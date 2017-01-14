@@ -1,0 +1,79 @@
+
+/* Colors */
+
+$color-primary: hsl(242, 900%, 66%);
+$color-accent: hsl(20, 100%, 55%);
+$color-text: #444;
+
+$color-background: #fdfdfd;
+
+/* Fonts */
+
+$font-sans-serif: Roboto, sans-serif;
+$font-serif: Charter, serif;
+
+/* Z index */
+
+@mixin card($z-index, $shadow-index) {
+  z-index: $z-index;
+  box-shadow: 0 unquote(($shadow-index / 2) + "px") unquote(($shadow-index * $shadow-index / 2) + "px") rgba(0, 0, 0, 0.05);
+}
+
+$z-topbar: 4;
+$z-popup: 8;
+
+@mixin fade-bottom($offset: 0.5em) {
+  -webkit-mask: linear-gradient(0deg, transparent, black $offset);
+}
+
+/* Main */
+
+@import "normalize";
+
+body {
+  background-color: $color-background;
+  font-family: $font-sans-serif;
+  font-weight: normal;
+  color: $color-text;
+  -webkit-font-smoothing: antialiased;
+}
+
+h3 {
+  font-weight: bold;
+}
+
+p {
+  line-height: 1.5;
+}
+
+@import "form";
+
+@import "topbar";
+@import "popup";
+
+@import "publisher";
+@import "explore";
+
+@import "map";
+
+@import "sources/source";
+@import "sources/jointsource";
+@import "sources/textsource";
+@import "sources/audiosource";
+
+@import "waveform";
+
+@import "app";
+
+.placeholder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  cursor: default;
+}

@@ -1,0 +1,11 @@
+
+.explore {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+
+  > * {
+    flex: 0 0 284px;
+  }
+}

@@ -1,0 +1,91 @@
+
+.jointsource {
+  @include source;
+  display: flex;
+  flex-direction: column;
+  width: 284px;
+  height: 284px;
+  overflow: hidden;
+  border: solid 1px #e8e8e8;
+  margin: 8px;
+  padding: 0 16px;
+  @include card(0, 2);
+
+  > h3 {
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  > .sources {
+    display: flex;
+    box-sizing: border-box;
+    margin: 0 -16px;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    font-size: 0.9em;
+
+    &:before,
+    &:after {
+      content: "";
+      display: block;
+      flex: 0 0 16px; // Taking account of the border
+    }
+
+    > * {
+      box-sizing: border-box;
+      display: inline-block;
+      position: relative;
+      white-space: normal;
+      flex: 0 0 calc(100% - 2em);
+      vertical-align: top;
+
+      &:not(:last-child) {
+        margin-right: 0.5em;
+      }
+    }
+
+    > .source {
+      @include card(0, 2);
+      border-bottom: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    > .hero {
+      display: flex;
+      flex-direction: column;
+      // font-size: 0.9em;
+      line-height: 1.25;
+      color: #666;
+
+      h4 {
+        margin: 1em 0 0.5em 0;
+        font-size: 0.8em;
+        font-weight: normal;
+        text-transform: uppercase;
+        color: lighten($color-text, 20%);
+      }
+
+      > .jointsource-meta {
+        flex: 1 1 auto;
+        height: auto;
+        padding-right: 1em;
+        overflow-x: hidden;
+        overflow-x: auto;
+        @include fade-bottom;
+
+        > * {
+          margin: 0.5em 0;
+        }
+      }
+
+      > .jointsource-status {
+        height: auto;
+        padding: 0.5em 0 1em;
+        color: lighten($color-text, 40%);
+        text-transform: lowercase;
+      }
+    }
+  }
+}

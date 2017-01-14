@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="assets/main.css">
+    <script type="text/javascript" src="assets/main.js"></script>
+  </head>
+  <body>
+    <!-- Template: Text source -->
+    <template id="template-textsource">
+      <div class="source textsource">
+        <!-- .textsource-paragraph pushed here -->
+      </div>
+    </template>
+    <template id="template-textsource-paragraph">
+      <p class="textsource-paragraph"></p>
+    </template>
+    <!-- Template: Audio source -->
+    <template id="template-audiosource">
+      <div class="source audiosource">
+        <p>Audio file: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+      </div>
+    </template>
+    <!-- Template: Explore -->
+    <template id="template-explore">
+      <section class="explore">
+
+      </section>
+    </template>
+    <template id="template-explore-jointsource">
+      <article class="jointsource">
+        <h3 data-ica-jointsource-meta="title">Title</h3>
+        <section class="sources">
+          <div class="hero">
+            <article class="jointsource-meta">
+              <p data-ica-jointsource-meta="intro"></p>
+              <div data-ica-jointsource-meta-predicate="region">
+                <h4>Region</h4>
+                <span data-ica-jointsource-meta="region"></span>
+              </div>
+              <div data-ica-jointsource-meta-predicate="participants">
+                <h4>Participants</h4>
+                <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
+              </div>
+              <div data-ica-jointsource-meta-predicate="themes">
+                <h4>Themes</h4>
+                <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
+              </div>
+            </article>
+            <div class="jointsource-status">
+              <a data-ica-action="edit-jointsource">Edit</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </template>
+    <!-- Template: Map -->
+    <template id="template-map">
+      <section class="map"></section>
+    </template>
+    <template id="template-map-level">
+      <div class="map-level"></div>
+    </template>
+    <!-- Template: Publisher -->
+    <template id="template-publisher">
+      <form class="publisher popup-series">
+        <article class="publisher-meta popup">
+          <header class="topbar">
+            <h3>Metadata</h3>
+          </header>
+          <section>
+            <table>
+              <tbody>
+                <tr>
+                  <th><label>Title</label></th>
+                  <td><input data-ica-jointsource-meta="title" placeholder="Title"></td>
+                </tr>
+                <tr>
+                  <th><label>Region</label></th>
+                  <td><input data-ica-jointsource-meta="region" type="text" placeholder="Region"></td>
+                </tr>
+                <tr>
+                  <th><label>Participants</label></th>
+                  <td>
+                    <textarea data-ica-jointsource-meta="participants" data-ica-format="tokens" placeholder="Participants"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>Themes</label></th>
+                  <td><textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" placeholder="Themes"></textarea></td>
+                </tr>
+                <tr>
+                  <th><label>Intro</label></th>
+                  <td><textarea data-ica-jointsource-meta="intro" placeholder="Intro" rows="1"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </article>
+        <article class="publisher-control popup-group">
+          <article class="popup">
+            <header class="topbar">
+              <h3>Add Source</h3>
+            </header>
+            <section>
+              <p>Add at least one piece of source content.</p>
+              <input type="button" value="Text" data-ica-action="add-source/text">
+              <!-- <input type="button" value="Audio" data-ica-action="add-source/audio"> -->
+            </section>
+          </article>
+          <article class="popup">
+            <header class="topbar">
+              <h3>Joint Source Control</h3>
+            </header>
+            <section>
+              <input type="submit" value="Publish">
+              <input type="button" value="Unpublish" data-ica-action="unpublish">
+              <input type="button" value="Cancel" data-ica-action="abort">
+            </section>
+          </article>
+        </article>
+      </form>
+    </template>
+    <template id="template-publisher-textsource">
+      <article class="publisher-source publisher-textsource popup">
+        <header class="topbar">
+          <h3>Text</h3>
+          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+        </header>
+        <section>
+          <textarea data-ica-source-content placeholder="Record your text here..."></textarea>
+        </section>
+      </article>
+    </template>
+    <template id="template-publisher-audiosource">
+      <article class="publisher-source publisher-audiosource popup">
+        <header class="topbar">
+          <h3>Audio</h3>
+          <a class="topbar-item" data-ica-action="select-file">Select</a>
+          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+        </header>
+        <section>
+          <input type="file" data-ica-source-content accept="audio/mpeg,audio/x-m4a">
+          <div class="waveform"></div>
+        </section>
+      </article>
+    </template>
+    <!-- Template: Tokens -->
+    <template id="template-tokens">
+      <div class="tokens"></div>
+    </template>
+    <template id="template-token">
+      <span class="token"></span>
+    </template>
+    <!-- Template: Waveform -->
+    <template id="template-waveform">
+      <div class="waveform">
+        <canvas class="waveform-canvas"></canvas>
+      </div>
+    </template>
+    <!-- Begin main -->
+    <header class="topbar">
+      <h1>ICA</h1>
+      <a href="#explore" class="topbar-item" data-ica-anchor-group="topbar">Explore</a>
+      <a href="#publisher" class="topbar-item" data-ica-anchor-group="topbar">Publish</a>
+      <a href="#account" class="topbar-item" data-ica-anchor-group="topbar">Account</a>
+    </header>
+    <section class="app-view" data-ica-width-multiple="300">
+      <div data-ica-app-view="explore" class="explore"></div>
+      <div data-ica-app-view="account">
+        <h2>You're logged in</h2>
+        <p>This section is still under implementation... To update your info, please navigate to <a href="https://accounts.mintkit.net" target="_blank"><em>accounts.mintkit.net</em></a></p>
+      </div>
+    </section>
+  </body>
+</html>

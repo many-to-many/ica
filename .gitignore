@@ -1,0 +1,16 @@
+
+node_modules
+
+.sass-cache
+
+styles/main.css
+
+app/assets/main.css
+app/assets/main.js
+
+app/accounts/*
+
+config.json
+app/config.oauth2.php
+app/config.php
+app/.htaccess

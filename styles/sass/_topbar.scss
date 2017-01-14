@@ -1,0 +1,70 @@
+
+.topbar {
+  display: flex;
+  box-sizing: content-box;
+  height: 3em;
+  background-color: #fff;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.10);
+  overflow-x: auto;
+  justify-content: flex-start;
+  @include card($z-topbar, 3);
+
+  &:before, &:after {
+    display: block;
+    content: "";
+    flex: 0 0 0.5em;
+  }
+
+  body > & {
+    position: fixed;
+    top: 0;
+    right : 0;
+    left: 0;
+
+    & ~ section {
+      margin-top: 3em;
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    padding: 1em;
+    font-size: 1em;
+    line-height: 1em;
+    flex: auto;
+  }
+
+  > .topbar-item {
+    position: relative;
+    padding: 1em;
+    line-height: 1em;
+    font-weight: bold;
+
+    &:not(.solid) {
+
+      &:after {
+        display: block;
+        position: absolute;
+        content: "";
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 0;
+        background-color: rgba(0, 0, 0, 0.10);
+
+        transition: height ease 0.2s, background-color ease 0.2s;
+      }
+
+      &:hover,
+      &.active {
+
+        &:after {
+          height: 1px;
+          background-color: $color-accent;
+        }
+      }
+    }
+  }
+}

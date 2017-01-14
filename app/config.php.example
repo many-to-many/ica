@@ -1,0 +1,28 @@
+<?php
+
+  function stringEndsWith($string, $ending) {
+
+    return substr($string, strlen($string) - strlen($ending)) == $ending;
+
+  }
+
+  if (stringEndsWith($_SERVER["HTTP_HOST"], "<http-host>")) {
+
+  	define("MYSQL_HOST", "<mysql-host>");
+  	define("MYSQL_DATABASE", "<mysql-database>");
+  	define("MYSQL_USER", "<mysql-user>");
+  	define("MYSQL_PASSWORD", "<mysql-password>");
+
+  	define("TIME_ZONE", "America/Phoenix");
+
+    define("URI_HOST", "http" . (($_SERVER["SERVER_PORT"] == 443) ? "s://" : "://") . $_SERVER["HTTP_HOST"]);
+
+  } else die("Site host not supported");
+
+  date_default_timezone_set(TIME_ZONE);
+
+  define("DIR_ROOT", __DIR__);
+
+  error_reporting(E_ALL);
+
+?>

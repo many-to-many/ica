@@ -1,0 +1,28 @@
+
+$column-width: 35em;
+
+.map {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  padding: 5em 0;
+
+  &::before, &::after {
+    display: block;
+    content: "";
+    flex: 1 0 2em;
+  }
+
+  & > .map-level {
+    min-width: $column-width;
+    min-height: 100%;
+
+    &:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  ::selection {
+    background-color: transparent;
+  }
+}

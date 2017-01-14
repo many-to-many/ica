@@ -1,0 +1,13 @@
+<?php
+
+  require_once(__DIR__ . "/config.php");
+
+  if (stringEndsWith($_SERVER["HTTP_HOST"], "<http-host>")) {
+
+    define("OAUTH2_URI", "https://accounts.mintkit.net/Auth/OAuth2");
+    define("OAUTH2_CLIENT_ID", "<client-id>");
+    define("OAUTH2_CLIENT_SECRET", "<client-secret>");
+
+  } else die("Site host not supported");
+
+?>

@@ -1,0 +1,10 @@
+
+@mixin source {
+  box-sizing: border-box;
+  position: relative;
+  width: $column-width;
+  padding: 2em;
+  background-color: #fff;
+  border: solid 1px #ddd;
+  border-radius: 3px;
+}
