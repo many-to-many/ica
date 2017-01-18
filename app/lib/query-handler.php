@@ -1,7 +1,7 @@
 <?php
 
   define("REQUEST_PARAMETER", "$");
-  
+
   function handle($path, $wildcard = false) {
 
     global $REQUEST_PATH;
@@ -62,7 +62,6 @@
     header('Accept-Ranges: bytes');
 
     print($data);
-    ob_flush();
     flush();
 
     exit();
