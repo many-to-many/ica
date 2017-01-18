@@ -8,6 +8,7 @@
 
       $mime = $_SERVER["CONTENT_TYPE"];
       if (!in_array($mime, [
+        "image/jpeg",
         "audio/mpeg",
         "audio/x-m4a"
       ])) {

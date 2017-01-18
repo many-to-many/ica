@@ -37,14 +37,13 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
 
       switch (getElementProperty(element, "action")) {
         case "add-source/text":
-
           new TextSource(null, this.controller.jointSource);
-
+          break;
+        case "add-source/image":
+          new ImageSource(null, this.controller.jointSource);
           break;
         case "add-source/audio":
-
           new AudioSource(null, this.controller.jointSource);
-
           break;
         default:
           return;
@@ -91,24 +90,24 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
 
     // Create new view
     switch (source.constructor) {
-      case TextSource:
-
-        var fragment = PublisherTextSourceController.createViewFragment();
+      case ImageSource:
+        var fragment = PublisherImageSourceController.createViewFragment();
         var element = fragment.querySelector(".publisher-source");
         this.insertBefore(element, this.querySelector(".publisher-control"));
-        new PublisherTextSourceController(source, element).componentOf = this.controller;
-
+        new PublisherImageSourceController(source, element).componentOf = this.controller;
         break;
       case AudioSource:
-
         var fragment = PublisherAudioSourceController.createViewFragment();
         var element = fragment.querySelector(".publisher-source");
         this.insertBefore(element, this.querySelector(".publisher-control"));
         new PublisherAudioSourceController(source, element).componentOf = this.controller;
-
         break;
+      case TextSource:
       default:
-        return;
+        var fragment = PublisherTextSourceController.createViewFragment();
+        var element = fragment.querySelector(".publisher-source");
+        this.insertBefore(element, this.querySelector(".publisher-control"));
+        new PublisherTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
 });

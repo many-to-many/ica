@@ -7,6 +7,7 @@
 
   define("SOURCE_TYPE_TEXT", 1);
   define("SOURCE_TYPE_AUDIO", 2);
+  define("SOURCE_TYPE_IMAGE", 3);
 
   class JointSource {
 
@@ -40,6 +41,8 @@
 
     public function encodeType() {
       switch ($this->type) {
+        case "image":
+          return SOURCE_TYPE_IMAGE;
         case "audio":
           return SOURCE_TYPE_AUDIO;
         case "text":
@@ -50,6 +53,9 @@
 
     public function decodeType($type) {
       switch ($type) {
+        case SOURCE_TYPE_IMAGE:
+          $this->type = "image";
+          break;
         case SOURCE_TYPE_AUDIO:
           $this->type = "audio";
           break;

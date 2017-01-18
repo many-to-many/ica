@@ -131,6 +131,12 @@ ICA.publishJointSource = function (jointSource) {
           meta: jointSource.meta,
           sources: jointSource.mapSources(function (source) {
             switch (source.constructor) {
+              case ImageSource:
+                return {
+                  _id: source.sourceId,
+                  type: "image",
+                  content: source.content
+                }
               case AudioSource:
                 return {
                   _id: source.sourceId,
@@ -166,6 +172,13 @@ ICA.publishJointSource = function (jointSource) {
             if (source.sourceId < 0) {
               var promise;
               switch (source.constructor) {
+                case ImageSource:
+                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                    _id: source.sourceId,
+                    type: "image",
+                    content: source.content
+                  });
+                  break;
                 case AudioSource:
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
@@ -266,6 +279,9 @@ function touchSources(dataSources, jointSource) {
       source.sourceId = sourceId;
     } else {
       switch (dataSource.type) {
+        case "image":
+          source = new ImageSource(dataSource.revision.content, jointSource, sourceId);
+          break;
         case "audio":
           source = new AudioSource(dataSource.revision.content, jointSource, sourceId);
           break;

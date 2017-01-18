@@ -168,5 +168,6 @@ window.addEventListener("load", function () {
 
   $("[href='#explore']")[0].click();
   // $("[href='#publisher']")[0].click();
+  // $("[data-ica-action='add-source/image']")[0].click();
 
 });

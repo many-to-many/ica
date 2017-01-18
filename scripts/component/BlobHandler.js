@@ -3,12 +3,30 @@ var BlobHandler = Handler.createComponent("BlobHandler");
 
 BlobHandler.defineAlias("content", "blob");
 
+BlobHandler.defineMethod("initContent", function initContent() {
+  if (!(this.blob instanceof Blob)) {
+    this._blobId = this.blob;
+    delete this._content;
+  }
+});
+
 BlobHandler.defineMethod("uninitContent", function uninitContent() {
+  delete this._blobId;
   delete this._cache_blob;
   delete this._cache_array_buffer;
 });
 
+Object.defineProperty(BlobHandler.prototype, "url", {
+  get: function () {
+    if (this._blobId) return (this.stream ? "streams/" : "") + "files/" + this._blobId;
+    return URL.createObjectURL(this.blob);
+  }
+});
+
+BlobHandler.prototype.stream = false; // Serving static content
+
 BlobHandler.prototype.readAsArrayBuffer = function () {
+  // Does not support remote blob id
   if (!this.blob) return Promise.reject(new Error("No blob"));
   if (this._cache_array_buffer) return Promise.resolve(this._cache_array_buffer);
 

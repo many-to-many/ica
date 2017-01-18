@@ -46,24 +46,24 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
 
     // Create new view
     switch (source.constructor) {
-
+      case ImageSource:
+        var fragment = ExploreImageSourceController.createViewFragment();
+        var element = fragment.querySelector(".source");
+        this.querySelector(".sources").appendChild(fragment);
+        new ExploreImageSourceController(source, element).componentOf = this.controller;
+        break;
       case AudioSource:
-
         var fragment = ExploreAudioSourceController.createViewFragment();
         var element = fragment.querySelector(".source");
         this.querySelector(".sources").appendChild(fragment);
         new ExploreAudioSourceController(source, element).componentOf = this.controller;
-
         break;
-
       case TextSource:
       default:
-
         var fragment = ExploreTextSourceController.createViewFragment();
         var element = fragment.querySelector(".source");
         this.querySelector(".sources").appendChild(fragment);
         new ExploreTextSourceController(source, element).componentOf = this.controller;
-
     }
   }.bind(this.view));
 });

@@ -1,0 +1,4 @@
+
+var ExploreImageSourceController = ImageSourceController.createComponent("ExploreImageSourceController");
+
+ExploreImageSourceController.createViewFragment = ImageSourceController.createViewFragment;

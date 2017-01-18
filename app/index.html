@@ -16,6 +16,12 @@
     <template id="template-textsource-paragraph">
       <p class="textsource-paragraph"></p>
     </template>
+    <!-- Template: Image source -->
+    <template id="template-imagesource">
+      <div class="source imagesource">
+        <img data-ica-content>
+      </div>
+    </template>
     <!-- Template: Audio source -->
     <template id="template-audiosource">
       <div class="source audiosource">
@@ -106,7 +112,8 @@
             <section>
               <p>Add at least one piece of source content.</p>
               <input type="button" value="Text" data-ica-action="add-source/text">
-              <!-- <input type="button" value="Audio" data-ica-action="add-source/audio"> -->
+              <input type="button" value="Image" data-ica-action="add-source/image">
+              <input type="button" value="Audio" data-ica-action="add-source/audio">
             </section>
           </article>
           <article class="popup">
@@ -130,6 +137,19 @@
         </header>
         <section>
           <textarea data-ica-source-content placeholder="Record your text here..."></textarea>
+        </section>
+      </article>
+    </template>
+    <template id="template-publisher-imagesource">
+      <article class="publisher-source publisher-imagesource popup">
+        <header class="topbar">
+          <h3>Image</h3>
+          <a class="topbar-item" data-ica-action="select-file">Select</a>
+          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+        </header>
+        <section>
+          <input type="file" data-ica-source-content accept="image/jpeg">
+          <img class="image">
         </section>
       </article>
     </template>
@@ -157,6 +177,12 @@
     <template id="template-waveform">
       <div class="waveform">
         <canvas class="waveform-canvas"></canvas>
+      </div>
+    </template>
+    <!-- Template: Image -->
+    <template id="template-image">
+      <div class="image">
+        <img class="image-view">
       </div>
     </template>
     <!-- Begin main -->

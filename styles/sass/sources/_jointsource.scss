@@ -29,19 +29,17 @@
     &:after {
       content: "";
       display: block;
-      flex: 0 0 16px; // Taking account of the border
+      flex: 0 0 15px; // Taking account of the border
     }
 
     > * {
       box-sizing: border-box;
-      display: inline-block;
       position: relative;
-      white-space: normal;
-      flex: 0 0 calc(100% - 2em);
+      flex: 0 0 252px;
       vertical-align: top;
 
       &:not(:last-child) {
-        margin-right: 0.5em;
+        margin-right: 4px;
       }
     }
 

@@ -7,12 +7,6 @@ RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
 # Remote: ica.mintkit.net
 
-# Add .php to access file, but don't redirect
-RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ /$1.php [L]
-
 # API calls
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -27,6 +21,11 @@ RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^files/(.*)$ /files/index.php?q=$1 [QSA,NC,L]
 
+# Add .php to access file, but don't redirect
+RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ /$1.php [L]
 
 # Remote: nocdn.mintkit.net/berkeley/ica (Skips CDN)
 
