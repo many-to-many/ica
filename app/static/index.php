@@ -11,7 +11,7 @@
     switch ($matches[1]) {
       case "image":
         // Check if request needs image resizing
-        if ($_GET["width"] || $_GET["height"]) {
+        if (isset($_GET["width"]) || isset($_GET["height"])) {
           $width = isset($_GET["width"]) ? intval($_GET["width"]) : 0;
           $height = isset($_GET["height"]) ? intval($_GET["height"]) : 0;
 
