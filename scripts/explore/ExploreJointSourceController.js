@@ -29,10 +29,10 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
 
   this.view.querySelectorAll("[data-ica-jointsource-meta-predicate]").forEach(function (element) {
     var metaPredicate = getElementProperty(element, "jointsource-meta-predicate");
-    if (this.jointSource.meta[metaPredicate]) {
-      element.style.display = "";
-    } else {
+    if (empty(this.jointSource.meta[metaPredicate])) {
       element.style.display = "none";
+    } else {
+      element.style.display = "";
     }
   }.bind(this));
 
@@ -73,3 +73,10 @@ ExploreJointSourceController.defineMethod("uninitView", function uninitView() {
 
   removeElementProperty(this.view, "jointsource-id");
 });
+
+/*****/
+
+function empty(value) {
+  if (Array.isArray(value)) return value.length == 0;
+  return !value;
+}

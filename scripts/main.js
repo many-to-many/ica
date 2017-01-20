@@ -47,6 +47,7 @@ function init(element) {
     this.addEventListener("focus", resizeTextArea);
     this.addEventListener("input", resizeTextArea);
     this.addEventListener("blur", resizeTextArea);
+    resizeTextArea();
 
     this._textareaInit = true;
   });

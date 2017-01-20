@@ -26,10 +26,15 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
   document.body.style.overflow = "hidden"; // Disable background scrolling
 
   this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
+    // Event listeners
     element.addEventListener("change", function (e) {
       this.controller.jointSource.meta[getElementProperty(element, "jointsource-meta")] = getFormattedInputValue(element);
-    }.bind(this));
-  }.bind(this.view));
+      this.controller.jointSource.didUpdate();
+    }.bind(this.view));
+
+    // Init input values
+    setInputValue(element, this.jointSource.meta[getElementProperty(element, "jointsource-meta")]);
+  }.bind(this));
 
   this.view.querySelectorAll("[data-ica-action^='add-source']").forEach(function (element) {
     element.addEventListener("click", function (e) {
@@ -78,10 +83,6 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
 
 PublisherJointSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
-
-  this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (input) {
-    setInputValue(input, this.controller.jointSource.meta[getElementProperty(input, "jointsource-meta")]);
-  }.bind(this.view));
 
   // Update views based on sources in joint source
   this.jointSource.forEachSource(function (source) {
@@ -155,7 +156,9 @@ function setInputValue(input, value) {
         input.handler.tokens = value;
         input.handler.contentDidUpdate();
       } else {
-        input.value = value.join("; ");
+        input.value = value
+          ? Array.isArray(value) ? value.join("; ") : value
+          : "";
       }
       break;
     default:
