@@ -37,82 +37,86 @@ Object.defineProperty(ICA, "accountSession", {
   }
 });
 
-ICA.request = function (path, method, data) {
+ICA.request = function (method, path, data, api = true, type = "") {
   return new Promise(function (resolve, reject) {
-    try {
-      var x = new XMLHttpRequest();
-      x.open(method, this.api + path, true);
-      if (x.upload) {
-        x.upload.onprogress = function (e) {
-          if (e.lengthComputable) {
-            var percentComplete = (e.loaded / e.total) * 100;
-            console.log("Requesting: {0}%".format(percentComplete));
+    var x = new XMLHttpRequest();
+    x.open(method, (api ? this.api : "") + path, true);
+    x.responseType = type;
+    if (x.upload) x.upload.onprogress = function (e) {
+      if (e.lengthComputable) {
+        var percentComplete = (e.loaded / e.total) * 100;
+        console.log("Requesting: {0}%".format(percentComplete));
+      }
+    };
+    x.onprogress = function (e) {
+      if (e.lengthComputable) {
+        var percentComplete = (e.loaded / e.total) * 100;
+        console.log("Responding: {0}%".format(percentComplete));
+      }
+    };
+    x.onreadystatechange = function (e) {
+      if (x.readyState == 4) {
+        if (x.status == 200) {
+          var data;
+          switch (x.responseType) {
+            case "blob":
+              data = new Blob([x.response], {type: x.getResponseHeader("Content-Type") || "text/plain"});
+              break;
+            default:
+              if (x.getResponseHeader("Content-Type") == "application/json") {
+                try {
+                  data = JSON.parse(x.responseText);
+                } catch(e) {
+                  reject(new Error("Error parsing server response:\n" + x.responseText));
+                }
+                if (data.error) {
+                  console.warn("Request caught error:", data);
+                  reject(new Error(data.error));
+                  return;
+                }
+                if (data.warn) {
+                  console.warn("Request caught warning:", data);
+                }
+              } else data = {};
           }
-        };
-      }
-      x.onprogress = function (e) {
-        if (e.lengthComputable) {
-          var percentComplete = (e.loaded / e.total) * 100;
-          console.log("Responding: {0}%".format(percentComplete));
+          resolve(data);
+        } else if (x.status == 400) {
+          reject(new Error("There was an error processing the token"));
+        } else {
+          reject(new Error("something else other than 200 was returned"));
         }
-      };
-      x.onreadystatechange = function (e) {
-        if (x.readyState == 4) {
-          if (x.status == 200){
-            try {
-              var data = JSON.parse(x.responseText);
-              if (data.error) {
-                console.warn("Request caught error:", data);
-                reject(new Error(data.error));
-                return;
-              }
-              if (data.warn) {
-                console.warn("Request caught warning:", data);
-              }
-              resolve(data);
-            } catch(e) {
-              reject(new Error("Error parsing server response:\n" + x.responseText));
-            }
-          } else if (x.status == 400) {
-            reject(new Error("There was an error processing the token"));
-          } else {
-            reject(new Error("something else other than 200 was returned"));
-          }
-        }
-      };
-      if (this.accountSession) {
-        x.setRequestHeader("Authorization", "Bearer " + this.accountSession);
       }
-      if (!data) data = {};
-      if (data instanceof File) {
-        // if (data.size > 16 * 1024 * 1024) throw new Error("File size over 16 MB");
-        x.setRequestHeader("Content-Type", data.type);
-        x.send(data);
-      } else {
-        x.setRequestHeader("Content-Type", "application/json");
-        x.send(JSON.stringify(data));
-      }
-      console.log("Request: {0} {1}".format(method, path));
-    } catch (err) {
-      reject(err);
+    };
+    if (this.accountSession) {
+      x.setRequestHeader("Authorization", "Bearer " + this.accountSession);
     }
+    if (!data) data = {};
+    if (data instanceof File) {
+      // if (data.size > 16 * 1024 * 1024) throw new Error("File size over 16 MB");
+      x.setRequestHeader("Content-Type", data.type);
+      x.send(data);
+    } else {
+      x.setRequestHeader("Content-Type", "application/json");
+      x.send(JSON.stringify(data));
+    }
+    console.log("Request: {0} {1}".format(method, path));
   }.bind(this));
 };
 
 ICA.get = function (path, params) {
-  return this.request(path, "GET", params);
+  return this.request("GET", path, params);
 };
 
 ICA.post = function (path, params) {
-  return this.request(path, "POST", params);
+  return this.request("POST", path, params);
 };
 
 ICA.put = function (path, params) {
-  return this.request(path, "PUT", params);
+  return this.request("PUT", path, params);
 };
 
 ICA.delete = function (path, params) {
-  return this.request(path, "DELETE", params);
+  return this.request("DELETE", path, params);
 };
 
 ICA.getJointSources = function () {

@@ -23,9 +23,8 @@ ImageController.defineMethod("updateView", function updateView() {
   this._view = element;
   this.initView(false);
 
-  if (!this.blobHandler.blob) return;
-
-  this.view.querySelector(".image-view").src = URL.createObjectURL(this.blobHandler.blob);
+  // Update the source of the view
+  this.view.querySelector(".image-view").src = this.blobHandler.url;
 });
 
 ImageController.defineMethod("uninitView", function uninitView() {
