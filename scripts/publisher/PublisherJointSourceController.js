@@ -53,8 +53,7 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
         default:
           return;
       }
-      // this.controller.jointSource.didUpdate();
-      this.controller.modelDidUpdate();
+      this.controller.jointSource.didUpdate();
     }.bind(this));
   }.bind(this.view));
 

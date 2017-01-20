@@ -17,7 +17,7 @@ Object.defineProperty(BlobHandler.prototype, "url", {
   get: function () {
     if (this.blob) {
       if (this.blob instanceof Blob) return URL.createObjectURL(this.blob);
-      return (this.stream ? "streams/" : "") + "files/" + this.blob;
+      return (this.stream ? "streams/" : "static/") + this.blob;
     }
     return null;
   }
