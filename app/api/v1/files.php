@@ -15,25 +15,20 @@
         throw new Exception("Unhandled content type: " . $mime);
       }
 
-      $DATABASE->autocommit(false);
-
       $accountId = \Session\getAccountId();
       $year = date("Y");
       $month = date("m");
-      $day = date("d");
       $uid = uniqid();
-      $dir = "$year/$month/$day";
+      $dir = "$accountId/$year/$month";
       $path = "$dir/$uid";
 
-      $fileId = \ICA\Files\insertFile($path, $mime);
-
-      if (!is_dir(DIR_ROOT . "/accounts/$accountId/files/$dir")
-        && !mkdir(DIR_ROOT . "/accounts/$accountId/files/$dir", 0755, true)) {
+      if (!is_dir(DIR_ROOT . "/data/$dir")
+        && !mkdir(DIR_ROOT . "/data/$dir", 0755, true)) {
         throw new Exception("Unable to create directory structure");
       }
 
       $input = fopen("php://input", "r");
-      $output = fopen(DIR_ROOT . "/accounts/$accountId/files/$path", "w");
+      $output = fopen(DIR_ROOT . "/data/$path", "w");
       while (!feof($input)) {
         $chunk = fread($input, 1024 * 1024); // 1 MB chunks
         fwrite($output, $chunk);
@@ -41,8 +36,11 @@
       fclose($input);
       fclose($output);
 
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      $file = new \ICA\Files\File;
+      $file->path = $path;
+      $file->mime = $mime;
+
+      $fileId = \ICA\Files\insertFile($file);
 
       respondJSON($fileId);
 

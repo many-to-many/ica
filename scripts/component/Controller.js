@@ -113,6 +113,8 @@ Controller.defineMethod("destroyView", function destroyView() {
   delete this._view;
 });
 
+Controller.prototype.devicePixelRatio = window.devicePixelRatio || 1;
+
 /*****/
 
 function getTimestamp() {

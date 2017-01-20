@@ -1,7 +1,5 @@
 
-var DropHandler = Handler.createComponent("DropHandler");
-
-DropHandler.defineAlias("content", "element");
+var DropHandler = ElementHandler.createComponent("DropHandler");
 
 DropHandler.defineMethod("init", function init(element, callback) {
 

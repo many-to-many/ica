@@ -34,14 +34,14 @@
 
   }
 
-  function insertFile($path, $mime) {
+  function insertFile($file) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
     $result = $DATABASE->query("INSERT INTO ica_files
       (`author_id`, `path`, `mime`)
-      VALUES ($accountId, '$path', '$mime');");
+      VALUES ($accountId, '{$file->path}', '{$file->mime}');");
     if (empty($result)) throw new \Exception($DATABASE->error);
 
     $fileId = $DATABASE->insert_id;

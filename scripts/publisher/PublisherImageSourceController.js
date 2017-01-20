@@ -12,8 +12,6 @@ PublisherImageSourceController.defineMethod("initView", function () {
     this.source.blobHandler,
     this.view.querySelector(".image"));
 
-  console.log(this.imageController);
-
   this.publisherSourceDropHandler = new DropHandler(this.view, function (files) {
     this.querySelector("[data-ica-source-content]").files = files;
   }.bind(this.view));

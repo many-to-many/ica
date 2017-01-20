@@ -33,11 +33,10 @@
 
   }
 
-  function respondFile($file) {
+  function respondFile($path, $mime) {
 
     // From: https://github.com/pomle/php-serveFilePartial/blob/master/ServeFilePartial.inc.php
 
-    $path = DIR_ROOT . "/accounts/{$file->author_id}/files/{$file->path}";
     $filesize = filesize($path);
 
     if (isset($_SERVER['HTTP_RANGE'])) {
@@ -58,7 +57,7 @@
     fclose($handler);
 
     header('Content-Length: ' . $length);
-    header('Content-Type: ' . $file->mime);
+    header('Content-Type: ' . $mime);
     header('Accept-Ranges: bytes');
 
     print($data);
