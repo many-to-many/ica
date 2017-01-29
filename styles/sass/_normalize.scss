@@ -3,7 +3,20 @@ body {
   margin: 0 8px;
   font-size: 16px;
   overflow: scroll;
-  // -webkit-user-select: none;
+  background-color: $color-background;
+  font-family: $font-sans-serif;
+  font-weight: normal;
+  color: $color-text;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+h3 {
+  font-weight: bold;
+}
+
+p {
+  line-height: 1.5;
 }
 
 a {
@@ -32,4 +45,8 @@ form {
     border: none;
     outline: none;
   }
+}
+
+::selection {
+  background-color: rgba($color-accent, 0.40);
 }

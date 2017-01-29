@@ -1,0 +1,4 @@
+
+var ArticleAudioSourceController = AudioSourceController.createComponent("ArticleAudioSourceController");
+
+ArticleAudioSourceController.createViewFragment = AudioSourceController.createViewFragment;

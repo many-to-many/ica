@@ -1,17 +1,14 @@
 
-var ExploreJointSourceController = JointSourceController.createComponent("ExploreJointSourceController");
+var ArticleJointSourceController = JointSourceController.createComponent("ArticleJointSourceController");
 
-ExploreJointSourceController.createViewFragment = function () {
-  return cloneTemplate("#template-explore-jointsource");
-};
+ArticleJointSourceController.createViewFragment = function () {
+  return cloneTemplate("#template-article");
+}
 
-ExploreJointSourceController.defineAlias("model", "jointSource");
+// View
 
-ExploreJointSourceController.defineMethod("initView", function initView() {
+ArticleJointSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
-
-  setElementProperty(this.view, "jointsource-id", this.jointSource.jointSourceId);
-  this.view.style.order = - this.jointSource.jointSourceId;
 
   this.view.querySelector("[data-ica-action='edit-jointsource']").addEventListener("click", function (e) {
     e.preventDefault();
@@ -22,26 +19,20 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
     new PublisherJointSourceController(this.controller.jointSource, element);
   }.bind(this.view));
 
-  this.view.querySelector(".jointsource-meta").addEventListener("click", function (e) {
+  this.view.querySelector("[data-ica-action='close']").addEventListener("click", function (e) {
     e.preventDefault();
-    e.stopPropagation();
-  });
-
-  this.view.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var map = new Map([this.controller.jointSource]);
-    var fragment = MapController.createViewFragment();
-    var element = fragment.querySelector(".map");
-    document.body.appendChild(fragment);
-    new MapController(map, element);
+    var jointSource = this.controller.jointSource;
+    var mapController = this.controller.componentOf;
+    this.controller.destroy(true);
+    mapController.map.removeArticle(jointSource);
+    mapController.map.didUpdate();
   }.bind(this.view));
 
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
   new TokensController(this.jointSource.metaThemesHandler, this.view.querySelector("[data-ica-jointsource-meta='themes']")).componentOf = this;
 });
 
-ExploreJointSourceController.defineMethod("updateView", function updateView() {
+ArticleJointSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelectorAll("[data-ica-jointsource-meta-predicate]").forEach(function (element) {
@@ -58,42 +49,27 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   }.bind(this));
 
   this.jointSource.forEachSource(function (source) {
-    // Check existing element
-    if (this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
+    if (this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
 
-    // Create new view
     switch (source.constructor) {
       case ImageSource:
-        var fragment = ExploreImageSourceController.createViewFragment();
+        var fragment = ArticleImageSourceController.createViewFragment();
         var element = fragment.querySelector(".source");
         this.querySelector(".sources").appendChild(fragment);
-        new ExploreImageSourceController(source, element).componentOf = this.controller;
+        new ArticleImageSourceController(source, element).componentOf = this.controller;
         break;
       case AudioSource:
-        var fragment = ExploreAudioSourceController.createViewFragment();
+        var fragment = ArticleAudioSourceController.createViewFragment();
         var element = fragment.querySelector(".source");
         this.querySelector(".sources").appendChild(fragment);
-        new ExploreAudioSourceController(source, element).componentOf = this.controller;
+        new ArticleAudioSourceController(source, element).componentOf = this.controller;
         break;
       case TextSource:
       default:
-        var fragment = ExploreTextSourceController.createViewFragment();
+        var fragment = ArticleTextSourceController.createViewFragment();
         var element = fragment.querySelector(".source");
         this.querySelector(".sources").appendChild(fragment);
-        new ExploreTextSourceController(source, element).componentOf = this.controller;
+        new ArticleTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
 });
-
-ExploreJointSourceController.defineMethod("uninitView", function uninitView() {
-  if (!this.view) return;
-
-  removeElementProperty(this.view, "jointsource-id");
-});
-
-/*****/
-
-function empty(value) {
-  if (Array.isArray(value)) return value.length == 0;
-  return !value;
-}

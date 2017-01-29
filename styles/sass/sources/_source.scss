@@ -2,9 +2,7 @@
 @mixin source {
   box-sizing: border-box;
   position: relative;
-  width: $column-width;
-  padding: 2em;
-  background-color: #fff;
-  border: solid 1px #ddd;
+  padding: 1.5em;
   border-radius: 3px;
+  background-color: #fff;
 }

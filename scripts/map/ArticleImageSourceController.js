@@ -1,0 +1,4 @@
+
+var ArticleImageSourceController = ImageSourceController.createComponent("ArticleImageSourceController");
+
+ArticleImageSourceController.createViewFragment = ImageSourceController.createViewFragment;

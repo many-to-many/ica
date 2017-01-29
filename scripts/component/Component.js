@@ -26,21 +26,22 @@ Component.childComponents = [];
 
 Component.toString = function () {
   if (this.parentComponent) {
-    return "{0} => {1}".format(this.parentComponent.toString(), this.componentName);
+    return "{0} -> {1}".format(this.parentComponent.toString(), this.componentName);
   } else {
     return this.componentName;
   }
 }
 
 Component.logChildComponents = function () {
-  console.group(this.componentName);
-  for (var name in this.prototype._methods) {
-    console.log(name);
-  }
+  console.log(this);
+  // console.group(this.componentName);
+  // for (var name in this.prototype._methods) {
+  //   console.log(name);
+  // }
   this.childComponents.forEach(function (childComponent) {
     Component.logChildComponents.call(childComponent);
   });
-  console.groupEnd();
+  // console.groupEnd();
 }
 
 Component.defineAlias = function (name, alias) {
@@ -95,7 +96,7 @@ Component.createComponent = function (name) {
   var Component = function () {
     return thisComponent.apply(this, arguments);
   };
-  eval("Component = function {0}() { return thisComponent.apply(this, arguments); };".format(name)); // NB: Debug
+  // eval("Component = function {0}() { return thisComponent.apply(this, arguments); };".format(name)); // NB: Debug
   // Assign the new component with the user-defined name
   Object.defineProperty(Component, "name", {
     value: name

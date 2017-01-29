@@ -1,63 +1,46 @@
 
-var MapController = function (element, map) {
-  Controller.call(this, element);
-  this.map = map;
-};
+var MapController = SingleModelController.createComponent("MapController");
 
-MapController.createViewFragment = function (map) {
-  var mapFragment = cloneTemplate("#template-map");
-  var mapElement = mapFragment.querySelector(".map");
-  // Adding elements
-  map.levels.map(function (level) {
-    var mapLevelFragment = MapLevelController.createViewFragment(level);
-    // Attach controller
-    var mapLevelController = new MapLevelController(mapLevelFragment.querySelector(".map-level"), level);
-    mapElement.appendChild(mapLevelFragment);
-  });
-  setElementProperty(mapElement, "map", 0);
-  return mapFragment;
+MapController.createViewFragment = function () {
+  return cloneTemplate("#template-map");
 }
 
-MapController.prototype = Object.create(Controller.prototype);
+MapController.defineAlias("model", "map");
 
-MapController.prototype.constructor = MapController;
+MapController.defineMethod("initView", function initView() {
+  if (!this.view) return;
 
-MapController.prototype.update = function () {
-  var parentNode = this.view.parentNode;
-  parentNode.replaceChild(MapController.createViewFragment(this.map), this.view);
-  this.view = parentNode.querySelector("[data-ica-map='{0}']".format(this.map.id));
-  Controller.prototype.update.call(this);
-};
+  document.body.style.overflow = "hidden"; // Disable background scrolling
+  // TODO: Document body controller to auto lock scrolling for ease of sub view navigation; this probably may not work well with publisher controller
+});
 
-/*****/
+MapController.defineMethod("updateView", function updateView() {
+  if (!this.view) return;
 
-var MapLevelController = function (view, level) {
-  Controller.call(this, view);
-  this.level = level;
-};
-
-MapLevelController.createViewFragment = function (level) {
-  var mapLevelFragment = cloneTemplate("#template-map-level");
-  var mapLevelElement = mapLevelFragment.querySelector(".map-level");
-  if (level.sources) {
-    level.sources.map(function (source) {
-      var sourceFragment = TextSourceController.createViewFragment(source);
-      // Attach controller
-      var mapLevelController = new TextSourceController(sourceFragment.querySelector(".source"), source);
-      mapLevelElement.appendChild(sourceFragment);
-    })
+  if (this.map.articles.length == 0) {
+    this.destroy(true);
+    return;
   }
-  return mapLevelFragment;
-}
 
-MapLevelController.prototype = Object.create(Controller.prototype);
+  // Adding elements
+  this.map.articles.map(function (article) {
+    switch (article.constructor) {
+      case JointSource:
+        // Check existing element
+        if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(article.jointSourceId))) return;
 
-MapLevelController.prototype.constructor = MapLevelController;
+        // Create new view
+        var fragment = ArticleJointSourceController.createViewFragment();
+        var element = fragment.querySelector(".article");
+        this.view.appendChild(fragment);
+        new ArticleJointSourceController(article, element).componentOf = this;
+        break;
+    }
+  }.bind(this));
+});
 
-MapLevelController.prototype.update = function () {
-  var parentNode = this.view.parentNode;
-  parentNode.replaceChild(TextSourceController.createViewFragment(this.source), this.view);
-  this.view = parentNode.querySelector("[data-ica-map-level='{0}']".format(this.source.sourceId));
+MapController.defineMethod("uninitView", function uninitView() {
+  document.body.style.overflow = ""; // Enable background scrolling
 
-  Controller.prototype.update.call(this);
-};
+  if (!this.view) return;
+});

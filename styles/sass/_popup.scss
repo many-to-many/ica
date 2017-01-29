@@ -1,10 +1,9 @@
 
-.popup {
-  position: fixed;
-  display: block;
+@mixin popup {
   box-sizing: border-box;
+  display: block;
   width: 30em;
-  max-width: 80%;
+  max-width: 90%;
   height: auto;
   min-height: 4em;
   max-height: 80%;
@@ -13,7 +12,7 @@
   background-color: #ffffff;
   border: solid 1px rgba(0, 0, 0, 0.15);
   border-radius: 6px;
-  overflow-x: hidden;
+  // overflow-x: hidden;
   overflow-y: auto;
   @include card($z-popup, 2);
 
@@ -23,36 +22,34 @@
     margin: 0 -1.5em;
     top: 0;
     @include card($z-topbar, 1.5);
+  }
 
-    + section {
-      margin: 1.5em 0;
-
-      &:not(:last-child) {
-        margin-bottom: 1.5em;
-      }
-    }
+  > section {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
   }
 }
 
-.popup-series {
+@mixin popup-series {
   position: fixed;
   display: flex;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+  margin: 0 !important;
   height: 100%;
+  background-color: rgba(#fefefe, 0.95);
   justify-content: flex-start;
+  z-index: $z-popup;
   overflow-x: auto;
   overflow-y: hidden;
-  background-color: rgba(#fefefe, 0.95);
-  z-index: $z-popup;
 
   &::before, &::after {
     display: block;
     content: "";
     flex: 1 0 calc((100% - 30em) / 2);
-    min-width: 10%;
+    min-width: 5%;
   }
 
   .popup {
@@ -71,18 +68,20 @@
     box-sizing: border-box;
     flex-direction: column;
     flex: 0 0 30em;
-    max-width: 80%;
+    max-width: 90%;
     height: 100%;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: visible;
     overflow-y: auto;
+    margin-left: -1.5em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
 
-    padding-right: 1em;
     &:not(:last-child) {
-      margin-right: 1em;
+      margin-right: 0.5em;
     }
     &:last-child {
-      margin-right: -1em;
+      margin-right: -1.5em;
     }
 
     &::before,
@@ -93,10 +92,10 @@
       min-height: 10%;
     }
 
-    > .popup {
+    > * {
       max-width: 100% !important;
-      height: auto;
-      max-height: none;
+      height: auto !important;
+      max-height: none !important;
       flex: none;
 
       &:not(:last-child) {
@@ -105,4 +104,12 @@
       }
     }
   }
+}
+
+.popup {
+  @include popup;
+}
+
+.popup-series {
+  @include popup-series;
 }

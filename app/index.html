@@ -38,8 +38,8 @@
       <article class="jointsource">
         <h3 data-ica-jointsource-meta="title">Title</h3>
         <section class="sources">
-          <div class="hero">
-            <article class="jointsource-meta">
+          <article class="hero">
+            <section class="jointsource-meta">
               <p data-ica-jointsource-meta="intro"></p>
               <div data-ica-jointsource-meta-predicate="region">
                 <h4>Region</h4>
@@ -53,11 +53,11 @@
                 <h4>Themes</h4>
                 <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
               </div>
-            </article>
-            <div class="jointsource-status">
+            </section>
+            <section class="jointsource-status">
               <a data-ica-action="edit-jointsource">Edit</a>
-            </div>
-          </div>
+            </section>
+          </article>
         </section>
       </article>
     </template>
@@ -165,6 +165,43 @@
           <div class="waveform"></div>
         </section>
       </article>
+    </template>
+    <!-- Template: Articles -->
+    <template id="template-map">
+      <article class="map">
+
+      </article>
+    </template>
+    <template id="template-article">
+      <section class="popup-group">
+        <article class="article">
+          <header>
+            <h3 data-ica-jointsource-meta="title">Title</h3>
+            <section class="jointsource-status">
+              <a data-ica-action="edit-jointsource">Edit</a>
+              <a data-ica-action="close">Close</a>
+            </section>
+          </header>
+          <section class="sources">
+
+          </section>
+          <section class="jointsource-meta">
+            <p data-ica-jointsource-meta="intro"></p>
+            <div data-ica-jointsource-meta-predicate="region">
+              <h4>Region</h4>
+              <span data-ica-jointsource-meta="region"></span>
+            </div>
+            <div data-ica-jointsource-meta-predicate="participants">
+              <h4>Participants</h4>
+              <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
+            </div>
+            <div data-ica-jointsource-meta-predicate="themes">
+              <h4>Themes</h4>
+              <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
+            </div>
+          </section>
+        </article>
+      </section>
     </template>
     <!-- Template: Tokens -->
     <template id="template-tokens">
