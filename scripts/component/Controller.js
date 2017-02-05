@@ -136,7 +136,7 @@ function getElementIntProperty(element, property) {
 
 function removeElementProperty(element, property) {
   element.removeAttribute("data-ica-" + property);
-  element[property] = undefined;
+  delete element[property];
 }
 
 function cloneTemplate (selector) {
