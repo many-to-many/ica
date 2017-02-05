@@ -66,19 +66,20 @@ Component.defineMethod = function (name, definition) {
   this.prototype._methods[name] = definition;
   // Redefine method with applyMethod to call the user-defined method in _methods
   this.prototype[name] = function () {
-    thisComponent.applyMethod.apply(thisComponent, [this, name, arguments]);
+    return thisComponent.applyMethod.apply(thisComponent, [this, name, arguments]);
   };
 };
 
 Component.applyMethod = function (thisObject, name, args) {
   try {
     if (this.prototype._methods[name]) {
-      var _args = this.prototype._methods[name].apply(thisObject, args);
+      var value = this.prototype._methods[name].apply(thisObject, args);
     }
     if (this.parentComponent &&
       this.parentComponent.isMethodDefined(name)) {
-      this.parentComponent.prototype[name].apply(thisObject, _args || args);
+      return this.parentComponent.prototype[name].apply(thisObject, value || args);
     }
+    return value;
   } catch (err) {
     console.group("Error applying method");
     console.log("Target:", thisObject);
