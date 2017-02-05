@@ -21,7 +21,7 @@ var Component = function () {
 Component.components = {count: 0};
 
 Component.componentName = "Component";
-Component.parentComponent = undefined;
+Component.parentComponent = null;
 Component.childComponents = [];
 
 Component.toString = function () {
