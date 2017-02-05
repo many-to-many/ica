@@ -6,15 +6,14 @@ var browserSync = require('browser-sync').create();
 var config = require('./config.json');
 
 gulp.task('compass', function() {
-  gulp.src('styles/**/*.scss')
+  return gulp.src('styles/**/*.scss')
     .pipe(compass({
       css: 'styles',
-      sass: 'styles/sass',
-      task: 'watch'
+      sass: 'styles/sass'
     }))
 });
 
-gulp.task('css', function () {
+gulp.task('css', ['compass'], function () {
   return gulp.src('styles/**/*.css')
     .pipe(gulp.dest('app/assets'));
 });
@@ -33,15 +32,17 @@ gulp.task('js-watch', ['js'], function () {
   browserSync.reload('*.js');
 });
 
-gulp.task('proxy', ['compass', 'css', 'js'], function () {
+gulp.task('build', ['compass', 'css', 'js']);
+
+gulp.task('proxy', ['build'], function () {
   browserSync.init({
-      proxy: config.proxy
+    proxy: config.proxy
   });
 
   gulp.watch('**/*.html').on("change", function () {
     browserSync.reload();
   });
-  gulp.watch('styles/**/*.css', ['css-watch']);
+  gulp.watch('styles/**/*.scss', ['css-watch']);
   gulp.watch('scripts/**/*.js', ['js-watch']);
 });
 
