@@ -46,7 +46,7 @@ In this case, `someComponent.destroy()` will be called when `parentComponent.des
 someComponent.componentOf = null;
 ```
 
-`Component` is designed in the way that each `Component` instance has a dictionary that other `Component` instances may hook onto. By setting `componentOf`, the parent component at the same time retains a reference to the child component so that, (1) when parent component is destroyed, its child components will be destroyed together, and (2) when the child component is destroyed, the parent will release its reference. This design is also known to be used in `Model` (described later in this article).
+`Component` is designed in the way that each `Component` instance has a dictionary that other `Component` instances may hook onto. By setting `componentOf`, the parent component at the same time retains a reference to the child component so that, (1) when parent component is destroyed, its child components will be destroyed together, and (2) when a child component is destroyed, it will release its reference from and to the parent. Similar designs are also known to be used in `Model` and `Controller` (described later in this article).
 
 ### Extending and Using a `Component`
 
@@ -157,12 +157,139 @@ holder.colour == "blue"; // True
 
 ## MVC with `Component`
 
+With `Component`, `Model` and `Controller` are provided for streamlining the rendering of data, view being `Element`, e.g. `HTMLDivElement`, in general.
+
 ### `Model`
+
+`Model` creates a uniform interface for the `Controller` where each `Model` instance has a dictionary that other `Controller` instances may hook onto. This functions in a similar way as `componentOf`: If a `Model` instance is destroyed, its `Controller` instances will be either (1) destroyed if `Model` instance is strongly dependent by them (that `Controller` instance cannot live without the `Model` instance), or (2) requested to remove the reference from and to the `Model`.
+
+#### Life Cycle
+
+With `new Model()`, a `Model` instance follows the process listed below: (Inherited from `Component`; note the symmetry in the methods.)
+
+- `create()` *(inherited)*
+
+  - `construct()` *(extending, avoid calling)*
+
+  - `init()` *(inherited, avoid calling)*
+
+- `didUpdate()` - A method manually called by user that broadcasts all its controllers of the update.
+
+  It calls the `modelDidUpdate()` on `Controller` instances, so the views may be updated accordingly without explicitly calling `updateView()` on every `Controller` instances using this model.
+
+- `destroy(destroyViews = false)` *(extending)*
+
+  It either (1) propagates to destroy its dependent `Controller` instances and their views, when `destroyViews = true`, or (2) requests the `Controller` instances to release their references from and to the `Model` instance, by default.
+
+  - `uninit()` *(inherited, avoid calling)*
+
+  - `destruct()` *(extending, avoid calling)*
 
 #### `Handler`
 
-- `ElementHandler`
+`Handler` is a specific type of `Model` that handles objects or other values in JavaScript that are not an instance of `Model` to be used with `Controller`. A default `content` member is available for boxed data.
+
+Sub-components of `Handler` may include the following:
+
+- `ElementHandler` - A handler for `Element`, where `content` is aliased to `element` for abstraction.
 
 ### `Controller`
 
+`Controller` has a dictionary of all of its retaining `Model` instances. This functions in a similar way as `componentOf`: If a `Controller` instance is destroyed, its `Model` instances will be released, so that all the references from and to the `Model` will suspend. After then, a `Model` instance may no longer send messages to `Controller`, e.g. for `contentDidUpdate()`.
+
+#### Life Cycle
+
+With `new Controller()`, a `Controller` instance follows the process listed below: (Inherited from `Component`; note the symmetry in the methods.)
+
+- `create()` *(inherited)*
+
+  - `construct()` *(extending, avoid calling)*
+
+  - `init()` *(extending, avoid calling)*
+
+- `destroy(destroyViews = false)` *(extending)*
+
+  It removes all references from and to the `Model` instances, which previously may send content update requests.
+
+  - `uninit()` *(extending, avoid calling)*
+
+  - `destruct()` *(extending, avoid calling)*
+
+##### Interacting with `Model`
+
+- `retainModel(model)` - A method that creates references from and to a `Model` instance. Note that a `Controller` may watch updates on multiple `Model` instances at a same time. It is useful when a `Model` instance fires `didUpdate()` and that `Controller` will be notified of the event.
+
+  (See `SingleModelController` for ease of maintaining the retaining of `Model` instances.)
+
+- `releaseModel(model)` - A method that removes references from and to a `Model` instance. After then the `Model` instance may no longer broadcast message to this `Controller` instance.
+
+- `releaseAllModels()` - A method that releases all `Controller`-`Model` references.
+
+- `modelDidUpdate([model])` - A method, usually called by `Model` instances, that signals update events. It calls `updateView()` so that the content may be refreshed following the latest content from the model(s).
+
+##### Interacting with View
+
+- `initView()` - A method to init the view `Element`, for adding event listeners, etc.
+
+- `updateView()` - A method to update the view `Element`.
+
+- `uninitView()` - A method symmetrical to `initView()`, for removing event listeners, etc.
+
+  It is slightly unnecessary to implement a full-fledged `uninitView()` if `destroyView()` is called for non-reusable `Element` on the webpage.
+
+- `destroyView()` *(avoid calling)* - A method that removes the view `Element` from its parent node.
+
+The `initView()` and `updateView()` method resembles an animation loop, in which `initView()` is called every time a view is attached to a `Controller` instance and `updateView()` is manually called after some of the models is updated.
+
 #### `SingleModelController`
+
+A special `Controller` frequently used is `SingleModelController` that listens to one `Model` instance at a time. With which the only `Model` instance may be accessed through the member `model`.
+
+```JavaScript
+// Number Counter class
+
+var NumberCounter = Model.createComponent("Number Counter");
+
+NumberCounter.prototype.number = 0;
+
+NumberCounter.prototype.increment = function increment() {
+  this.number += 1;
+}
+
+// End of Number Counter class
+// Number Display class
+
+var NumberDisplay = SingleModelController.createComponent("Number Display");
+
+NumberDisplay.defineMethod("initView", function initView() {
+  if (!this.view) return; // View may be null
+
+  var span = document.createElement("p");
+  span.innerHTML = "Init view";
+  this.view.appendChild(span);
+});
+
+NumberDisplay.defineMethod("updateView", function updateView() {
+  if (!this.view || !this.model) return; // View or model may be null
+
+  var span = document.createElement("p");
+  span.innerHTML = "Update view, number now: " + this.model.number;
+  this.view.appendChild(span);
+});
+
+// End of Number Display class
+
+var counter = new NumberCounter();
+var display = new NumberDisplay(/* Model */ counter, /* View */ document.body);
+// Output: Init view
+//         Update view, number now: 0
+
+counter.increment();
+counter.didUpdate(); // Manually calling didUpdate()
+// Output: Update view, number now: 1
+
+counter.increment();
+counter.increment();
+counter.didUpdate(); // Manually calling didUpdate() so that changing the content does not fire the update event twice
+// Output: Update view, number now: 3
+```
