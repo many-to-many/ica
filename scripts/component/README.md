@@ -123,6 +123,32 @@ tiger.makeNoise("arh");
 // Return: Tigris meows: arh!!!!!
 ```
 
+### Aliases to Class Members
+
+This feature allows creating abstraction barriers on extended components. To create an alias on a class prototype, refer to the following script. Note that the aliases only are only effective on the instances.
+
+```JavaScript
+var ColorHolder = Component.createComponent("Color Holder");
+
+ColorHolder.defineMethod("init", function (color) {
+  this.color = color;
+  return [];
+});
+
+// Allow accessing member `color` with `colour` on the instance
+ColorHolder.defineAlias("color", "colour");
+
+var holder = new ColorHolder("red");
+holder.color == "red";  // True
+holder.colour == "red"; // True
+
+// Set color member to blue with alias
+holder.colour = "blue";
+
+holder.color == "blue";  // True
+holder.colour == "blue"; // True
+```
+
 ## MVC with `Component`
 
 ### `Model`
