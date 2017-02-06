@@ -11,36 +11,42 @@ Whenever creating a subclass, the constructor of the superclass is usually calle
 
 With `new Component()`, a `Component` instance follows the process listed below: (Note the symmetry in the methods.)
 
-- `Component.create()` - A pseudo-function constructor that is called every time an object is constructed, e.g. `new Component()`.
+- `create()` - A pseudo-function constructor that is called every time an object is constructed, e.g. `new Component()`.
 
   It calls `construct()`, and `init()` with the arguments passed into the constructor (the arguments passed into `new Component()`).
 
-  - `Component.construct()` - A generic method that initializes the instance, independent of the arguments.
+  - `construct()` *(avoid calling)* - A generic method that initializes the instance, independent of the arguments.
 
-    For example, in `Component.construct()`, a reference to the object is saved in `Component.components`. It is useful in `construct()` to create instance variables that are hard to be taken from the prototype, like objects including `Array`.
+    For example, in `construct()`, a reference to the object is saved in `Component.components`. It is useful in `construct()` to create instance variables that are hard to be taken from the prototype, like objects including `Array`.
 
-  - `Component.init()` - A method that initializes the instance, applied with the arguments passed into `new Component()`. The body of the function is usually object-specific.
+  - `init()` *(avoid calling)* - A method that initializes the instance, applied with the arguments passed into `new Component()`. The body of the function is usually object-specific.
 
-- `Component.destroy()` - A method to be called on a `Component` instance when it is no longer in use and ready for freeing. Calling `destroy()` on an `Component` instance will destroy its sub-components at the same time.
+- `destroy()` - A method to be called on a `Component` instance when it is no longer in use and ready for freeing. Calling `destroy()` on an `Component` instance will destroy its sub-components at the same time.
 
-  To set a parent component of some component, use the following script:
+  It calls `uninit()` and `destruct()`.
 
-  ```JavaScript
-  // To set parent component
-  // This also causes `parentComponent.components` to include someComponent
-  someComponent.componentOf = parentComponent;
-  ```
+  - `uninit()` *(avoid calling)* - A method that undos the effect from `init()`, uninitializing the instance members specific to the arguments.
 
-  In this case, `someComponent.destroy()` will be called when `parentComponent.destroy()`.
+  - `destruct()` *(avoid calling)* - A method that undos the effect from `construct()`.
 
-  ```JavaScript
-  // To reset
-  someComponent.componentOf = null;
-  ```
+### Instance's Parent Component
 
-  - `Component.uninit()` - A method that undos the effect from `init()`, uninitializing the instance members specific to the arguments.
+To set a parent component of some component, use the following script:
 
-  - `Component.destruct()` - A method that undos the effect from `construct()`.
+```JavaScript
+// To set parent component
+// This also causes `parentComponent.components` to include someComponent
+someComponent.componentOf = parentComponent;
+```
+
+In this case, `someComponent.destroy()` will be called when `parentComponent.destroy()`.
+
+```JavaScript
+// To reset
+someComponent.componentOf = null;
+```
+
+`Component` is designed in the way that each `Component` instance has a dictionary that other `Component` instances may hook onto. By setting `componentOf`, the parent component at the same time retains a reference to the child component so that, (1) when parent component is destroyed, its child components will be destroyed together, and (2) when the child component is destroyed, the parent will release its reference. This design is also known to be used in `Model` (described later in this article).
 
 ### Extending and Using a `Component`
 
