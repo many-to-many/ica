@@ -36,3 +36,7 @@
 1. Front-end build: `gulp build`.
 
   Or start the front-end build and watch for changes: `gulp` or `gulp proxy`.
+
+## Notes on Architecture
+
+- [`Component`](scripts/component/README.md): A syntactical sugar for the JavaScript class.
