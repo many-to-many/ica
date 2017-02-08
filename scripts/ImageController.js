@@ -25,9 +25,11 @@ ImageController.defineMethod("updateView", function updateView() {
 
   // Update the source of the view
   var img = this.view.querySelector(".image-view");
-  img.src = this.blobHandler.blob instanceof Blob
-    ? this.blobHandler.url
-    : this.blobHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio);
+  img.src = this.blobHandler.blob
+    ? this.blobHandler.blob instanceof Blob
+      ? this.blobHandler.url
+      : this.blobHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
+    : "";
 });
 
 ImageController.defineMethod("uninitView", function uninitView() {
