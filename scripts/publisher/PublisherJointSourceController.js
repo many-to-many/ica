@@ -50,6 +50,9 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
         case "add-source/audio":
           new AudioSource(null, this.controller.jointSource);
           break;
+        case "add-source/video":
+          new VideoSource(null, this.controller.jointSource);
+          break;
         default:
           return;
       }
@@ -101,6 +104,12 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
         var element = fragment.querySelector(".publisher-source");
         this.insertBefore(element, this.querySelector(".publisher-control"));
         new PublisherAudioSourceController(source, element).componentOf = this.controller;
+        break;
+      case VideoSource:
+        var fragment = PublisherVideoSourceController.createViewFragment();
+        var element = fragment.querySelector(".publisher-source");
+        this.insertBefore(element, this.querySelector(".publisher-control"));
+        new PublisherVideoSourceController(source, element).componentOf = this.controller;
         break;
       case TextSource:
       default:

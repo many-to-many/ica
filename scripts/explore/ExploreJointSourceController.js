@@ -75,6 +75,12 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
         this.querySelector(".sources").appendChild(fragment);
         new ExploreAudioSourceController(source, element).componentOf = this.controller;
         break;
+      case VideoSource:
+        var fragment = ExploreVideoSourceController.createViewFragment();
+        var element = fragment.querySelector(".source");
+        this.querySelector(".sources").appendChild(fragment);
+        new ExploreVideoSourceController(source, element).componentOf = this.controller;
+        break;
       case TextSource:
       default:
         var fragment = ExploreTextSourceController.createViewFragment();

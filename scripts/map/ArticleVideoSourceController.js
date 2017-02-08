@@ -1,0 +1,4 @@
+
+var ArticleVideoSourceController = VideoSourceController.createComponent("ArticleVideoSourceController");
+
+ArticleVideoSourceController.createViewFragment = VideoSourceController.createViewFragment;

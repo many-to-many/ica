@@ -1,12 +1,5 @@
 
-var AudioSource = BlobSource.createComponent("AudioSource");
-
-AudioSource.defineMethod("construct", function construct() {
-
-  if (!this.blobHandler) this.blobHandler = new BlobHandler();
-  this.blobHandler.stream = true;
-
-});
+var AudioSource = BlobStreamSource.createComponent("AudioSource");
 
 // AudioSource.prototype.extractConstructor = AudioExtract;
 

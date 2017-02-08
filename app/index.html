@@ -25,7 +25,13 @@
     <!-- Template: Audio source -->
     <template id="template-audiosource">
       <div class="source audiosource">
-        <p>Audio file: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+        <p>Audio: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+      </div>
+    </template>
+    <!-- Template: Audio source -->
+    <template id="template-videosource">
+      <div class="source videosource">
+        <p>Video: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
       </div>
     </template>
     <!-- Template: Explore -->
@@ -114,6 +120,7 @@
               <input type="button" value="Text" data-ica-action="add-source/text">
               <input type="button" value="Image" data-ica-action="add-source/image">
               <input type="button" value="Audio" data-ica-action="add-source/audio">
+              <input type="button" value="Video" data-ica-action="add-source/video">
             </section>
           </article>
           <article class="popup">
@@ -163,6 +170,18 @@
         <section>
           <input type="file" data-ica-source-content accept="audio/mpeg,audio/x-m4a">
           <div class="waveform"></div>
+        </section>
+      </article>
+    </template>
+    <template id="template-publisher-videosource">
+      <article class="publisher-source publisher-videosource popup">
+        <header class="topbar">
+          <h3>Video</h3>
+          <a class="topbar-item" data-ica-action="select-file">Select</a>
+          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+        </header>
+        <section>
+          <input type="file" data-ica-source-content accept="video/*">
         </section>
       </article>
     </template>

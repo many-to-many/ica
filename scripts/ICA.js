@@ -364,6 +364,9 @@ function touchSources(dataSources, jointSource) {
         case "audio":
           source = new AudioSource(dataSource.revision.content, jointSource, sourceId);
           break;
+        case "video":
+          source = new VideoSource(dataSource.revision.content, jointSource, sourceId);
+          break;
         case "text":
         default:
           source = new TextSource(dataSource.revision.content, jointSource, sourceId);

@@ -5,7 +5,8 @@
   $SUPPORTED_MIME_TYPES = [
     "image/jpeg",
     "audio/mpeg",
-    "audio/x-m4a"
+    "audio/x-m4a",
+    "video/x-msvideo"
   ];
 
   function prepareFile($mime, $size=0) {

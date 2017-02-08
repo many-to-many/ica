@@ -5,7 +5,7 @@ AudioSourceController.createViewFragment = function (source) {
   return cloneTemplate("#template-audiosource");
 };
 
-AudioSourceController.defineMethod("updateView", function updateView(length = 0) {
+AudioSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelector("a[data-ica-content]").textContent = this.source.blobHandler.url;

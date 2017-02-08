@@ -8,6 +8,7 @@
   define("SOURCE_TYPE_TEXT", 1);
   define("SOURCE_TYPE_AUDIO", 2);
   define("SOURCE_TYPE_IMAGE", 3);
+  define("SOURCE_TYPE_VIDEO", 4);
 
   class JointSource {
 
@@ -45,6 +46,8 @@
           return SOURCE_TYPE_IMAGE;
         case "audio":
           return SOURCE_TYPE_AUDIO;
+        case "video":
+          return SOURCE_TYPE_VIDEO;
         case "text":
         default:
           return SOURCE_TYPE_TEXT;
@@ -58,6 +61,9 @@
           break;
         case SOURCE_TYPE_AUDIO:
           $this->type = "audio";
+          break;
+        case SOURCE_TYPE_VIDEO:
+          $this->type = "video";
           break;
         case SOURCE_TYPE_TEXT:
         default:
