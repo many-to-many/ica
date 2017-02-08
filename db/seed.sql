@@ -35,6 +35,7 @@ CREATE TABLE `ica_files` (
   `author_id` int(11) unsigned DEFAULT NULL,
   `path` varchar(30) NOT NULL DEFAULT '',
   `mime` varchar(20) NOT NULL DEFAULT '',
+  `size` bigint(11) NOT NULL,
   `lastupdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `author_id` (`author_id`),
