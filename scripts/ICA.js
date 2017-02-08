@@ -37,11 +37,11 @@ Object.defineProperty(ICA, "accountSession", {
   }
 });
 
-ICA.request = function (method, path, data, api = true, type = "") {
+ICA.request = function (method, url, headers, data, type="json") {
   return new Promise(function (resolve, reject) {
     var x = new XMLHttpRequest();
-    x.open(method, (api ? this.api : "") + path, true);
-    x.responseType = type;
+    x.open(method, url, true);
+    if (type && type != "x") x.responseType = type;
     if (x.upload) x.upload.onprogress = function (e) {
       if (e.lengthComputable) {
         var percentComplete = (e.loaded / e.total) * 100;
@@ -56,32 +56,30 @@ ICA.request = function (method, path, data, api = true, type = "") {
     };
     x.onreadystatechange = function (e) {
       if (x.readyState == 4) {
+        if (type == "x") {
+          resolve(x);
+          return;
+        }
         if (x.status == 200) {
-          var data;
           switch (x.responseType) {
             case "blob":
-              data = new Blob([x.response], {type: x.getResponseHeader("Content-Type") || "text/plain"});
+              resolve(new Blob(
+                [x.response],
+                {
+                  type: x.getResponseHeader("Content-Type")
+                    || "text/plain"
+                }));
+              break;
+            case "json":
+              resolve(x.response);
               break;
             default:
               if (x.getResponseHeader("Content-Type") == "application/json") {
-                try {
-                  data = JSON.parse(x.responseText);
-                } catch(e) {
-                  reject(new Error("Error parsing server response:\n" + x.responseText));
-                }
-                if (data.error) {
-                  console.warn("Request caught error:", data);
-                  reject(new Error(data.error));
-                  return;
-                }
-                if (data.warn) {
-                  console.warn("Request caught warning:", data);
-                }
-              } else data = {};
+                resolve(JSON.parse(x.responseText));
+                break;
+              }
+              resolve(x.responseText);
           }
-          resolve(data);
-        } else if (x.status == 400) {
-          reject(new Error("There was an error processing the token"));
         } else {
           reject(new Error("something else other than 200 was returned"));
         }
@@ -90,33 +88,118 @@ ICA.request = function (method, path, data, api = true, type = "") {
     if (this.accountSession) {
       x.setRequestHeader("Authorization", "Bearer " + this.accountSession);
     }
-    if (!data) data = {};
-    if (data instanceof File) {
-      // if (data.size > 16 * 1024 * 1024) throw new Error("File size over 16 MB");
-      x.setRequestHeader("Content-Type", data.type);
-      x.send(data);
-    } else {
-      x.setRequestHeader("Content-Type", "application/json");
-      x.send(JSON.stringify(data));
+    if (headers) for (var header in headers) {
+      x.setRequestHeader(header, headers[header]);
     }
-    console.log("Request: {0} {1}".format(method, path));
+    x.send(data);
+    console.log("Request: {0} {1}".format(method, url));
   }.bind(this));
+}
+
+ICA.requestAPI = function (method, path, data) {
+  return ICA.request(
+    method,
+    this.api + path,
+    {
+      "Content-Type": "application/json"
+    },
+    JSON.stringify(data))
+      .then(function (data) {
+        if (typeof data == "object") {
+          if (data.error) {
+            console.warn("Request caught error:", data);
+            return Promise.reject(new Error(data.error));
+          }
+          if (data.warn) {
+            console.warn("Request caught warning:", data);
+          }
+        }
+        return data;
+      });
+};
+
+ICA.uploadFile = function (file) {
+  return ICA.uploadFileChunked(file);
+  // return ICA.request(
+  //   "post",
+  //   this.api + "/files/",
+  //   {
+  //     "Content-Type": file.type
+  //   },
+  //   blob
+  // )
+  //   .then(function (fileId) {
+  //     console.log("ICA: File uploaded");
+  //     return fileId;
+  //   });
+};
+
+ICA.uploadFileChunked = function (file) {
+  return ICA.request(
+    "post",
+    this.api + "/files/",
+    {
+      "X-Upload-Content-Type": file.type,
+      "X-Upload-Content-Length": file.size
+    },
+    null,
+    "x"
+  )
+    .then(function (x) {
+      if (x.status !== 200) return Promise.reject(new Error("ICA: Error with file upload request"))
+      if (!x.response) return Promise.reject(new Error("ICA: Failed to upload file"));
+      var fileId = x.response;
+
+      function putFile(url, byteStart = 0, byteLength = 5 * 1024 * 1024) {
+        var byteEnd = Math.min(file.size, byteStart + byteLength);
+        return ICA.request(
+          "put",
+          url,
+          {
+            "Content-Type": file.type,
+            "Content-Range": "bytes {0}-{1}/{2}".format(byteStart, byteEnd - 1, file.size)
+          },
+          file.slice(byteStart, byteEnd),
+          "x"
+        )
+          .then(function (x) {
+            if (x.status == 200) {
+              // File upload completed
+              console.log("ICA: File uploaded");
+              return fileId;
+            } else if (x.status == 308) {
+              // File upload incomplete
+              var matches = x.getResponseHeader("Range").match(/(\d*)-(\d*)/),
+                byteLast = parseInt(matches[2]);
+              console.log("ICA: File upload incomplete: {0}%".format(100 * (byteLast + 1) / file.size));
+              return putFile(url, byteLast + 1, byteLength);
+            } else {
+              // Error uploading file chunk
+              return Promise.reject(); // TODO: Allow retry
+            }
+          });
+      }
+
+      // Start uploading file chunks
+      return putFile(this.api + "/files/" + fileId);
+      // return fileId;
+    }.bind(this));
 };
 
 ICA.get = function (path, params) {
-  return this.request("GET", path, params);
+  return this.requestAPI("GET", path, params);
 };
 
 ICA.post = function (path, params) {
-  return this.request("POST", path, params);
+  return this.requestAPI("POST", path, params);
 };
 
 ICA.put = function (path, params) {
-  return this.request("PUT", path, params);
+  return this.requestAPI("PUT", path, params);
 };
 
 ICA.delete = function (path, params) {
-  return this.request("DELETE", path, params);
+  return this.requestAPI("DELETE", path, params);
 };
 
 ICA.getJointSources = function () {
@@ -247,14 +330,6 @@ ICA.unpublishSource = function (source) {
     .then(function () {
       source.destroy(true);
       console.log("ICA: Source deleted");
-    });
-};
-
-ICA.uploadFile = function (file) {
-  return ICA.post("/files/", file)
-    .then(function (fileId) {
-      console.log("ICA: File uploaded");
-      return fileId;
     });
 };
 

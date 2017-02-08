@@ -27,6 +27,11 @@
 
   }
 
+  function respondHeaderResponseCode($code, $text) {
+    $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
+    header("{$protocol} {$code} {$text}");
+  }
+
   function respondJSON($data) {
 
     exit(json_encode($data));
@@ -44,7 +49,7 @@
       $offset = $matches[1] ? intval($matches[1]) : 0;
       $length = ($matches[2] ? intval($matches[2]) : $filesize - 1) - $offset + 1;
 
-      header('HTTP/1.1 206 Partial Content');
+      respondHeaderResponseCode(206, "Partial Content");
       header('Content-Range: bytes ' . $offset . '-' . ($offset + $length - 1) . '/' . $filesize);
     } else {
       $offset = 0;
