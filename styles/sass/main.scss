@@ -12,7 +12,7 @@ $color-background: #fdfdfd;
 $font-sans-serif: Roboto, sans-serif;
 $font-serif: Charter, serif;
 
-/* Z index */
+/* Z-Index & Effects */
 
 @mixin card($z-index, $shadow-index) {
   z-index: $z-index;
@@ -31,33 +31,16 @@ $z-popup: 8;
 @import "normalize";
 
 @import "form";
+@import "tokens";
 
 @import "topbar";
 @import "popup";
+@import "sources";
 
 @import "publisher";
 @import "explore";
 @import "map";
 
-@import "sources/source";
-@import "sources/jointsource";
-@import "sources/textsource";
-@import "sources/imagesource";
-@import "sources/audiosource";
-
 @import "waveform";
 
 @import "app";
-
-.placeholder {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  cursor: default;
-}
