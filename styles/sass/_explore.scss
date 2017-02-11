@@ -7,7 +7,8 @@ $column-spacing: 8px;
   flex-direction: row;
   flex-wrap: wrap;
   overflow-x: hidden;
-  padding: $column-spacing 0;
+  padding: ($column-spacing / 2) 0;
+  cursor: default;
 
   > * {
     flex: 0 0 $column-width - $column-spacing;
@@ -40,10 +41,6 @@ $column-spacing: 8px;
       flex: 0 0 auto;
     }
 
-    [data-ica-jointsource-meta] {
-      -webkit-user-select: text;
-    }
-
     > .jointsource-container {
       flex: auto;
       display: flex;
@@ -64,7 +61,6 @@ $column-spacing: 8px;
           font-weight: normal;
           text-transform: uppercase;
           color: lighten($color-text, 20%);
-          -webkit-user-select: text;
         }
 
         > * {
@@ -84,29 +80,31 @@ $column-spacing: 8px;
       }
     }
 
-    $color-text-light: #e8e8e8;
-
     &.dark,
     &[data-ica-jointsource-feature="image"] {
+      // background-color: mix($color-primary, #000, 30%);
       background-color: #555;
       color: $color-text-light;
+      text-shadow: 0 0 1em rgba(0, 0, 0, 0.20);
 
-      > section {
-        color: darken($color-text-light, 10%);
-      }
+      > .jointsource-container {
+        color: rgba($color-text-light, 0.90);
 
-      > .jointsource-meta {
-        h4 {
-          color: darken($color-text-light, 20%);
+        > .jointsource-meta {
+
+          h4 {
+            color: rgba($color-text-light, 0.80);
+          }
         }
       }
 
       > .jointsource-status {
-        color: darken($color-text-light, 40%);
+        color: rgba($color-text-light, 0.60);
       }
     }
 
     &[data-ica-jointsource-feature="image"] {
+      // background-blend-mode: luminosity;
       background-blend-mode: multiply;
       background-size: cover;
       background-position: center;
