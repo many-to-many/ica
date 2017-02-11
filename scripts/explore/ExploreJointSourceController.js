@@ -39,6 +39,15 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
 ExploreJointSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
+  // Reset view
+  var parentNode = this.view.parentNode;
+  var fragment = this.constructor.createViewFragment();
+  var element = fragment.querySelector(".jointsource");
+  parentNode.replaceChild(fragment, this.view);
+  this.uninitView();
+  this._view = element;
+  this.initView(false);
+
   this.view.querySelectorAll("[data-ica-jointsource-meta-predicate]").forEach(function (element) {
     var metaPredicate = getElementProperty(element, "jointsource-meta-predicate");
     if (empty(this.jointSource.meta[metaPredicate])) {
