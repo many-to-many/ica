@@ -1,4 +1,0 @@
-
-var ExploreVideoSourceController = VideoSourceController.createComponent("ExploreVideoSourceController");
-
-ExploreVideoSourceController.createViewFragment = VideoSourceController.createViewFragment;

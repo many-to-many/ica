@@ -1,0 +1,177 @@
+
+.article {
+  
+  .jointsource {
+    box-sizing: border-box;
+    position: relative;
+    padding: 1.5em;
+    border-radius: 3px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    width: 284px;
+    height: 284px;
+    overflow: hidden;
+    border: solid 1px #e8e8e8;
+    margin: 8px;
+    padding: 0 16px;
+    @include lift(0, 2);
+    transition: box-shadow ease 0.3s, border-color ease 0.3s;
+
+    &:hover {
+      @include lift(1, 4);
+      border-color: #d0d0d0;
+    }
+
+    &:active {
+      border-color: mix(#e8e8e8, $color-accent, 40%);
+    }
+
+    > h3 {
+      flex: 0 0 auto;
+    }
+
+    > .sources {
+      display: flex;
+      box-sizing: border-box;
+      margin: 0 -16px;
+      height: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      font-size: 0.9em;
+
+      &:before,
+      &:after {
+        content: "";
+        display: block;
+        flex: 0 0 15px; // Taking account of the border
+      }
+
+      > * {
+        box-sizing: border-box;
+        position: relative;
+        flex: 0 0 252px;
+        vertical-align: top;
+
+        &:not(:last-child) {
+          margin-right: 4px;
+        }
+      }
+
+      > .source {
+        @include lift(0, 2);
+        border-bottom: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border: solid 1px #ddd;
+        overflow: hidden;
+      }
+
+      > .hero {
+        display: flex;
+        flex-direction: column;
+        // font-size: 0.9em;
+        line-height: 1.25;
+        color: #666;
+
+        [data-ica-jointsource-meta] {
+          -webkit-user-select: text;
+        }
+
+        > .jointsource-meta {
+          flex: 1 1 auto;
+          height: auto;
+          padding-right: 1em;
+          overflow-x: hidden;
+          overflow-y: auto;
+          @include fade-bottom;
+
+          h4 {
+            margin: 1em 0 0.5em 0;
+            font-size: 0.8em;
+            font-weight: normal;
+            text-transform: uppercase;
+            color: lighten($color-text, 20%);
+            -webkit-user-select: text;
+          }
+
+          > * {
+            margin: 0.5em 0;
+          }
+        }
+
+        > .jointsource-status {
+          height: auto;
+          padding: 0.5em 0 1em;
+          color: lighten($color-text, 40%);
+          text-transform: lowercase;
+
+          > :not(:last-child) {
+            margin-right: 0.25em;
+          }
+        }
+      }
+    }
+  }
+
+  .source {
+    box-sizing: border-box;
+    position: relative;
+    padding: 1.5em;
+    border-radius: 3px;
+    background-color: #fff;
+
+    &.textsource {
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+      // text-align: justify;
+
+      & > p {
+        margin: 1.25em 0;
+        line-height: 1.5;
+
+        & > span {
+          display: inline;
+          padding: 0.1em 0;
+          transition: border-color ease 0.3s;
+          -webkit-user-select: text;
+
+          &:not([data-ica-textsource-extract=""]) {
+            background-color: rgba($color-primary, 0.40);
+            border-bottom: solid 3px transparent;
+
+            // Debugging purpose
+            // &::before {
+            //   content: attr(data-ica-textsource-extract);
+            //   position: absolute;
+            //   font-size: 0.5em;
+            //   margin-top: -1em;
+            //   font-style: italic;
+            //   color: #444;
+            // }
+          }
+        }
+      }
+    }
+
+    &.imagesource {
+      padding: 0;
+
+      > img {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+      }
+    }
+
+    &.audiosource {
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+    }
+
+    &.videosource {
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+    }
+  }
+}

@@ -22,11 +22,6 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
     new PublisherJointSourceController(this.controller.jointSource, element);
   }.bind(this.view));
 
-  this.view.querySelector(".jointsource-meta").addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  });
-
   this.view.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -57,38 +52,20 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
     element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")];
   }.bind(this));
 
-  this.jointSource.forEachSource(function (source) {
-    // Check existing element
-    if (this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
+  var featuredSource = this.jointSource.sources[Object.keys(this.jointSource.sources)[0]];
 
-    // Create new view
-    switch (source.constructor) {
-      case ImageSource:
-        var fragment = ExploreImageSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ExploreImageSourceController(source, element).componentOf = this.controller;
-        break;
-      case AudioSource:
-        var fragment = ExploreAudioSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ExploreAudioSourceController(source, element).componentOf = this.controller;
-        break;
-      case VideoSource:
-        var fragment = ExploreVideoSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ExploreVideoSourceController(source, element).componentOf = this.controller;
-        break;
-      case TextSource:
-      default:
-        var fragment = ExploreTextSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ExploreTextSourceController(source, element).componentOf = this.controller;
-    }
-  }.bind(this.view));
+  switch (featuredSource.constructor) {
+    case ImageSource:
+      setElementProperty(this.view, "jointsource-feature", "image");
+      this.view.style.backgroundImage = featuredSource.content
+        ? "url(" + (
+          featuredSource.blobHandler.blob instanceof Blob
+            ? featuredSource.blobHandler.url
+            : featuredSource.blobHandler.url + "?width=" + (this.view.offsetWidth * this.devicePixelRatio)
+          ) + ")"
+        : "";
+      break;
+  }
 });
 
 ExploreJointSourceController.defineMethod("uninitView", function uninitView() {
