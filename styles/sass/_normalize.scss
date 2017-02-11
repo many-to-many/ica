@@ -54,3 +54,7 @@ form {
 ::selection {
   background-color: rgba($color-accent, 0.40);
 }
+
+.color-accent {
+  color: $color-accent !important;
+}
