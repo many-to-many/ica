@@ -76,7 +76,7 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
     this.controller.unpublish();
   }.bind(this.view));
 
-  this.view.addEventListener("submit", function (e) {
+  this.view.querySelector("[data-ica-action='publish']").addEventListener("click", function (e) {
     e.preventDefault();
 
     this.controller.publish();
@@ -96,26 +96,26 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
       case ImageSource:
         var fragment = PublisherImageSourceController.createViewFragment();
         var element = fragment.querySelector(".publisher-source");
-        this.insertBefore(element, this.querySelector(".publisher-control"));
+        this.querySelector(".publisher-sources").appendChild(element);
         new PublisherImageSourceController(source, element).componentOf = this.controller;
         break;
       case AudioSource:
         var fragment = PublisherAudioSourceController.createViewFragment();
         var element = fragment.querySelector(".publisher-source");
-        this.insertBefore(element, this.querySelector(".publisher-control"));
+        this.querySelector(".publisher-sources").appendChild(element);
         new PublisherAudioSourceController(source, element).componentOf = this.controller;
         break;
       case VideoSource:
         var fragment = PublisherVideoSourceController.createViewFragment();
         var element = fragment.querySelector(".publisher-source");
-        this.insertBefore(element, this.querySelector(".publisher-control"));
+        this.querySelector(".publisher-sources").appendChild(element);
         new PublisherVideoSourceController(source, element).componentOf = this.controller;
         break;
       case TextSource:
       default:
         var fragment = PublisherTextSourceController.createViewFragment();
         var element = fragment.querySelector(".publisher-source");
-        this.insertBefore(element, this.querySelector(".publisher-control"));
+        this.querySelector(".publisher-sources").appendChild(element);
         new PublisherTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));

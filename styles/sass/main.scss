@@ -14,7 +14,7 @@ $font-serif: Charter, serif;
 
 /* Z-Index & Effects */
 
-@mixin card($z-index, $shadow-index) {
+@mixin lift($z-index, $shadow-index) {
   z-index: $z-index;
   box-shadow: 0 unquote(($shadow-index / 2) + "px") unquote(($shadow-index * $shadow-index / 2) + "px") rgba(0, 0, 0, 0.05);
 }
@@ -28,19 +28,22 @@ $z-popup: 8;
 
 /* Main */
 
+/* Normalize */
 @import "normalize";
 
-@import "form";
+/* Primitive components */
 @import "tokens";
+@import "card";
 
+/* Larger components */
+@import "form";
 @import "topbar";
 @import "popup";
-@import "sources";
+@import "waveform";
 
+/* App */
+@import "sources";
 @import "publisher";
 @import "explore";
 @import "map";
-
-@import "waveform";
-
 @import "app";

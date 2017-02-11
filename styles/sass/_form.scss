@@ -2,36 +2,14 @@
 form {
   position: relative;
 
-  table {
-    margin-top: -1em;
-    width: 100%;
-    border: none;
-    border-collapse: collapse;
-
-    th, td {
-      position: relative;
-      font-weight: normal;
-      vertical-align: top;
-      padding: 0;
-    }
-
-    th {
-      text-align: right;
-      width: 1px;
-    }
-
-    & + div {
-      margin-top: 1.5em;
-      text-align: right;
-    }
-  }
-
   label {
-    display: inline-block;
+    display: block;
     box-sizing: border-box;
-    font-size: 1em;
+    font-size: 0.8em;
     line-height: 1.5;
-    padding: 0.75em 0.75em 0.75em 0;
+    margin-top: 0.75em;
+    text-transform: uppercase;
+    color: lighten($color-text, 20%);
   }
 
   input,
@@ -64,36 +42,42 @@ form {
 
     &[type="submit"],
     &[type="button"] {
-      display: inline-block;
+      display: block;
       width: auto;
       padding-left: 1em;
       padding-right: 1em;
       margin: 0 0.5em 0.5em 0;
-      border-color: transparent;
-      color: #fff !important;
+      background-color: #fefefe;
       border-radius: 6px;
       font-weight: bold;
       transition: background-color ease 0.1s;
 
       &:hover {
-        @include card(0, 2);
+        @include lift(0, 3);
       }
 
-      &[type="submit"] {
-        background-color: $color-accent;
+      $button-color: lighten($color-text, 25%);
+
+      &[type="button"] {
+        border-color: $button-color;
+        color: $button-color !important;
 
         &:hover,
         &.active {
-          background-color: darken($color-accent, 4%);
+          border-color: $button-color;
+          background-color: mix($button-color, #fff, 5%);
         }
       }
 
-      &[type="button"] {
-        background-color: #afafaf;
+      &[type="submit"],
+      &.color-accent {
+        border-color: $color-accent;
+        color: $color-accent !important;
 
         &:hover,
         &.active {
-          background-color: darken(#afafaf, 4%);
+          border-color: $color-accent;
+          background-color: mix($color-accent, #fff, 5%);
         }
       }
     }
@@ -105,7 +89,7 @@ form {
   }
 
   .tokens {
-    padding: calc(0.75em - 1px) 0.25em;
+    padding: calc(0.75em - 1px) 0.5em;
     border: solid 1px transparent;
     border-bottom: solid 1px #cdcdcd;
     min-height: 3em;

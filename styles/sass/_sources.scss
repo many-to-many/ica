@@ -17,11 +17,11 @@
   border: solid 1px #e8e8e8;
   margin: 8px;
   padding: 0 16px;
-  @include card(0, 2);
+  @include lift(0, 2);
   transition: box-shadow ease 0.3s, border-color ease 0.3s;
 
   &:hover {
-    @include card(1, 4);
+    @include lift(1, 4);
     border-color: #d0d0d0;
   }
 
@@ -30,9 +30,7 @@
   }
 
   > h3 {
-    display: block;
     flex: 0 0 auto;
-    -webkit-user-select: text;
   }
 
   > .sources {
@@ -63,7 +61,7 @@
     }
 
     > .source {
-      @include card(0, 2);
+      @include lift(0, 2);
       border-bottom: 0 !important;
       border-bottom-left-radius: 0 !important;
       border-bottom-right-radius: 0 !important;

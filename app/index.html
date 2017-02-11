@@ -76,68 +76,43 @@
     </template>
     <!-- Template: Publisher -->
     <template id="template-publisher">
-      <form class="publisher popup-series">
-        <article class="publisher-meta popup">
+      <form class="publisher">
+        <article class="publisher-sources series"></article>
+        <article class="publisher-control">
           <header class="topbar">
-            <h3>Metadata</h3>
+            <h3>Publisher</h3>
+            <a class="topbar-item" data-ica-action="publish">Publish</a>
+            <a class="topbar-item" data-ica-action="abort">Close</a>
           </header>
-          <section>
-            <table>
-              <tbody>
-                <tr>
-                  <th><label>Title</label></th>
-                  <td><input data-ica-jointsource-meta="title" placeholder="Title"></td>
-                </tr>
-                <tr>
-                  <th><label>Region</label></th>
-                  <td><input data-ica-jointsource-meta="region" type="text" placeholder="Region"></td>
-                </tr>
-                <tr>
-                  <th><label>Participants</label></th>
-                  <td>
-                    <textarea data-ica-jointsource-meta="participants" data-ica-format="tokens" placeholder="Participants"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <th><label>Themes</label></th>
-                  <td><textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" placeholder="Themes"></textarea></td>
-                </tr>
-                <tr>
-                  <th><label>Intro</label></th>
-                  <td><textarea data-ica-jointsource-meta="intro" placeholder="Intro" rows="1"></textarea></td>
-                </tr>
-              </tbody>
-            </table>
+          <section class="publisher-meta">
+            <h4>About the Conversation</h4>
+            <label>Title</label>
+            <input data-ica-jointsource-meta="title" placeholder="Title">
+            <label>Region</label>
+            <input data-ica-jointsource-meta="region" type="text" placeholder="Region">
+            <label>Participants</label>
+            <textarea data-ica-jointsource-meta="participants" data-ica-format="tokens" placeholder="Participants"></textarea>
+            <label>Themes</label>
+            <textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" placeholder="Themes"></textarea>
+            <label>Intro</label>
+            <textarea data-ica-jointsource-meta="intro" placeholder="Intro" rows="1"></textarea>
           </section>
-        </article>
-        <article class="publisher-control popup-group">
-          <article class="popup">
-            <header class="topbar">
-              <h3>Add Source</h3>
-            </header>
-            <section>
-              <p>Add at least one piece of source content.</p>
-              <input type="button" value="Text" data-ica-action="add-source/text">
-              <input type="button" value="Image" data-ica-action="add-source/image">
-              <input type="button" value="Audio" data-ica-action="add-source/audio">
-              <input type="button" value="Video" data-ica-action="add-source/video">
-            </section>
-          </article>
-          <article class="popup">
-            <header class="topbar">
-              <h3>Joint Source Control</h3>
-            </header>
-            <section>
-              <input type="submit" value="Publish">
-              <input type="button" value="Unpublish" data-ica-action="unpublish">
-              <input type="button" value="Cancel" data-ica-action="abort">
-            </section>
-          </article>
+          <section>
+            <h4>Add Item</h4>
+            <input type="button" value="Plain Text" data-ica-action="add-source/text">
+            <input type="button" value="Photo" data-ica-action="add-source/image">
+            <input type="button" value="Sound Recording" data-ica-action="add-source/audio">
+            <input type="button" value="Video Clip" data-ica-action="add-source/video">
+          </section>
+          <section data-ica-jointsource-filter="published">
+            <h4 class="color-accent">Danger Zone</h4>
+            <input type="button" class="color-accent" value="Unpublish" data-ica-action="unpublish">
+          </section>
         </article>
       </form>
     </template>
     <template id="template-publisher-textsource">
-      <article class="publisher-source publisher-textsource popup">
+      <article class="publisher-source publisher-textsource card">
         <header class="topbar">
           <h3>Text</h3>
           <a class="topbar-item" data-ica-action="remove-source">Remove</a>
@@ -148,7 +123,7 @@
       </article>
     </template>
     <template id="template-publisher-imagesource">
-      <article class="publisher-source publisher-imagesource popup">
+      <article class="publisher-source publisher-imagesource card">
         <header class="topbar">
           <h3>Image</h3>
           <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -161,7 +136,7 @@
       </article>
     </template>
     <template id="template-publisher-audiosource">
-      <article class="publisher-source publisher-audiosource popup">
+      <article class="publisher-source publisher-audiosource card">
         <header class="topbar">
           <h3>Audio</h3>
           <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -174,7 +149,7 @@
       </article>
     </template>
     <template id="template-publisher-videosource">
-      <article class="publisher-source publisher-videosource popup">
+      <article class="publisher-source publisher-videosource card">
         <header class="topbar">
           <h3>Video</h3>
           <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -192,7 +167,7 @@
       </article>
     </template>
     <template id="template-article">
-      <section class="popup-group">
+      <section class="card-group">
         <article class="article">
           <header>
             <h3 data-ica-jointsource-meta="title">Title</h3>
