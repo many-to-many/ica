@@ -23,7 +23,7 @@ ICA.login = function () {
       console.error("Failed to open popup window");
     }
   });
-}
+};
 
 Object.defineProperty(ICA, "accountId", {
   get: function () {
@@ -37,11 +37,11 @@ Object.defineProperty(ICA, "accountSession", {
   }
 });
 
-ICA.request = function (method, url, headers, data, type="json") {
+ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false) {
   return new Promise(function (resolve, reject) {
     var x = new XMLHttpRequest();
     x.open(method, url, true);
-    if (type && type != "x") x.responseType = type;
+    if (responseType && responseType != "x") x.responseType = responseType;
     if (x.upload) x.upload.onprogress = function (e) {
       if (e.lengthComputable) {
         var percentComplete = (e.loaded / e.total) * 100;
@@ -54,34 +54,34 @@ ICA.request = function (method, url, headers, data, type="json") {
         console.log("Responding: {0}%".format(percentComplete));
       }
     };
-    x.onreadystatechange = function (e) {
+    x.onreadystatechange = function () {
       if (x.readyState == 4) {
-        if (type == "x") {
+        if (returnXHR) {
           resolve(x);
           return;
         }
         if (x.status == 200) {
           switch (x.responseType) {
-            case "blob":
-              resolve(new Blob(
-                [x.response],
-                {
-                  type: x.getResponseHeader("Content-Type")
-                    || "text/plain"
-                }));
+          case "blob":
+            resolve(new Blob(
+              [x.response],
+              {
+                type: x.getResponseHeader("Content-Type")
+                  || "text/plain"
+              }));
+            break;
+          case "json":
+            resolve(x.response);
+            break;
+          default:
+            if (x.getResponseHeader("Content-Type") == "application/json") {
+              resolve(JSON.parse(x.responseText));
               break;
-            case "json":
-              resolve(x.response);
-              break;
-            default:
-              if (x.getResponseHeader("Content-Type") == "application/json") {
-                resolve(JSON.parse(x.responseText));
-                break;
-              }
-              resolve(x.responseText);
+            }
+            resolve(x.responseText);
           }
         } else {
-          reject(new Error("something else other than 200 was returned"));
+          reject(new Error("Something else other than 200 was returned"));
         }
       }
     };
@@ -92,9 +92,8 @@ ICA.request = function (method, url, headers, data, type="json") {
       x.setRequestHeader(header, headers[header]);
     }
     x.send(data);
-    console.log("Request: {0} {1}".format(method, url));
   }.bind(this));
-}
+};
 
 ICA.requestAPI = function (method, path, data) {
   return ICA.request(
@@ -103,19 +102,23 @@ ICA.requestAPI = function (method, path, data) {
     {
       "Content-Type": "application/json"
     },
-    JSON.stringify(data))
-      .then(function (data) {
-        if (typeof data == "object") {
-          if (data.error) {
-            console.warn("Request caught error:", data);
-            return Promise.reject(new Error(data.error));
-          }
-          if (data.warn) {
-            console.warn("Request caught warning:", data);
-          }
+    JSON.stringify(data),
+    "json",
+    true
+  )
+    .then(function (x) {
+      var data = x.response;
+      if (typeof data == "object") {
+        if (data.error) {
+          console.warn("Request caught error:", data);
+          return Promise.reject(new Error(data.error));
         }
-        return data;
-      });
+        if (data.warn) {
+          console.warn("Request caught warning:", data);
+        }
+      }
+      return data;
+    });
 };
 
 ICA.uploadFile = function (file) {
@@ -143,10 +146,11 @@ ICA.uploadFileChunked = function (file) {
       "X-Upload-Content-Length": file.size
     },
     null,
-    "x"
+    null,
+    true
   )
     .then(function (x) {
-      if (x.status !== 200) return Promise.reject(new Error("ICA: Error with file upload request"))
+      if (x.status !== 200) return Promise.reject(new Error("ICA: Error with file upload request"));
       if (!x.response) return Promise.reject(new Error("ICA: Failed to upload file"));
       var fileId = x.response;
 
@@ -160,12 +164,13 @@ ICA.uploadFileChunked = function (file) {
             "Content-Range": "bytes {0}-{1}/{2}".format(byteStart, byteEnd - 1, file.size)
           },
           file.slice(byteStart, byteEnd),
-          "x"
+          null,
+          null,
+          true
         )
           .then(function (x) {
             if (x.status == 200) {
               // File upload completed
-              console.log("ICA: File uploaded");
               return fileId;
             } else if (x.status == 308) {
               // File upload incomplete
@@ -205,7 +210,7 @@ ICA.delete = function (path, params) {
 ICA.getJointSources = function () {
   return ICA.get("/jointsources/")
     .then(touchJointSources);
-}
+};
 
 ICA.publishJointSource = function (jointSource) {
   return jointSource.prePublish()
@@ -218,30 +223,30 @@ ICA.publishJointSource = function (jointSource) {
           meta: {"*": jointSource.meta},
           sources: jointSource.mapSources(function (source) {
             switch (source.constructor) {
-              case ImageSource:
-                return {
-                  _id: source.sourceId,
-                  type: "image",
-                  content: {"*": source.content}
-                }
-              case AudioSource:
-                return {
-                  _id: source.sourceId,
-                  type: "audio",
-                  content: {"*": source.content}
-                }
-              case TextSource:
-              default:
-                return {
-                  _id: source.sourceId,
-                  type: "text",
-                  content: {"*": source.content}
-                }
+            case ImageSource:
+              return {
+                _id: source.sourceId,
+                type: "image",
+                content: {"*": source.content}
+              };
+            case AudioSource:
+              return {
+                _id: source.sourceId,
+                type: "audio",
+                content: {"*": source.content}
+              };
+            case TextSource:
+            default:
+              return {
+                _id: source.sourceId,
+                type: "text",
+                content: {"*": source.content}
+              };
             }
           })
         })
           .then(touchJointSources)
-          .then(function (jointSources) {
+          .then(function () {
             console.log("ICA: Joint source posted");
             return jointSource;
           });
@@ -259,27 +264,27 @@ ICA.publishJointSource = function (jointSource) {
             if (source.sourceId < 0) {
               var promise;
               switch (source.constructor) {
-                case ImageSource:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
-                    _id: source.sourceId,
-                    type: "image",
-                    content: {"*": source.content}
-                  });
-                  break;
-                case AudioSource:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
-                    _id: source.sourceId,
-                    type: "audio",
-                    content: {"*": source.content}
-                  });
-                  break;
-                case TextSource:
-                default:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
-                    _id: source.sourceId,
-                    type: "text",
-                    content: {"*": source.content}
-                  });
+              case ImageSource:
+                promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  _id: source.sourceId,
+                  type: "image",
+                  content: {"*": source.content}
+                });
+                break;
+              case AudioSource:
+                promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  _id: source.sourceId,
+                  type: "audio",
+                  content: {"*": source.content}
+                });
+                break;
+              case TextSource:
+              default:
+                promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  _id: source.sourceId,
+                  type: "text",
+                  content: {"*": source.content}
+                });
               }
               return promise
                 .then(function (dataSources) {
@@ -290,9 +295,10 @@ ICA.publishJointSource = function (jointSource) {
             // Post new revision (only if necessary) TODO
             return ICA.put("/jointsources/{0}/sources/{1}/".format(
               jointSource.jointSourceId,
-              source.sourceId), {
-              content: {"*": source.content}
-            })
+              source.sourceId),
+              {
+                content: {"*": source.content}
+              })
               .then(function () {
                 console.log("ICA: Source revision posted");
               });
@@ -358,22 +364,22 @@ function touchSources(dataSources, jointSource) {
       source.sourceId = sourceId;
     } else {
       switch (dataSource.type) {
-        case "image":
-          source = new ImageSource(dataSource.content["*"], jointSource, sourceId);
-          break;
-        case "audio":
-          source = new AudioSource(dataSource.content["*"], jointSource, sourceId);
-          break;
-        case "video":
-          source = new VideoSource(dataSource.content["*"], jointSource, sourceId);
-          break;
-        case "text":
-        default:
-          source = new TextSource(dataSource.content["*"], jointSource, sourceId);
+      case "image":
+        source = new ImageSource(dataSource.content["*"], jointSource, sourceId);
+        break;
+      case "audio":
+        source = new AudioSource(dataSource.content["*"], jointSource, sourceId);
+        break;
+      case "video":
+        source = new VideoSource(dataSource.content["*"], jointSource, sourceId);
+        break;
+      case "text":
+      default:
+        source = new TextSource(dataSource.content["*"], jointSource, sourceId);
       }
       sources.push(source);
     }
     // jointSource._timeLastUpdated = dataJointSource["updated"];
-  };
+  }
   return sources;
 }
