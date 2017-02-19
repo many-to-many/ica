@@ -206,8 +206,8 @@
 
     global $DATABASE;
 
-    $state = STATE_PUBLISHED;
-    $result = query("SELECT * FROM jointsources_summary LIMIT $limit;");
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT * FROM jointsources_summary WHERE state = {$stateEncoded} LIMIT {$limit};");
 
     if ($result->num_rows == 0) return [];
     $data = [];
