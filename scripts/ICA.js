@@ -165,7 +165,6 @@ ICA.uploadFileChunked = function (file) {
           },
           file.slice(byteStart, byteEnd),
           null,
-          null,
           true
         )
           .then(function (x) {
