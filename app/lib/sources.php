@@ -2,34 +2,88 @@
 
   namespace ICA\Sources;
 
-  define("STATE_PUBLISHED", 1);
-  define("STATE_UNPUBLISHED", 2);
+  define("STATE_PUBLISHED_ENCODED", 1);
+  define("STATE_PUBLISHED", "published");
+  define("STATE_UNPUBLISHED_ENCODED", 2);
+  define("STATE_UNPUBLISHED", "unpublished");
 
-  define("SOURCE_TYPE_TEXT", 1);
-  define("SOURCE_TYPE_AUDIO", 2);
-  define("SOURCE_TYPE_IMAGE", 3);
-  define("SOURCE_TYPE_VIDEO", 4);
+  define("TYPE_TEXT_ENCODED", 1);
+  define("TYPE_TEXT", "text");
+  define("TYPE_AUDIO_ENCODED", 2);
+  define("TYPE_AUDIO", "audio");
+  define("TYPE_IMAGE_ENCODED", 3);
+  define("TYPE_IMAGE", "image");
+  define("TYPE_VIDEO_ENCODED", 4);
+  define("TYPE_VIDEO", "video");
+
+  define("LANG_UNDEFINED_ENCODED", 0);
+  define("LANG_UNDEFINED", "*");
+
+  function encodeLang($lang) {
+    switch ($lang) {
+      case LANG_UNDEFINED: return LANG_UNDEFINED_ENCODED;
+    }
+    throw new \Exception("Unable to encode lang");
+  }
+
+  function decodeLang($code) {
+    switch ($code) {
+      case LANG_UNDEFINED_ENCODED: return LANG_UNDEFINED;
+    }
+    throw new \Exception("Unable to decode lang");
+  }
+
+  function encodeType($type) {
+    switch ($type) {
+      case TYPE_IMAGE: return TYPE_IMAGE_ENCODED;
+      case TYPE_AUDIO: return TYPE_AUDIO_ENCODED;
+      case TYPE_VIDEO: return TYPE_VIDEO_ENCODED;
+      case TYPE_TEXT: return TYPE_TEXT_ENCODED;
+    }
+    throw new \Exception("Unable to encode type");
+  }
+
+  function decodeType($type) {
+    switch ($type) {
+      case TYPE_IMAGE_ENCODED: return TYPE_IMAGE;
+      case TYPE_AUDIO_ENCODED: return TYPE_AUDIO;
+      case TYPE_VIDEO_ENCODED: return TYPE_VIDEO;
+      case TYPE_TEXT_ENCODED: return TYPE_TEXT;
+    }
+    throw new \Exception("Unable to decode type");
+  }
+
+  function encodeState($state) {
+    switch ($state) {
+      case STATE_PUBLISHED: return STATE_PUBLISHED_ENCODED;
+      case STATE_UNPUBLISHED: return STATE_UNPUBLISHED_ENCODED;
+    }
+    throw new \Exception("Unable to encode state");
+  }
+
+  function decodeState($code) {
+    switch ($code) {
+      case STATE_PUBLISHED_ENCODED: return STATE_PUBLISHED;
+      case STATE_UNPUBLISHED_ENCODED: return STATE_UNPUBLISHED;
+    }
+    throw new \Exception("Unable to decode state");
+  }
+
+
+  function encodeContent($meta) {
+    return json_encode($meta);
+  }
+
+  function decodeContent($text) {
+    return json_decode($text);
+  }
 
   class JointSource {
 
-    public $revision;
-
-    public function __construct() {
-      $this->revision = new JointSourceRevision;
-    }
-
-  }
-
-  class JointSourceRevision {
-
     public $meta;
 
-    public function encodeMeta() {
-      return json_encode($this->meta);
-    }
-
-    public function decodeMeta($meta) {
-      $this->meta = json_decode($meta);
+    public function __construct() {
+      $this->meta = [];
     }
 
   }
@@ -38,128 +92,144 @@
 
     public $type;
 
-    public $revision;
-
-    public function encodeType() {
-      switch ($this->type) {
-        case "image":
-          return SOURCE_TYPE_IMAGE;
-        case "audio":
-          return SOURCE_TYPE_AUDIO;
-        case "video":
-          return SOURCE_TYPE_VIDEO;
-        case "text":
-        default:
-          return SOURCE_TYPE_TEXT;
-      }
-    }
-
-    public function decodeType($type) {
-      switch ($type) {
-        case SOURCE_TYPE_IMAGE:
-          $this->type = "image";
-          break;
-        case SOURCE_TYPE_AUDIO:
-          $this->type = "audio";
-          break;
-        case SOURCE_TYPE_VIDEO:
-          $this->type = "video";
-          break;
-        case SOURCE_TYPE_TEXT:
-        default:
-          $this->type = "text";
-      }
-    }
-
     public function __construct() {
-      $this->revision = new SourceRevision;
+      $this->content = [];
     }
 
   }
 
-  class SourceRevision {
+  /* Content */
 
-    public $content;
-
-    public function encodeContent() {
-      return $this->content;
-    }
-
-    public function decodeContent($content) {
-      $this->content = $content;
-    }
-
-  }
-
-  function getSources($jointSourceId) {
+  function requestContentId() {
 
     global $DATABASE;
+    $accountId = \Session\getAccountId();
 
-    // Ref: http://www.techfounder.net/2010/03/12/fetching-specific-rows-from-a-group-with-mysql/
+    // Create & save a new joint source
+    $result = query("INSERT INTO contents
+      (`author_id`)
+      VALUES ({$accountId});");
 
-    $state = STATE_PUBLISHED;
-    $result = $DATABASE->query("SELECT src.id AS id, src.joint_id AS joint_id, rev.id AS revision_id, src.type AS type, rev.content AS content
-      FROM ica_sources AS src
-      LEFT JOIN ica_sources_states as sta ON src.state_id = sta.id
-      LEFT JOIN ica_sources_revisions as rev ON src.revision_id = rev.id
-      WHERE src.joint_id = $jointSourceId AND sta.state = $state
-      ORDER BY id DESC, revision_id DESC;");
-
-    if (isset($result) && $result) {
-      if ($result->num_rows > 0) {
-        $data = [];
-        // Iterate through joint sources
-        while ($row = $result->fetch_assoc()) {
-          $source = new Source;
-          $source->decodeType($row["type"]);
-          $source->revision->decodeContent($row["content"]);
-          $data[$row["id"]] = $source;
-        }
-        return $data;
-      } else return [];
-    } else throw new \Exception($DATABASE->error);
+    $contentId = $DATABASE->insert_id;
+    return $contentId;
 
   }
+
+  function insertContentLanguageState($langId, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    $stateEncoded = encodeState($state);
+    $result = query("INSERT INTO contents_langs_states
+      (`lang_id`, `author_id`, `state`)
+      VALUES ({$langId}, {$accountId}, {$stateEncoded})");
+
+    $stateId = $DATABASE->insert_id;
+    return $stateId;
+
+  }
+
+  function insertContentLanguageRevision($langId, $content) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    $contentEncoded = encodeContent($content);
+    $result = query("INSERT INTO contents_langs_revs
+      (`lang_id`, `author_id`, `content`)
+      VALUES ({$langId}, {$accountId}, '{$contentEncoded}')");
+
+    $revisionId = $DATABASE->insert_id;
+    return $revisionId;
+
+  }
+
+  function insertContentLanguage($contentId, $lang, $rev, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    $langEncoded = encodeLang($lang);
+
+    $result = query("SELECT *
+      FROM `contents_langs_summary`
+      WHERE content_id = {$contentId} AND lang = {$langEncoded}");
+
+    if ($result->num_rows == 0) {
+      // Content does not hold language of which the revision is given
+      $result = query("INSERT INTO `contents_langs`
+        (`content_id`, `author_id`, `lang`)
+        VALUES ({$contentId}, {$accountId}, {$langEncoded});");
+      $langId = $DATABASE->insert_id;
+
+      // Set initial state
+      insertContentLanguageState($langId, $state);
+
+    } else {
+      $row = $result->fetch_assoc();
+      $langId = $row["lang_id"];
+
+      if (decodeState($row["state"]) != $state) {
+        // Update existing state
+        insertContentLanguageState($langId, $state);
+      }
+    }
+
+    // Add new revision
+    $revisionId = insertContentLanguageRevision($langId, $rev);
+
+    return $revisionId;
+
+  }
+
+  function insertContentLanguages($contentId, $revs, $state = STATE_PUBLISHED) {
+    foreach ($revs as $lang => $rev) {
+      insertContentLanguage($contentId, $lang, $rev, $state);
+    }
+  }
+
+  function getContentLanguagesOfLatestRevision($contentId) {
+
+    $result = query("SELECT * FROM contents_langs_summary WHERE content_id = {$contentId};");
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+      $data[decodeLang($row["lang"])] = decodeContent($row["rev_content"]);
+    }
+    return $data;
+
+  }
+
+  /* Joint source */
 
   function getJointSources($limit = 200) {
 
     global $DATABASE;
 
     $state = STATE_PUBLISHED;
-    $result = $DATABASE->query("SELECT src.id AS id, rev.id AS revision_id, rev.meta AS meta, rev.lastupdated AS lastupdated
-      FROM ica_jointsources AS src
-      -- LEFT JOIN ( -- a derived subquery to discover latest revision for each joint source
-      -- 	SELECT rev.source_id AS source_id, MAX(rev.id) AS id
-      -- 	FROM ica_jointsources_revisions AS rev
-      -- 	GROUP BY source_id
-      -- ) AS latest ON latest.source_id = src.id
-      -- LEFT JOIN ica_jointsources_revisions as rev ON latest.id = rev.id
-      LEFT JOIN ica_jointsources_states as sta ON src.state_id = sta.id
-      LEFT JOIN ica_jointsources_revisions as rev ON src.revision_id = rev.id
-      WHERE sta.state = $state
-      ORDER BY id DESC, revision_id DESC
-      LIMIT $limit;");
+    $result = query("SELECT * FROM jointsources_summary LIMIT $limit;");
 
-    if (isset($result) && $result) {
-      if ($result->num_rows > 0) {
-        $data = [];
-        // Iterate through joint sources
-        while ($row = $result->fetch_assoc()) {
-          $jointSource = new JointSource;
-          $jointSourceId = $row["id"];
+    if ($result->num_rows == 0) return [];
+    $data = [];
+    // Iterate through joint sources
+    while ($row = $result->fetch_assoc()) {
+      $jointSourceId = $row["jointsource_id"];
+      $contentId = $row["content_id"];
+      if (empty($data[$jointSourceId])) {
+        $jointSource = new JointSource;
+      } else {
+        $jointSource = $data[$jointSourceId];
+      }
 
-          $jointSource->revision->decodeMeta($row["meta"]);
-          $data[$jointSourceId] = $jointSource;
+      $jointSource->meta = getContentLanguagesOfLatestRevision($contentId);
 
-          // Run all sources joint by joint source
-          $jointSource->sources = getSources($jointSourceId);
+      // Run all sources joint by joint source
+      $jointSource->sources = getSources($jointSourceId);
 
-          $jointSource->updated = strtotime($row["lastupdated"]);
-        }
-        return $data;
-      } else return [];
-    } else throw new \Exception($DATABASE->error);
+      $data[$jointSourceId] = $jointSource;
+    }
 
+    return $data;
   }
 
   function insertJointSource($jointSource, $state = STATE_PUBLISHED) {
@@ -167,186 +237,127 @@
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
-    // Create & save a new joint source
-    $result = $DATABASE->query("INSERT INTO ica_jointsources
-      (`author_id`)
-      VALUES ($accountId);");
-    if (empty($result)) throw new \Exception($DATABASE->error);
+    // Request content versioning unit id
+    $contentId = requestContentId();
 
-    // Update joint source id
+    // Create a new joint source
+    $result = query("INSERT INTO jointsources
+      (`author_id`, `content_id`)
+      VALUES ({$accountId}, {$contentId});");
     $jointSourceId = $DATABASE->insert_id;
 
-    $stateId = insertJointSourceState($state, $jointSourceId);
-    $revisionId = insertJointSourceRevision($jointSource->revision, $jointSourceId);
+    $stateId = insertJointSourceState($jointSourceId, $state);
+    insertContentLanguages($contentId, $jointSource->meta);
 
     return $jointSourceId;
 
   }
 
-  // Joint source state
-
-  function updateJointSourceState($state, $jointSourceId) {
-
-    insertJointSourceState($state, $jointSourceId);
-
-  }
-
-  function insertJointSourceState($state, $jointSourceId) {
+  function insertJointSourceState($jointSourceId, $state = STATE_PUBLISHED) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
-    $result = $DATABASE->query("INSERT INTO ica_jointsources_states
-      (`source_id`, `author_id`, `state`)
-      VALUES ($jointSourceId, $accountId, $state);");
-    if (empty($result)) throw new \Exception($DATABASE->error);
+    $stateEncoded = encodeState($state);
 
+    $result = query("INSERT INTO jointsources_states
+      (`jointsource_id`, `author_id`, `state`)
+      VALUES ($jointSourceId, $accountId, $stateEncoded);");
     $stateId = $DATABASE->insert_id;
-
-    updateJointSourceStateId($stateId, $jointSourceId);
 
     return $stateId;
 
   }
 
-  function updateJointSourceStateId($stateId, $jointSourceId) {
+  function insertJointSourceMetaRevision($jointSourceId, $meta) {
 
-    global $DATABASE;
-    $accountId = \Session\getAccountId();
+    $result = query("SELECT content_id FROM jointsources WHERE id = {$jointSourceId};");
+    if ($result->num_rows == 0) {
+      return false; // Joint source not found
+    }
 
-    $result = $DATABASE->query("UPDATE ica_jointsources
-      SET `state_id` = $stateId
-      WHERE `id` = $jointSourceId;");
-    if (empty($result)) throw new \Exception($DATABASE->error);
-
-  }
-
-  // Joint source revision
-
-  function insertJointSourceRevision($jointSourceRevision, $jointSourceId) {
-
-    global $DATABASE;
-    $accountId = \Session\getAccountId();
-
-    // Create & save a new revision
-    $queryMeta = $DATABASE->real_escape_string($jointSourceRevision->encodeMeta());
-    $result = $DATABASE->query("INSERT INTO ica_jointsources_revisions
-      (`source_id`, `author_id`, `meta`)
-      VALUES ($jointSourceId, $accountId, \"$queryMeta\");");
-    if (empty($result)) throw new \Exception($DATABASE->error);
-
-    $revisionId = $DATABASE->insert_id;
-
-    updateJointSourceRevisionId($revisionId, $jointSourceId);
-
-    return $revisionId;
+    $contentId = $result->fetch_assoc()["content_id"];
+    insertContentLanguages($contentId, $meta);
 
   }
 
-  function updateJointSourceRevisionId($revisionId, $jointSourceId) {
+  /* Source */
+
+  function getSources($jointSourceId) {
 
     global $DATABASE;
-    $accountId = \Session\getAccountId();
 
-    $result = $DATABASE->query("UPDATE ica_jointsources
-      SET `revision_id` = $revisionId
-      WHERE `id` = $jointSourceId;");
-    if (empty($result)) throw new \Exception($DATABASE->error);
+    $state = STATE_PUBLISHED;
+    $result = query("SELECT * FROM sources_summary WHERE jointsource_id = {$jointSourceId};");
+
+    if ($result->num_rows == 0) return [];
+    $data = [];
+    // Iterate through joint sources
+    while ($row = $result->fetch_assoc()) {
+      $sourceId = $row["source_id"];
+      $contentId = $row["content_id"];
+      if (empty($data[$sourceId])) {
+        $source = new Source;
+        $source->type = decodeType($row["source_type"]);
+      } else {
+        $source = $data[$sourceId];
+      }
+
+      $source->content = getContentLanguagesOfLatestRevision($contentId);
+
+      $data[$sourceId] = $source;
+    }
+    return $data;
 
   }
 
-  // Source
-
-  function insertSource($source, $jointSourceId, $state = STATE_PUBLISHED) {
+  function insertSource($jointSourceId, $source, $state = STATE_PUBLISHED) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
-    // Create & save a new source
-    $queryType = $DATABASE->real_escape_string($source->encodeType());
-    $result = $DATABASE->query("INSERT INTO ica_sources
-      (`joint_id`, `author_id`, `type`)
-      VALUES ($jointSourceId, $accountId, \"$queryType\");");
-    if (empty($result)) throw new \Exception($DATABASE->error);
+    // Request content versioning unit id
+    $contentId = requestContentId();
 
-    // Update source id
+    // Create a new joint source
+    $typeEncoded = encodeType($source->type);
+    $result = query("INSERT INTO sources
+      (`jointsource_id`, `author_id`, `content_id`, `type`)
+      VALUES ({$jointSourceId}, {$accountId}, {$contentId}, {$typeEncoded});");
     $sourceId = $DATABASE->insert_id;
 
-    $stateId = insertSourceState($state, $sourceId);
-    $revisionId = insertSourceRevision($source->revision, $sourceId);
+    $stateId = insertSourceState($sourceId, $state);
+    insertContentLanguages($contentId, $source->content);
 
     return $sourceId;
 
   }
 
-  // Source state
-
-  function updateSourceState($state, $sourceId) {
-
-    insertSourceState($state, $sourceId);
-
-  }
-
-  function insertSourceState($state, $sourceId) {
+  function insertSourceState($sourceId, $state = STATE_PUBLISHED) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
-    $result = $DATABASE->query("INSERT INTO ica_sources_states
+    $stateEncoded = encodeState($state);
+
+    $result = query("INSERT INTO sources_states
       (`source_id`, `author_id`, `state`)
-      VALUES ($sourceId, $accountId, $state);");
-    if (empty($result)) throw new \Exception($DATABASE->error);
-
+      VALUES ($sourceId, $accountId, $stateEncoded);");
     $stateId = $DATABASE->insert_id;
-
-    updateSourceStateId($stateId, $sourceId);
 
     return $stateId;
 
   }
 
-  function updateSourceStateId($stateId, $sourceId) {
+  function insertJointSourceContentRevision($sourceId, $content) {
 
-    global $DATABASE;
-    $accountId = \Session\getAccountId();
+    $result = query("SELECT content_id FROM sources WHERE id = {$sourceId};");
+    if ($result->num_rows == 0) {
+      return false; // Joint source not found
+    }
 
-    $result = $DATABASE->query("UPDATE ica_sources
-      SET `state_id` = $stateId
-      WHERE `id` = $sourceId;");
-    if (empty($result)) throw new \Exception($DATABASE->error);
-
-  }
-
-  // Source revision
-
-  function insertSourceRevision($sourceRevision, $sourceId) {
-
-    global $DATABASE;
-    $accountId = \Session\getAccountId();
-
-    // Create & save a new revision
-    $queryContent = $DATABASE->real_escape_string($sourceRevision->encodeContent());
-    $result = $DATABASE->query("INSERT INTO ica_sources_revisions
-      (`source_id`, `author_id`, `content`)
-      VALUES ($sourceId, $accountId, \"$queryContent\");");
-    if (empty($result)) throw new \Exception($DATABASE->error);
-
-    $sourceRevisionId = $DATABASE->insert_id;
-
-    updateSourceRevisionId($sourceRevisionId, $sourceId);
-
-  }
-
-  function updateSourceRevisionId($sourceRevisionId, $sourceId) {
-
-    global $DATABASE;
-    $accountId = \Session\getAccountId();
-
-    // Create & save a new revision
-    $result = $DATABASE->query("UPDATE ica_sources
-      SET `revision_id` = $sourceRevisionId
-      WHERE `id` = $sourceId;");
-    if (empty($result)) throw new \Exception($DATABASE->error);
+    $contentId = $result->fetch_assoc()["content_id"];
+    insertContentLanguages($contentId, $content);
 
   }
 

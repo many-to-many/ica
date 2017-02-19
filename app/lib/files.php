@@ -18,8 +18,8 @@
 
     // Ref: http://www.techfounder.net/2010/03/12/fetching-specific-rows-from-a-group-with-mysql/
 
-    $result = $DATABASE->query("SELECT file.path AS path, file.mime AS mime, file.size AS size, file.author_id AS author_id
-      FROM ica_files AS file
+    $result = $DATABASE->query("SELECT file.path AS path, file.mime AS mime, file.size AS size, file.uploader_id AS uploader_id
+      FROM files AS file
       WHERE file.id = $fileId
       ORDER BY id DESC;");
 
@@ -30,7 +30,7 @@
         $file->path = $row["path"];
         $file->mime = $row["mime"];
         $file->size = $row["size"];
-        $file->author_id = $row["author_id"];
+        $file->uploader_id = $row["uploader_id"];
         return $file;
       } else return NULL;
     } else throw new \Exception($DATABASE->error);
@@ -42,8 +42,8 @@
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
-    $result = $DATABASE->query("INSERT INTO ica_files
-      (`author_id`, `path`, `mime`, `size`)
+    $result = $DATABASE->query("INSERT INTO files
+      (`uploader_id`, `path`, `mime`, `size`)
       VALUES ($accountId, '{$file->path}', '{$file->mime}', {$file->size});");
     if (empty($result)) throw new \Exception($DATABASE->error);
 

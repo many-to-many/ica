@@ -63,7 +63,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
 
   var featuredSource = this.jointSource.sources[Object.keys(this.jointSource.sources)[0]];
 
-  switch (featuredSource.constructor) {
+  if (featuredSource) switch (featuredSource.constructor) {
     case ImageSource:
       setElementProperty(this.view, "jointsource-feature", "image");
       this.view.style.backgroundImage = featuredSource.content

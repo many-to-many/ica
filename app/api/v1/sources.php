@@ -27,18 +27,15 @@
 
       // Validation
       if (!$REQUEST_DATA) throw new Error("No request data");
-      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
-      if (empty($REQUEST_DATA["meta"]["title"])) throw new Exception("Untitled");
-      // if (empty($REQUEST_DATA["meta"]["region"])) throw new Exception("Uncategorized region");
-      // if (empty($REQUEST_DATA["meta"]["participants"])) throw new Exception("Empty participants");
-      // if (empty($REQUEST_DATA["meta"]["themes"])) throw new Exception("Empty themes");
-      // if (empty($REQUEST_DATA["meta"]["intro"])) throw new Exception("No intro");
+      if (empty($REQUEST_DATA["meta"]) || empty($REQUEST_DATA["meta"]["*"]))
+        throw new Exception("Metadata must not be empty");
+      if (empty($REQUEST_DATA["meta"]["*"]["title"])) throw new Exception("Untitled");
       if (empty($REQUEST_DATA["sources"])) throw new Exception("Must be at least one source");
 
       $DATABASE->autocommit(false);
 
       $jointSource = new \ICA\Sources\JointSource;
-      $jointSource->revision->meta = $REQUEST_DATA["meta"];
+      $jointSource->meta = $REQUEST_DATA["meta"];
 
       $jointSourceId = \ICA\Sources\insertJointSource($jointSource);
 
@@ -47,9 +44,9 @@
       foreach ($REQUEST_DATA["sources"] as $requestDataSource) {
         $source = new \ICA\Sources\Source;
         $source->type = $requestDataSource["type"];
-        $source->revision->content = $requestDataSource["content"];
+        $source->content = $requestDataSource["content"];
 
-        $sourceId = \ICA\Sources\insertSource($source, $jointSourceId);
+        $sourceId = \ICA\Sources\insertSource($jointSourceId, $source);
 
         $dataSources[$sourceId] = [
           "_id" => $requestDataSource["_id"]
@@ -72,23 +69,11 @@
 
       // Validation
       if (!$REQUEST_DATA) throw new Error("No request data");
-      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
-      if (empty($REQUEST_DATA["meta"]["title"])) throw new Exception("Untitled");
-      // if (empty($REQUEST_DATA["meta"]["region"])) throw new Exception("Uncategorized region");
-      // if (empty($REQUEST_DATA["meta"]["participants"])) throw new Exception("Empty participants");
-      // if (empty($REQUEST_DATA["meta"]["themes"])) throw new Exception("Empty themes");
-      // if (empty($REQUEST_DATA["meta"]["intro"])) throw new Exception("No intro");
-      // if (empty($REQUEST_DATA["sources"])) throw new Exception("Must be at least one source");
+      if (empty($REQUEST_DATA["meta"]) || empty($REQUEST_DATA["meta"]["*"]))
+        throw new Exception("Metadata must not be empty");
+      if (empty($REQUEST_DATA["meta"]["*"]["title"])) throw new Exception("Untitled");
 
-      $DATABASE->autocommit(false);
-
-      $jointSourceRevision = new \ICA\Sources\JointSourceRevision;
-      $jointSourceRevision->meta = $REQUEST_DATA["meta"];
-
-      \ICA\Sources\insertJointSourceRevision($jointSourceRevision, $jointSourceId);
-
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      \ICA\Sources\insertJointSourceMetaRevision($jointSourceId, $REQUEST_DATA["meta"]);
 
       respondJSON([]);
 
@@ -96,12 +81,7 @@
 
     case "DELETE":
 
-      $DATABASE->autocommit(false);
-
-      \ICA\Sources\updateJointSourceState(STATE_UNPUBLISHED, $jointSourceId);
-
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      \ICA\Sources\insertJointSourceState($jointSourceId, STATE_UNPUBLISHED);
 
       respondJSON([]);
 
@@ -111,16 +91,11 @@
 
     case "POST": \Session\requireVerification();
 
-      $DATABASE->autocommit(false);
-
       $source = new \ICA\Sources\Source;
       $source->type = $REQUEST_DATA["type"];
-      $source->revision->content = $REQUEST_DATA["content"];
+      $source->content = $REQUEST_DATA["content"];
 
-      $sourceId = \ICA\Sources\insertSource($source, $jointSourceId);
-
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      $sourceId = \ICA\Sources\insertSource($jointSourceId, $source);
 
       respondJSON([$sourceId => [
         "_id" => $REQUEST_DATA["_id"]
@@ -132,15 +107,7 @@
 
     case "PUT": \Session\requireVerification();
 
-      $DATABASE->autocommit(false);
-
-      $sourceRevision = new \ICA\Sources\SourceRevision;
-      $sourceRevision->content = $REQUEST_DATA["content"];
-
-      \ICA\Sources\insertSourceRevision($sourceRevision, $sourceId);
-
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      \ICA\Sources\insertJointSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
 
       respondJSON([]);
 
@@ -148,12 +115,7 @@
 
     case "DELETE": \Session\requireVerification();
 
-      $DATABASE->autocommit(false);
-
-      \ICA\Sources\updateSourceState(STATE_UNPUBLISHED, $sourceId);
-
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      \ICA\Sources\insertSourceState($sourceId, STATE_UNPUBLISHED);
 
       respondJSON([]);
 

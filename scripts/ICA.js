@@ -210,32 +210,32 @@ ICA.getJointSources = function () {
 ICA.publishJointSource = function (jointSource) {
   return jointSource.prePublish()
     .then(function () {
-      if (jointSource.getNumberOfSources() == 0) throw new Error("Needs at least one source");
+      // if (jointSource.getNumberOfSources() == 0) throw new Error("Needs at least one source");
       if (jointSource.jointSourceId < 0) {
         // Post new joint source
         return ICA.post("/jointsources/", {
           _id: jointSource.jointSourceId,
-          meta: jointSource.meta,
+          meta: {"*": jointSource.meta},
           sources: jointSource.mapSources(function (source) {
             switch (source.constructor) {
               case ImageSource:
                 return {
                   _id: source.sourceId,
                   type: "image",
-                  content: source.content
+                  content: {"*": source.content}
                 }
               case AudioSource:
                 return {
                   _id: source.sourceId,
                   type: "audio",
-                  content: source.content
+                  content: {"*": source.content}
                 }
               case TextSource:
               default:
                 return {
                   _id: source.sourceId,
                   type: "text",
-                  content: source.content
+                  content: {"*": source.content}
                 }
             }
           })
@@ -248,7 +248,7 @@ ICA.publishJointSource = function (jointSource) {
       }
       // Update joint source and individual sources (only if necessary TODO)
       return ICA.put("/jointsources/{0}/".format(jointSource.jointSourceId), {
-        meta: jointSource.meta
+        meta: {"*": jointSource.meta}
       })
         .then(function () {
           console.log("ICA: Joint source revision posted");
@@ -263,14 +263,14 @@ ICA.publishJointSource = function (jointSource) {
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "image",
-                    content: source.content
+                    content: {"*": source.content}
                   });
                   break;
                 case AudioSource:
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "audio",
-                    content: source.content
+                    content: {"*": source.content}
                   });
                   break;
                 case TextSource:
@@ -278,7 +278,7 @@ ICA.publishJointSource = function (jointSource) {
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "text",
-                    content: source.content
+                    content: {"*": source.content}
                   });
               }
               return promise
@@ -291,7 +291,7 @@ ICA.publishJointSource = function (jointSource) {
             return ICA.put("/jointsources/{0}/sources/{1}/".format(
               jointSource.jointSourceId,
               source.sourceId), {
-              content: source.content
+              content: {"*": source.content}
             })
               .then(function () {
                 console.log("ICA: Source revision posted");
@@ -341,7 +341,7 @@ function touchJointSources(data) {
       jointSource = JointSource.jointSources[dataJointSource._id];
       jointSource.jointSourceId = jointSourceId;
     } else {
-      jointSource = new JointSource(dataJointSource.revision.meta, jointSourceId);
+      jointSource = new JointSource(dataJointSource.meta["*"], jointSourceId);
       jointSources.push(jointSource);
     }
     touchSources(dataJointSource.sources, jointSource);
@@ -359,17 +359,17 @@ function touchSources(dataSources, jointSource) {
     } else {
       switch (dataSource.type) {
         case "image":
-          source = new ImageSource(dataSource.revision.content, jointSource, sourceId);
+          source = new ImageSource(dataSource.content["*"], jointSource, sourceId);
           break;
         case "audio":
-          source = new AudioSource(dataSource.revision.content, jointSource, sourceId);
+          source = new AudioSource(dataSource.content["*"], jointSource, sourceId);
           break;
         case "video":
-          source = new VideoSource(dataSource.revision.content, jointSource, sourceId);
+          source = new VideoSource(dataSource.content["*"], jointSource, sourceId);
           break;
         case "text":
         default:
-          source = new TextSource(dataSource.revision.content, jointSource, sourceId);
+          source = new TextSource(dataSource.content["*"], jointSource, sourceId);
       }
       sources.push(source);
     }

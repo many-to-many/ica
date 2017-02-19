@@ -29,6 +29,17 @@
 
     }
 
+    function query($q) {
+
+      global $DATABASE;
+      $result = $DATABASE->query($q);
+      if (empty($result)) {
+        throw new \Exception($DATABASE->error);
+      }
+      return $result;
+
+    }
+
   }
 
   namespace Accounts {
@@ -50,7 +61,7 @@
       global $DATABASE;
 
       $result = $DATABASE->query("SELECT *
-        FROM `ica_accounts`
+        FROM `accounts`
         WHERE `identifier` = '$identifier'
         LIMIT 1;");
 
@@ -73,7 +84,7 @@
 
       global $DATABASE;
 
-      $result = $DATABASE->query("INSERT INTO `ica_accounts`
+      $result = $DATABASE->query("INSERT INTO `accounts`
         (`identifier`) VALUES ('$identifier');");
 
       if (isset($result) && $result) { // Statement executed
