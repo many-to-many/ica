@@ -64,16 +64,36 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   var featuredSource = this.jointSource.sources[Object.keys(this.jointSource.sources)[0]];
 
   if (featuredSource) switch (featuredSource.constructor) {
-    case ImageSource:
-      setElementProperty(this.view, "jointsource-feature", "image");
-      this.view.style.backgroundImage = featuredSource.content
-        ? "url(" + (
-          featuredSource.blobHandler.blob instanceof Blob
-            ? featuredSource.blobHandler.url
-            : featuredSource.blobHandler.url + "?width=" + (this.view.offsetWidth * this.devicePixelRatio)
-          ) + ")"
-        : "";
-      break;
+  case ImageSource:
+
+    setElementProperty(this.view, "jointsource-feature", "image");
+    this.view.style.backgroundImage = featuredSource.content
+      ? "url(" + (
+        featuredSource.blobHandler.blob instanceof Blob
+          ? featuredSource.blobHandler.url
+          : featuredSource.blobHandler.url + "?width=" + (this.view.offsetWidth * this.devicePixelRatio)
+        ) + ")"
+      : "";
+
+    break;
+  case AudioSource:
+
+    setElementProperty(this.view, "jointsource-feature", "audio");
+    if (featuredSource.content) {
+      var audio = new Audio(featuredSource.blobHandler.url);
+
+      this.view.audio = audio;
+
+      this.view.addEventListener("mouseover", function mouseOver() {
+        this.audio.play();
+      }.bind(this.view));
+      this.view.addEventListener("mouseout", function mouseOver() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+      }.bind(this.view));
+    }
+
+    break;
   }
 });
 
