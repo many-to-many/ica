@@ -1,34 +1,50 @@
 
-function $(selector, element) {
-  element = element || document;
-  var nodeList = element.querySelectorAll(selector);
-  nodeList.each = function (func) {
-    nodeList.forEach(function (node) {
-      func.bind(node)();
-    });
-  };
-  return nodeList;
-}
+var AppController = Controller.createComponent("AppController");
+
+AppController.defineMethod("initView", function () {
+  if (!this.view) return;
+
+  ICA.getJointSources()
+    .then(function (jointSources) {
+      var explore = new Explore(); explore.addItems(jointSources);
+      new ExploreController(
+        explore,
+        this.view.querySelector(".explore")
+      ).componentOf = this;
+    }.bind(this));
+});
+
+/*****/
+
+window.addEventListener("load", function () {
+  window.addEventListener("resize", resize);
+  init(document.body);
+
+  new AppController(document.body);
+
+  document.querySelector("[href='#explore']").click();
+});
+
+/*****/
 
 function switchAppView(view) {
-  $("[data-ica-app-view]:not([data-ica-app-view='{0}'])".format(view)).forEach(function (element) {
+  document.querySelectorAll("[data-ica-app-view]:not([data-ica-app-view='{0}'])".format(view)).forEach(function (element) {
     element.style.display = "none";
   });
-  $("[data-ica-app-view='{0}']".format(view)).forEach(function (element) {
+  document.querySelectorAll("[data-ica-app-view='{0}']".format(view)).forEach(function (element) {
     element.style.display = "";
   });
 }
 
 function init(element) {
-
   // Init textarea
-  $("form textarea", element).each(function () {
-    if (this._textareaInit) return;
+  element.querySelectorAll("textarea").forEach(function (element) {
+    if (element._textareaInit) return;
 
-    var style = window.getComputedStyle(this);
-    var defaultRows = this.getAttribute("rows") || 1;
+    var style = window.getComputedStyle(element);
+    var defaultRows = element.getAttribute("rows") || 1;
 
-    this.rows = defaultRows;
+    element.rows = defaultRows;
     var paddingTop = parseInt(style.paddingTop);
     var paddingBottom = parseInt(style.paddingBottom);
     var lineHeight = parseInt(style.lineHeight);
@@ -41,134 +57,103 @@ function init(element) {
       var maxRows = getElementProperty(this, "data-ica-max-rows");
       if (maxRows) this.rows = Math.min(rows, maxRows);
       else this.rows = rows;
-    }.bind(this);
+    }.bind(element);
 
-    this.addEventListener("click", resizeTextArea);
-    this.addEventListener("focus", resizeTextArea);
-    this.addEventListener("input", resizeTextArea);
-    this.addEventListener("blur", resizeTextArea);
+    element.addEventListener("click", resizeTextArea);
+    element.addEventListener("focus", resizeTextArea);
+    element.addEventListener("input", resizeTextArea);
+    element.addEventListener("blur", resizeTextArea);
     resizeTextArea();
 
-    this._textareaInit = true;
+    element._textareaInit = true;
   });
 
   // Init input tokens
-  $("input[type='file']", element).each(function () {
-    if (this._fileInputInit) return;
+  element.querySelectorAll("input[type='file']").forEach(function (element) {
+    if (element._fileInputInit) return;
 
-    var fileInputHandler = new FileInputHandler(this);
+    new FileInputHandler(element);
 
-    this._fileInputInit = true;
+    element._fileInputInit = true;
   });
 
   // Init input tokens
-  $("input[data-ica-format='tokens'], textarea[data-ica-format='tokens']", element).each(function () {
-    if (this._formatInit) return;
+  element.querySelectorAll("input[data-ica-format='tokens'], textarea[data-ica-format='tokens']").forEach(function (element) {
+    if (element._formatInit) return;
 
     var tokenInputFragment = TokenInputController.createViewFragment();
     var tokenInputElement = tokenInputFragment.querySelector(".tokens");
-    this.parentNode.insertBefore(tokenInputFragment, this);
-    var tokenInputController = new TokenInputController(new TokenInputHandler(this), tokenInputElement);
+    element.parentNode.insertBefore(tokenInputFragment, element);
+    var tokenInputController = new TokenInputController(new TokenInputHandler(element), tokenInputElement);
     if (element.controller) tokenInputController.componentOf = element.controller;
 
-    this._formatInit = true;
+    element._formatInit = true;
   });
 
   var anchorHistory = [];
 
-  $("[data-ica-anchor-group]", element).each(function () {
-    if (this._anchorGroupInit) return;
+  element.querySelectorAll("[data-ica-anchor-group]").forEach(function (element) {
+    if (element._anchorGroupInit) return;
 
-    this.addEventListener("click", function () {
+    element.addEventListener("click", function () {
       anchorHistory.push(this);
       while (anchorHistory.length > 50) anchorHistory.shift();
 
       switch (this.getAttribute("href")) {
+      case "#explore":
 
-        case "#explore":
+        switchAppView("explore");
 
-          switchAppView("explore");
+        break;
+      case "#publisher":
 
-          break;
+        anchorHistory.pop(); // Escape current anchor
 
-        case "#publisher":
+        var publisherFragment = PublisherJointSourceController.createViewFragment();
+        var publisherElement = publisherFragment.querySelector(".publisher");
+        document.body.appendChild(publisherFragment);
+        new PublisherJointSourceController(new JointSource(), publisherElement);
 
-          anchorHistory.pop(); // Escape current anchor
+        return; // Does not focus on publisher
+      case "#account":
 
-          var publisherFragment = PublisherJointSourceController.createViewFragment();
-          var publisherElement = publisherFragment.querySelector(".publisher");
-          document.body.appendChild(publisherFragment);
-          var publisherController = new PublisherJointSourceController(new JointSource(), publisherElement);
+        // Redirect to login if account id not available
+        if (!ICA.accountId) {
+          var continueAnchor = anchorHistory.pop(); // Escape current anchor
 
-          return; // Does not focus on publisher
+          ICA.login()
+            .then(function () {
+              console.log("Logged in");
+              continueAnchor.click();
+            })
+            .catch(function (e) {
+              console.warn(e);
+            });
 
-          break;
+          return; // Await to continue
+        }
+        switchAppView("account");
 
-        case "#account":
-
-          // Redirect to login if account id not available
-          if (!ICA.accountId) {
-            var continueAnchor = anchorHistory.pop(); // Escape current anchor
-
-            ICA.login()
-              .then(function () {
-                console.log("Logged in");
-                continueAnchor.click();
-              })
-              .catch(function (e) {
-                console.warn(e);
-              });
-
-            return; // Await to continue
-          }
-
-          switchAppView("account");
-
-          break;
-
+        break;
       }
 
-      $("[data-ica-anchor-group='" + getElementProperty(this, "anchor-group") + "']", element).each(function () {
-        this.classList.remove("active");
-      });
+      document.body.querySelectorAll("[data-ica-anchor-group='" + getElementProperty(this, "anchor-group") + "']")
+        .forEach(function (element) {
+          element.classList.remove("active");
+        });
       this.classList.add("active");
-    }.bind(this));
+    }.bind(element));
 
-    this._anchorGroupInit = true;
+    element._anchorGroupInit = true;
   });
 
   resize();
-
 }
 
 function resize() {
-
-  $("[data-ica-width-multiple]").each(function () {
-
-    var multiple = parseInt(getElementProperty(this, "width-multiple"));
-    this.style.width = Math.floor(document.body.offsetWidth / multiple) * multiple + "px";
-
-  });
-
-}
-
-/***/
-
-var explore = new Explore();
-
-window.addEventListener("load", function () {
-  window.addEventListener("resize", resize);
-  init();
-
-  ICA.getJointSources()
-    .then(function (jointSources) {
-      explore.addItems(jointSources);
-      var exploreElement = document.querySelector(".explore");
-      var exploreController = new ExploreController(explore, exploreElement);
+  document.body.querySelectorAll("[data-ica-width-multiple]")
+    .forEach(function (element) {
+      var multiple = parseInt(getElementProperty(element, "width-multiple"));
+      element.style.width = Math.floor(document.body.offsetWidth / multiple) * multiple + "px";
     });
-
-  $("[href='#explore']")[0].click();
-  // $("[href='#publisher']")[0].click();
-  // $("[data-ica-action='add-source/text']")[0].click();
-
-});
+}
