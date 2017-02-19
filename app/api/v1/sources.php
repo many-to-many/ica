@@ -30,7 +30,6 @@
       if (empty($REQUEST_DATA["meta"]) || empty($REQUEST_DATA["meta"]["*"]))
         throw new Exception("Metadata must not be empty");
       if (empty($REQUEST_DATA["meta"]["*"]["title"])) throw new Exception("Untitled");
-      if (empty($REQUEST_DATA["sources"])) throw new Exception("Must be at least one source");
 
       $DATABASE->autocommit(false);
 
