@@ -136,10 +136,11 @@ PublisherJointSourceController.prototype.publish = function () {
       }
 
       this.destroy(true);
-
       alert("Content published");
-    }.bind(this), function (err) {
+    }.bind(this))
+    .catch(function (err) {
       // TODO: Alert boxes to be implemented
+      console.warn(err);
       alert(err.message);
     });
 };
@@ -147,10 +148,11 @@ PublisherJointSourceController.prototype.publish = function () {
 PublisherJointSourceController.prototype.unpublish = function () {
   return this.jointSource.unpublish()
     .then(function () {
-
       alert("Content unpublished; to be available online for another week after deletion (recover not yet implemented)");
-    }, function (err) {
+    })
+    .catch(function (err) {
       // TODO: Alert boxes to be implemented
+      console.warn(err);
       alert(err.message);
     });
 };
