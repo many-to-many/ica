@@ -3,6 +3,8 @@ node_modules
 
 .sass-cache
 
+*.bak
+
 styles/main.css
 
 app/assets/main.css
