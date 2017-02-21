@@ -204,8 +204,6 @@
 
   function getJointSources($limit = 200) {
 
-    global $DATABASE;
-
     $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT * FROM jointsources_summary WHERE state = {$stateEncoded} LIMIT {$limit};");
 
@@ -284,8 +282,6 @@
   /* Source */
 
   function getSources($jointSourceId) {
-
-    global $DATABASE;
 
     $state = STATE_PUBLISHED;
     $result = query("SELECT * FROM sources_summary WHERE jointsource_id = {$jointSourceId};");
