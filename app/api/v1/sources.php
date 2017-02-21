@@ -18,7 +18,13 @@
 
     case "GET":
 
-      $data = \ICA\Sources\getJointSources();
+      $query = $_GET["query"];
+      if (!empty($query)) {
+        $data = \ICA\Sources\searchJointSourcesByMeta($query);
+      } else {
+        $data = \ICA\Sources\getJointSources();
+      }
+
       respondJSON($data);
 
       break;

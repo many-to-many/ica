@@ -202,12 +202,10 @@
 
   /* Joint source */
 
-  function getJointSources($limit = 200) {
-
-    $stateEncoded = STATE_PUBLISHED_ENCODED;
-    $result = query("SELECT * FROM jointsources_summary WHERE state = {$stateEncoded} LIMIT {$limit};");
+  function createJointSourcesFromQueryResult($result) {
 
     if ($result->num_rows == 0) return [];
+
     $data = [];
     // Iterate through joint sources
     while ($row = $result->fetch_assoc()) {
@@ -226,8 +224,33 @@
 
       $data[$jointSourceId] = $jointSource;
     }
-
     return $data;
+
+  }
+
+  function searchJointSourcesByMeta($q, $limit = 200) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT jointsource.*
+      FROM jointsources_summary AS jointsource
+      INNER JOIN contents_langs_summary AS lang
+        ON lang.content_id = jointsource.content_id AND
+          lang.state = {$stateEncoded} AND
+          lang.content REGEXP '\"title\":\"([^\"]*){$q}([^\"]*)\"'
+      WHERE jointsource.state = {$stateEncoded}
+      LIMIT {$limit};");
+
+    return createJointSourcesFromQueryResult($result);
+
+  }
+
+  function getJointSources($limit = 200) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT * FROM jointsources_summary WHERE state = {$stateEncoded} LIMIT {$limit};");
+
+    return createJointSourcesFromQueryResult($result);
+
   }
 
   function insertJointSource($jointSource, $state = STATE_PUBLISHED) {
