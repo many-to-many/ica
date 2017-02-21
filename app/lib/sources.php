@@ -194,7 +194,7 @@
     $result = query("SELECT * FROM contents_langs_summary WHERE content_id = {$contentId};");
     $data = [];
     while ($row = $result->fetch_assoc()) {
-      $data[decodeLang($row["lang"])] = decodeContent($row["rev_content"]);
+      $data[decodeLang($row["lang"])] = decodeContent($row["content"]);
     }
     return $data;
 
