@@ -108,14 +108,9 @@ ICA.requestAPI = function (method, path, data) {
   )
     .then(function (x) {
       var data = x.response;
-      if (typeof data == "object") {
-        if (data.error) {
-          console.warn("Request caught error:", data);
-          return Promise.reject(new Error(data.error));
-        }
-        if (data.warn) {
-          console.warn("Request caught warning:", data);
-        }
+      if (typeof data == "object" && data.error) {
+        console.warn("Request caught error:", data);
+        return Promise.reject(new Error(data.error));
       }
       return data;
     });
@@ -146,13 +141,19 @@ ICA.uploadFileChunked = function (file) {
       "X-Upload-Content-Length": file.size
     },
     null,
-    null,
+    "json",
     true
   )
     .then(function (x) {
-      if (x.status !== 200) return Promise.reject(new Error("ICA: Error with file upload request"));
-      if (!x.response) return Promise.reject(new Error("ICA: Failed to upload file"));
-      var fileId = x.response;
+      var data = x.response;
+      if (typeof data != "number") {
+        if (typeof data == "object" && data.error) {
+          console.warn("Request caught error:", data);
+          return Promise.reject(new Error(data.error));
+        }
+        return Promise.reject(new Error("Error starting file upload"));
+      }
+      var fileId = data;
 
       function putFile(url, byteStart = 0, byteLength = 5 * 1024 * 1024) {
         var byteEnd = Math.min(file.size, byteStart + byteLength);
