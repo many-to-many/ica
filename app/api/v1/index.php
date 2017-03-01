@@ -2,7 +2,7 @@
 
   require_once(__DIR__ . "/init.php");
 
-  if (handle(["jointsources"], true)) require_once(__DIR__ . "/sources.php");
+  if (handle(["jointsources"], true)) require_once(__DIR__ . "/jointsources.php");
   elseif (handle(["files"], true)) require_once(__DIR__ . "/files.php");
 
   respondHeaderResponseCode(501, "Not Implemented");
