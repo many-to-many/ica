@@ -7,213 +7,216 @@
     <script type="text/javascript" src="assets/main.js"></script>
   </head>
   <body>
-    <!-- Template: Text source -->
-    <template id="template-textsource">
-      <div class="source textsource">
-        <!-- .textsource-paragraph pushed here -->
-      </div>
-    </template>
-    <template id="template-textsource-paragraph">
-      <p class="textsource-paragraph"></p>
-    </template>
-    <!-- Template: Image source -->
-    <template id="template-imagesource">
-      <div class="source imagesource">
-        <img data-ica-content>
-      </div>
-    </template>
-    <!-- Template: Audio source -->
-    <template id="template-audiosource">
-      <div class="source audiosource">
-        <p>Audio: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
-      </div>
-    </template>
-    <!-- Template: Audio source -->
-    <template id="template-videosource">
-      <div class="source videosource">
-        <p>Video: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
-      </div>
-    </template>
-    <!-- Template: Explore -->
-    <template id="template-explore">
-      <section class="explore">
+    <!-- Begin templates -->
+    <div hidden>
+      <!-- Template: Text source -->
+      <template id="template-textsource">
+        <div class="source textsource">
+          <!-- .textsource-paragraph pushed here -->
+        </div>
+      </template>
+      <template id="template-textsource-paragraph">
+        <p class="textsource-paragraph"></p>
+      </template>
+      <!-- Template: Image source -->
+      <template id="template-imagesource">
+        <div class="source imagesource">
+          <img data-ica-content>
+        </div>
+      </template>
+      <!-- Template: Audio source -->
+      <template id="template-audiosource">
+        <div class="source audiosource">
+          <p>Audio: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+        </div>
+      </template>
+      <!-- Template: Audio source -->
+      <template id="template-videosource">
+        <div class="source videosource">
+          <p>Video: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+        </div>
+      </template>
+      <!-- Template: Explore -->
+      <template id="template-explore">
+        <section class="explore">
 
-      </section>
-    </template>
-    <template id="template-explore-jointsource">
-      <article class="jointsource">
-        <h3 data-ica-jointsource-meta="title">Title</h3>
-        <section class="jointsource-container">
-          <section class="jointsource-meta">
-            <p data-ica-jointsource-meta="intro"></p>
-            <div data-ica-jointsource-meta-predicate="region">
-              <h4>Region</h4>
-              <span data-ica-jointsource-meta="region"></span>
-            </div>
-            <div data-ica-jointsource-meta-predicate="participants">
-              <h4>Participants</h4>
-              <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
-            </div>
-            <div data-ica-jointsource-meta-predicate="themes">
-              <h4>Themes</h4>
-              <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
-            </div>
-          </section>
-          <section class="jointsource-status">
-            <a data-ica-action="edit-jointsource">Edit</a>
-          </section>
         </section>
-      </article>
-    </template>
-    <!-- Template: Map -->
-    <template id="template-map">
-      <section class="map"></section>
-    </template>
-    <template id="template-map-level">
-      <div class="map-level"></div>
-    </template>
-    <!-- Template: Publisher -->
-    <template id="template-publisher">
-      <form class="publisher">
-        <article class="publisher-sources series"></article>
-        <article class="publisher-control">
-          <header class="topbar">
-            <h3>Publisher</h3>
-            <a class="topbar-item" data-ica-action="publish">Publish</a>
-            <a class="topbar-item" data-ica-action="abort">Close</a>
-          </header>
-          <section class="publisher-meta">
-            <h4>About the Conversation</h4>
-            <label>Title</label>
-            <input data-ica-jointsource-meta="title" placeholder="Title">
-            <label>Region</label>
-            <input data-ica-jointsource-meta="region" type="text" placeholder="Region">
-            <label>Participants</label>
-            <textarea data-ica-jointsource-meta="participants" data-ica-format="tokens" placeholder="Participants"></textarea>
-            <label>Themes</label>
-            <textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" placeholder="Themes"></textarea>
-            <label>Intro</label>
-            <textarea data-ica-jointsource-meta="intro" placeholder="Intro" rows="1"></textarea>
-          </section>
-          <section>
-            <h4>Add Item</h4>
-            <input type="button" value="Plain Text" data-ica-action="add-source/text">
-            <input type="button" value="Photo" data-ica-action="add-source/image">
-            <input type="button" value="Sound Recording" data-ica-action="add-source/audio">
-            <input type="button" value="Video Clip" data-ica-action="add-source/video">
-          </section>
-          <section data-ica-jointsource-filter="published">
-            <h4 class="color-accent">Danger Zone</h4>
-            <input type="button" class="color-accent" value="Unpublish" data-ica-action="unpublish">
-          </section>
-        </article>
-      </form>
-    </template>
-    <template id="template-publisher-textsource">
-      <article class="publisher-source publisher-textsource card">
-        <header class="topbar">
-          <h3>Text</h3>
-          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
-        </header>
-        <section>
-          <textarea data-ica-source-content placeholder="Record your text here..."></textarea>
-        </section>
-      </article>
-    </template>
-    <template id="template-publisher-imagesource">
-      <article class="publisher-source publisher-imagesource card">
-        <header class="topbar">
-          <h3>Image</h3>
-          <a class="topbar-item" data-ica-action="select-file">Select</a>
-          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
-        </header>
-        <section>
-          <input type="file" data-ica-source-content accept="image/jpeg">
-          <div class="image"></div>
-        </section>
-      </article>
-    </template>
-    <template id="template-publisher-audiosource">
-      <article class="publisher-source publisher-audiosource card">
-        <header class="topbar">
-          <h3>Audio</h3>
-          <a class="topbar-item" data-ica-action="select-file">Select</a>
-          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
-        </header>
-        <section>
-          <input type="file" data-ica-source-content accept="audio/mpeg,audio/x-m4a">
-          <div class="waveform"></div>
-        </section>
-      </article>
-    </template>
-    <template id="template-publisher-videosource">
-      <article class="publisher-source publisher-videosource card">
-        <header class="topbar">
-          <h3>Video</h3>
-          <a class="topbar-item" data-ica-action="select-file">Select</a>
-          <a class="topbar-item" data-ica-action="remove-source">Remove</a>
-        </header>
-        <section>
-          <input type="file" data-ica-source-content accept="video/*">
-        </section>
-      </article>
-    </template>
-    <!-- Template: Articles -->
-    <template id="template-map">
-      <article class="map">
-
-      </article>
-    </template>
-    <template id="template-article">
-      <section class="card-group">
-        <article class="article">
-          <header>
-            <h3 data-ica-jointsource-meta="title">Title</h3>
+      </template>
+      <template id="template-explore-jointsource">
+        <article class="jointsource">
+          <h3 data-ica-jointsource-meta="title">Title</h3>
+          <section class="jointsource-container">
+            <section class="jointsource-meta">
+              <p data-ica-jointsource-meta="intro"></p>
+              <div data-ica-jointsource-meta-predicate="region">
+                <h4>Region</h4>
+                <span data-ica-jointsource-meta="region"></span>
+              </div>
+              <div data-ica-jointsource-meta-predicate="participants">
+                <h4>Participants</h4>
+                <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
+              </div>
+              <div data-ica-jointsource-meta-predicate="themes">
+                <h4>Themes</h4>
+                <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
+              </div>
+            </section>
             <section class="jointsource-status">
               <a data-ica-action="edit-jointsource">Edit</a>
-              <a data-ica-action="close">Close</a>
             </section>
-          </header>
-          <section class="sources">
-
-          </section>
-          <section class="jointsource-meta">
-            <p data-ica-jointsource-meta="intro"></p>
-            <div data-ica-jointsource-meta-predicate="region">
-              <h4>Region</h4>
-              <span data-ica-jointsource-meta="region"></span>
-            </div>
-            <div data-ica-jointsource-meta-predicate="participants">
-              <h4>Participants</h4>
-              <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
-            </div>
-            <div data-ica-jointsource-meta-predicate="themes">
-              <h4>Themes</h4>
-              <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
-            </div>
           </section>
         </article>
-      </section>
-    </template>
-    <!-- Template: Tokens -->
-    <template id="template-tokens">
-      <div class="tokens"></div>
-    </template>
-    <template id="template-token">
-      <span class="token"></span>
-    </template>
-    <!-- Template: Waveform -->
-    <template id="template-waveform">
-      <div class="waveform">
-        <canvas class="waveform-canvas"></canvas>
-      </div>
-    </template>
-    <!-- Template: Image -->
-    <template id="template-image">
-      <div class="image">
-        <img class="image-view">
-      </div>
-    </template>
+      </template>
+      <!-- Template: Map -->
+      <template id="template-map">
+        <section class="map"></section>
+      </template>
+      <template id="template-map-level">
+        <div class="map-level"></div>
+      </template>
+      <!-- Template: Publisher -->
+      <template id="template-publisher">
+        <form class="publisher">
+          <article class="publisher-sources series"></article>
+          <article class="publisher-control">
+            <header class="topbar">
+              <h3>Publisher</h3>
+              <a class="topbar-item" data-ica-action="publish">Publish</a>
+              <a class="topbar-item" data-ica-action="abort">Close</a>
+            </header>
+            <section class="publisher-meta">
+              <h4>About the Conversation</h4>
+              <label>Title</label>
+              <input data-ica-jointsource-meta="title" placeholder="Title">
+              <!-- <label>Region</label>
+              <input data-ica-jointsource-meta="region" type="text" placeholder="Region">
+              <label>Participants</label>
+              <textarea data-ica-jointsource-meta="participants" data-ica-format="tokens" placeholder="Participants"></textarea> -->
+              <label>Themes</label>
+              <textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" placeholder="Themes"></textarea>
+              <label>Intro</label>
+              <textarea data-ica-jointsource-meta="intro" placeholder="Intro" rows="1"></textarea>
+            </section>
+            <section>
+              <h4>Add Item</h4>
+              <input type="button" value="Plain Text" data-ica-action="add-source/text">
+              <input type="button" value="Photo" data-ica-action="add-source/image">
+              <input type="button" value="Sound Recording" data-ica-action="add-source/audio">
+              <input type="button" value="Video Clip" data-ica-action="add-source/video">
+            </section>
+            <section data-ica-jointsource-filter="published">
+              <h4 class="color-accent">Danger Zone</h4>
+              <input type="button" class="color-accent" value="Unpublish" data-ica-action="unpublish">
+            </section>
+          </article>
+        </form>
+      </template>
+      <template id="template-publisher-textsource">
+        <article class="publisher-source publisher-textsource card">
+          <header class="topbar">
+            <h3>Text</h3>
+            <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+          </header>
+          <section>
+            <textarea data-ica-source-content placeholder="Record your text here..."></textarea>
+          </section>
+        </article>
+      </template>
+      <template id="template-publisher-imagesource">
+        <article class="publisher-source publisher-imagesource card">
+          <header class="topbar">
+            <h3>Image</h3>
+            <a class="topbar-item" data-ica-action="select-file">Select</a>
+            <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+          </header>
+          <section>
+            <input type="file" data-ica-source-content accept="image/jpeg">
+            <div class="image"></div>
+          </section>
+        </article>
+      </template>
+      <template id="template-publisher-audiosource">
+        <article class="publisher-source publisher-audiosource card">
+          <header class="topbar">
+            <h3>Audio</h3>
+            <a class="topbar-item" data-ica-action="select-file">Select</a>
+            <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+          </header>
+          <section>
+            <input type="file" data-ica-source-content accept="audio/mpeg,audio/x-m4a">
+            <div class="waveform"></div>
+          </section>
+        </article>
+      </template>
+      <template id="template-publisher-videosource">
+        <article class="publisher-source publisher-videosource card">
+          <header class="topbar">
+            <h3>Video</h3>
+            <a class="topbar-item" data-ica-action="select-file">Select</a>
+            <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+          </header>
+          <section>
+            <input type="file" data-ica-source-content accept="video/*">
+          </section>
+        </article>
+      </template>
+      <!-- Template: Articles -->
+      <template id="template-map">
+        <article class="map">
+
+        </article>
+      </template>
+      <template id="template-article">
+        <section class="card-group">
+          <article class="article">
+            <header>
+              <h3 data-ica-jointsource-meta="title">Title</h3>
+              <section class="jointsource-status">
+                <a data-ica-action="edit-jointsource">Edit</a>
+                <a data-ica-action="close">Close</a>
+              </section>
+            </header>
+            <section class="sources">
+
+            </section>
+            <section class="jointsource-meta">
+              <p data-ica-jointsource-meta="intro"></p>
+              <div data-ica-jointsource-meta-predicate="region">
+                <h4>Region</h4>
+                <span data-ica-jointsource-meta="region"></span>
+              </div>
+              <div data-ica-jointsource-meta-predicate="participants">
+                <h4>Participants</h4>
+                <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
+              </div>
+              <div data-ica-jointsource-meta-predicate="themes">
+                <h4>Themes</h4>
+                <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
+              </div>
+            </section>
+          </article>
+        </section>
+      </template>
+      <!-- Template: Tokens -->
+      <template id="template-tokens">
+        <div class="tokens"></div>
+      </template>
+      <template id="template-token">
+        <span class="token"></span>
+      </template>
+      <!-- Template: Waveform -->
+      <template id="template-waveform">
+        <div class="waveform">
+          <canvas class="waveform-canvas"></canvas>
+        </div>
+      </template>
+      <!-- Template: Image -->
+      <template id="template-image">
+        <div class="image">
+          <img class="image-view">
+        </div>
+      </template>
+    </div>
     <!-- Begin main -->
     <header class="topbar">
       <h1>ICA</h1>
