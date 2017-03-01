@@ -4,15 +4,19 @@ var AppController = Controller.createComponent("AppController");
 AppController.defineMethod("initView", function () {
   if (!this.view) return;
 
+  this.explore = new Explore();
+
   ICA.getJointSources()
     .then(function (jointSources) {
-      var explore = new Explore(); explore.addItems(jointSources);
+      this.explore.addItems(jointSources);
       new ExploreController(
-        explore,
+        this.explore,
         this.view.querySelector(".explore")
       ).componentOf = this;
     }.bind(this));
 });
+
+var appController;
 
 /*****/
 
@@ -20,7 +24,7 @@ window.addEventListener("load", function () {
   window.addEventListener("resize", resize);
   init(document.body);
 
-  new AppController(document.body);
+  appController = new AppController(document.body);
 
   document.querySelector("[href='#explore']").click();
 });

@@ -131,8 +131,8 @@ PublisherJointSourceController.prototype.publish = function () {
   return this.jointSource.publish()
     .then(function (jointSource) {
       if (jointSource) {
-        explore.addItems([jointSource]);
-        explore.didUpdate();
+        appController.explore.addItems([jointSource]);
+        appController.explore.didUpdate();
       }
 
       this.destroy(true);
