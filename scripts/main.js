@@ -109,6 +109,11 @@ function init(element) {
         switchAppView("explore");
 
         break;
+      case "#search":
+
+        switchAppView("search");
+
+        break;
       case "#publisher":
 
         anchorHistory.pop(); // Escape current anchor
