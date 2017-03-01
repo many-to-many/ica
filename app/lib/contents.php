@@ -107,6 +107,9 @@
         // Update existing state
         insertContentLanguageState($langId, $state);
       }
+      if ($content == $row["content"]) {
+        return $row["rev_id"];
+      }
     }
 
     // Add new revision
