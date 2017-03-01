@@ -260,7 +260,8 @@ ICA.publishJointSource = function (jointSource) {
         meta: {
           title: jointSource.meta.title ? {"*": jointSource.meta.title} : null,
           intro: jointSource.meta.intro ? {"*": jointSource.meta.intro} : null,
-          themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null
+          themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null,
+          participants: jointSource.meta.participants ? {"*": jointSource.meta.participants} : null
         }
       })
         .then(function () {
@@ -358,7 +359,8 @@ function touchJointSources(data) {
       jointSource = new JointSource({
         title: dataJointSource.meta.title ? dataJointSource.meta.title["*"] : null,
         intro: dataJointSource.meta.intro ? dataJointSource.meta.intro["*"] : null,
-        themes: dataJointSource.meta.themes ? dataJointSource.meta.themes["*"] : null
+        themes: dataJointSource.meta.themes ? dataJointSource.meta.themes["*"] : null,
+        participants: dataJointSource.meta.participants ? dataJointSource.meta.participants["*"] : null
       }, jointSourceId);
       jointSources.push(jointSource);
     }

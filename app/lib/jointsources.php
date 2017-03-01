@@ -33,6 +33,7 @@
         $jointSource->meta["title"] = getJointSourceMetaTitleOfLatestRevision($row["title_id"]);
         $jointSource->meta["intro"] = getJointSourceMetaIntroOfLatestRevision($row["intro_id"]);
         $jointSource->meta["themes"] = getJointSourceMetaThemesOfLatestRevision($jointSourceId);
+        $jointSource->meta["participants"] = getJointSourceMetaParticipantsOfLatestRevision($jointSourceId);
 
         // Run all sources joint by joint source
         $jointSource->sources = \ICA\Sources\getSources($jointSourceId);
@@ -103,6 +104,7 @@
     if (!empty($jointSource->meta["title"])) partialPutJointSourceMetaTitle($titleId, $jointSource->meta["title"]);
     if (!empty($jointSource->meta["intro"])) partialPutJointSourceMetaIntro($introId, $jointSource->meta["intro"]);
     if (!empty($jointSource->meta["themes"])) partialPutJointSourceMetaThemes($jointSourceId, $jointSource->meta["themes"]);
+    if (!empty($jointSource->meta["participants"])) partialPutJointSourceMetaParticipants($jointSourceId, $jointSource->meta["participants"]);
 
     releaseDatabaseTransaction();
 
@@ -148,6 +150,7 @@
     if (!empty($meta["title"])) partialPutJointSourceMetaTitle($row["title_id"], $meta["title"]);
     if (!empty($meta["intro"])) partialPutJointSourceMetaIntro($row["intro_id"], $meta["intro"]);
     if (!empty($meta["themes"])) partialPutJointSourceMetaThemes($jointSourceId, $meta["themes"]);
+    if (!empty($meta["participants"])) partialPutJointSourceMetaParticipants($jointSourceId, $meta["participants"]);
 
     releaseDatabaseTransaction();
 
@@ -172,6 +175,7 @@
     if (!empty($meta["title"])) putJointSourceMetaTitle($row["title_id"], $meta["title"]);
     if (!empty($meta["intro"])) putJointSourceMetaIntro($row["intro_id"], $meta["intro"]);
     if (!empty($meta["themes"])) putJointSourceMetaThemes($jointSourceId, $meta["themes"]);
+    if (!empty($meta["participants"])) putJointSourceMetaParticipants($jointSourceId, $meta["participants"]);
 
     releaseDatabaseTransaction();
 
@@ -357,6 +361,143 @@
         || !in_array($row["theme"], $metaThemes[$lang])) {
         $delegId = $row["deleg_id"];
         insertJointSourceMetaThemeState($delegId, STATE_UNPUBLISHED);
+      }
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  /**
+   * Joint source meta participant delegations
+   */
+
+  /**
+   * Returns the latest revision of the cluster of participants.
+   */
+  function getJointSourceMetaParticipantsOfLatestRevision($jointSourceId) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT *
+      FROM jointsources_participants_summary
+      WHERE jointsource_id = {$jointSourceId}
+        AND state = {$stateEncoded};");
+
+    $participants = [];
+    while ($row = $result->fetch_assoc()) {
+      $lang = decodeLang($row["lang"]);
+      if (!array_key_exists($lang, $participants)) {
+        $participants[$lang] = [];
+      }
+      array_push($participants[$lang], $row["participant"]);
+    }
+    return $participants;
+
+  }
+
+  /**
+   * Partially puts the cluster of participants for the joint source.
+   */
+  function partialPutJointSourceMetaParticipants($jointSourceId, $metaParticipants, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    retainDatabaseTransaction();
+
+    $stateEncoded = encodeState($state);
+    foreach ($metaParticipants as $lang => $content) {
+      $langEncoded = encodeLang($lang);
+
+      foreach ($content as $participant) {
+        $participantEncoded = $DATABASE->real_escape_string($participant);
+
+        // Get participant id
+        $result = query("SELECT id
+          FROM participants
+          WHERE participant = '{$participantEncoded}'
+          LIMIT 1;");
+
+        if ($result->num_rows == 0) {
+          query("INSERT INTO participants
+            (`participant`, `author_id`)
+            VALUES ('{$participantEncoded}', {$accountId});");
+          $participantId = $DATABASE->insert_id;
+        } else {
+          $row = $result->fetch_assoc();
+          $participantId = $row["id"];
+        }
+
+        // Get joint source-participant delegate
+        $result = query("SELECT *
+          FROM jointsources_participants_summary
+          WHERE participant_id = {$participantId}
+          LIMIT 1;");
+
+        if ($result->num_rows == 0) {
+          query("INSERT INTO jointsources_participants
+            (`jointsource_id`, `participant_id`, `lang`, `author_id`)
+            VALUES ({$jointSourceId}, {$participantId}, {$langEncoded}, {$accountId})");
+          $delegId = $DATABASE->insert_id;
+        } else {
+          $row = $result->fetch_assoc();
+          if (decodeState($row["state"]) == $state) {
+            // Skip the current participant if already up to date
+            continue;
+          }
+          $delegId = $row["deleg_id"];
+        }
+
+        // Update delegate status
+        insertJointSourceMetaParticipantState($delegId, $state);
+      }
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  /**
+   * Inserts a new state for the participant.
+   */
+  function insertJointSourceMetaParticipantState($delegId, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    $stateEncoded = encodeState($state);
+    $result = query("INSERT INTO jointsources_participants_states
+      (`deleg_id`, `state`, `author_id`)
+      VALUES ({$delegId}, {$stateEncoded}, {$accountId});");
+
+    $stateId = $DATABASE->insert_id;
+    return $stateId;
+
+  }
+
+  /**
+   * Puts the cluster of participants for the joint source.
+   */
+  function putJointSourceMetaParticipants($jointSourceId, $metaParticipants) {
+
+    retainDatabaseTransaction();
+
+    // Add new languages to the database
+
+    partialPutJointSourceMetaParticipants($jointSourceId, $metaParticipants);
+
+    // Unpublish languages no longer listed in the content put
+
+    $result = query("SELECT *
+      FROM jointsources_participants_summary
+      WHERE jointsource_id = {$jointSourceId};");
+
+    while ($row = $result->fetch_assoc()) {
+      $lang = decodeLang($row["lang"]);
+      if (!array_key_exists($lang, $metaParticipants)
+        || !in_array($row["participant"], $metaParticipants[$lang])) {
+        $delegId = $row["deleg_id"];
+        insertJointSourceMetaParticipantState($delegId, STATE_UNPUBLISHED);
       }
     }
 
