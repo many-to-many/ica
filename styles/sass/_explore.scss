@@ -6,7 +6,7 @@ $column-spacing: 8px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  overflow-x: hidden;
+  margin: 0 auto;
   padding: ($column-spacing / 2) 0;
   cursor: default;
 
@@ -108,6 +108,17 @@ $column-spacing: 8px;
       background-blend-mode: multiply;
       background-size: cover;
       background-position: center;
+    }
+  }
+
+  &.explore-list {
+    flex-direction: column;
+    max-width: 3 * $column-width;
+
+    .jointsource {
+      flex: none;
+      width: auto;
+      height: $column-width * 0.5 - $column-spacing;
     }
   }
 }
