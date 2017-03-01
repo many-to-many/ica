@@ -1,5 +1,7 @@
 <?php
 
+  require_once(DIR_ROOT . "/lib/shared.php");
+  require_once(DIR_ROOT . "/lib/jointsources.php");
   require_once(DIR_ROOT . "/lib/sources.php");
 
   $REQUEST_BODY = file_get_contents("php://input");
@@ -18,11 +20,10 @@
 
     case "GET":
 
-      $query = $_GET["query"];
-      if (!empty($query)) {
-        $data = \ICA\Sources\searchJointSourcesByMeta($query);
+      if (!empty($_GET["query"])) {
+        $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["query"]);
       } else {
-        $data = \ICA\Sources\getJointSources();
+        $data = \ICA\JointSources\getJointSources();
       }
 
       respondJSON($data);
@@ -33,16 +34,14 @@
 
       // Validation
       if (!$REQUEST_DATA) throw new Error("No request data");
-      if (empty($REQUEST_DATA["meta"]) || empty($REQUEST_DATA["meta"]["*"]))
-        throw new Exception("Metadata must not be empty");
-      if (empty($REQUEST_DATA["meta"]["*"]["title"])) throw new Exception("Untitled");
+      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
-      $DATABASE->autocommit(false);
+      retainDatabaseTransaction();
 
-      $jointSource = new \ICA\Sources\JointSource;
+      $jointSource = new \ICA\JointSources\JointSource;
       $jointSource->meta = $REQUEST_DATA["meta"];
 
-      $jointSourceId = \ICA\Sources\insertJointSource($jointSource);
+      $jointSourceId = \ICA\JointSources\insertJointSource($jointSource);
 
       $dataSources = [];
       // For each source
@@ -58,8 +57,7 @@
         ];
       }
 
-      $result = $DATABASE->commit();
-      if (empty($result)) throw new \Exception($DATABASE->error);
+      releaseDatabaseTransaction();
 
       respondJSON([$jointSourceId => [
         "_id" => $REQUEST_DATA["_id"],
@@ -74,11 +72,9 @@
 
       // Validation
       if (!$REQUEST_DATA) throw new Error("No request data");
-      if (empty($REQUEST_DATA["meta"]) || empty($REQUEST_DATA["meta"]["*"]))
-        throw new Exception("Metadata must not be empty");
-      if (empty($REQUEST_DATA["meta"]["*"]["title"])) throw new Exception("Untitled");
+      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
-      \ICA\Sources\insertJointSourceMetaRevision($jointSourceId, $REQUEST_DATA["meta"]);
+      \ICA\JointSources\putJointSourceMeta($jointSourceId, $REQUEST_DATA["meta"]);
 
       respondJSON([]);
 
@@ -86,7 +82,7 @@
 
     case "DELETE":
 
-      \ICA\Sources\insertJointSourceState($jointSourceId, STATE_UNPUBLISHED);
+      \ICA\JointSources\insertJointSourceState($jointSourceId, STATE_UNPUBLISHED);
 
       respondJSON([]);
 
@@ -112,7 +108,7 @@
 
     case "PUT": \Session\requireVerification();
 
-      \ICA\Sources\insertJointSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
+      \ICA\Sources\partialPutJointSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
 
       respondJSON([]);
 

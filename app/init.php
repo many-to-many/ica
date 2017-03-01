@@ -40,6 +40,34 @@
 
     }
 
+    $DATABASE_NUM_TRANSACTIONS = 0;
+
+    function retainDatabaseTransaction() {
+
+      global $DATABASE, $DATABASE_NUM_TRANSACTIONS;
+
+      $DATABASE->autocommit(false);
+      ++$DATABASE_NUM_TRANSACTIONS;
+
+    }
+
+    function releaseDatabaseTransaction() {
+
+      global $DATABASE, $DATABASE_NUM_TRANSACTIONS;
+
+      if ($DATABASE_NUM_TRANSACTIONS > 0) {
+        --$DATABASE_NUM_TRANSACTIONS;
+        if ($DATABASE_NUM_TRANSACTIONS == 0) {
+          $result = $DATABASE->commit();
+          if (empty($result)) {
+            throw new \Exception($DATABASE->error);
+          }
+          return $result;
+        }
+      }
+
+    }
+
   }
 
   namespace Accounts {

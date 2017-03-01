@@ -220,7 +220,11 @@ ICA.publishJointSource = function (jointSource) {
         // Post new joint source
         return ICA.post("/jointsources/", {
           _id: jointSource.jointSourceId,
-          meta: {"*": jointSource.meta},
+          meta: {
+            title: jointSource.meta.title ? {"*": jointSource.meta.title} : null,
+            intro: jointSource.meta.intro ? {"*": jointSource.meta.intro} : null,
+            themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null
+          },
           sources: jointSource.mapSources(function (source) {
             switch (source.constructor) {
             case ImageSource:
@@ -253,7 +257,11 @@ ICA.publishJointSource = function (jointSource) {
       }
       // Update joint source and individual sources (only if necessary TODO)
       return ICA.put("/jointsources/{0}/".format(jointSource.jointSourceId), {
-        meta: {"*": jointSource.meta}
+        meta: {
+          title: jointSource.meta.title ? {"*": jointSource.meta.title} : null,
+          intro: jointSource.meta.intro ? {"*": jointSource.meta.intro} : null,
+          themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null
+        }
       })
         .then(function () {
           console.log("ICA: Joint source revision posted");
@@ -347,7 +355,11 @@ function touchJointSources(data) {
       jointSource = JointSource.jointSources[dataJointSource._id];
       jointSource.jointSourceId = jointSourceId;
     } else {
-      jointSource = new JointSource(dataJointSource.meta["*"], jointSourceId);
+      jointSource = new JointSource({
+        title: dataJointSource.meta.title ? dataJointSource.meta.title["*"] : null,
+        intro: dataJointSource.meta.intro ? dataJointSource.meta.intro["*"] : null,
+        themes: dataJointSource.meta.themes ? dataJointSource.meta.themes["*"] : null
+      }, jointSourceId);
       jointSources.push(jointSource);
     }
     touchSources(dataJointSource.sources, jointSource);
