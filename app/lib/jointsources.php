@@ -300,8 +300,7 @@
           $delegId = $DATABASE->insert_id;
         } else {
           $row = $result->fetch_assoc();
-          if ($row["theme"] == $theme
-            && decodeState($row["state"]) == $state) {
+          if (decodeState($row["state"]) == $state) {
             // Skip the current theme if already up to date
             continue;
           }
