@@ -5,7 +5,7 @@
 
 - Apache
 - PHP ^5.4
-- MySQL
+- MySQL ^5.5
 
 Development dependencies please check in [`package.json`](package.json).
 
