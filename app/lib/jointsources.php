@@ -34,6 +34,7 @@
         $jointSource->meta["intro"] = getJointSourceMetaIntroOfLatestRevision($row["intro_id"]);
         $jointSource->meta["themes"] = getJointSourceMetaThemesOfLatestRevision($jointSourceId);
         $jointSource->meta["participants"] = getJointSourceMetaParticipantsOfLatestRevision($jointSourceId);
+        $jointSource->meta["region"] = getJointSourceMetaRegionOfLatestRevision($jointSourceId);
 
         // Run all sources joint by joint source
         $jointSource->sources = \ICA\Sources\getSources($jointSourceId);
@@ -105,6 +106,7 @@
     if (!empty($jointSource->meta["intro"])) partialPutJointSourceMetaIntro($introId, $jointSource->meta["intro"]);
     if (!empty($jointSource->meta["themes"])) partialPutJointSourceMetaThemes($jointSourceId, $jointSource->meta["themes"]);
     if (!empty($jointSource->meta["participants"])) partialPutJointSourceMetaParticipants($jointSourceId, $jointSource->meta["participants"]);
+    if (!empty($jointSource->meta["region"])) partialPutJointSourceMetaRegion($jointSourceId, $jointSource->meta["region"]);
 
     releaseDatabaseTransaction();
 
@@ -151,6 +153,7 @@
     if (!empty($meta["intro"])) partialPutJointSourceMetaIntro($row["intro_id"], $meta["intro"]);
     if (!empty($meta["themes"])) partialPutJointSourceMetaThemes($jointSourceId, $meta["themes"]);
     if (!empty($meta["participants"])) partialPutJointSourceMetaParticipants($jointSourceId, $meta["participants"]);
+    if (!empty($meta["region"])) partialPutJointSourceMetaRegion($jointSourceId, $meta["region"]);
 
     releaseDatabaseTransaction();
 
@@ -176,6 +179,7 @@
     if (!empty($meta["intro"])) putJointSourceMetaIntro($row["intro_id"], $meta["intro"]);
     if (!empty($meta["themes"])) putJointSourceMetaThemes($jointSourceId, $meta["themes"]);
     if (!empty($meta["participants"])) putJointSourceMetaParticipants($jointSourceId, $meta["participants"]);
+    if (!empty($meta["region"])) putJointSourceMetaRegion($jointSourceId, $meta["region"]);
 
     releaseDatabaseTransaction();
 
@@ -498,6 +502,148 @@
         || !in_array($row["participant"], $metaParticipants[$lang])) {
         $delegId = $row["deleg_id"];
         insertJointSourceMetaParticipantState($delegId, STATE_UNPUBLISHED);
+      }
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  /**
+   * Joint source meta region
+   */
+
+  /**
+   * Returns the latest revision of the language-specific regions.
+   */
+  function getJointSourceMetaRegionOfLatestRevision($jointSourceId) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT *
+      FROM jointsources_regions_langs_summary
+      WHERE jointsource_id = {$jointSourceId}
+        AND state = {$stateEncoded};");
+
+    $region = [];
+    while ($row = $result->fetch_assoc()) {
+      $lang = decodeLang($row["lang"]);
+      $region[$lang] = $row["region"];
+    }
+    return $region;
+
+  }
+
+  /**
+   * Partially puts the language-specific regions for the joint source.
+   */
+  function partialPutJointSourceMetaRegion($jointSourceId, $metaRegion, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    retainDatabaseTransaction();
+
+    $stateEncoded = encodeState($state);
+    foreach ($metaRegion as $lang => $region) {
+      $langEncoded = encodeLang($lang);
+      $regionEncoded = $DATABASE->real_escape_string($region);
+
+      // Get region id
+      $result = query("SELECT id
+        FROM regions
+        WHERE region = '{$regionEncoded}'
+        LIMIT 1;");
+
+      if ($result->num_rows == 0) {
+        query("INSERT INTO regions
+          (`region`, `author_id`)
+          VALUES ('{$regionEncoded}', {$accountId})");
+        $regionId = $DATABASE->insert_id;
+      } else {
+        $row = $result->fetch_assoc();
+        $regionId = $row["id"];
+      }
+
+      // Get joint source-region language
+      $result = query("SELECT *
+        FROM jointsources_regions_langs_summary
+        WHERE jointsource_id = {$jointSourceId}
+          AND lang = {$langEncoded}
+          AND region_id = {$regionId}
+        LIMIT 1;");
+
+      if ($result->num_rows == 0) {
+        query("INSERT INTO jointsources_regions_langs
+          (`jointsource_id`, `lang`, `author_id`)
+          VALUES ({$jointSourceId}, {$langEncoded}, {$accountId});");
+        $langId = $DATABASE->insert_id;
+
+        // Set initial state
+        insertJointSourceMetaRegionLanguageState($langId, $state);
+
+      } else {
+        $row = $result->fetch_assoc();
+        $langId = $row["lang_id"];
+
+        if (decodeState($row["state"]) != $state) {
+          // Update existing state
+          insertJointSourceMetaRegionLanguageState($langId, $state);
+        }
+        if ($region == $row["region"]) {
+          continue;
+        }
+      }
+
+      // Add new revision
+      query("INSERT INTO jointsources_regions_langs_revs
+        (`lang_id`, `author_id`, `region_id`)
+        VALUES ({$langId}, {$accountId}, {$regionId});");
+
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  /**
+   * Inserts a new state for the language-specific region.
+   */
+  function insertJointSourceMetaRegionLanguageState($langId, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    $stateEncoded = encodeState($state);
+    $result = query("INSERT INTO jointsources_regions_langs_states
+      (`lang_id`, `state`, `author_id`)
+      VALUES ({$langId}, {$stateEncoded}, {$accountId});");
+
+    $stateId = $DATABASE->insert_id;
+    return $stateId;
+
+  }
+
+  /**
+   * Puts the language-specific region for the joint source.
+   */
+  function putJointSourceMetaRegion($jointSourceId, $metaRegion) {
+
+    retainDatabaseTransaction();
+
+    // Add new languages to the database
+
+    partialPutJointSourceMetaRegion($jointSourceId, $metaRegion);
+
+    // Unpublish languages no longer listed in the content put
+
+    $result = query("SELECT *
+      FROM jointsources_regions_langs_summary
+      WHERE jointsource_id = {$jointSourceId};");
+
+    while ($row = $result->fetch_assoc()) {
+      $lang = decodeLang($row["lang"]);
+      if (!array_key_exists($lang, $metaRegion)) {
+        insertJointSourceMetaRegionLanguageState($row["lang_id"], STATE_UNPUBLISHED);
       }
     }
 
