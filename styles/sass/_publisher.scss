@@ -90,13 +90,5 @@
       top: 0;
       @include lift($z-topbar, 1.5);
     }
-
-    > section {
-      margin: 1.5em 0;
-
-      > h4 {
-        margin: 1.5em 0 1em 0;
-      }
-    }
   }
 }
