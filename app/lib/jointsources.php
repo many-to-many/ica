@@ -298,7 +298,9 @@
         // Get joint source-theme delegate
         $result = query("SELECT *
           FROM jointsources_themes_summary
-          WHERE theme_id = {$themeId}
+          WHERE jointsource_id = {$jointSourceId}
+            AND lang = {$langEncoded}
+            AND theme_id = {$themeId}
           LIMIT 1;");
 
         if ($result->num_rows == 0) {
@@ -435,7 +437,9 @@
         // Get joint source-participant delegate
         $result = query("SELECT *
           FROM jointsources_participants_summary
-          WHERE participant_id = {$participantId}
+          WHERE jointsource_id = {$jointSourceId}
+            AND lang = {$langEncoded}
+            AND participant_id = {$participantId}
           LIMIT 1;");
 
         if ($result->num_rows == 0) {
