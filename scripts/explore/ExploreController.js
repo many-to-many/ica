@@ -1,10 +1,6 @@
 
 var ExploreController = SingleModelController.createComponent("ExploreController");
 
-ExploreController.createViewFragment = function () {
-  return cloneTemplate("#template-explore");
-};
-
 ExploreController.defineAlias("model", "explore");
 
 ExploreController.defineMethod("initView", function initView() {
