@@ -20,8 +20,8 @@
 
     case "GET":
 
-      if (!empty($_GET["query"])) {
-        $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["query"]);
+      if (array_key_exists("q", $_GET)) {
+        $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"]);
       } else {
         $data = \ICA\JointSources\getJointSources();
       }

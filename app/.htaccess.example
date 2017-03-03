@@ -10,7 +10,7 @@ RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 # API calls
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^api/([^/]+)/(.*)$ /api/$1/index.php?q=$2 [QSA,NC,L]
+RewriteRule ^api/([^/]+)/(.*)$ /api/$1/index.php?p=$2 [QSA,NC,L]
 
 # Stream file hosting (Skips CDN)
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
@@ -19,7 +19,7 @@ RewriteRule ^streams/(.*)$ https://nocdn.mintkit.net/berkeley/ica/static/$1 [R=3
 # Static file hosting
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^static/(.*)$ /static/index.php?q=$1 [QSA,NC,L]
+RewriteRule ^static/(.*)$ /static/index.php?p=$1 [QSA,NC,L]
 
 # Add .php to access file, but don't redirect
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
@@ -37,7 +37,7 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 # Stream file hosting
 RewriteCond %{HTTP_HOST} =nocdn.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^static/(.*)$ static/index.php?q=$1 [QSA,NC,L]
+RewriteRule ^static/(.*)$ static/index.php?p=$1 [QSA,NC,L]
 
 
 # Remote: berkeley.mintkit.net/ica
@@ -53,7 +53,7 @@ RewriteRule ^(.*)$ https://ica.mintkit.net/$1 [R=301,L]
 # API calls
 RewriteCond %{HTTP_HOST} =<http-host> [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^api/([^/]+)/(.*)$ api/$1/index.php?q=$2 [QSA,NC,L]
+RewriteRule ^api/([^/]+)/(.*)$ api/$1/index.php?p=$2 [QSA,NC,L]
 
 # Stream file hosting
 RewriteCond %{HTTP_HOST} =<http-host> [NC]
@@ -63,7 +63,7 @@ RewriteRule ^streams/(.*)$ static/$1 [NC,L]
 # Static file hosting
 RewriteCond %{HTTP_HOST} =<http-host> [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^static/(.*)$ static/index.php?q=$1 [QSA,NC,L]
+RewriteRule ^static/(.*)$ static/index.php?p=$1 [QSA,NC,L]
 
 # Add .php to access file, but don't redirect
 RewriteCond %{HTTP_HOST} =<http-host> [NC]

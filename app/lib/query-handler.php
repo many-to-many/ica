@@ -72,7 +72,7 @@
 
   }
 
-  $REQUEST_PATH = array_filter(explode("/", strtolower($_GET["q"])), function ($value) {
+  $REQUEST_PATH = array_filter(explode("/", strtolower($_GET["p"])), function ($value) {
     return $value;
   });
 
