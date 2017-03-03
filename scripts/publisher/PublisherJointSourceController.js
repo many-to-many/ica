@@ -164,7 +164,7 @@ function setInputValue(input, value) {
     case "tokens":
       if (input.handler) {
         input.handler.tokens = value;
-        input.handler.contentDidUpdate();
+        input.handler.didUpdate();
       } else {
         input.value = value
           ? Array.isArray(value) ? value.join("; ") : value

@@ -2,7 +2,7 @@
 var TokenInputController = SingleModelController.createComponent("TokenInputController");
 
 TokenInputController.createViewFragment = function () {
-  return cloneTemplate("#template-tokens");
+  return cloneTemplate("#template-tokens-editable");
 }
 
 TokenInputController.defineAlias("model", "inputHandler");
@@ -26,10 +26,18 @@ TokenInputController.defineMethod("updateView", function updateView(edit = false
 
   if (this.inputHandler.tokens.length && !edit) {
     this.inputHandler.tokens.map(function (token) {
-      var tokenFragment = cloneTemplate("#template-token");
+      var tokenFragment = cloneTemplate("#template-token-editable");
       var tokenElement = tokenFragment.querySelector(".token");
 
-      tokenElement.textContent = token;
+      tokenElement.querySelector("[data-ica-token]").textContent = token;
+
+      tokenElement.querySelector("[data-ica-action='remove-token']").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.controller.inputHandler.removeToken(token);
+        this.controller.inputHandler.didUpdate();
+      }.bind(this));
 
       this.appendChild(tokenFragment);
     }.bind(this.view));

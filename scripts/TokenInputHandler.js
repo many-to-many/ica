@@ -19,6 +19,15 @@ TokenInputHandler.inputUpdated = function inputUpdated(e) {
   this.handler.contentDidUpdate();
 };
 
+TokenInputHandler.prototype.removeToken = function removeToken(token) {
+  var tokens = this.tokens;
+  var index = tokens.indexOf(token);
+  if (index > -1) {
+    tokens.splice(index, 1);
+    this.tokens = tokens;
+  }
+};
+
 Object.defineProperty(TokenInputHandler.prototype, "tokens", {
   get: function () {
     var str = this.input.value;

@@ -23,7 +23,7 @@ TokensController.defineMethod("updateView", function updateView() {
       var tokenFragment = cloneTemplate("#template-token");
       var tokenElement = tokenFragment.querySelector(".token");
 
-      tokenElement.textContent = token;
+      tokenElement.querySelector("[data-ica-token]").textContent = token;
 
       this.appendChild(tokenFragment);
     }.bind(this.view));

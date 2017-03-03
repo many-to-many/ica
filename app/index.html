@@ -200,10 +200,21 @@
       </template>
       <!-- Template: Tokens -->
       <template id="template-tokens">
-        <div class="tokens"></div>
+        <div class="tokens borderless"></div>
       </template>
       <template id="template-token">
-        <span class="token"></span>
+        <div class="token">
+          <span data-ica-token></span>
+        </div>
+      </template>
+      <template id="template-tokens-editable">
+        <div class="tokens"></div>
+      </template>
+      <template id="template-token-editable">
+        <div class="token">
+          <span data-ica-token></span>
+          <a class="token-control" data-ica-action="remove-token">-</a>
+        </div>
       </template>
       <!-- Template: Waveform -->
       <template id="template-waveform">
