@@ -27,7 +27,10 @@ Object.defineProperty(TokenInputHandler.prototype, "tokens", {
       // Ref: http://stackoverflow.com/questions/7695997/split-the-sentences-by-and-remove-surrounding-spaces
       var tokens = line.match(/(?=\S)[^;]+?(?=\s*(;|$))/g) || [];
       return tokens;
-    }));
+    }))
+      .filter(function (token, index, self) {
+        return index == self.indexOf(token);
+      });
   },
   set: function (tokens) {
     this.input.value = tokens ? tokens.join("; ") : "";
