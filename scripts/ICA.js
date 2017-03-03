@@ -223,7 +223,9 @@ ICA.publishJointSource = function (jointSource) {
           meta: {
             title: jointSource.meta.title ? {"*": jointSource.meta.title} : null,
             intro: jointSource.meta.intro ? {"*": jointSource.meta.intro} : null,
-            themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null
+            themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null,
+            participants: jointSource.meta.participants ? {"*": jointSource.meta.participants} : null,
+            region: jointSource.meta.region ? {"*": jointSource.meta.region} : null
           },
           sources: jointSource.mapSources(function (source) {
             switch (source.constructor) {
