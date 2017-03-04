@@ -67,4 +67,12 @@
     throw new \Exception("Unable to decode state");
   }
 
+  function createArrayFromQueryResult($result, $col) {
+    $arr = [];
+    while ($row = $result->fetch_assoc()) {
+      array_push($arr, $row[$col]);
+    }
+    return $arr;
+  }
+
 ?>

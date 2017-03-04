@@ -4,6 +4,7 @@
 
   if (handle(["jointsources"], true)) require_once(__DIR__ . "/jointsources.php");
   elseif (handle(["files"], true)) require_once(__DIR__ . "/files.php");
+  elseif (handle(["themes"], true)) require_once(__DIR__ . "/themes.php");
 
   respondHeaderResponseCode(501, "Not Implemented");
 
