@@ -21,7 +21,8 @@
     case "GET":
 
       if (array_key_exists("q", $_GET)) {
-        $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"]);
+        if (empty($_GET["q"])) $data = [];
+        else $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"]);
       } else {
         $data = \ICA\JointSources\getJointSources();
       }
