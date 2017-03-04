@@ -11,11 +11,13 @@
 
     $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT
-        tbl_theme.theme AS theme,
+        tbl_deleg.theme AS theme,
         COUNT(*) AS freq
-      FROM themes AS tbl_theme
-      INNER JOIN jointsources_themes_summary AS tbl_deleg
-        ON tbl_deleg.theme_id = tbl_theme.id AND tbl_deleg.state = {$stateEncoded}
+      FROM jointsources_themes_summary AS tbl_deleg
+      INNER JOIN jointsources_summary AS tbl_jointsource
+        ON tbl_jointsource.jointsource_id = tbl_deleg.jointsource_id
+        AND tbl_jointsource.state = {$stateEncoded}
+      WHERE tbl_deleg.state = {$stateEncoded}
       GROUP BY theme
       ORDER BY freq DESC, theme ASC
       LIMIT {$limit};");
