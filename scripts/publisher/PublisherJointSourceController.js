@@ -28,6 +28,12 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
   this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
     // Event listeners
     element.addEventListener("change", function (e) {
+      // User input change
+      this.controller.jointSource.meta[getElementProperty(element, "jointsource-meta")] = getFormattedInputValue(element);
+      this.controller.jointSource.didUpdate();
+    }.bind(this.view));
+    element.addEventListener("ica-change", function (e) {
+      // Simulated input change
       this.controller.jointSource.meta[getElementProperty(element, "jointsource-meta")] = getFormattedInputValue(element);
       this.controller.jointSource.didUpdate();
     }.bind(this.view));

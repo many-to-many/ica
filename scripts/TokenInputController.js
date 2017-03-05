@@ -13,6 +13,16 @@ TokenInputController.defineMethod("uninitModel", function uninitModel() {
   this.inputHandler.input.style.display = "";
 });
 
+TokenInputController.defineMethod("initModel", function initModel() {
+  if (!this.inputHandler) return;
+
+  this.inputHandler.input.addEventListener("blur", function () {
+    this.updateView();
+  }.bind(this));
+});
+
+// TODO: Remove event listener
+
 TokenInputController.defineMethod("updateView", function updateView(edit = false) {
   if (!this.view) return;
 

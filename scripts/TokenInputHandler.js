@@ -34,5 +34,6 @@ Object.defineProperty(TokenInputHandler.prototype, "tokens", {
   },
   set: function (tokens) {
     this.input.value = tokens ? tokens.join("; ") : "";
+    this.input.dispatchEvent(new Event("ica-change"));
   }
 });
