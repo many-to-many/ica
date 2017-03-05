@@ -26,5 +26,5 @@ window.addEventListener("load", function () {
 
   appController = new AppController(document.body);
 
-  document.querySelector("[href='#search']").click();
+  document.querySelector("[href='#explore']").click();
 });
