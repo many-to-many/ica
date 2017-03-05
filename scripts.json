@@ -46,6 +46,8 @@
   "scripts/FileInputHandler.js",
   "scripts/TokenInputHandler.js",
   "scripts/TokenInputController.js",
+  "scripts/TokenInputSuggestionsController.js",
+  "scripts/TokenInputThemeSuggestionsController.js",
   "scripts/TokensHandler.js",
   "scripts/TokensController.js",
   "scripts/ImageController.js",

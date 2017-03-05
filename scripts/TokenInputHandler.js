@@ -28,6 +28,15 @@ TokenInputHandler.prototype.removeToken = function removeToken(token) {
   }
 };
 
+TokenInputHandler.prototype.addToken = function addToken(token) {
+  var tokens = this.tokens;
+  var index = tokens.indexOf(token);
+  if (index == -1) {
+    tokens.push(token);
+    this.tokens = tokens;
+  }
+};
+
 Object.defineProperty(TokenInputHandler.prototype, "tokens", {
   get: function () {
     var str = this.input.value;

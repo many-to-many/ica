@@ -351,6 +351,10 @@ ICA.unpublishSource = function (source) {
     });
 };
 
+ICA.getThemes = function () {
+  return ICA.get("/themes/");
+}
+
 function touchJointSources(data) {
   var jointSources = [];
   for (var jointSourceId in data) {
