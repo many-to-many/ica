@@ -39,5 +39,8 @@ SingleModelController.defineMethod("uninitModel", function uninitModel() {
 });
 
 SingleModelController.defineMethod("releaseModel", function releaseModel(model) {
-  delete this._model; // TODO: Find a better place for this
+  if (model && model != this.model) {
+    return arguments;
+  }
+  delete this._model;
 });
