@@ -5,6 +5,7 @@
   "scripts/component/SingleModelController.js",
   "scripts/component/Handler.js",
   "scripts/component/ElementHandler.js",
+  "scripts/Controller.js",
   "scripts/sources/JointSource.js",
   "scripts/sources/JointSourceController.js",
   "scripts/sources/Source.js",
@@ -50,5 +51,5 @@
   "scripts/ImageController.js",
   "scripts/WaveformController.js",
   "scripts/ICA.js",
-  "scripts/main.js"
+  "scripts/AppController.js"
 ]

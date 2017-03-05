@@ -90,7 +90,6 @@ Controller.defineMethod("initView", function initView(updateView = []) {
   if (!this.view) return;
   this.view.controller = this;
   setElementProperty(this.view, "controller-id", this.controllerId);
-  init(this.view);
   if (updateView) this.updateView.apply(this, updateView);
 });
 

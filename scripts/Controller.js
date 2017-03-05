@@ -1,46 +1,10 @@
 
-var AppController = Controller.createComponent("AppController");
-
-AppController.defineMethod("initView", function () {
+Controller.defineMethod("initView", function initView(updateView = []) {
   if (!this.view) return;
+  this.view.controller = this;
 
-  this.explore = new Explore();
+  var element = this.view;
 
-  ICA.getJointSources()
-    .then(function (jointSources) {
-      this.explore.addItems(jointSources);
-      new ExploreController(
-        this.explore,
-        this.view.querySelector(".explore")
-      ).componentOf = this;
-    }.bind(this));
-});
-
-var appController;
-
-/*****/
-
-window.addEventListener("load", function () {
-  window.addEventListener("resize", resize);
-  init(document.body);
-
-  appController = new AppController(document.body);
-
-  document.querySelector("[href='#explore']").click();
-});
-
-/*****/
-
-function switchAppView(view) {
-  document.querySelectorAll("[data-ica-app-view]:not([data-ica-app-view='{0}'])".format(view)).forEach(function (element) {
-    element.style.display = "none";
-  });
-  document.querySelectorAll("[data-ica-app-view='{0}']".format(view)).forEach(function (element) {
-    element.style.display = "";
-  });
-}
-
-function init(element) {
   // Init textarea
   element.querySelectorAll("textarea").forEach(function (element) {
     if (element._textareaInit) return;
@@ -82,14 +46,26 @@ function init(element) {
   });
 
   // Init input tokens
-  element.querySelectorAll("input[data-ica-format='tokens'], textarea[data-ica-format='tokens']").forEach(function (element) {
+  element.querySelectorAll("[data-ica-format='tokens']").forEach(function (element) {
     if (element._formatInit) return;
+
+    var tokenInputHandler = new TokenInputHandler(element);
 
     var tokenInputFragment = TokenInputController.createViewFragment();
     var tokenInputElement = tokenInputFragment.querySelector(".tokens");
     element.parentNode.insertBefore(tokenInputFragment, element);
-    var tokenInputController = new TokenInputController(new TokenInputHandler(element), tokenInputElement);
+    var tokenInputController = new TokenInputController(tokenInputHandler, tokenInputElement);
     if (element.controller) tokenInputController.componentOf = element.controller;
+
+    switch (getElementProperty(element, "suggestions")) {
+    case "themes":
+      var tokenSuggestionsFragment = TokenInputSuggestionsController.createViewFragment();
+      var tokenSuggestionsElement = tokenSuggestionsFragment.querySelector(".tokens");
+      element.parentNode.insertBefore(tokenSuggestionsFragment, element.nextSibling);
+      var tokenSuggestionsController = new TokenInputThemeSuggestionsController(tokenInputHandler, tokenSuggestionsElement);
+      if (element.controller) tokenSuggestionsController.componentOf = element.controller;
+      break;
+    }
 
     element._formatInit = true;
   });
@@ -157,6 +133,20 @@ function init(element) {
   });
 
   resize();
+
+  setElementProperty(this.view, "controller-id", this.controllerId);
+  if (updateView) this.updateView.apply(this, updateView);
+});
+
+/*****/
+
+function switchAppView(view) {
+  document.querySelectorAll("[data-ica-app-view]:not([data-ica-app-view='{0}'])".format(view)).forEach(function (element) {
+    element.style.display = "none";
+  });
+  document.querySelectorAll("[data-ica-app-view='{0}']".format(view)).forEach(function (element) {
+    element.style.display = "";
+  });
 }
 
 function resize() {
