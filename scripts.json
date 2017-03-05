@@ -1,4 +1,5 @@
 [
+  "node_modules/quill/dist/quill.min.js",
   "scripts/component/Component.js",
   "scripts/component/Model.js",
   "scripts/component/Controller.js",

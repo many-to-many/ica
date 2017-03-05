@@ -8,15 +8,27 @@ PublisherTextSourceController.createViewFragment = function () {
 PublisherTextSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  var input = this.view.querySelector("[data-ica-source-content]");
-  input.addEventListener("change", function (e) {
-    this.controller.source.content = input.value;
-  }.bind(this.view));
+  var editor = this.view.querySelector("[data-ica-source-content]");
+  this.quill = new Quill(editor, {
+    modules: {
+      toolbar: false
+    },
+    theme: ""
+  });
+  this.quill.on("text-change", function () {
+    this.source.content = this.quill.getText();
+  }.bind(this));
 });
 
 PublisherTextSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  var input = this.view.querySelector("[data-ica-source-content]");
-  setInputValue(input, this.source.content || null);
+  this.quill.setText(this.source.content);
+});
+
+PublisherTextSourceController.defineMethod("uninitView", function uninitView() {
+  if (!this.view) return;
+
+  this.quill.destroy();
+  delete this.quill;
 });

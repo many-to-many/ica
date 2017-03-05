@@ -1,6 +1,6 @@
 
 .article {
-  
+
   .jointsource {
     box-sizing: border-box;
     position: relative;
@@ -117,13 +117,13 @@
   .source {
     box-sizing: border-box;
     position: relative;
-    padding: 1.5em;
+    padding: 0.5em 1.5em;
     border-radius: 3px;
     background-color: #fff;
 
     &.textsource {
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
+      padding-top: 0;
+      padding-bottom: 0;
       // text-align: justify;
 
       & > p {
@@ -165,13 +165,9 @@
     }
 
     &.audiosource {
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
     }
 
     &.videosource {
-      padding-top: 0.5em;
-      padding-bottom: 0.5em;
     }
   }
 }
