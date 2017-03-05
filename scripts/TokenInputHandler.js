@@ -1,23 +1,5 @@
 
-var TokenInputHandler = ElementHandler.createComponent("TokenInputHandler");
-
-TokenInputHandler.defineAlias("element", "input");
-
-TokenInputHandler.defineMethod("initContent", function initContent() {
-  if (!this.input) return;
-
-  this.input.addEventListener("blur", TokenInputHandler.inputUpdated);
-});
-
-TokenInputHandler.defineMethod("uninitContent", function uninitContent() {
-  if (!this.input) return;
-
-  // TODO: Remove event listeners
-});
-
-TokenInputHandler.inputUpdated = function inputUpdated(e) {
-  this.handler.contentDidUpdate();
-};
+var TokenInputHandler = InputHandler.createComponent("TokenInputHandler");
 
 TokenInputHandler.prototype.removeToken = function removeToken(token) {
   var tokens = this.tokens;

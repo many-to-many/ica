@@ -5,6 +5,7 @@
   "scripts/component/SingleModelController.js",
   "scripts/component/Handler.js",
   "scripts/component/ElementHandler.js",
+  "scripts/component/InputHandler.js",
   "scripts/Controller.js",
   "scripts/sources/JointSource.js",
   "scripts/sources/JointSourceController.js",

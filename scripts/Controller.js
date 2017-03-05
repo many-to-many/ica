@@ -37,15 +37,6 @@ Controller.defineMethod("initView", function initView(updateView = []) {
   });
 
   // Init input tokens
-  element.querySelectorAll("input[type='file']").forEach(function (element) {
-    if (element._fileInputInit) return;
-
-    new FileInputHandler(element);
-
-    element._fileInputInit = true;
-  });
-
-  // Init input tokens
   element.querySelectorAll("[data-ica-format='tokens']").forEach(function (element) {
     if (element._formatInit) return;
 
