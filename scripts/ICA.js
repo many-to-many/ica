@@ -207,8 +207,16 @@ ICA.delete = function (path, params) {
   return this.requestAPI("DELETE", path, params);
 };
 
-ICA.getJointSources = function () {
-  return ICA.get("/jointsources/")
+ICA.getJointSources = function (params) {
+  var data = [];
+  for (var key in params) {
+    data.push(key + "=" + params[key]);
+  }
+  return ICA.get("/jointsources/"
+    + (data.length > 0
+    ? "?" + data.join("&")
+    : "")
+  )
     .then(touchJointSources);
 };
 

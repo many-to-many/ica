@@ -28,6 +28,10 @@ Explore.defineMethod("destruct", function destruct() {
 });
 
 Explore.prototype.addItems = function (items) {
-  if (!this.items) return;
   Array.prototype.unshift.apply(this.items, items.reverse());
 };
+
+Explore.prototype.putItems = function (items) {
+  this.items.splice(0, this.items.length);
+  this.addItems(items);
+}

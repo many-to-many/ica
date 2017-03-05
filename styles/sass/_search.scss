@@ -1,0 +1,16 @@
+
+.search {
+  display: flex;
+
+  > .search-control {
+    box-sizing: border-box;
+    flex: 0 1 20em;
+    padding: 0 1.25em 0 0.25em;
+
+  }
+
+  > .explore {
+    flex: auto;
+    margin: 0;
+  }
+}

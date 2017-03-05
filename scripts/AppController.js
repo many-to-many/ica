@@ -15,6 +15,25 @@ AppController.defineMethod("initView", function () {
       this.explore.addItems(jointSources);
       this.explore.didUpdate();
     }.bind(this));
+
+
+   this.searchExplore = new Explore();
+   new ExploreController(
+     this.searchExplore,
+     this.view.querySelector(".search .explore")
+   ).componentOf = this;
+
+   this.view.querySelectorAll(".search .search-control [data-ica-jointsource-query-meta]").forEach(function (element) {
+     element.addEventListener("input", function (e) {
+       ICA.getJointSources({
+         q: this.querySelector(".search .search-control [data-ica-jointsource-query-meta='title']").value
+       })
+         .then(function (jointSources) {
+           this.controller.searchExplore.putItems(jointSources);
+           this.controller.searchExplore.didUpdate();
+         }.bind(this));
+     }.bind(this));
+   }.bind(this.view));
 });
 
 /*****/
