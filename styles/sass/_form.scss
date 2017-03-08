@@ -2,7 +2,7 @@
 .form {
   position: relative;
 
-  > section {
+  section {
     margin: 1.5em 0;
 
     > h4 {
@@ -15,7 +15,7 @@
     box-sizing: border-box;
     font-size: 0.8em;
     line-height: 1.5;
-    margin-top: 0.75em;
+    margin-top: 1.25em;
     text-transform: uppercase;
     color: lighten($color-text, 20%);
   }
