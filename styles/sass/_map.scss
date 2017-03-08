@@ -4,14 +4,12 @@
 
   .article {
     @include card;
-    overflow: visible;
 
     > .sources {
       display: flex;
       overflow-x: auto;
       overflow-y: hidden;
       margin: 0 -1.5em;
-      border-top: solid 1px #f4f4f4;
       border-bottom: solid 1px #f4f4f4;
       align-items: flex-start;
 
@@ -83,7 +81,7 @@
       margin-bottom: 1.5em;
 
       h4 {
-        margin: 1em 0 0.5em 0;
+        margin: 1.25em 0 0.625em 0;
         font-size: 0.8em;
         font-weight: normal;
         text-transform: uppercase;
@@ -91,7 +89,7 @@
         -webkit-user-select: text;
       }
 
-      > * {
+      p {
         margin: 0.5em 0;
       }
     }

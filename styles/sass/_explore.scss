@@ -38,13 +38,13 @@ $column-spacing: 8px;
       line-height: 1.25;
       @include fade-bottom(30%);
 
-      > * {
-        margin: 0.25em 0;
-      }
-
-      > h3 {
+      h3 {
         margin-top: 1em;
         margin-bottom: 0.5em;
+      }
+
+      p {
+        margin: 0.25em 0;
       }
     }
 

@@ -143,19 +143,16 @@
       <template id="template-article">
         <section class="card-group">
           <article class="article">
-            <header>
+            <header class="topbar">
               <h3 data-ica-jointsource-meta="title">Title</h3>
-              <section class="jointsource-status">
-                <a data-ica-action="edit-jointsource">Edit</a>
-                <a data-ica-action="close">Close</a>
-              </section>
+              <a class="topbar-item" data-ica-action="edit-jointsource">Edit</a>
+              <a class="topbar-item" data-ica-action="close">Close</a>
             </header>
             <section class="sources"></section>
             <section class="jointsource-meta">
-              <p data-ica-jointsource-meta="intro"></p>
               <div data-ica-jointsource-meta-predicate="region">
                 <h4>Region</h4>
-                <span data-ica-jointsource-meta="region"></span>
+                <p data-ica-jointsource-meta="region"></p>
               </div>
               <div data-ica-jointsource-meta-predicate="participants">
                 <h4>Participants</h4>
@@ -164,6 +161,10 @@
               <div data-ica-jointsource-meta-predicate="themes">
                 <h4>Themes</h4>
                 <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
+              </div>
+              <div data-ica-jointsource-meta-predicate="intro">
+                <h4>Intro</h4>
+                <p data-ica-jointsource-meta="intro"></p>
               </div>
             </section>
           </article>
