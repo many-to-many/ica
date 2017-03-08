@@ -1,8 +1,10 @@
 
+$card-width: 30em;
+
 @mixin card {
   box-sizing: border-box;
   display: block;
-  width: 30em;
+  width: $card-width;
   max-width: 90%;
   height: auto;
   min-height: 4em;
@@ -41,14 +43,13 @@
   &::before, &::after {
     display: block;
     content: "";
-    flex: 1 0 calc((100% - 30em) / 2);
+    flex: 1 0 calc(50% - #{($card-width + 2.5em)} / 2);
     min-width: 5%;
   }
 
   .card {
     position: relative !important;
-    // width: 30em;
-    flex: 0 0 30em;
+    flex: 0 0 $card-width;
 
     &:not(:last-child) {
       margin-right: 2em;
@@ -60,22 +61,14 @@
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
-    flex: 0 0 30em;
+    flex: 0 0 ($card-width + 2em);
     max-width: 90%;
     height: 100%;
     padding: 0;
     overflow-x: visible;
     overflow-y: auto;
-    margin-left: -1.5em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-
-    &:not(:last-child) {
-      margin-right: 0.5em;
-    }
-    &:last-child {
-      margin-right: -1.5em;
-    }
+    padding-left: 1em;
+    padding-right: 1em;
 
     &::before,
     &::after {
