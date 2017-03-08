@@ -23,8 +23,8 @@
     right : 0;
     left: 0;
 
-    & ~ * {
-      margin-top: 3em;
+    & ~ .app-view {
+      padding-top: 3em;
     }
   }
 
