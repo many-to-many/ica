@@ -16,7 +16,7 @@ PublisherTextSourceController.defineMethod("initView", function initView() {
     theme: ""
   });
   this.quill.on("text-change", function () {
-    this.source.content = this.quill.getText();
+    this.source.content = this.quill.getText().replace(/\n$/, "");
   }.bind(this));
 });
 
@@ -29,6 +29,5 @@ PublisherTextSourceController.defineMethod("updateView", function updateView() {
 PublisherTextSourceController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
-  this.quill.destroy();
   delete this.quill;
 });
