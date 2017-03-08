@@ -31,9 +31,6 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
     document.body.appendChild(fragment);
     new MapController(map, element);
   }.bind(this.view));
-
-  new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
-  new TokensController(this.jointSource.metaThemesHandler, this.view.querySelector("[data-ica-jointsource-meta='themes']")).componentOf = this;
 });
 
 ExploreJointSourceController.defineMethod("updateView", function updateView() {
@@ -47,15 +44,6 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   this.uninitView();
   this._view = element;
   this.initView(false);
-
-  this.view.querySelectorAll("[data-ica-jointsource-meta-predicate]").forEach(function (element) {
-    var metaPredicate = getElementProperty(element, "jointsource-meta-predicate");
-    if (empty(this.jointSource.meta[metaPredicate])) {
-      element.style.display = "none";
-    } else {
-      element.style.display = "";
-    }
-  }.bind(this));
 
   this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
     element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")];
