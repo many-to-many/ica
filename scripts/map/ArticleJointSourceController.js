@@ -28,6 +28,27 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
     mapController.map.didUpdate();
   }.bind(this.view));
 
+  this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (e) {
+    e.preventDefault();
+    var sourcesElement = this.querySelector(".sources");
+    var destIndex = Math.max(0, Math.round(sourcesElement.scrollLeft / sourcesElement.offsetWidth) - 1);
+    var destScrollLeft = sourcesElement.offsetWidth * destIndex;
+    sourcesElement.scrollLeft = destScrollLeft;
+  }.bind(this.view));
+
+  this.view.querySelector("[data-ica-action='next-source']").addEventListener("click", function (e) {
+    e.preventDefault();
+    var sourcesElement = this.querySelector(".sources");
+    var destIndex = Math.min(sourcesElement.children.length, Math.round(sourcesElement.scrollLeft / sourcesElement.offsetWidth) + 1);
+    var destScrollLeft = sourcesElement.offsetWidth * destIndex;
+    sourcesElement.scrollLeft = destScrollLeft;
+  }.bind(this.view));
+
+  this.view.querySelector(".sources").addEventListener("scroll", function (e) {
+    var sourceIndex = Math.round(this.scrollLeft / this.offsetWidth);
+    this.style.height = this.children[sourceIndex].offsetHeight + "px";
+  });
+
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
   new TokensController(this.jointSource.metaThemesHandler, this.view.querySelector("[data-ica-jointsource-meta='themes']")).componentOf = this;
 });

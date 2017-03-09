@@ -142,13 +142,20 @@
       </template>
       <template id="template-article">
         <section class="card-group">
-          <article class="article">
+          <article class="article card">
             <header class="topbar">
               <h3 data-ica-jointsource-meta="title">Title</h3>
               <a class="topbar-item" data-ica-action="edit-jointsource">Edit</a>
               <a class="topbar-item" data-ica-action="close">Close</a>
             </header>
-            <section class="sources"></section>
+            <section class="sources-container">
+              <section class="sources-status">
+                <a class="sources-control sources-control-left" data-ica-action="previous-source"></a>
+                <span></span>
+                <a class="sources-control sources-control-right" data-ica-action="next-source"></a>
+              </section>
+              <section class="sources"></section>
+            </section>
             <section class="jointsource-meta">
               <div data-ica-jointsource-meta-predicate="region">
                 <h4>Region</h4>
