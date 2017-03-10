@@ -66,6 +66,16 @@
           $dst = imagecreatetruecolor($width, $height);
           imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $imageWidth, $imageHeight);
 
+          // Fix image orientation
+          $exif = exif_read_data(DIR_ROOT . "/data/{$file->path}");
+          if (!empty($exif["Orientation"])) {
+            switch ($exif["Orientation"]) {
+              case 3: $dst = imagerotate($dst, 180, 0); break;
+              case 6: $dst = imagerotate($dst, -90, 0); break;
+              case 8: $dst = imagerotate($dst, 90, 0); break;
+            }
+          }
+
           if (!is_dir(DIR_ROOT . "/cache/{$file->path}")
             && !mkdir(DIR_ROOT . "/cache/{$file->path}", 0755, true)) {
             throw new Exception("Unable to create directory for image");
