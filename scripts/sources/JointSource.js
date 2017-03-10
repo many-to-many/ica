@@ -86,6 +86,22 @@ JointSource.defineMethod("uninitJointSourceId", function uninitJointSourceId() {
 
 // Sources
 
+Object.defineProperty(JointSource.prototype, "imageSources", {
+  get: function () {
+    return this.filterSources(function (source) {
+      return source instanceof ImageSource;
+    });
+  }
+});
+
+Object.defineProperty(JointSource.prototype, "audioSources", {
+  get: function () {
+    return this.filterSources(function (source) {
+      return source instanceof AudioSource;
+    });
+  }
+});
+
 JointSource.prototype.mapSources = function (callback) {
   var result = [];
   for (var sourceId in this.sources) {
@@ -98,6 +114,16 @@ JointSource.prototype.forEachSource = function (callback) {
   for (var sourceId in this.sources) {
     callback(this.sources[sourceId], sourceId);
   }
+}
+
+JointSource.prototype.filterSources = function (filter) {
+  var result = [];
+  for (var sourceId in this.sources) {
+    if (filter(this.sources[sourceId], sourceId)) {
+      result.push(this.sources[sourceId]);
+    }
+  }
+  return result;
 }
 
 JointSource.prototype.mapRecoverSources = function (callback) {
