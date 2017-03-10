@@ -2,13 +2,6 @@
 
   require_once(DIR_ROOT . "/lib/files.php");
 
-  $SUPPORTED_MIME_TYPES = [
-    "image/jpeg",
-    "audio/mpeg",
-    "audio/x-m4a",
-    "video/x-msvideo"
-  ];
-
   function prepareFile($mime, $size=0) {
     $accountId = \Session\getAccountId();
     $year = date("Y");
@@ -53,9 +46,6 @@
         // Start chunked file upload
 
         $mime = $_SERVER["HTTP_X_UPLOAD_CONTENT_TYPE"];
-        if (!in_array($mime, $SUPPORTED_MIME_TYPES)) {
-          throw new Exception("Unhandled content type: " . $mime);
-        }
 
         $file = prepareFile($mime, (int)$_SERVER["HTTP_X_UPLOAD_CONTENT_LENGTH"]);
 
@@ -66,9 +56,6 @@
         // Upload single file
 
         $mime = $_SERVER["CONTENT_TYPE"];
-        if (!in_array($mime, $SUPPORTED_MIME_TYPES)) {
-          throw new Exception("Unhandled content type: " . $mime);
-        }
 
         $file = prepareFile($mime);
         $file->size = writeInputStreamToFile($file);
