@@ -34,8 +34,28 @@
     margin: 0;
     padding: 1em;
     font-size: 1em;
-    line-height: 1em;
+    line-height: 1;
     flex: 1 0 auto;
+  }
+
+  > .title-complex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+
+    > * {
+      flex: none;
+    }
+
+    > .subtitle {
+      display: block;
+      font-size: 0.75em;
+      font-weight: 500;
+      padding-top: 0.1em;
+      line-height: 1;
+    }
   }
 
   > .topbar-item {
