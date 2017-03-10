@@ -34,7 +34,13 @@ gulp.task("js-watch", ["js"], function () {
   browserSync.reload("*.js");
 });
 
-gulp.task("build", ["compass", "css", "js"]);
+gulp.task("quill", function () {
+  return gulp.src("node_modules/quill/dist/quill.min.js")
+    .pipe(concat("quill.js"))
+    .pipe(gulp.dest("app/assets"));
+});
+
+gulp.task("build", ["compass", "css", "quill", "js"]);
 
 gulp.task("proxy", ["build"], function () {
   browserSync.init({

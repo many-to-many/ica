@@ -7,8 +7,7 @@ node_modules
 
 styles/main.css
 
-app/assets/main.css
-app/assets/main.js
+app/assets/*
 
 app/data/*
 app/cache/*
