@@ -249,6 +249,12 @@ ICA.publishJointSource = function (jointSource) {
                 type: "audio",
                 content: {"*": source.content}
               };
+            case VideoSource:
+              return {
+                _id: source.sourceId,
+                type: "video",
+                content: {"*": source.content}
+              };
             case TextSource:
             default:
               return {
@@ -295,6 +301,13 @@ ICA.publishJointSource = function (jointSource) {
                 promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                   _id: source.sourceId,
                   type: "audio",
+                  content: {"*": source.content}
+                });
+                break;
+              case VideoSource:
+                promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  _id: source.sourceId,
+                  type: "video",
                   content: {"*": source.content}
                 });
                 break;
