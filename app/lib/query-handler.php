@@ -56,17 +56,24 @@
       $length = $filesize;
     }
 
-    $handler = fopen($path, 'r');
-    fseek($handler, $offset);
-    $data = fread($handler, $length);
-    fclose($handler);
-
     header('Content-Length: ' . $length);
     header('Content-Type: ' . $mime);
     header('Accept-Ranges: bytes');
 
-    print($data);
-    flush();
+    if ($offset == 0 && $length == $filesize) {
+      readfile($path);
+      flush();
+    } else {
+      $handler = fopen($path, 'r');
+      fseek($handler, $offset);
+      while (!feof($handler) && $length > 0) {
+        $bytes = min($length, 1024 * 1024); // 1 MB chunks
+        print(fread($handler, $bytes));
+        flush();
+        $length -= $bytes;
+      }
+      fclose($handler);
+    }
 
     exit();
 

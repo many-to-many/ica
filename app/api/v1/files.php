@@ -100,13 +100,6 @@
           (int)$matches[2] >= (int)$matches[3] || // Range overflow
           (int)$matches[3] != $file->size // Request total file size mismatch
         ) {
-          var_dump($size, $file->size, $matches, $_SERVER,
-          (int)$matches[1] != $size,
-          (int)$matches[1] > (int)$matches[2],
-          (int)$matches[2] + 1 - (int)$matches[1]
-            != (int)$_SERVER['CONTENT_LENGTH'],
-          (int)$matches[2] >= (int)$matches[3],
-          (int)$matches[3] != $file->size);
           throw new Exception("Invalid request");
         }
 
