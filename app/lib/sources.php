@@ -49,6 +49,8 @@
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
+    retainDatabaseTransaction();
+
     // Request content versioning unit id
     $contentId = \ICA\Contents\requestContentId();
 
@@ -61,6 +63,8 @@
 
     $stateId = insertSourceState($sourceId, $state);
     \ICA\Contents\partialPutContentLanguages($contentId, $source->content);
+
+    releaseDatabaseTransaction();
 
     return $sourceId;
 
