@@ -45,7 +45,14 @@ gulp.task("quill", function () {
     .pipe(gulp.dest("app/assets"));
 });
 
-gulp.task("build", ["compass", "css", "quill", "js"]);
+gulp.task("plyr", function () {
+  return gulp.src([
+    "node_modules/plyr/dist/plyr.js"
+  ])
+    .pipe(gulp.dest("app/assets"));
+});
+
+gulp.task("build", ["quill", "plyr", "compass", "css", "js"]);
 
 gulp.task("proxy", ["build"], function () {
   browserSync.init({

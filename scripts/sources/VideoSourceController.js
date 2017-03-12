@@ -8,7 +8,6 @@ VideoSourceController.createViewFragment = function (source) {
 VideoSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  this.view.querySelector("a[data-ica-content]").textContent = this.source.blobHandler.url;
-  this.view.querySelector("a[data-ica-content]").href = this.source.blobHandler.url;
+  this.view.querySelector("[data-ica-content]").src = this.source.blobHandler.url;
 
 });

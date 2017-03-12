@@ -1,0 +1,19 @@
+
+// Font sizes
+$plyr-font-family: $font-sans-serif;
+
+// Colors
+$plyr-color-main: $color-primary;
+
+// Controls
+$plyr-audio-controls-border: none;
+$plyr-audio-control-color: $color-text;
+
+// Progress
+$plyr-audio-progress-bg: #eee;
+
+// Range sliders
+$plyr-range-thumb-shadow: 0 0 1px rgba(#000, 0.50);
+$plyr-range-thumb-active-scale: 1;
+
+@import "../../node_modules/plyr/src/scss/plyr";

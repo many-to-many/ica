@@ -6,6 +6,7 @@
     <title>Many-to-Many</title>
     <link rel="stylesheet" type="text/css" href="assets/main.css">
     <script type="text/javascript" src="assets/quill.js"></script>
+    <script type="text/javascript" src="assets/plyr.js"></script>
     <script type="text/javascript" src="assets/main.js"></script>
   </head>
   <body>
@@ -29,13 +30,18 @@
       <!-- Template: Audio source -->
       <template id="template-audiosource">
         <div class="source audiosource">
-          <p>Audio: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+          <div class="waveform"></div>
+          <audio class="player" controls>
+            <source data-ica-content></source>
+          </audio>
         </div>
       </template>
       <!-- Template: Audio source -->
       <template id="template-videosource">
         <div class="source videosource">
-          <p>Video: <a data-ica-content target="_blank"></a><br>(Controls to be implemented)</p>
+          <video class="player" controls>
+            <source data-ica-content></source>
+          </video>
         </div>
       </template>
       <!-- Template: Explore -->

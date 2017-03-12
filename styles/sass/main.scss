@@ -43,6 +43,9 @@ $z-popup: 8;
 @import "popup";
 @import "waveform";
 
+/** Customizations */
+@import "plyr";
+
 /* App */
 @import "publisher";
 @import "explore";

@@ -96,7 +96,6 @@
           }
 
           &.imagesource {
-            // margin: 0;
             padding: 0;
 
             > img {
@@ -107,9 +106,11 @@
           }
 
           &.audiosource {
+            padding: 0;
           }
 
           &.videosource {
+            padding: 0;
           }
         }
       }

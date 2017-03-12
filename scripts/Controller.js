@@ -61,6 +61,11 @@ Controller.defineMethod("initView", function initView(updateView = []) {
     element._formatInit = true;
   });
 
+  // Use Plyr for audio/video
+  plyr.setup(element.querySelectorAll(".player"), {
+    controls: ["play", "progress", "current-time", "fullscreen"]
+  });
+
   var anchorHistory = [];
 
   element.querySelectorAll("[data-ica-anchor-group]").forEach(function (element) {
