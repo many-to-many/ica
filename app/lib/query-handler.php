@@ -60,21 +60,16 @@
     header('Content-Type: ' . $mime);
     header('Accept-Ranges: bytes');
 
-    if ($offset == 0 && $length == $filesize) {
-      readfile($path);
+    $handler = fopen($path, 'r');
+    fseek($handler, $offset);
+    while (!feof($handler) && $length > 0) {
+      $bytes = min($length, 1024 * 1024); // 1 MB chunks
+      print(fread($handler, $bytes));
       flush();
-    } else {
-      $handler = fopen($path, 'r');
-      fseek($handler, $offset);
-      while (!feof($handler) && $length > 0) {
-        $bytes = min($length, 1024 * 1024); // 1 MB chunks
-        print(fread($handler, $bytes));
-        flush();
-        $length -= $bytes;
-      }
-      fclose($handler);
+      $length -= $bytes;
     }
-
+    fclose($handler);
+  
     exit();
 
   }
