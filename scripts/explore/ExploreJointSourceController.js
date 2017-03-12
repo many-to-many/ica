@@ -33,12 +33,12 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
   }.bind(this.view));
 
   this.view.addEventListener("mouseover", function mouseOver() {
-    if (this.controller.audio) {
+    if (this.controller.audio && this.controller.audio.paused) {
       this.controller.audio.play();
     }
   }.bind(this.view));
 
-  this.view.addEventListener("mouseout", function mouseOver() {
+  this.view.addEventListener("mouseleave", function mouseLeave() {
     if (this.controller.audio) {
       this.controller.audio.pause();
       this.controller.audio.currentTime = 0;
