@@ -24,13 +24,24 @@ PublisherVideoSourceController.defineMethod("initView", function () {
     this.view.querySelector("[data-ica-source-content]").click();
   }.bind(this));
 
+  this.player = plyr.setup(this.view.querySelector(".player"), {
+    controls: ["play", "progress", "current-time", "fullscreen"]
+  })[0];
+
 });
 
 PublisherVideoSourceController.defineMethod("updateView", function () {
   if (!this.view) return;
 
-  var input = this.view.querySelector("[data-ica-source-content]");
-
+  if (this.source && this.source.blobHandler.blob) {
+    this.player.source({
+      type: "video",
+      sources: [{
+        src: this.source.blobHandler.url
+      }]
+    });
+  }
+  
 });
 
 PublisherVideoSourceController.defineMethod("uninitView", function () {
