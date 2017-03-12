@@ -1,10 +1,11 @@
 
-var gulp = require("gulp");
-var compass = require("gulp-compass");
-var concat = require("gulp-concat");
-var strip = require("gulp-strip-comments");
-var browserSync = require("browser-sync").create();
-var config = require("./config.json");
+const gulp = require("gulp");
+const compass = require("gulp-compass");
+const concat = require("gulp-concat");
+const strip = require("gulp-strip-comments");
+const autoprefixer = require('gulp-autoprefixer');
+const browserSync = require("browser-sync").create();
+const config = require("./config.json");
 
 gulp.task("compass", function() {
   return gulp.src("styles/**/*.scss")
@@ -16,6 +17,10 @@ gulp.task("compass", function() {
 
 gulp.task("css", ["compass"], function () {
   return gulp.src("styles/**/*.css")
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: true
+    }))
     .pipe(gulp.dest("app/assets"));
 });
 
