@@ -83,6 +83,8 @@
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
+    retainDatabaseTransaction();
+
     $langEncoded = encodeLang($lang);
 
     $result = query("SELECT *
@@ -114,6 +116,8 @@
 
     // Add new revision
     $revisionId = insertContentLanguageRevision($langId, $content);
+
+    releaseDatabaseTransaction();
 
     return $revisionId;
 
