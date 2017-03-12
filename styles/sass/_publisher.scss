@@ -16,11 +16,11 @@
 
     .publisher-source {
 
-      &.publisher-textsource{
+      > .source-container {
+        margin: 0 -1.5em;
+      }
 
-        section {
-          margin: 0;
-        }
+      &.publisher-textsource{
 
         .editor {
           margin: 0;
@@ -57,10 +57,6 @@
 
       &.publisher-imagesource {
 
-        section {
-          margin: 0;
-        }
-
         [type="file"] {
           display: none;
         }
@@ -79,10 +75,6 @@
 
       &.publisher-audiosource {
 
-        section {
-          margin: 0;
-        }
-
         [type="file"] {
           display: none;
         }
@@ -94,9 +86,6 @@
 
       &.publisher-videosource {
 
-        section {
-          margin: 0;
-        }
       }
     }
   }
