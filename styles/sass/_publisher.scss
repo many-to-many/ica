@@ -90,7 +90,6 @@
     @include lift($z-popup + 1, 3);
 
     > .topbar {
-      position: sticky;
       position: -webkit-sticky;
       margin: 0 -1.5em;
       top: 0;

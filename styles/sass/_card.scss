@@ -18,7 +18,6 @@ $card-width: 30em;
   @include lift(0, 2);
 
   > .topbar {
-    position: sticky;
     position: -webkit-sticky;
     margin-right: -1.5em;
     margin-left: -1.5em;
