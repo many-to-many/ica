@@ -62,7 +62,7 @@ Controller.defineMethod("initView", function initView(updateView = []) {
   });
 
   // Use Plyr for audio/video
-  plyr.setup(element.querySelectorAll(".player"), {
+  plyr.setup(element.querySelectorAll(".player:not(.plyr--setup)"), {
     controls: ["play", "progress", "current-time", "fullscreen"]
   });
 
