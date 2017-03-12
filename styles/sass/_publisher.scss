@@ -57,10 +57,6 @@
 
       &.publisher-imagesource {
 
-        [type="file"] {
-          display: none;
-        }
-
         .image {
           display: block;
           margin: 0 -1.5em;
@@ -74,10 +70,6 @@
       }
 
       &.publisher-audiosource {
-
-        [type="file"] {
-          display: none;
-        }
 
         .waveform {
           margin: 0 -1.5em;
