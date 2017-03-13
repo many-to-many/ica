@@ -56,7 +56,7 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
 
   this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
 
-  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 300);
+  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 400);
   this.resizeSourcesHeightRoutine.componentOf = this;
 
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
