@@ -52,6 +52,8 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
       this.style.height = this.children[sourceIndex].offsetHeight + "px";
     }
     this.parentNode.querySelector("[data-ica-jointsource-source-index]").textContent = sourceIndex + 1;
+    this.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceIndex > 0 ? 1 : 0;
+    this.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceIndex < this.children.length - 1 ? 1 : 0;
   }.bind(this.view.querySelector(".sources"));
 
   this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
