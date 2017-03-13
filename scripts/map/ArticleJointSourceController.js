@@ -44,10 +44,19 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
     sourcesElement.scrollLeft = destScrollLeft;
   }.bind(this.view));
 
-  this.view.querySelector(".sources").addEventListener("scroll", function (e) {
+  // Resize height of sources box
+
+  var resizeSourcesHeight = function resizeSourcesHeight() {
     var sourceIndex = Math.round(this.scrollLeft / this.offsetWidth);
-    this.style.height = this.children[sourceIndex].offsetHeight + "px";
-  });
+    if (this.children[sourceIndex]) {
+      this.style.height = this.children[sourceIndex].offsetHeight + "px";
+    }
+  }.bind(this.view.querySelector(".sources"));
+
+  this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
+
+  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 1000);
+  this.resizeSourcesHeightRoutine.componentOf = this;
 
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
   new TokensController(this.jointSource.metaThemesHandler, this.view.querySelector("[data-ica-jointsource-meta='themes']")).componentOf = this;
@@ -99,4 +108,13 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
         new ArticleTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
+});
+
+ArticleJointSourceController.defineMethod("uninitView", function uninitView() {
+
+  if (this.resizeSourcesHeightRoutine) {
+    this.resizeSourcesHeightRoutine.destroy();
+    delete this.resizeSourcesHeightRoutine;
+  }
+
 });
