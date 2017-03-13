@@ -56,3 +56,8 @@ Routine.prototype.end = function () {
   // Cancel interval limit
   clearTimeout(this._container.timeout);
 }
+
+Routine.prototype.restart = function () {
+  this.end();
+  this.start();
+}

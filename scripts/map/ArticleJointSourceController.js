@@ -51,11 +51,12 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
     if (this.children[sourceIndex]) {
       this.style.height = this.children[sourceIndex].offsetHeight + "px";
     }
+    this.parentNode.querySelector("[data-ica-jointsource-source-index]").textContent = sourceIndex + 1;
   }.bind(this.view.querySelector(".sources"));
 
   this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
 
-  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 1000);
+  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 300);
   this.resizeSourcesHeightRoutine.componentOf = this;
 
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
@@ -108,6 +109,9 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
         new ArticleTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
+
+  this.resizeSourcesHeightRoutine.restart();
+  this.view.querySelector("[data-ica-jointsource-number-of-sources]").textContent = this.jointSource.getNumberOfSources();
 });
 
 ArticleJointSourceController.defineMethod("uninitView", function uninitView() {
