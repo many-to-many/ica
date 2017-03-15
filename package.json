@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint -c .eslintrc.json scripts/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp build"
   },
   "author": "sethlu",
   "license": "MIT",
