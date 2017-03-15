@@ -34,4 +34,4 @@ Explore.prototype.addItems = function (items) {
 Explore.prototype.putItems = function (items) {
   this.items.splice(0, this.items.length);
   this.addItems(items);
-}
+};

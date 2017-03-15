@@ -3,7 +3,7 @@ var PublisherJointSourceController = JointSourceController.createComponent("Publ
 
 PublisherJointSourceController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
-}
+};
 
 // Model
 
@@ -47,20 +47,20 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
       e.preventDefault();
 
       switch (getElementProperty(element, "action")) {
-        case "add-source/text":
-          new TextSource(null, this.controller.jointSource);
-          break;
-        case "add-source/image":
-          new ImageSource(null, this.controller.jointSource);
-          break;
-        case "add-source/audio":
-          new AudioSource(null, this.controller.jointSource);
-          break;
-        case "add-source/video":
-          new VideoSource(null, this.controller.jointSource);
-          break;
-        default:
-          return;
+      case "add-source/text":
+        new TextSource(null, this.controller.jointSource);
+        break;
+      case "add-source/image":
+        new ImageSource(null, this.controller.jointSource);
+        break;
+      case "add-source/audio":
+        new AudioSource(null, this.controller.jointSource);
+        break;
+      case "add-source/video":
+        new VideoSource(null, this.controller.jointSource);
+        break;
+      default:
+        return;
       }
       this.controller.jointSource.didUpdate();
     }.bind(this));
@@ -98,31 +98,32 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
     if (element) return;
 
     // Create new view
+    var fragment;
     switch (source.constructor) {
-      case ImageSource:
-        var fragment = PublisherImageSourceController.createViewFragment();
-        var element = fragment.querySelector(".publisher-source");
-        this.querySelector(".publisher-sources").appendChild(element);
-        new PublisherImageSourceController(source, element).componentOf = this.controller;
-        break;
-      case AudioSource:
-        var fragment = PublisherAudioSourceController.createViewFragment();
-        var element = fragment.querySelector(".publisher-source");
-        this.querySelector(".publisher-sources").appendChild(element);
-        new PublisherAudioSourceController(source, element).componentOf = this.controller;
-        break;
-      case VideoSource:
-        var fragment = PublisherVideoSourceController.createViewFragment();
-        var element = fragment.querySelector(".publisher-source");
-        this.querySelector(".publisher-sources").appendChild(element);
-        new PublisherVideoSourceController(source, element).componentOf = this.controller;
-        break;
-      case TextSource:
-      default:
-        var fragment = PublisherTextSourceController.createViewFragment();
-        var element = fragment.querySelector(".publisher-source");
-        this.querySelector(".publisher-sources").appendChild(element);
-        new PublisherTextSourceController(source, element).componentOf = this.controller;
+    case ImageSource:
+      fragment = PublisherImageSourceController.createViewFragment();
+      element = fragment.querySelector(".publisher-source");
+      this.querySelector(".publisher-sources").appendChild(element);
+      new PublisherImageSourceController(source, element).componentOf = this.controller;
+      break;
+    case AudioSource:
+      fragment = PublisherAudioSourceController.createViewFragment();
+      element = fragment.querySelector(".publisher-source");
+      this.querySelector(".publisher-sources").appendChild(element);
+      new PublisherAudioSourceController(source, element).componentOf = this.controller;
+      break;
+    case VideoSource:
+      fragment = PublisherVideoSourceController.createViewFragment();
+      element = fragment.querySelector(".publisher-source");
+      this.querySelector(".publisher-sources").appendChild(element);
+      new PublisherVideoSourceController(source, element).componentOf = this.controller;
+      break;
+    case TextSource:
+    default:
+      fragment = PublisherTextSourceController.createViewFragment();
+      element = fragment.querySelector(".publisher-source");
+      this.querySelector(".publisher-sources").appendChild(element);
+      new PublisherTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
 });
@@ -167,18 +168,18 @@ PublisherJointSourceController.prototype.unpublish = function () {
 
 function setInputValue(input, value) {
   switch (getElementProperty(input, "format")) {
-    case "tokens":
-      if (input.handler) {
-        input.handler.tokens = value;
-        input.handler.didUpdate();
-      } else {
-        input.value = value
+  case "tokens":
+    if (input.handler) {
+      input.handler.tokens = value;
+      input.handler.didUpdate();
+    } else {
+      input.value = value
           ? Array.isArray(value) ? value.join("; ") : value
           : "";
-      }
-      break;
-    default:
-      input.value = value || null;
+    }
+    break;
+  default:
+    input.value = value || null;
   }
   input.click();
 }
@@ -186,11 +187,10 @@ function setInputValue(input, value) {
 function getFormattedInputValue(input) {
   if (input) {
     switch (getElementProperty(input, "format")) {
-      case "tokens":
-        return input.handler.tokens;
-        break;
-      default:
-        return input.value;
+    case "tokens":
+      return input.handler.tokens;
+    default:
+      return input.value;
     }
   }
   return null;

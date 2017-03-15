@@ -23,7 +23,7 @@ WaveformController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   var parentNode = this.view.parentNode;
-  var waveformFragment = WaveformController.createViewFragment()
+  var waveformFragment = WaveformController.createViewFragment();
   var waveformElement = waveformFragment.querySelector(".waveform");
   parentNode.replaceChild(waveformFragment, this.view);
   this.uninitView();
@@ -49,7 +49,7 @@ WaveformController.defineMethod("updateView", function updateView() {
             var gmin = 0, gmax = 0;
             for (var slice = 0; slice < channel.length; slice += sampleLength) {
               var min = 0, max = 0;
-              for (var i = slice, end = Math.min(channel.length, slice + sampleLength); i < end; i += 64 * 1024) {
+              for (let i = slice, end = Math.min(channel.length, slice + sampleLength); i < end; i += 64 * 1024) {
                 // Sample min and max
                 if (channel[i] < min) min = channel[i];
                 if (channel[i] > max) max = channel[i];
@@ -60,9 +60,9 @@ WaveformController.defineMethod("updateView", function updateView() {
               peaks.push([min, max]);
             }
             var globalRange = gmax - gmin;
-            for (var i in peaks) {
+            for (let i in peaks) {
               var peak = peaks[i],
-                sampleRange = peak[1] - peak[0];
+                sampleRange = peak[1] - peak[0],
                 sampleScale = this.canvasHandler.canvasHeight / buffer.numberOfChannels / globalRange * 0.8,
                 sampleHigh = peak[1] * sampleScale,
                 sampleLow = peak[0] * sampleScale,
@@ -78,7 +78,7 @@ WaveformController.defineMethod("updateView", function updateView() {
             }
           }
         }.bind(this), function () {
-            alert("Decode error");
+          alert("Decode error");
         });
       }
 
@@ -90,7 +90,7 @@ WaveformController.defineMethod("uninitView", function uninitView() {
 
   if (this.canvasHandler) {
     this.canvasHandler.destroy();
-    delete this.canvasHandler
-  };
+    delete this.canvasHandler;
+  }
 
 });

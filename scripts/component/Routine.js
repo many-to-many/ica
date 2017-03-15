@@ -21,7 +21,7 @@ Routine.defineMethod("init", function (func, interval) {
         window.requestAnimationFrame(_execute);
       }, interval);
     }
-  }
+  };
   // Start routine
   this.start();
   return [];
@@ -48,16 +48,16 @@ Routine.prototype.start = function () {
     // Execute the routine
     this._execute();
   }
-}
+};
 
 Routine.prototype.end = function () {
   // Pause the routine
   this.paused = true;
   // Cancel interval limit
   clearTimeout(this._container.timeout);
-}
+};
 
 Routine.prototype.restart = function () {
   this.end();
   this.start();
-}
+};

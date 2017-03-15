@@ -3,7 +3,7 @@ var ArticleJointSourceController = JointSourceController.createComponent("Articl
 
 ArticleJointSourceController.createViewFragment = function () {
   return cloneTemplate("#template-article");
-}
+};
 
 // View
 
@@ -84,31 +84,32 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
   this.jointSource.forEachSource(function (source) {
     if (this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
 
+    var fragment, element;
     switch (source.constructor) {
-      case ImageSource:
-        var fragment = ArticleImageSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ArticleImageSourceController(source, element).componentOf = this.controller;
-        break;
-      case AudioSource:
-        var fragment = ArticleAudioSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ArticleAudioSourceController(source, element).componentOf = this.controller;
-        break;
-      case VideoSource:
-        var fragment = ArticleVideoSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ArticleVideoSourceController(source, element).componentOf = this.controller;
-        break;
-      case TextSource:
-      default:
-        var fragment = ArticleTextSourceController.createViewFragment();
-        var element = fragment.querySelector(".source");
-        this.querySelector(".sources").appendChild(fragment);
-        new ArticleTextSourceController(source, element).componentOf = this.controller;
+    case ImageSource:
+      fragment = ArticleImageSourceController.createViewFragment();
+      element = fragment.querySelector(".source");
+      this.querySelector(".sources").appendChild(fragment);
+      new ArticleImageSourceController(source, element).componentOf = this.controller;
+      break;
+    case AudioSource:
+      fragment = ArticleAudioSourceController.createViewFragment();
+      element = fragment.querySelector(".source");
+      this.querySelector(".sources").appendChild(fragment);
+      new ArticleAudioSourceController(source, element).componentOf = this.controller;
+      break;
+    case VideoSource:
+      fragment = ArticleVideoSourceController.createViewFragment();
+      element = fragment.querySelector(".source");
+      this.querySelector(".sources").appendChild(fragment);
+      new ArticleVideoSourceController(source, element).componentOf = this.controller;
+      break;
+    case TextSource:
+    default:
+      fragment = ArticleTextSourceController.createViewFragment();
+      element = fragment.querySelector(".source");
+      this.querySelector(".sources").appendChild(fragment);
+      new ArticleTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
 

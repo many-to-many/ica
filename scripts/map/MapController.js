@@ -3,7 +3,7 @@ var MapController = SingleModelController.createComponent("MapController");
 
 MapController.createViewFragment = function () {
   return cloneTemplate("#template-map");
-}
+};
 
 MapController.defineAlias("model", "map");
 
@@ -25,16 +25,16 @@ MapController.defineMethod("updateView", function updateView() {
   // Adding elements
   this.map.articles.map(function (article) {
     switch (article.constructor) {
-      case JointSource:
-        // Check existing element
-        if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(article.jointSourceId))) return;
+    case JointSource:
+      // Check existing element
+      if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(article.jointSourceId))) return;
 
-        // Create new view
-        var fragment = ArticleJointSourceController.createViewFragment();
-        var element = fragment.querySelector(".article");
-        this.view.appendChild(fragment);
-        new ArticleJointSourceController(article, element).componentOf = this;
-        break;
+      // Create new view
+      var fragment = ArticleJointSourceController.createViewFragment();
+      var element = fragment.querySelector(".article");
+      this.view.appendChild(fragment);
+      new ArticleJointSourceController(article, element).componentOf = this;
+      break;
     }
   }.bind(this));
 });

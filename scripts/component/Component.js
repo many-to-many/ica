@@ -30,7 +30,7 @@ Component.toString = function () {
   } else {
     return this.componentName;
   }
-}
+};
 
 Component.logChildComponents = function () {
   console.log(this);
@@ -42,7 +42,7 @@ Component.logChildComponents = function () {
     Component.logChildComponents.call(childComponent);
   });
   // console.groupEnd();
-}
+};
 
 Component.defineAlias = function (name, alias) {
   Object.defineProperty(this.prototype, alias, {
@@ -57,7 +57,7 @@ Component.defineAlias = function (name, alias) {
 
 Component.isMethodDefined = function (name) {
   return !!this.prototype[name];
-}
+};
 
 Component.defineMethod = function (name, definition) {
   var thisComponent = this;
@@ -210,4 +210,4 @@ Component.prototype.forEachComponent = function (callback) {
   for (var componentId in this.components) {
     callback(this.components[componentId]);
   }
-}
+};

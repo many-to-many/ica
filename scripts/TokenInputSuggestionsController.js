@@ -3,7 +3,7 @@ var TokenInputSuggestionsController = SingleModelController.createComponent("Tok
 
 TokenInputSuggestionsController.createViewFragment = function () {
   return cloneTemplate("#template-tokens");
-}
+};
 
 TokenInputSuggestionsController.defineAlias("model", "inputHandler");
 

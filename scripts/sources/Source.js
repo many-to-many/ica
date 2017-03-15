@@ -95,25 +95,25 @@ Source.prototype.forEachExtract = function (callback) {
   for (var extractId in this.extracts) {
     callback(this.extracts[extractId]);
   }
-}
+};
 
 // Publisher
 
 Source.prototype.prePublish = function () {
   return Promise.resolve(); // Done pre-publish
-}
+};
 
 Source.prototype.cloneContent = function () {
   // Clone an object
   return this.content;
-}
+};
 
 Source.prototype.backup = function (force = false) {
   // Backup original for user editing
   if (!this._backup_content || force) {
     this._backup_content = this.cloneContent();
   }
-}
+};
 
 Source.prototype.recover = function () {
   if (this._backup_content) {

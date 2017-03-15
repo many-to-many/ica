@@ -104,21 +104,21 @@ TextSourceController.defineMethod("updateView", function updateView(length = 0) 
       var span = document.createElement("span");
       textInsert.map(function (description) {
         switch (description.mark) {
-          case "in":
-            // console.log("mark in", description.extract.id)
-            extracts[description.extract.id] = description.extract;
-            break;
-          case "out":
-            // console.log("mark out", description.extract.id)
-            delete extracts[description.extract.id];
-            break;
+        case "in":
+          // console.log("mark in", description.extract.id)
+          extracts[description.extract.id] = description.extract;
+          break;
+        case "out":
+          // console.log("mark out", description.extract.id)
+          delete extracts[description.extract.id];
+          break;
         }
       });
       var extractIds = [];
       extracts.map(function (extract) {
         new TextExtractController(span, extract);
         extractIds.push(extract.id);
-      })
+      });
       setElementProperty(span, "textsource-extract", extractIds.join(" "));
       return span;
     }
@@ -126,7 +126,7 @@ TextSourceController.defineMethod("updateView", function updateView(length = 0) 
     var extracts = [], span = createSpan([]);
     for (var absoluteIndex in textInserts) {
       var relativeIndex = absoluteIndex - textSourceStart;
-      var length = absoluteIndex - previousAbsoluteIndex;
+      let length = absoluteIndex - previousAbsoluteIndex;
 
       if (length > 0) {
         setElementProperty(span, "textsource-start", previousAbsoluteIndex);
@@ -140,8 +140,7 @@ TextSourceController.defineMethod("updateView", function updateView(length = 0) 
       previousAbsoluteIndex = absoluteIndex;
       previousRelativeIndex = relativeIndex;
     }
-    var length = textSourceEnd - previousAbsoluteIndex;
-    if (length > 0) {
+    if (textSourceEnd - previousAbsoluteIndex > 0) {
       setElementProperty(span, "textsource-start", previousAbsoluteIndex);
       setElementProperty(span, "textsource-length", textSourceEnd - previousAbsoluteIndex);
       span.textContent = sourceParagraph.substring(previousRelativeIndex, textSourceLength);
@@ -154,7 +153,7 @@ TextSourceController.defineMethod("updateView", function updateView(length = 0) 
     this.view.appendChild(sourceParagraphElement);
   }
   if (sourceLength - 1 != content.length) {
-    console.log(sourceLength, content.length)
+    console.log(sourceLength, content.length);
     throw "error testing text source length";
   }
 });

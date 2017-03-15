@@ -3,7 +3,7 @@ var TokenInputController = SingleModelController.createComponent("TokenInputCont
 
 TokenInputController.createViewFragment = function () {
   return cloneTemplate("#template-tokens-editable");
-}
+};
 
 TokenInputController.defineAlias("model", "inputHandler");
 
@@ -27,7 +27,7 @@ TokenInputController.defineMethod("updateView", function updateView(edit = false
   if (!this.view) return;
 
   var parentNode = this.view.parentNode;
-  var tokenInputFragment = TokenInputController.createViewFragment()
+  var tokenInputFragment = TokenInputController.createViewFragment();
   var tokenInputElement = tokenInputFragment.querySelector(".tokens");
   parentNode.replaceChild(tokenInputFragment, this.view);
   this.uninitView();

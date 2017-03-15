@@ -16,7 +16,7 @@ ImageController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   var parentNode = this.view.parentNode;
-  var fragment = ImageController.createViewFragment()
+  var fragment = ImageController.createViewFragment();
   var element = fragment.querySelector(".image");
   parentNode.replaceChild(fragment, this.view);
   this.uninitView();

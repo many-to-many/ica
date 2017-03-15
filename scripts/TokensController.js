@@ -3,7 +3,7 @@ var TokensController = SingleModelController.createComponent("TokensController")
 
 TokensController.createViewFragment = function () {
   return cloneTemplate("#template-tokens");
-}
+};
 
 TokensController.defineAlias("model", "tokensHandler");
 
@@ -11,7 +11,7 @@ TokensController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   var parentNode = this.view.parentNode;
-  var fragment = TokensController.createViewFragment()
+  var fragment = TokensController.createViewFragment();
   var element = fragment.querySelector(".tokens");
   parentNode.replaceChild(fragment, this.view);
   this.uninitView();

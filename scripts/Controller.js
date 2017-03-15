@@ -18,7 +18,7 @@ Controller.defineMethod("initView", function initView(updateView = []) {
     var lineHeight = parseInt(style.lineHeight);
 
     var resizeTextArea = function () {
-      this.rows = defaultRows; // reset to 1 for scroll height detection
+      this.rows = defaultRows; // Reset to 1 for scroll height detection
       if (this.scrollHeight == 0) return;
 
       var rows = Math.round((this.scrollHeight - paddingTop - paddingBottom) / lineHeight);

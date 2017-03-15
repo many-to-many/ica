@@ -7,7 +7,7 @@ DropHandler.defineMethod("init", function init(element, callback) {
 
   return [element];
 
-})
+});
 
 DropHandler.defineMethod("initContent", function initContent() {
 

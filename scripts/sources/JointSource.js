@@ -108,13 +108,13 @@ JointSource.prototype.mapSources = function (callback) {
     result.push(callback(this.sources[sourceId], sourceId));
   }
   return result;
-}
+};
 
 JointSource.prototype.forEachSource = function (callback) {
   for (var sourceId in this.sources) {
     callback(this.sources[sourceId], sourceId);
   }
-}
+};
 
 JointSource.prototype.filterSources = function (filter) {
   var result = [];
@@ -124,7 +124,7 @@ JointSource.prototype.filterSources = function (filter) {
     }
   }
   return result;
-}
+};
 
 JointSource.prototype.mapRecoverSources = function (callback) {
   var result = [];
@@ -134,7 +134,7 @@ JointSource.prototype.mapRecoverSources = function (callback) {
     }
   }
   return result;
-}
+};
 
 JointSource.prototype.getNumberOfSources = function () {
   var sum = 0;
@@ -142,13 +142,13 @@ JointSource.prototype.getNumberOfSources = function () {
     sum++;
   });
   return sum;
-}
+};
 
 JointSource.prototype.forEachJointExtract = function (callback) {
   for (var jointExtractId in this.jointExtracts) {
     callback(this.jointExtracts[jointExtractId], jointExtractId);
   }
-}
+};
 
 // Publisher
 
@@ -156,7 +156,7 @@ JointSource.prototype.prePublish = function () {
   return Promise.all(this.mapSources(function (source) {
     return source.prePublish();
   }));
-}
+};
 
 JointSource.prototype.publish = function () {
   return ICA.publishJointSource(this)
@@ -189,7 +189,7 @@ JointSource.prototype.cloneMeta = function () {
     meta[name] = this.meta[name];
   }
   return meta;
-}
+};
 
 JointSource.prototype.cloneSources = function () {
   var sources = {};
@@ -197,7 +197,7 @@ JointSource.prototype.cloneSources = function () {
     sources[sourceId] = this.sources[sourceId];
   }
   return sources;
-}
+};
 
 JointSource.prototype.backup = function (force = false) {
   // Backup original for user editing
@@ -207,7 +207,7 @@ JointSource.prototype.backup = function (force = false) {
   if (!this._backup_sources || force) {
     this._backup_sources = this.cloneSources();
   }
-}
+};
 
 JointSource.prototype.recover = function () {
   if (this._backup_meta) {
@@ -215,8 +215,8 @@ JointSource.prototype.recover = function () {
     delete this._backup_meta;
   }
   if (this._backup_sources) {
-    for (var sourceId in this.sources) {
-      var source = this.sources[sourceId];
+    for (let sourceId in this.sources) {
+      let source = this.sources[sourceId];
       if (source.sourceId < 0) {
         source.destroy(true);
       }
@@ -224,9 +224,9 @@ JointSource.prototype.recover = function () {
     var _backup_sources = this._backup_sources;
     this.sources = this._backup_sources;
     delete this._backup_sources;
-    for (var sourceId in _backup_sources) {
+    for (let sourceId in _backup_sources) {
       if (!(sourceId in this.sources)) {
-        var source = _backup_sources[sourceId];
+        let source = _backup_sources[sourceId];
         source.initJointSource();
       }
     }

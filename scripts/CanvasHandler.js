@@ -20,7 +20,7 @@ CanvasHandler.prototype.clearRect = function (x, y, width, height) {
     y * this.devicePixelRatio,
     width * this.devicePixelRatio,
     height * this.devicePixelRatio);
-}
+};
 
 CanvasHandler.prototype.rect = function (x, y, width, height) {
   this.canvasContext.rect(
@@ -47,11 +47,11 @@ CanvasHandler.prototype.arcTo = function (x1, y1, x2, y2, radius) {
 
 CanvasHandler.prototype.beginPath = function () {
   this.canvasContext.beginPath();
-}
+};
 
 CanvasHandler.prototype.closePath = function () {
   this.canvasContext.closePath();
-}
+};
 
 CanvasHandler.prototype.roundRect = function (x, y, width, height, radius = 0) {
   // From: http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
@@ -64,7 +64,7 @@ CanvasHandler.prototype.roundRect = function (x, y, width, height, radius = 0) {
   this.arcTo(x, y + height, x, y, radius);
   this.arcTo(x, y, x + width, y, radius);
   this.closePath();
-}
+};
 
 CanvasHandler.prototype.fill = function () {
   this.canvasContext.fill();

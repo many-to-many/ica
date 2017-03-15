@@ -37,17 +37,18 @@ BlobHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
 
   // Need blob for file reading
   if (!this.blob) return Promise.reject(new Error("No blob"));
+  var promise;
   if (!(this.blob instanceof Blob)) {
     if (!loadRemote) {
       return Promise.reject(new Error("Disallowed to load remote content"));
     }
     // Need remote file access and then read file
-    var promise = ICA.request("GET", this.url, null, null, "blob")
+    promise = ICA.request("GET", this.url, null, null, "blob")
       .then(function (data) {
         this.blob = data;
       }.bind(this));
   } else {
-    var promise = Promise.resolve();
+    promise = Promise.resolve();
   }
 
   return promise
