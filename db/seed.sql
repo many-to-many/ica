@@ -987,6 +987,7 @@ INSERT INTO `ica`.`types` (`type`, `name`) VALUES (2, 'audio');
 INSERT INTO `ica`.`types` (`type`, `name`) VALUES (3, 'image');
 INSERT INTO `ica`.`types` (`type`, `name`) VALUES (4, 'video');
 INSERT INTO `ica`.`types` (`type`, `name`) VALUES (0, 'undefined');
+INSERT INTO `ica`.`types` (`type`, `name`) VALUES (5, 'hyperlink');
 
 COMMIT;
 

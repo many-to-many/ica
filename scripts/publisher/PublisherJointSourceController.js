@@ -59,6 +59,9 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
       case "add-source/video":
         new VideoSource(null, this.controller.jointSource);
         break;
+      case "add-source/hyperlink":
+        new HyperlinkSource(null, this.controller.jointSource);
+        break;
       default:
         return;
       }
@@ -117,6 +120,12 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
       element = fragment.querySelector(".publisher-source");
       this.querySelector(".publisher-sources").appendChild(element);
       new PublisherVideoSourceController(source, element).componentOf = this.controller;
+      break;
+    case HyperlinkSource:
+      fragment = PublisherHyperlinkSourceController.createViewFragment();
+      element = fragment.querySelector(".publisher-source");
+      this.querySelector(".publisher-sources").appendChild(element);
+      new PublisherHyperlinkSourceController(source, element).componentOf = this.controller;
       break;
     case TextSource:
     default:

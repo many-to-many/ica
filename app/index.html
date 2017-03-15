@@ -57,6 +57,7 @@
               <input type="button" value="Photo" data-ica-action="add-source/image">
               <input type="button" value="Sound Recording" data-ica-action="add-source/audio">
               <input type="button" value="Video Clip" data-ica-action="add-source/video">
+              <input type="button" value="Hyperlink" data-ica-action="add-source/hyperlink">
             </section>
             <section data-ica-jointsource-filter="published">
               <h4 class="color-accent">Danger Zone</h4>
@@ -113,6 +114,20 @@
           <section class="source-container">
             <input type="file" data-ica-source-content accept="video/*" hidden>
             <video class="player" controls></video>
+          </section>
+        </article>
+      </template>
+      <template id="template-publisher-hyperlinksource">
+        <article class="publisher-source publisher-hyperlinksource card">
+          <header class="topbar">
+            <h3>Hyperlink</h3>
+            <a class="topbar-item" data-ica-action="remove-source">Remove</a>
+          </header>
+          <section class="source-container">
+            <section class="editor">
+              <label>Link</label>
+              <input type="text" data-ica-source-content>
+            </section>
           </section>
         </article>
       </template>
@@ -180,6 +195,11 @@
             <source data-ica-content></source>
           </video>
           <span class="download">Video source: <a data-ica-content target="_blank"></a></span>
+        </div>
+      </template>
+      <template id="template-article-hyperlinksource">
+        <div class="source hyperlinksource">
+          <a data-ica-content target="_blank"></a>
         </div>
       </template>
       <!-- Template: Tokens -->

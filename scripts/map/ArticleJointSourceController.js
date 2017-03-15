@@ -102,6 +102,12 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
       this.querySelector(".sources").appendChild(fragment);
       new ArticleVideoSourceController(source, element).componentOf = this.controller;
       break;
+    case HyperlinkSource:
+      fragment = ArticleHyperlinkSourceController.createViewFragment();
+      element = fragment.querySelector(".source");
+      this.querySelector(".sources").appendChild(fragment);
+      new ArticleHyperlinkSourceController(source, element).componentOf = this.controller;
+      break;
     case TextSource:
     default:
       fragment = ArticleTextSourceController.createViewFragment();
