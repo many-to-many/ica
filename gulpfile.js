@@ -5,7 +5,6 @@ const concat = require("gulp-concat");
 const strip = require("gulp-strip-comments");
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require("browser-sync").create();
-const config = require("./config.json");
 
 gulp.task("compass", function() {
   return gulp.src("styles/**/*.scss")
@@ -55,6 +54,8 @@ gulp.task("plyr", function () {
 gulp.task("build", ["quill", "plyr", "compass", "css", "js"]);
 
 gulp.task("proxy", ["build"], function () {
+  var config = require("./config.json");
+
   browserSync.init({
     proxy: config.proxy
   });
