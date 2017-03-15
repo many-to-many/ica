@@ -1,5 +1,5 @@
 
-# Interactive Conversation Archive
+# Interactive Conversation Archive [![Build Status][travis_img]][travis_url]
 
 ## Dependencies
 
@@ -42,3 +42,6 @@ Development dependencies please check in [`package.json`](package.json).
 ## Notes on Architecture
 
 - [`Component`](scripts/component/): A syntactical sugar for the JavaScript class.
+
+[travis_img]: https://travis-ci.org/many-to-many/ica.svg?branch=master
+[travis_url]: https://travis-ci.org/many-to-many/ica
