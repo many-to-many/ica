@@ -35,6 +35,9 @@
     ],
     "no-unused-vars": [
       "warn"
+    ],
+    "no-inner-declarations": [
+      "warn"
     ]
   }
 }
