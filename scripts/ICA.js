@@ -117,19 +117,18 @@ ICA.requestAPI = function (method, path, data) {
 };
 
 ICA.uploadFile = function (file) {
-  return ICA.uploadFileChunked(file);
-  // return ICA.request(
-  //   "post",
-  //   this.api + "/files/",
-  //   {
-  //     "Content-Type": file.type
-  //   },
-  //   blob
-  // )
-  //   .then(function (fileId) {
-  //     console.log("ICA: File uploaded");
-  //     return fileId;
-  //   });
+  return ICA.request(
+    "post",
+    this.api + "/files/",
+    {
+      "Content-Type": file.type
+    },
+    blob
+  )
+    .then(function (fileId) {
+      console.log("ICA: File uploaded");
+      return fileId;
+    });
 };
 
 ICA.uploadFileChunked = function (file) {
