@@ -1,5 +1,6 @@
 
 node_modules
+npm-debug.log
 
 .sass-cache
 
@@ -8,7 +9,6 @@ node_modules
 styles/main.css
 
 app/assets/*
-
 app/data/*
 app/cache/*
 
