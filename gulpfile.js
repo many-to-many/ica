@@ -2,7 +2,10 @@
 const gulp = require("gulp");
 const compass = require("gulp-compass");
 const concat = require("gulp-concat");
-const strip = require("gulp-strip-comments");
+const sourcemaps = require("gulp-sourcemaps");
+const rename = require("gulp-rename");
+const uglify = require("gulp-uglify");
+const babel = require("gulp-babel");
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require("browser-sync").create();
 
@@ -29,8 +32,18 @@ gulp.task("css-watch", ["css"], function () {
 
 gulp.task("js", function () {
   return gulp.src(require("./scripts.json"))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: [
+        ["es2015", {
+          modules: false
+        }]
+      ]
+    }))
     .pipe(concat("main.js"))
-    .pipe(strip({trim: true}))
+    .pipe(uglify())
+    .pipe(rename("main.min.js"))
+    .pipe(sourcemaps.write("."))
     .pipe(gulp.dest("app/assets"));
 });
 
@@ -39,15 +52,15 @@ gulp.task("js-watch", ["js"], function () {
 });
 
 gulp.task("quill", function () {
-  return gulp.src("node_modules/quill/dist/quill.min.js")
-    .pipe(concat("quill.js"))
+  return gulp.src([
+    "node_modules/quill/dist/quill.min.js",
+    "node_modules/quill/dist/quill.min.js.map"
+  ])
     .pipe(gulp.dest("app/assets"));
 });
 
 gulp.task("plyr", function () {
-  return gulp.src([
-    "node_modules/plyr/dist/plyr.js"
-  ])
+  return gulp.src("node_modules/plyr/dist/plyr.js")
     .pipe(gulp.dest("app/assets"));
 });
 
