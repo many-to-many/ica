@@ -4,8 +4,6 @@ npm-debug.log
 
 .sass-cache
 
-*.bak
-
 styles/main.css
 
 app/assets/*
