@@ -5,6 +5,13 @@
   require_once(__DIR__ . "/shared.php");
   require_once(__DIR__ . "/contents.php");
 
+  $TYPE_HYPERLINK_LOOKUP_TABLES = [
+    LANG_UNDEFINED => "hyperlinks"
+  ];
+  $TYPE_HYPERLINK_LOOKUP_COLUMNS = [
+    LANG_UNDEFINED => "link"
+  ];
+
   class Source {
 
     public $type;
@@ -16,6 +23,8 @@
   }
 
   function getSources($jointSourceId) {
+
+    global $TYPE_HYPERLINK_LOOKUP_TABLES, $TYPE_HYPERLINK_LOOKUP_COLUMNS;
 
     $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT *
@@ -36,7 +45,15 @@
         $source = $data[$sourceId];
       }
 
-      $source->content = \ICA\Contents\getContentLanguagesOfLatestRevision($contentId);
+      switch ($source->type) {
+        case TYPE_HYPERLINK:
+          $source->content = \ICA\Contents\getContentLanguagesOfLatestRevision($contentId,
+            $TYPE_HYPERLINK_LOOKUP_TABLES,
+            $TYPE_HYPERLINK_LOOKUP_COLUMNS);
+          break;
+        default:
+          $source->content = \ICA\Contents\getContentLanguagesOfLatestRevision($contentId);
+      }
 
       $data[$sourceId] = $source;
     }
@@ -47,6 +64,7 @@
   function insertSource($jointSourceId, $source, $state = STATE_PUBLISHED) {
 
     global $DATABASE;
+    global $TYPE_HYPERLINK_LOOKUP_TABLES, $TYPE_HYPERLINK_LOOKUP_COLUMNS;
     $accountId = \Session\getAccountId();
 
     retainDatabaseTransaction();
@@ -62,7 +80,15 @@
     $sourceId = $DATABASE->insert_id;
 
     $stateId = insertSourceState($sourceId, $state);
-    \ICA\Contents\partialPutContentLanguages($contentId, $source->content);
+    switch ($source->type) {
+      case TYPE_HYPERLINK:
+        \ICA\Contents\partialPutContentLanguages($contentId, $source->content, $state,
+          $TYPE_HYPERLINK_LOOKUP_TABLES,
+          $TYPE_HYPERLINK_LOOKUP_COLUMNS);
+        break;
+      default:
+        \ICA\Contents\partialPutContentLanguages($contentId, $source->content, $state);
+    }
 
     releaseDatabaseTransaction();
 
@@ -86,17 +112,29 @@
 
   }
 
-  function partialPutJointSourceContentRevision($sourceId, $content) {
+  function partialPutSourceContentRevision($sourceId, $content, $state = STATE_PUBLISHED) {
 
-    $result = query("SELECT content_id
+    global $TYPE_HYPERLINK_LOOKUP_TABLES, $TYPE_HYPERLINK_LOOKUP_COLUMNS;
+
+    $result = query("SELECT *
       FROM sources
       WHERE id = {$sourceId};");
-    if ($result->num_rows == 0) {
-      return false; // Joint source not found
-    }
 
-    $contentId = $result->fetch_assoc()["content_id"];
-    \ICA\Contents\partialPutContentLanguages($contentId, $content);
+    if ($row = $result->fetch_assoc()) {
+      $type = decodeType($row["type"]);
+      $contentId = $row["content_id"];
+
+      switch ($type) {
+        case TYPE_HYPERLINK:
+          \ICA\Contents\partialPutContentLanguages($contentId, $content, $state,
+            $TYPE_HYPERLINK_LOOKUP_TABLES,
+            $TYPE_HYPERLINK_LOOKUP_COLUMNS);
+          break;
+        default:
+          \ICA\Contents\partialPutContentLanguages($contentId, $content, $state);
+      }
+    }
+    return false; // Joint source not found
 
   }
 

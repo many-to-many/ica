@@ -21,10 +21,45 @@
 
   }
 
+  function getLookupContent($lookupId, $lookupTable, $lookupColumn = NULL) {
+
+    $result = query("SELECT * FROM `{$lookupTable}`
+      WHERE id = '{$lookupId}';");
+
+    if ($row = $result->fetch_assoc()) {
+      $lookupColumn = !empty($lookupColumn) ? $lookupColumn : "content";
+      return $row[$lookupColumn];
+    }
+    // Inconsistency with lookup table
+    return NULL;
+
+  }
+
+  function getContentLanguageOfLatestRevision($contentId, $lang, $lookupTable = NULL, $lookupColumn = NULL) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $langEncoded = encodeLang($lang);
+    $result = query("SELECT *
+      FROM contents_langs_summary
+      WHERE content_id = {$contentId} AND lang = {$langEncoded}
+        AND state = {$stateEncoded};");
+
+    if ($row = $result->fetch_assoc()) {
+      $content = $row["content"];
+      if (!empty($lookupTable)) {
+        $lookupId = $content;
+        $content = getLookupContent($lookupId, $lookupTable, $lookupColumn);
+      }
+      return $content;
+    }
+    return NULL;
+
+  }
+
   /**
    * Returns the latest languages for a content.
    */
-  function getContentLanguagesOfLatestRevision($contentId) {
+  function getContentLanguagesOfLatestRevision($contentId, $lookupTables = [], $lookupColumns = []) {
 
     $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT *
@@ -33,7 +68,16 @@
         AND state = {$stateEncoded};");
     $data = [];
     while ($row = $result->fetch_assoc()) {
-      $data[decodeLang($row["lang"])] = $row["content"];
+      $lang = decodeLang($row["lang"]);
+      $content = $row["content"];
+      if (!empty($lookupTables[$lang])) {
+        $lookupTable = $lookupTables[$lang];
+        $lookupId = $content;
+        $content = getLookupContent($lookupId, $lookupTable, !empty($lookupColumns[$lang])
+          ? $lookupColumns[$lang]
+          : NULL);
+      }
+      $data[$lang] = $content;
     }
     return $data;
 
@@ -60,12 +104,29 @@
   /**
    * Inserts a new revision for a language-specific content by the language id.
    */
-  function insertContentLanguageRevision($langId, $content) {
+  function insertContentLanguageRevision($langId, $content, $lookupTable = NULL, $lookupColumn = NULL) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
     $contentEncoded = $DATABASE->real_escape_string($content);
+    if (!empty($lookupTable)) {
+      if (empty($lookupColumn)) $lookupColumn = "content";
+
+      $result = query("SELECT * FROM `{$lookupTable}`
+        WHERE {$lookupColumn} = '{$contentEncoded}';");
+
+      if ($result->num_rows == 0) {
+        query("INSERT INTO `{$lookupTable}`
+          (`author_id`, {$lookupColumn})
+          VALUES ({$accountId}, '{$contentEncoded}')");
+        $lookupId = $DATABASE->insert_id;
+      } else {
+        $row = $result->fetch_assoc();
+        $lookupId = $row["id"];
+      }
+      $contentEncoded = $lookupId;
+    }
     $result = query("INSERT INTO contents_langs_revs
       (`lang_id`, `author_id`, `content`)
       VALUES ({$langId}, {$accountId}, '{$contentEncoded}')");
@@ -78,7 +139,7 @@
   /**
    * Partially puts the language specific content by content id.
    */
-  function partialPutContentLanguage($contentId, $lang, $content, $state = STATE_PUBLISHED) {
+  function partialPutContentLanguage($contentId, $lang, $content, $state = STATE_PUBLISHED, $lookupTable = NULL, $lookupColumn = NULL) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
@@ -86,7 +147,6 @@
     retainDatabaseTransaction();
 
     $langEncoded = encodeLang($lang);
-
     $result = query("SELECT *
       FROM `contents_langs_summary`
       WHERE content_id = {$contentId} AND lang = {$langEncoded};");
@@ -104,18 +164,24 @@
     } else {
       $row = $result->fetch_assoc();
       $langId = $row["lang_id"];
+      $rev = $row["content"];
 
       if (decodeState($row["state"]) != $state) {
         // Update existing state
         insertContentLanguageState($langId, $state);
       }
-      if ($content == $row["content"]) {
+
+      if (!empty($lookupTable)) {
+        $lookupId = $rev;
+        $rev = getLookupContent($lookupId, $lookupTable, $lookupColumn);
+      }
+      if ($content == $rev) {
         return $row["rev_id"];
       }
     }
 
     // Add new revision
-    $revisionId = insertContentLanguageRevision($langId, $content);
+    $revisionId = insertContentLanguageRevision($langId, $content, $lookupTable, $lookupColumn);
 
     releaseDatabaseTransaction();
 
@@ -126,12 +192,21 @@
   /**
    * Partially batch puts the language specific content by content id.
    */
-  function partialPutContentLanguages($contentId, $langs, $state = STATE_PUBLISHED) {
+  function partialPutContentLanguages($contentId, $langs, $state = STATE_PUBLISHED, $lookupTables = [], $lookupColumns = []) {
 
     retainDatabaseTransaction();
 
     foreach ($langs as $lang => $content) {
-      partialPutContentLanguage($contentId, $lang, $content, $state);
+
+      if (!empty($lookupTables[$lang])) {
+        partialPutContentLanguage($contentId, $lang, $content, $state,
+          $lookupTables[$lang],
+          !empty($lookupColumns[$lang])
+            ? $lookupColumns[$lang]
+            : NULL);
+      } else {
+        partialPutContentLanguage($contentId, $lang, $content, $state);
+      }
     }
 
     releaseDatabaseTransaction();
@@ -141,13 +216,13 @@
   /**
    * Puts the language specific content by content id.
    */
-  function putContentLanguages($contentId, $langs, $state = STATE_PUBLISHED) {
+  function putContentLanguages($contentId, $langs, $state = STATE_PUBLISHED, $lookupTables = [], $lookupColumns = []) {
 
     retainDatabaseTransaction();
 
     // Add new languages to the database
 
-    partialPutContentLanguages($contentId, $langs);
+    partialPutContentLanguages($contentId, $langs, $state, $lookupTables, $lookupColumns);
 
     // Unpublish languages no longer listed in the content put
 
