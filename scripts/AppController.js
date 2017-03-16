@@ -14,8 +14,10 @@ AppController.defineMethod("initView", function () {
     .then(function (jointSources) {
       this.explore.addItems(jointSources);
       this.explore.didUpdate();
-    }.bind(this));
-
+    }.bind(this))
+    .catch(function (err) {
+      console.warn(err);
+    });
 
   this.searchExplore = new Explore();
   new ExploreController(
@@ -31,7 +33,10 @@ AppController.defineMethod("initView", function () {
          .then(function (jointSources) {
            this.controller.searchExplore.putItems(jointSources);
            this.controller.searchExplore.didUpdate();
-         }.bind(this));
+         }.bind(this))
+         .catch(function (err) {
+           console.warn(err);
+         });
     }.bind(this));
   }.bind(this.view));
 });
