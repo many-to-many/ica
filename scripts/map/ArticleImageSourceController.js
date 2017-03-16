@@ -2,7 +2,7 @@
 var ArticleImageSourceController = ArticleSourceController.createComponent("ArticleImageSourceController");
 
 ArticleImageSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-imagesource");
+  return cloneTemplate("#template-article-imagesource");
 };
 
 ArticleImageSourceController.defineMethod("updateView", function updateView(length = 0) {

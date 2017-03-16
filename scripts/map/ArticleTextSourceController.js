@@ -2,7 +2,7 @@
 var ArticleTextSourceController = ArticleSourceController.createComponent("ArticleTextSourceController");
 
 ArticleTextSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-textsource");
+  return cloneTemplate("#template-article-textsource");
 };
 
 ArticleTextSourceController.defineMethod("updateView", function updateView(length = 0) {

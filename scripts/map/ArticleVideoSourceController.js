@@ -2,7 +2,7 @@
 var ArticleVideoSourceController = ArticleSourceController.createComponent("ArticleVideoSourceController");
 
 ArticleVideoSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-videosource");
+  return cloneTemplate("#template-article-videosource");
 };
 
 ArticleVideoSourceController.defineMethod("updateView", function updateView() {

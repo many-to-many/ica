@@ -2,7 +2,7 @@
 var ArticleAudioSourceController = ArticleSourceController.createComponent("ArticleAudioSourceController");
 
 ArticleAudioSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-audiosource");
+  return cloneTemplate("#template-article-audiosource");
 };
 
 ArticleAudioSourceController.defineMethod("updateView", function updateView() {

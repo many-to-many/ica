@@ -12,40 +12,6 @@
   <body>
     <!-- Begin templates -->
     <div hidden>
-      <!-- Template: Text source -->
-      <template id="template-textsource">
-        <div class="source textsource">
-          <!-- .textsource-paragraph pushed here -->
-        </div>
-      </template>
-      <template id="template-textsource-paragraph">
-        <p class="textsource-paragraph"></p>
-      </template>
-      <!-- Template: Image source -->
-      <template id="template-imagesource">
-        <div class="source imagesource">
-          <img data-ica-content>
-        </div>
-      </template>
-      <!-- Template: Audio source -->
-      <template id="template-audiosource">
-        <div class="source audiosource">
-          <div class="waveform"></div>
-          <audio class="player" controls>
-            <source data-ica-content></source>
-          </audio>
-          <span class="download">Audio source: <a data-ica-content></a></span>
-        </div>
-      </template>
-      <!-- Template: Audio source -->
-      <template id="template-videosource">
-        <div class="source videosource">
-          <video class="player" controls>
-            <source data-ica-content></source>
-          </video>
-          <span class="download">Video source: <a data-ica-content></a></span>
-        </div>
-      </template>
       <!-- Template: Explore -->
       <template id="template-explore-jointsource">
         <article class="jointsource">
@@ -190,6 +156,31 @@
             </section>
           </article>
         </section>
+      </template>
+      <template id="template-article-textsource">
+        <div class="source textsource"></div>
+      </template>
+      <template id="template-article-imagesource">
+        <div class="source imagesource">
+          <img data-ica-content>
+        </div>
+      </template>
+      <template id="template-article-audiosource">
+        <div class="source audiosource">
+          <div class="waveform"></div>
+          <audio class="player" controls>
+            <source data-ica-content></source>
+          </audio>
+          <span class="download">Audio source: <a data-ica-content></a></span>
+        </div>
+      </template>
+      <template id="template-article-videosource">
+        <div class="source videosource">
+          <video class="player" controls>
+            <source data-ica-content></source>
+          </video>
+          <span class="download">Video source: <a data-ica-content></a></span>
+        </div>
       </template>
       <!-- Template: Tokens -->
       <template id="template-tokens">
