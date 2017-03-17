@@ -54,7 +54,7 @@ JointSource.defineMethod("destruct", function destruct() {
 });
 
 JointSource.defineMethod("destroy", function destroy() {
-  // Destruct components
+  // Destruct sources
   for (var sourceId in this.sources) {
     this.sources[sourceId].destroy.apply(this.sources[sourceId], arguments);
   }
