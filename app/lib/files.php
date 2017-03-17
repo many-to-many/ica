@@ -30,7 +30,6 @@
         $file->path = $row["path"];
         $file->mime = $row["mime"];
         $file->size = $row["size"];
-        $file->uploader_id = $row["uploader_id"];
         return $file;
       } else return NULL;
     } else throw new \Exception($DATABASE->error);

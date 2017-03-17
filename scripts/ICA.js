@@ -379,6 +379,10 @@ ICA.getThemes = function () {
   return ICA.get("/themes/");
 };
 
+ICA.getFileStats = function (fileId) {
+  return ICA.get("/files/" + fileId);
+};
+
 function touchJointSources(data) {
   var jointSources = [];
   for (var jointSourceId in data) {
