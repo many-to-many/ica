@@ -13,8 +13,6 @@ Controller.defineMethod("construct", function construct() {
   Object.defineProperty(this, "models", {
     value: {}
   });
-  // Construct routines
-  this._routines = [];
 });
 
 Controller.defineMethod("init", function init(view) {
