@@ -15,7 +15,7 @@ ArticleAudioSourceController.defineMethod("updateView", function updateView() {
   }.bind(this.view);
 
   displayPlayer(false);
-  this.source.getBlobStats()
+  this.source.getFileStats()
     .then(function (stats) {
       if (this.querySelector("audio").canPlayType(stats.type) != "") {
         displayPlayer(true);

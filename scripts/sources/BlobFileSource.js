@@ -39,7 +39,7 @@ BlobFileSource.prototype.prePublish = function () {
     }.bind(this));
 };
 
-BlobFileSource.prototype.getBlobStats = function () {
+BlobFileSource.prototype.getFileStats = function () {
   if (this.content instanceof Blob) {
     return Promise.resolve({
       size: this.content.size,

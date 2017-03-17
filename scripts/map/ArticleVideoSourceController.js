@@ -15,7 +15,7 @@ ArticleVideoSourceController.defineMethod("updateView", function updateView() {
   }.bind(this.view);
 
   displayPlayer(false);
-  this.source.getBlobStats()
+  this.source.getFileStats()
     .then(function (stats) {
       if (this.querySelector("video").canPlayType(stats.type) != "") {
         displayPlayer(true);
