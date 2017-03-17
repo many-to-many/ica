@@ -1,2 +1,2 @@
 
-var ImageSource = BlobSource.createComponent("ImageSource");
+var ImageSource = BlobFileSource.createComponent("ImageSource");

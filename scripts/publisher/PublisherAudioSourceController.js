@@ -9,7 +9,7 @@ PublisherAudioSourceController.defineMethod("initView", function () {
   if (!this.view) return;
 
   this.waveformController = new WaveformController(
-    this.source.blobHandler,
+    this.source.fileHandler,
     this.view.querySelector(".waveform"));
 
   this.publisherSourceDropHandler = new DropHandler(this.view, function (files) {
@@ -37,11 +37,11 @@ PublisherAudioSourceController.defineMethod("initView", function () {
 PublisherAudioSourceController.defineMethod("updateView", function () {
   if (!this.view) return;
 
-  if (this.source && this.source.blobHandler.blob) {
+  if (this.source && this.source.fileHandler.blob) {
     this.player.source({
       type: "audio",
       sources: [{
-        src: this.source.blobHandler.url
+        src: this.source.fileHandler.url
       }]
     });
   }

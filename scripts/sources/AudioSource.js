@@ -1,2 +1,2 @@
 
-var AudioSource = BlobStreamSource.createComponent("AudioSource");
+var AudioSource = BlobFileSource.createComponent("AudioSource");

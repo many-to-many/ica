@@ -1,2 +1,2 @@
 
-var VideoSource = BlobStreamSource.createComponent("VideoSource");
+var VideoSource = BlobFileSource.createComponent("VideoSource");
