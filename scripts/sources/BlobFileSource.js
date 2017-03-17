@@ -47,4 +47,4 @@ BlobFileSource.prototype.getBlobStats = function () {
     });
   }
   return ICA.getFileStats(this.content);
-}
+};
