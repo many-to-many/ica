@@ -123,7 +123,7 @@ ICA.uploadFile = function (file) {
     {
       "Content-Type": file.type
     },
-    blob
+    file
   )
     .then(function (fileId) {
       console.log("ICA: File uploaded");
