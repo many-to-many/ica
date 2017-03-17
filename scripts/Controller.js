@@ -71,7 +71,9 @@ Controller.defineMethod("initView", function initView(updateView = []) {
   element.querySelectorAll("[data-ica-anchor-group]").forEach(function (element) {
     if (element._anchorGroupInit) return;
 
-    element.addEventListener("click", function () {
+    element.addEventListener("click", function (e) {
+      e.preventDefault();
+
       anchorHistory.push(this);
       while (anchorHistory.length > 50) anchorHistory.shift();
 
