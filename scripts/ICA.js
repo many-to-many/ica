@@ -359,7 +359,7 @@ ICA.unpublishJointSource = function (jointSource) {
   if (jointSource.jointSourceId < 0) return Promise.reject(new Error("Joint source not yet published"));
   return ICA.delete("/jointsources/{0}/".format(jointSource.jointSourceId))
     .then(function () {
-      jointSource.destroy(true);
+      jointSource.destroy(true, true);
       console.log("ICA: Joint source deleted");
     });
 };
@@ -370,7 +370,7 @@ ICA.unpublishSource = function (source) {
     source.jointSource.jointSourceId,
     source.sourceId))
     .then(function () {
-      source.destroy(true);
+      source.destroy(true, true);
       console.log("ICA: Source deleted");
     });
 };

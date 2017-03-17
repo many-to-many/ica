@@ -70,7 +70,7 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
     e.preventDefault();
 
     if (this.controller.jointSource.jointSourceId < 0) {
-      this.controller.jointSource.destroy(true);
+      this.controller.jointSource.destroy(true, true);
     } else {
       this.controller.destroy(true);
     }

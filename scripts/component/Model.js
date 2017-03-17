@@ -25,11 +25,11 @@ Model.defineMethod("destruct", function destruct() {
   delete Model.models[this.modelId];
 });
 
-Model.defineMethod("destroy", function destroy(destroyViews = false) {
-  if (destroyViews) {
+Model.defineMethod("destroy", function destroy(destroyControllers = false, destroyViews = false) {
+  if (destroyControllers) {
     // The controller to be destroyed with its view removed
     for (var controllerId in this.controllers) {
-      this.controllers[controllerId].destroy(true);
+      this.controllers[controllerId].destroy(destroyViews);
     }
   }
 });

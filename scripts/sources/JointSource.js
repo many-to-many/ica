@@ -218,7 +218,7 @@ JointSource.prototype.recover = function () {
     for (let sourceId in this.sources) {
       let source = this.sources[sourceId];
       if (source.sourceId < 0) {
-        source.destroy(true);
+        source.destroy(true, true);
       }
     }
     var _backup_sources = this._backup_sources;
