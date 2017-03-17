@@ -7,7 +7,7 @@
     $file = \ICA\Files\getFile($requestFileId);
     if (!$file) throw new Exception("File not found");
 
-    preg_match("/([^\/]+)\/([^\/]+)/", $file->mime, $matches);
+    preg_match("/([^\/]+)\/([^\/]+)/", $file->type, $matches);
     $fileType = $matches[1];
     $fileSubtype = $matches[2];
 
@@ -82,7 +82,7 @@
           }
 
           $imageFunctions[$requestImageSubtype]($dst, $path);
-          respondFile($path, $file->mime);
+          respondFile($path, $file->type);
 
         } elseif ($requestImageSubtype == $fileSubtype) {
 
@@ -98,7 +98,7 @@
     }
 
     // Serve original file
-    respondFile(DIR_ROOT . "/data/{$file->path}", $file->mime);
+    respondFile(DIR_ROOT . "/data/{$file->path}", $file->type);
 
   }
 

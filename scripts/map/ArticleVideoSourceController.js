@@ -14,17 +14,13 @@ ArticleVideoSourceController.defineMethod("updateView", function updateView() {
     });
   }.bind(this.view);
 
-  if (this.source.content instanceof Blob) {
-    displayPlayer(true);
-  } else {
-    displayPlayer(false);
-    ICA.getFileStats(this.source.content)
-      .then(function (fileStats) {
-        if (this.querySelector("video").canPlayType(fileStats.mime) != "") {
-          displayPlayer(true);
-        }
-      }.bind(this.view));
-  }
+  displayPlayer(false);
+  this.source.getBlobStats()
+    .then(function (stats) {
+      if (this.querySelector("video").canPlayType(stats.type) != "") {
+        displayPlayer(true);
+      }
+    }.bind(this.view));
 
   if (this.source.blobHandler.blob) {
     this.view.querySelector("source[data-ica-content]").src = this.source.blobHandler.url;

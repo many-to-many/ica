@@ -38,3 +38,13 @@ BlobSource.prototype.prePublish = function () {
       }
     }.bind(this));
 };
+
+BlobSource.prototype.getBlobStats = function () {
+  if (this.content instanceof Blob) {
+    return Promise.resolve({
+      size: this.content.size,
+      type: this.content.type
+    });
+  }
+  return ICA.getFileStats(this.content);
+}

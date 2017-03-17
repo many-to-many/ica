@@ -2,7 +2,7 @@
 
   require_once(DIR_ROOT . "/lib/files.php");
 
-  function prepareFile($mime, $size=0) {
+  function prepareFile($type, $size=0) {
     $accountId = \Session\getAccountId();
     $year = date("Y");
     $month = date("m");
@@ -17,7 +17,7 @@
 
     $file = new \ICA\Files\File;
     $file->path = $path;
-    $file->mime = $mime;
+    $file->type = $type;
     $file->size = $size;
 
     return $file;
@@ -45,9 +45,9 @@
         !empty($_SERVER["HTTP_X_UPLOAD_CONTENT_LENGTH"])) {
         // Start chunked file upload
 
-        $mime = $_SERVER["HTTP_X_UPLOAD_CONTENT_TYPE"];
+        $type = $_SERVER["HTTP_X_UPLOAD_CONTENT_TYPE"];
 
-        $file = prepareFile($mime, (int)$_SERVER["HTTP_X_UPLOAD_CONTENT_LENGTH"]);
+        $file = prepareFile($type, (int)$_SERVER["HTTP_X_UPLOAD_CONTENT_LENGTH"]);
 
         $fileId = \ICA\Files\insertFile($file);
         respondJSON($fileId);
@@ -55,9 +55,9 @@
       } else {
         // Upload single file
 
-        $mime = $_SERVER["CONTENT_TYPE"];
+        $type = $_SERVER["CONTENT_TYPE"];
 
-        $file = prepareFile($mime);
+        $file = prepareFile($type);
         $file->size = writeInputStreamToFile($file);
       }
 
