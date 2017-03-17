@@ -10,8 +10,8 @@ ArticleImageSourceController.defineMethod("updateView", function updateView(leng
 
   var img = this.view.querySelector("img[data-ica-content]");
   img.src = this.source.content
-    ? this.source.blobHandler.blob instanceof Blob
-      ? this.source.blobHandler.url
-      : this.source.blobHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
+    ? this.source.fileHandler.blob instanceof Blob
+      ? this.source.fileHandler.url
+      : this.source.fileHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
     : "";
 });

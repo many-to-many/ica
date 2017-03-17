@@ -8,11 +8,25 @@ ArticleAudioSourceController.createViewFragment = function (source) {
 ArticleAudioSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  if (this.source.blobHandler.blob) {
-    this.view.querySelector("source[data-ica-content]").src = this.source.blobHandler.url;
+  var displayPlayer = function displayPlayer(display) {
+    this.querySelectorAll(".source > :not(.download)").forEach(function (element) {
+      element.style.display = display ? "" : "none";
+    });
+  }.bind(this.view);
 
-    this.view.querySelector("a[data-ica-content]").href = this.source.blobHandler.url;
-    this.view.querySelector("a[data-ica-content]").textContent = this.source.blobHandler.url;
+  displayPlayer(false);
+  this.source.getBlobStats()
+    .then(function (stats) {
+      if (this.querySelector("audio").canPlayType(stats.type) != "") {
+        displayPlayer(true);
+      }
+    }.bind(this.view));
+
+  if (this.source.fileHandler.blob) {
+    this.view.querySelector("source[data-ica-content]").src = this.source.fileHandler.url;
+
+    this.view.querySelector("a[data-ica-content]").href = this.source.fileHandler.url;
+    this.view.querySelector("a[data-ica-content]").textContent = this.source.fileHandler.url;
   }
 
 });

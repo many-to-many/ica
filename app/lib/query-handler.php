@@ -38,7 +38,7 @@
 
   }
 
-  function respondFile($path, $mime) {
+  function respondFile($path, $type) {
 
     // From: https://github.com/pomle/php-serveFilePartial/blob/master/ServeFilePartial.inc.php
 
@@ -57,7 +57,7 @@
     }
 
     header('Content-Length: ' . $length);
-    header('Content-Type: ' . $mime);
+    header('Content-Type: ' . $type);
     header('Accept-Ranges: bytes');
 
     $handler = fopen($path, 'r');

@@ -123,7 +123,7 @@ ICA.uploadFile = function (file) {
     {
       "Content-Type": file.type
     },
-    blob
+    file
   )
     .then(function (fileId) {
       console.log("ICA: File uploaded");
@@ -377,6 +377,10 @@ ICA.unpublishSource = function (source) {
 
 ICA.getThemes = function () {
   return ICA.get("/themes/");
+};
+
+ICA.getFileStats = function (fileId) {
+  return ICA.get("/files/" + fileId);
 };
 
 function touchJointSources(data) {

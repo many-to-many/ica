@@ -5,7 +5,7 @@ ImageController.createViewFragment = function () {
   return cloneTemplate("#template-image");
 };
 
-ImageController.defineAlias("model", "blobHandler");
+ImageController.defineAlias("model", "fileHandler");
 
 ImageController.defineMethod("initView", function initView() {
   if (!this.view) return;
@@ -25,10 +25,10 @@ ImageController.defineMethod("updateView", function updateView() {
 
   // Update the source of the view
   var img = this.view.querySelector(".image-view");
-  img.src = this.blobHandler.blob
-    ? this.blobHandler.blob instanceof Blob
-      ? this.blobHandler.url
-      : this.blobHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
+  img.src = this.fileHandler.blob
+    ? this.fileHandler.blob instanceof Blob
+      ? this.fileHandler.url
+      : this.fileHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
     : "";
 });
 

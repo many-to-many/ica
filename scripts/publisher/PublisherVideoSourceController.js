@@ -33,15 +33,15 @@ PublisherVideoSourceController.defineMethod("initView", function () {
 PublisherVideoSourceController.defineMethod("updateView", function () {
   if (!this.view) return;
 
-  if (this.source && this.source.blobHandler.blob) {
+  if (this.source && this.source.fileHandler.blob) {
     this.player.source({
       type: "video",
       sources: [{
-        src: this.source.blobHandler.url
+        src: this.source.fileHandler.url
       }]
     });
   }
-  
+
 });
 
 PublisherVideoSourceController.defineMethod("uninitView", function () {

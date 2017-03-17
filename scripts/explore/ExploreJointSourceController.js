@@ -70,9 +70,9 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
       this.view.classList.add("dark");
       this.view.querySelector(".jointsource-backdrop-image").style.backgroundImage = imageSource.content
         ? "url(" + (
-          imageSource.blobHandler.blob instanceof Blob
-            ? imageSource.blobHandler.url
-            : imageSource.blobHandler.url + "?width=" + (2 * this.view.offsetWidth * this.devicePixelRatio)
+          imageSource.fileHandler.blob instanceof Blob
+            ? imageSource.fileHandler.url
+            : imageSource.fileHandler.url + "?width=" + (2 * this.view.offsetWidth * this.devicePixelRatio)
           ) + ")"
         : "";
     }
@@ -83,7 +83,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
     var audioSource = audioSources[0];
 
     if (audioSource.content) {
-      var audio = new Audio(audioSource.blobHandler.url);
+      var audio = new Audio(audioSource.fileHandler.url);
       this.audio = audio;
     }
   }

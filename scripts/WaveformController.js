@@ -5,7 +5,7 @@ WaveformController.createViewFragment = function () {
   return cloneTemplate("#template-waveform");
 };
 
-WaveformController.defineAlias("model", "blobHandler");
+WaveformController.defineAlias("model", "fileHandler");
 
 WaveformController.defineMethod("initView", function initView() {
   if (!this.view) return;
@@ -30,12 +30,9 @@ WaveformController.defineMethod("updateView", function updateView() {
   this._view = waveformElement;
   this.initView(false);
 
-  if (!this.blobHandler.blob) return;
+  if (!this.fileHandler.blob) return;
 
-  // var audio = new Audio(URL.createObjectURL(this.blobHandler.blob));
-  // console.log(audio);
-
-  this.blobHandler.readAsArrayBuffer()
+  this.fileHandler.readAsArrayBuffer()
     .then(function (audioData) {
 
       if (this.canvasHandler) {

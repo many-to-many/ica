@@ -9,7 +9,7 @@ PublisherImageSourceController.defineMethod("initView", function () {
   if (!this.view) return;
 
   this.imageController = new ImageController(
-    this.source.blobHandler,
+    this.source.fileHandler,
     this.view.querySelector(".image"));
 
   this.publisherSourceDropHandler = new DropHandler(this.view, function (files) {

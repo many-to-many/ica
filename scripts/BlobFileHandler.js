@@ -1,37 +1,29 @@
 
-var BlobHandler = Handler.createComponent("BlobHandler");
+var BlobFileHandler = Handler.createComponent("BlobFileHandler");
 
 /**
  * The content is either going to be a blob id that represents a remote file on
  * the server end or an Blob instance. If a blob file id is provided, the blob
  * content may not be read directly.
  */
-BlobHandler.defineAlias("content", "blob");
+BlobFileHandler.defineAlias("content", "blob");
 
-BlobHandler.defineMethod("uninitContent", function uninitContent() {
+BlobFileHandler.defineMethod("uninitContent", function uninitContent() {
   // Remove the corresponding array buffer if any
   delete this._cache_array_buffer;
 });
 
-Object.defineProperty(BlobHandler.prototype, "url", {
+Object.defineProperty(BlobFileHandler.prototype, "url", {
   get: function () {
     if (this.blob) {
       if (this.blob instanceof Blob) return URL.createObjectURL(this.blob);
-      return (this.stream ? "streams/" : "static/") + this.blob;
+      return "static/" + this.blob;
     }
     return null;
   }
 });
 
-/**
- * Stream option is only applicable when blob is served remotely (if a blob id
- * is provided) and the file will be served bypassing the CDN (NB as of now)
- * due to issues with request/respond headers regarding partial content causing
- * issues with e.g. audio/video seeking.
- */
-BlobHandler.prototype.stream = false;
-
-BlobHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
+BlobFileHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
   // Serve cached buffers if available
   if (this._cache_array_buffer) return Promise.resolve(this._cache_array_buffer);
 
@@ -77,7 +69,7 @@ BlobHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
     }.bind(this));
 };
 
-BlobHandler.prototype.makeSlices = function (size = 1 * 1024 * 1024) { // 1 MB each
+BlobFileHandler.prototype.makeSlices = function (size = 1 * 1024 * 1024) { // 1 MB each
   if (!this.blob || !(this.blob instanceof Blob)) return [];
 
   var slices = [];
