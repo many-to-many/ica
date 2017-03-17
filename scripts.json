@@ -1,6 +1,7 @@
 [
   "scripts/component/Component.js",
   "scripts/component/Model.js",
+  "scripts/component/JointModel.js",
   "scripts/component/Controller.js",
   "scripts/component/SingleModelController.js",
   "scripts/component/Handler.js",

@@ -5,13 +5,6 @@ ArticleJointSourceController.createViewFragment = function () {
   return cloneTemplate("#template-article");
 };
 
-ArticleJointSourceController.defineMethod("uninit", function uninit() {
-
-  this.componentOf.map.removeArticle(this.jointSource);
-  this.componentOf.map.didUpdate();
-
-});
-
 // View
 
 ArticleJointSourceController.defineMethod("initView", function initView() {
@@ -27,7 +20,10 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
 
   this.view.querySelector("[data-ica-action='close']").addEventListener("click", function (e) {
     e.preventDefault();
+    var jointSource = this.controller.jointSource;
+    var mapController = this.controller.componentOf;
     this.controller.destroy(true);
+    mapController.map.removeArticle(jointSource);
   }.bind(this.view));
 
   this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (e) {

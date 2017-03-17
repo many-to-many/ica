@@ -13,9 +13,18 @@ Model.defineMethod("construct", function construct() {
   Object.defineProperty(this, "controllers", {
     value: {}
   });
+  // Construct jointModels
+  Object.defineProperty(this, "jointModels", {
+    value: {}
+  });
 });
 
 Model.defineMethod("destruct", function destruct() {
+  // Destruct jointModels
+  for (var modelId in this.jointModels) {
+    // Request jointModel to release model
+    this.jointModels[modelId].releaseModel(this);
+  }
   // Destruct controllers
   for (var controllerId in this.controllers) {
     // Request controller to release model
@@ -34,10 +43,14 @@ Model.defineMethod("destroy", function destroy(destroyControllers = false, destr
   }
 });
 
-// This function is used to propagate the content update event to controllers
+// This function is used to propagate the content update event to controllers and jointModels
 Model.defineMethod("didUpdate", function didUpdate() {
   // Broadcast controllers that the model itself was just updated
   for (var controllerId in this.controllers) {
     this.controllers[controllerId].modelDidUpdate(this);
+  }
+  // Broadcast jointModels that the model itself was just updated
+  for (var modelId in this.jointModels) {
+    this.jointModels[modelId].modelDidUpdate(this);
   }
 });
