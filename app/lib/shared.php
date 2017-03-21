@@ -1,9 +1,9 @@
 <?php
 
+  define("STATE_UNPUBLISHED_ENCODED", 0);
+  define("STATE_UNPUBLISHED", "unpublished");
   define("STATE_PUBLISHED_ENCODED", 1);
   define("STATE_PUBLISHED", "published");
-  define("STATE_UNPUBLISHED_ENCODED", 2);
-  define("STATE_UNPUBLISHED", "unpublished");
 
   define("TYPE_TEXT_ENCODED", 1);
   define("TYPE_TEXT", "text");
