@@ -256,6 +256,12 @@ ICA.publishJointSource = function (jointSource) {
                 type: "video",
                 content: {"*": source.content}
               };
+            case HyperlinkSource:
+              return {
+                _id: source.sourceId,
+                type: "hyperlink",
+                content: {"*": source.content}
+              };
             case TextSource:
             default:
               return {
@@ -311,6 +317,13 @@ ICA.publishJointSource = function (jointSource) {
                 promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                   _id: source.sourceId,
                   type: "video",
+                  content: {"*": source.content}
+                });
+                break;
+              case HyperlinkSource:
+                promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  _id: source.sourceId,
+                  type: "hyperlink",
                   content: {"*": source.content}
                 });
                 break;
@@ -424,6 +437,9 @@ function touchSources(dataSources, jointSource) {
         break;
       case "video":
         source = new VideoSource(dataSource.content["*"], jointSource, sourceId);
+        break;
+      case "hyperlink":
+        source = new HyperlinkSource(dataSource.content["*"], jointSource, sourceId);
         break;
       case "text":
       default:

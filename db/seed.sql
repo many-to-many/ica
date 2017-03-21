@@ -644,6 +644,26 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_states` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `ica`.`hyperlinks`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`hyperlinks` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`hyperlinks` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `author_id` INT UNSIGNED NOT NULL,
+  `link` VARCHAR(2400) NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_hyperlinks_accounts1_idx` (`author_id` ASC),
+  CONSTRAINT `fk_hyperlinks_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `ica` ;
 
 -- -----------------------------------------------------
@@ -987,6 +1007,7 @@ INSERT INTO `ica`.`types` (`type`, `name`) VALUES (2, 'audio');
 INSERT INTO `ica`.`types` (`type`, `name`) VALUES (3, 'image');
 INSERT INTO `ica`.`types` (`type`, `name`) VALUES (4, 'video');
 INSERT INTO `ica`.`types` (`type`, `name`) VALUES (0, 'undefined');
+INSERT INTO `ica`.`types` (`type`, `name`) VALUES (5, 'hyperlink');
 
 COMMIT;
 

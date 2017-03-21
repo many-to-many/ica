@@ -109,7 +109,7 @@
 
     case "PUT": \Session\requireVerification();
 
-      \ICA\Sources\partialPutJointSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
+      \ICA\Sources\partialPutSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
 
       respondJSON([]);
 

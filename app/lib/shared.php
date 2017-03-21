@@ -13,6 +13,8 @@
   define("TYPE_IMAGE", "image");
   define("TYPE_VIDEO_ENCODED", 4);
   define("TYPE_VIDEO", "video");
+  define("TYPE_HYPERLINK_ENCODED", 5);
+  define("TYPE_HYPERLINK", "hyperlink");
 
   define("LANG_UNDEFINED_ENCODED", 0);
   define("LANG_UNDEFINED", "*");
@@ -36,6 +38,7 @@
       case TYPE_IMAGE: return TYPE_IMAGE_ENCODED;
       case TYPE_AUDIO: return TYPE_AUDIO_ENCODED;
       case TYPE_VIDEO: return TYPE_VIDEO_ENCODED;
+      case TYPE_HYPERLINK: return TYPE_HYPERLINK_ENCODED;
       case TYPE_TEXT: return TYPE_TEXT_ENCODED;
     }
     throw new \Exception("Unable to encode type");
@@ -46,6 +49,7 @@
       case TYPE_IMAGE_ENCODED: return TYPE_IMAGE;
       case TYPE_AUDIO_ENCODED: return TYPE_AUDIO;
       case TYPE_VIDEO_ENCODED: return TYPE_VIDEO;
+      case TYPE_HYPERLINK_ENCODED: return TYPE_HYPERLINK;
       case TYPE_TEXT_ENCODED: return TYPE_TEXT;
     }
     throw new \Exception("Unable to decode type");
