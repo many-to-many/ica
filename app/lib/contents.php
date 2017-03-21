@@ -110,6 +110,7 @@
         insertContentLanguageState($langId, $state);
       }
       if ($content == $row["content"]) {
+        releaseDatabaseTransaction();
         return $row["rev_id"];
       }
     }
