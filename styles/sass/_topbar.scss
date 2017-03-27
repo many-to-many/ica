@@ -9,6 +9,7 @@
   justify-content: flex-start;
   font-weight: bold;
   cursor: default;
+  -webkit-overflow-scrolling: touch;
   @include lift($z-topbar, 3);
 
   &:before, &:after {
@@ -57,6 +58,7 @@
 
   > .topbar-item {
     position: relative;
+    flex: 0 0 auto;
     padding: 1em 0.75em;
     line-height: 1em;
     font-weight: 500;
