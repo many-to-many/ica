@@ -10,20 +10,17 @@ ArticleJointSourceController.createViewFragment = function () {
 ArticleJointSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
+  this.view.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }.bind(this.view));
+
   this.view.querySelector("[data-ica-action='edit-jointsource']").addEventListener("click", function (e) {
     e.preventDefault();
     var fragment = PublisherJointSourceController.createViewFragment();
     var element = fragment.querySelector(".publisher");
     document.body.appendChild(fragment);
     new PublisherJointSourceController(this.controller.jointSource, element);
-  }.bind(this.view));
-
-  this.view.querySelector("[data-ica-action='close']").addEventListener("click", function (e) {
-    e.preventDefault();
-    var jointSource = this.controller.jointSource;
-    var mapController = this.controller.componentOf;
-    this.controller.destroy(true);
-    mapController.map.removeArticle(jointSource);
   }.bind(this.view));
 
   this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (e) {
@@ -49,9 +46,9 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
     if (this.children[sourceIndex]) {
       this.style.height = this.children[sourceIndex].offsetHeight + "px";
     }
-    this.parentNode.querySelector("[data-ica-jointsource-source-index]").textContent = sourceIndex + 1;
-    this.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceIndex > 0 ? 1 : 0;
-    this.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceIndex < this.children.length - 1 ? 1 : 0;
+    this.parentNode.parentNode.querySelector("[data-ica-jointsource-source-index]").textContent = sourceIndex + 1;
+    this.parentNode.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceIndex > 0 ? 1 : 0;
+    this.parentNode.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceIndex < this.children.length - 1 ? 1 : 0;
   }.bind(this.view.querySelector(".sources"));
 
   this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
@@ -78,6 +75,23 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
   this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
     element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")];
   }.bind(this));
+
+  this.view.querySelector(".jointsource-backdrop").hidden = true;
+  var imageSources = this.jointSource.imageSources;
+  if (imageSources.length > 0) {
+    var imageSource = imageSources[0];
+
+    if (imageSource.content) {
+      this.view.querySelector(".jointsource-backdrop").hidden = false;
+      this.view.querySelector(".jointsource-backdrop-image").style.backgroundImage = imageSource.content
+        ? "url(" + (
+          imageSource.fileHandler.blob instanceof Blob
+            ? imageSource.fileHandler.url
+            : imageSource.fileHandler.url + "?width=" + (2 * this.view.offsetWidth * this.devicePixelRatio)
+          ) + ")"
+        : "";
+    }
+  }
 
   this.jointSource.forEachSource(function (source) {
     if (this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
@@ -112,7 +126,7 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
   }.bind(this.view));
 
   this.resizeSourcesHeightRoutine.restart();
-  this.view.querySelector("[data-ica-jointsource-number-of-sources]").textContent = this.jointSource.getNumberOfSources();
+  this.view.querySelector("[data-ica-jointsource-number-of-sources]").textContent = this.jointSource.getNumberOfSources() + 1;
 });
 
 ArticleJointSourceController.defineMethod("uninitView", function uninitView() {

@@ -62,6 +62,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
     element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")];
   }.bind(this));
 
+  this.view.classList.remove("dark");
   var imageSources = this.jointSource.imageSources;
   if (imageSources.length > 0) {
     var imageSource = imageSources[0];
@@ -72,7 +73,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
         ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
-            : imageSource.fileHandler.url + "?width=" + (2 * this.view.offsetWidth * this.devicePixelRatio)
+            : imageSource.fileHandler.url + "?width=" + (this.view.offsetWidth * this.devicePixelRatio)
           ) + ")"
         : "";
     }

@@ -4,48 +4,50 @@
 
   .article {
 
+    .jointsource-nav {
+      position: -webkit-sticky;
+      top: 0;
+      margin: 0 -1.5em;
+      min-height: 2em;
+      display: flex;
+      background-color: #fff;
+      border-bottom: solid 1px rgba(0, 0, 0, 0.10);
+      @include lift($z-topbar - 1, 1.5);
+
+      > * {
+        line-height: 1.5;
+        flex: 1 0 auto;
+        text-align: center;
+        padding: 0.25em 0;
+      }
+
+      > .jointsource-nav-btn {
+        box-sizing: border-box;
+        flex: 0 0 3em;
+        background-size: 1em 1em;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: opacity ease 0.2s, background-color ease 0.2s;
+
+        &:hover {
+          background-color: rgba($color-primary, 0.10);
+        }
+
+        &.left {
+          border-right: solid 1px rgba(0, 0, 0, 0.10);
+          background-image: inline-image("icon-left.svg");
+        }
+
+        &.right {
+          border-left: solid 1px rgba(0, 0, 0, 0.10);
+          background-image: inline-image("icon-right.svg");
+        }
+      }
+    }
+
     .sources-container {
       position: relative;
       margin: 0 -1.5em;
-      border-bottom: solid 1px rgba(0, 0, 0, 0.10);
-
-      > .sources-status {
-        position: -webkit-sticky;
-        top: 3em;
-        min-height: 2em;
-        display: flex;
-        background-color: #fff;
-        border-bottom: solid 1px rgba(0, 0, 0, 0.10);
-        @include lift($z-topbar - 1, 1.5);
-
-        > * {
-          line-height: 1.5;
-          flex: 1 0 auto;
-          text-align: center;
-          padding: 0.25em 0;
-        }
-
-        > .sources-control {
-          box-sizing: border-box;
-          flex: 0 0 3em;
-          background-size: 1em 1em;
-          background-position: center;
-          background-repeat: no-repeat;
-          transition: opacity ease 0.2s, background-color ease 0.2s;
-
-          &:hover {
-            background-color: rgba($color-primary, 0.10);
-          }
-
-          &.sources-control-left {
-            background-image: inline-image("icon-left.svg");
-          }
-
-          &.sources-control-right {
-            background-image: inline-image("icon-right.svg");
-          }
-        }
-      }
 
       > .sources {
         display: flex;
@@ -53,19 +55,68 @@
         overflow-y: hidden;
         align-items: flex-start;
         transition: height ease 0.4s;
+        overflow: hidden;
 
         > .source {
           flex: none;
           box-sizing: border-box;
           width: 100%;
-          margin: 0;
-          padding: 0.5em 1.5em;
           min-height: 10em;
 
+          &.jointsource {
+
+            > .jointsource-backdrop {
+              position: relative;
+              height: 0.6 * $card-width;
+              max-height: 40vw;
+
+              > .jointsource-backdrop-image {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-size: cover;
+                background-position: top;
+              }
+            }
+
+            > .jointsource-meta {
+              margin: 1.5em 0;
+              padding: 0 1.5em;
+
+              h3 {
+                font-family: $font-serif;
+                font-size: 1.6em;
+                margin: 0.5em 0;
+              }
+
+              h4 {
+                margin: 1.25em 0 0.625em 0;
+                font-size: 0.8em;
+                font-weight: normal;
+                text-transform: uppercase;
+                color: lighten($color-text, 20%);
+                -webkit-user-select: text;
+              }
+
+              p {
+                margin: 0.5em 0;
+              }
+
+              [data-ica-jointsource-meta] {
+                -webkit-user-select: text;
+              }
+            }
+
+            > .jointsource-control {
+              padding: 1.5em;
+              border-top: solid 1px rgba(0, 0, 0, 0.10);
+            }
+          }
+
           &.textsource {
-            padding-top: 0;
-            padding-bottom: 0;
-            // text-align: justify;
+            padding: 0 1.5em;
 
             & > p {
               margin: 1.25em 0;
@@ -96,7 +147,6 @@
           }
 
           &.imagesource {
-            padding: 0;
 
             > img {
               box-sizing: border-box;
@@ -106,7 +156,6 @@
           }
 
           &.audiosource {
-            padding: 0;
 
             .plyr {
               border-top: solid 1px #f4f4f4;
@@ -115,7 +164,7 @@
           }
 
           &.videosource {
-            padding: 0;
+
           }
 
           .download {
@@ -123,29 +172,6 @@
             padding: 1.5em;
           }
         }
-      }
-    }
-
-
-    [data-ica-jointsource-meta] {
-      -webkit-user-select: text;
-    }
-
-    .jointsource-meta {
-      margin-top: 1.5em;
-      margin-bottom: 1.5em;
-
-      h4 {
-        margin: 1.25em 0 0.625em 0;
-        font-size: 0.8em;
-        font-weight: normal;
-        text-transform: uppercase;
-        color: lighten($color-text, 20%);
-        -webkit-user-select: text;
-      }
-
-      p {
-        margin: 0.5em 0;
       }
     }
   }

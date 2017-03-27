@@ -121,38 +121,39 @@
         <article class="map"></article>
       </template>
       <template id="template-article">
-        <section class="article card-group">
-          <article class="card">
-            <header class="topbar">
-              <h3 data-ica-jointsource-meta="title">Title</h3>
-              <a class="topbar-item" data-ica-action="edit-jointsource">Edit</a>
-              <a class="topbar-item" data-ica-action="close">Close</a>
+        <section class="card-group">
+          <article class="article jointsource card">
+            <header class="jointsource-nav">
+              <a class="jointsource-nav-btn left" data-ica-action="previous-source"></a>
+              <div>
+                <span data-ica-jointsource-source-index></span>/<span data-ica-jointsource-number-of-sources></span>
+              </div>
+              <a class="jointsource-nav-btn right" data-ica-action="next-source"></a>
             </header>
             <section class="sources-container">
-              <section class="sources-status">
-                <a class="sources-control sources-control-left" data-ica-action="previous-source"></a>
-                <div><span data-ica-jointsource-source-index></span>/<span data-ica-jointsource-number-of-sources></span></div>
-                <a class="sources-control sources-control-right" data-ica-action="next-source"></a>
+              <section class="sources">
+                <div class="source jointsource">
+                  <div class="jointsource-backdrop" hidden>
+                    <div class="jointsource-backdrop-image"></div>
+                  </div>
+                  <div class="jointsource-meta">
+                    <h3 data-ica-jointsource-meta-predicate="title" data-ica-jointsource-meta="title">Title</h3>
+                    <p data-ica-jointsource-meta-predicate="region" data-ica-jointsource-meta="region"></p>
+                    <p data-ica-jointsource-meta-predicate="intro" data-ica-jointsource-meta="intro"></p>
+                    <div data-ica-jointsource-meta-predicate="participants">
+                      <h4>Participants</h4>
+                      <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
+                    </div>
+                    <div data-ica-jointsource-meta-predicate="themes">
+                      <h4>Themes</h4>
+                      <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
+                    </div>
+                  </div>
+                  <section class="jointsource-control">
+                    <a data-ica-action="edit-jointsource">Edit Conversation</a>
+                  </section>
+                </div>
               </section>
-              <section class="sources"></section>
-            </section>
-            <section class="jointsource-meta">
-              <div data-ica-jointsource-meta-predicate="region">
-                <h4>Region</h4>
-                <p data-ica-jointsource-meta="region"></p>
-              </div>
-              <div data-ica-jointsource-meta-predicate="participants">
-                <h4>Participants</h4>
-                <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
-              </div>
-              <div data-ica-jointsource-meta-predicate="themes">
-                <h4>Themes</h4>
-                <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
-              </div>
-              <div data-ica-jointsource-meta-predicate="intro">
-                <h4>Intro</h4>
-                <p data-ica-jointsource-meta="intro"></p>
-              </div>
             </section>
           </article>
         </section>

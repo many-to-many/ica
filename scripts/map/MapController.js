@@ -10,6 +10,10 @@ MapController.defineAlias("model", "map");
 MapController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
+  this.view.addEventListener("click", function (e) {
+    this.controller.destroy(true);
+  }.bind(this.view));
+
   document.body.style.overflow = "hidden"; // Disable background scrolling
   // TODO: Document body controller to auto lock scrolling for ease of sub view navigation; this probably may not work well with publisher controller
 });
