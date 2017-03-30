@@ -118,6 +118,11 @@ Controller.defineMethod("initView", function initView(updateView = []) {
         switchAppView("account");
 
         break;
+      case "#about":
+
+        switchAppView("about");
+
+        break;
       }
 
       document.body.querySelectorAll("[data-ica-anchor-group='" + getElementProperty(this, "anchor-group") + "']")
