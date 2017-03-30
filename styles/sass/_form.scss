@@ -1,116 +1,102 @@
 
-.form {
+label {
+  display: block;
+  box-sizing: border-box;
+  line-height: 1.5;
+  margin-top: 1.25em;
+  color: lighten($color-text, 20%);
+}
+
+input,
+textarea,
+.input {
   position: relative;
+  box-sizing: border-box;
+  margin: 0;
+  padding: calc(0.75em - 1px) 0.75em;
+  width: 100%;
+  max-width: 100%;
+  font-size: 1em;
+  line-height: 1.5;
+  background: none;
+  border: solid 1px transparent;
+  border-bottom-color: #cdcdcd;
+  font-family: $font-sans-serif;
+  color: $color-text !important;
+  -webkit-appearance: none;
 
-  section {
-    margin: 1.5em 0;
-
-    > h4 {
-      margin: 1.5em 0 1em 0;
-    }
+  &:focus,
+  &.active {
+    border-bottom-color: $color-accent;
   }
 
-  label {
+  &[type="file"] {
+    border-color: transparent;
+  }
+
+  &[type="submit"],
+  &[type="button"] {
     display: block;
-    box-sizing: border-box;
-    font-size: 0.8em;
-    line-height: 1.5;
-    margin-top: 1.25em;
-    text-transform: uppercase;
-    color: lighten($color-text, 20%);
-  }
+    width: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+    margin: 0 0.5em 0.5em 0;
+    background-color: #fefefe;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color ease 0.1s;
 
-  input,
-  textarea,
-  .input {
-    position: relative;
-    box-sizing: border-box;
-    margin: 0;
-    padding: calc(0.75em - 1px) 0.75em;
-    width: 100%;
-    max-width: 100%;
-    font-size: 1em;
-    line-height: 1.5;
-    background: none;
-    border: solid 1px transparent;
-    border-bottom-color: #cdcdcd;
-    font-family: $font-sans-serif;
-    color: $color-text !important;
-    -webkit-appearance: none;
-
-    &:focus,
-    &.active {
-      border-bottom-color: $color-accent;
+    &:hover {
+      @include lift(0, 3);
     }
 
-    &[type="file"] {
-      border-color: transparent;
+    $button-color: lighten($color-text, 25%);
+
+    &[type="button"] {
+      border-color: $button-color;
+      color: $button-color !important;
+
+      &:hover,
+      &.active {
+        border-color: $button-color;
+        background-color: mix($button-color, #fff, 5%);
+      }
     }
 
     &[type="submit"],
-    &[type="button"] {
-      display: block;
-      width: auto;
-      padding-left: 1em;
-      padding-right: 1em;
-      margin: 0 0.5em 0.5em 0;
-      background-color: #fefefe;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: background-color ease 0.1s;
+    &.color-accent {
+      border-color: $color-accent;
+      color: $color-accent !important;
 
-      &:hover {
-        @include lift(0, 3);
-      }
-
-      $button-color: lighten($color-text, 25%);
-
-      &[type="button"] {
-        border-color: $button-color;
-        color: $button-color !important;
-
-        &:hover,
-        &.active {
-          border-color: $button-color;
-          background-color: mix($button-color, #fff, 5%);
-        }
-      }
-
-      &[type="submit"],
-      &.color-accent {
+      &:hover,
+      &.active {
         border-color: $color-accent;
-        color: $color-accent !important;
-
-        &:hover,
-        &.active {
-          border-color: $color-accent;
-          background-color: mix($color-accent, #fff, 5%);
-        }
-      }
-    }
-
-    &.tokens {
-      padding: calc(0.75em - 1px) 0.375em;
-      min-height: 3em;
-    }
-
-    + .tokens {
-      max-width: 100%;
-      max-height: 4.5em;
-      overflow: hidden;
-      margin: 0.5em calc(0.375em + 1px);
-
-      $fade-num: 18;
-      @for $i from 1 through $fade-num {
-        :nth-child(#{$i}) {
-          opacity: max(0.95 - $i * $i / ($fade-num * $fade-num / 0.50), 0.45);
-        }
+        background-color: mix($color-accent, #fff, 5%);
       }
     }
   }
 
-  textarea {
-    display: block;
-    resize: none;
+  &.tokens {
+    padding: calc(0.75em - 1px) 0.375em;
+    min-height: 3em;
   }
+
+  + .tokens {
+    max-width: 100%;
+    max-height: 4.5em;
+    overflow: hidden;
+    margin: 0.5em calc(0.375em + 1px);
+
+    $fade-num: 18;
+    @for $i from 1 through $fade-num {
+      :nth-child(#{$i}) {
+        opacity: max(0.95 - $i * $i / ($fade-num * $fade-num / 0.50), 0.45);
+      }
+    }
+  }
+}
+
+textarea {
+  display: block;
+  resize: none;
 }

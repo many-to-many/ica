@@ -32,6 +32,10 @@
   h1,
   h2,
   h3 {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1;
+    font-weight: bold;
     padding: 1em;
     flex: 1 0 auto;
   }
