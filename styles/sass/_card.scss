@@ -42,7 +42,6 @@ $card-width: 40em;
     display: block;
     content: "";
     flex: 1 0 calc(50% - #{$card-width} / 2 - 1em);
-    min-width: 5%;
   }
 
   .card {
