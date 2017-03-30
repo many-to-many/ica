@@ -70,7 +70,8 @@ gulp.task("proxy", ["build"], function () {
   var config = require("./config.json");
 
   browserSync.init({
-    proxy: config.proxy
+    proxy: config.proxy,
+    ghostMode: false
   });
 
   gulp.watch("**/*.html").on("change", function () {
