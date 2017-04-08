@@ -27,8 +27,8 @@ $font-mono: "Roboto Mono", monospace;
 $z-popup: 6;
 $z-relative-topbar: 2;
 
-@mixin fade($offset: 0.5em, $angle: 0deg) {
-  -webkit-mask: linear-gradient($angle, transparent, black $offset);
+@mixin fade($offset: 0.5em, $angle: 0deg, $to: transparent) {
+  -webkit-mask: linear-gradient($angle, $to, black $offset);
 }
 
 /* Main */

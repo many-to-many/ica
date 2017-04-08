@@ -37,6 +37,7 @@ $column-spacing: 8px;
       bottom: 0;
       left: 0;
       z-index: -1;
+      @include fade(6em, 180deg, rgba(#000, 0.30));
 
       > .jointsource-backdrop-image {
           position: absolute;
@@ -91,8 +92,8 @@ $column-spacing: 8px;
     }
 
     &.dark {
+      background-color: #000;
       color: $color-text-light;
-      text-shadow: 0 1px 0.5em #000;
 
       > .jointsource-meta {
 
@@ -103,10 +104,6 @@ $column-spacing: 8px;
 
       > .jointsource-status {
         color: rgba($color-text-light, 0.60);
-
-        a:hover {
-
-        }
       }
     }
   }
