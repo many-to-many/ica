@@ -53,7 +53,7 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
 
   this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
 
-  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 400);
+  this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 1000, false);
   this.resizeSourcesHeightRoutine.componentOf = this;
 
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
@@ -127,6 +127,8 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
 
   this.resizeSourcesHeightRoutine.restart();
   this.view.querySelector("[data-ica-jointsource-number-of-sources]").textContent = this.jointSource.getNumberOfSources() + 1;
+
+  setElementProperty(this.view.querySelector(".sources"), "ready", "");
 });
 
 ArticleJointSourceController.defineMethod("uninitView", function uninitView() {

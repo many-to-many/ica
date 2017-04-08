@@ -54,8 +54,11 @@
         overflow-x: auto;
         overflow-y: hidden;
         align-items: flex-start;
-        transition: height ease 0.4s;
         overflow: hidden;
+
+        &[data-ica-ready] {
+          transition: height ease 0.3s;
+        }
 
         > .source {
           flex: none;
