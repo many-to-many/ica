@@ -10,7 +10,7 @@ Routine.defineMethod("construct", function () {
   });
 });
 
-Routine.defineMethod("init", function (func, interval) {
+Routine.defineMethod("init", function (func, interval, start = true) {
   // Init execute method
   var container = this._container;
   this._execute = function _execute() {
@@ -23,7 +23,7 @@ Routine.defineMethod("init", function (func, interval) {
     }
   };
   // Start routine
-  this.start();
+  if (start) this.start();
   return [];
 });
 
