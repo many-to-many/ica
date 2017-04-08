@@ -81,8 +81,8 @@ $column-spacing: 8px;
     }
 
     &:hover {
-      @include lift(1, 4);
-      border-color: #d0d0d0;
+      @include lift(1, 5);
+      border-color: #d4d4d4;
 
       > .jointsource-status {
         opacity: 1;

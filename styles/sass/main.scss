@@ -16,8 +16,8 @@ $font-serif: Charter, serif;
 
 /* Z-Index & Effects */
 
-@mixin shadow($shadow-index) {
-  box-shadow: 0 unquote(($shadow-index / 2) + "px") unquote(($shadow-index * $shadow-index / 2) + "px") rgba(0, 0, 0, 0.05);
+@mixin shadow($index) {
+  box-shadow: 0 #{($index * 2/3) + "px"} #{($index * $index / 2) + "px"} rgba(#000, 0.02 * $index);
 }
 
 @mixin lift($z-index, $shadow-index) {
@@ -25,8 +25,8 @@ $font-serif: Charter, serif;
   @include shadow($shadow-index);
 }
 
-$z-popup: 8;
-$z-relative-topbar: 4;
+$z-popup: 6;
+$z-relative-topbar: 2;
 
 @mixin fade($offset: 0.5em, $angle: 0deg) {
   -webkit-mask: linear-gradient($angle, transparent, black $offset);

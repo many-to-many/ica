@@ -15,14 +15,14 @@ $card-width: 40em;
   border: solid 1px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
   overflow-y: auto;
-  @include lift(0, 2);
+  @include lift(0, $z);
 
   > .topbar {
     position: -webkit-sticky;
     margin-right: -1.5em;
     margin-left: -1.5em;
     top: 0;
-    @include lift($z + $z-relative-topbar, 2);
+    @include lift($z + $z-relative-topbar, $z-relative-topbar);
   }
 
   > section {
