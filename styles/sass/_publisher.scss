@@ -2,10 +2,29 @@
 .publisher {
   @include popup-series;
 
-  > .publisher-sources {
-    flex-grow: 1;
+  .publisher-meta-container {
+    margin: 1.5em -1.5em;
+    padding: 0 1.5em;
+  }
+
+  .publisher-sources {
+    margin: 0 -1.5em;
 
     .publisher-source {
+      @include card(0);
+      width: auto;
+      max-width: none;
+      max-height: none;
+      overflow-y: visible;
+      border-radius: 0;
+      border-right: none;
+      border-left: none;
+      margin: 1.5em 0;
+
+      > .topbar {
+        position: -webkit-sticky;
+        top: 3em;
+      }
 
       > .source-container {
         margin: 0 -1.5em;
@@ -26,7 +45,7 @@
             box-sizing: border-box;
             cursor: text;
             height: 100%;
-            min-height: 25em;
+            min-height: 10em;
             outline: none;
             overflow-y: auto;
             white-space: pre-wrap;
@@ -67,5 +86,11 @@
 
       }
     }
+  }
+
+  .publisher-sources-control {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: -0.5em;
   }
 }

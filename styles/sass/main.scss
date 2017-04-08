@@ -16,13 +16,17 @@ $font-serif: Charter, serif;
 
 /* Z-Index & Effects */
 
-@mixin lift($z-index, $shadow-index) {
-  z-index: $z-index;
+@mixin shadow($shadow-index) {
   box-shadow: 0 unquote(($shadow-index / 2) + "px") unquote(($shadow-index * $shadow-index / 2) + "px") rgba(0, 0, 0, 0.05);
 }
 
-$z-topbar: 4;
+@mixin lift($z-index, $shadow-index) {
+  z-index: $z-index;
+  @include shadow($shadow-index);
+}
+
 $z-popup: 8;
+$z-relative-topbar: 4;
 
 @mixin fade($offset: 0.5em, $angle: 0deg) {
   -webkit-mask: linear-gradient($angle, transparent, black $offset);

@@ -1,5 +1,5 @@
 
-@mixin popup-series {
+@mixin popup-series($z: $z-popup) {
   @include series;
   position: fixed;
   top: 0;
@@ -7,7 +7,7 @@
   bottom: 0;
   left: 0;
   margin: 0 !important;
-  z-index: $z-popup;
+  z-index: $z;
   background-color: rgba(#fefefe, 0.98);
 }
 

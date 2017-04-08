@@ -32,13 +32,14 @@
       <template id="template-publisher">
         <div class="publisher">
           <section class="card-group">
-            <article class="article jointsource card">
+            <article class="card">
               <header class="topbar">
                 <h2>Share a Conversation</h2>
                 <a class="topbar-item" data-ica-action="publish">Publish</a>
                 <a class="topbar-item" data-ica-action="abort">Close</a>
               </header>
-              <section class="publisher-meta">
+              <section class="publisher-meta-container">
+                <h3>About the Conversation</h3>
                 <label>What would you like to call the conversation?</label>
                 <input data-ica-jointsource-meta="title" placeholder="Enter title here...">
                 <label>Where did the conversation take place?</label>
@@ -50,13 +51,16 @@
                 <label>What themes emerge from your conversation?</label>
                 <textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" data-ica-suggestions="themes" placeholder="List themes here... (Separate with semicolon or line break)"></textarea>
               </section>
-              <section hidden>
-                <input type="button" value="Plain Text" data-ica-action="add-source/text">
-                <input type="button" value="Photo" data-ica-action="add-source/image">
-                <input type="button" value="Sound Recording" data-ica-action="add-source/audio">
-                <input type="button" value="Video Clip" data-ica-action="add-source/video">
+              <section class="publisher-sources-container">
+                <h3>Sources</h3>
+                <section class="publisher-sources"></section>
+                <section class="publisher-sources-control">
+                  <input type="button" value="Plain Text" data-ica-action="add-source/text">
+                  <input type="button" value="Photo" data-ica-action="add-source/image">
+                  <input type="button" value="Sound Recording" data-ica-action="add-source/audio">
+                  <input type="button" value="Video Clip" data-ica-action="add-source/video">
+                </section>
               </section>
-              <article class="publisher-sources series" hidden></article>
               <section data-ica-jointsource-filter="published" hidden>
                 <h4 class="color-accent">Danger Zone</h4>
                 <input type="button" class="color-accent" value="Unpublish" data-ica-action="unpublish">
@@ -66,9 +70,9 @@
         </div>
       </template>
       <template id="template-publisher-textsource">
-        <article class="publisher-source publisher-textsource card">
+        <article class="publisher-source publisher-textsource">
           <header class="topbar">
-            <h3>Text</h3>
+            <h3>Plain Text</h3>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
           <section class="source-container">
@@ -77,7 +81,7 @@
         </article>
       </template>
       <template id="template-publisher-imagesource">
-        <article class="publisher-source publisher-imagesource card">
+        <article class="publisher-source publisher-imagesource">
           <header class="topbar">
             <h3>Image</h3>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -90,7 +94,7 @@
         </article>
       </template>
       <template id="template-publisher-audiosource">
-        <article class="publisher-source publisher-audiosource card">
+        <article class="publisher-source publisher-audiosource">
           <header class="topbar">
             <h3>Audio</h3>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -104,7 +108,7 @@
         </article>
       </template>
       <template id="template-publisher-videosource">
-        <article class="publisher-source publisher-videosource card">
+        <article class="publisher-source publisher-videosource">
           <header class="topbar">
             <h3>Video</h3>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
