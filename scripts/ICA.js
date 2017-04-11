@@ -2,7 +2,7 @@
 (function (window) {
   var ICA = {};
 
-  ICA.api = "api/v1";
+  // User Authentication
 
   ICA.login = function () {
     return new Promise(function (resolve, reject) {
@@ -37,6 +37,10 @@
       return window.sessionStorage.getItem("_ica_account_session");
     }
   });
+
+  // API Request
+
+  ICA.api = "api/v1";
 
   ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false) {
     return new Promise(function (resolve, reject) {
@@ -384,6 +388,8 @@
     return ICA.get("/files/" + fileId);
   };
 
+  // Utility Functions
+
   function touchJointSources(data) {
     var jointSources = [];
     for (var jointSourceId in data) {
@@ -436,6 +442,6 @@
     }
     return sources;
   }
-  
+
   window.ICA = ICA;
 } (window));
