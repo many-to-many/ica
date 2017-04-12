@@ -22,13 +22,7 @@
       "always"
     ],
     "no-console": [
-      "warn",
-      {
-        "allow": [
-          "warn",
-          "error"
-        ]
-      }
+      "off"
     ],
     "no-undef": [
       "off"
