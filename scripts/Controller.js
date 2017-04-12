@@ -78,9 +78,9 @@ Controller.defineMethod("initView", function initView(updateView = []) {
       while (anchorHistory.length > 50) anchorHistory.shift();
 
       switch (this.getAttribute("href")) {
-      case "#explore":
+      case "#main":
 
-        switchAppView("explore");
+        switchAppView("main");
 
         break;
       case "#search":

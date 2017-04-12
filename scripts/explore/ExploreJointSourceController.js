@@ -98,10 +98,3 @@ ExploreJointSourceController.defineMethod("uninitView", function uninitView() {
 
   removeElementProperty(this.view, "jointsource-id");
 });
-
-/*****/
-
-function empty(value) {
-  if (Array.isArray(value)) return value.length == 0;
-  return !value;
-}

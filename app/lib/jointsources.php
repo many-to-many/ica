@@ -49,7 +49,7 @@
   /**
    * Returns a list of JointSource instances which title contains the query text.
    */
-  function getJointSourcesByMetaTitle($q, $limit = 200) {
+  function getJointSourcesByMetaTitle($q, $limit = 200, $underJointSourceId = NULL) {
 
     $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT jointsource.*
@@ -59,6 +59,8 @@
           lang.state = {$stateEncoded} AND
           lang.content LIKE '%{$q}%'
       WHERE jointsource.state = {$stateEncoded}
+        " . ($underJointSourceId ? "AND jointsource_id < {$underJointSourceId}" : "") . "
+      ORDER BY jointsource_id DESC
       LIMIT {$limit};");
 
     return createJointSourcesFromQueryResult($result);
@@ -68,12 +70,14 @@
   /**
    * Returns a list of most recent JointSource instances.
    */
-  function getJointSources($limit = 200) {
+  function getJointSources($limit = 200, $underJointSourceId = NULL) {
 
     $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT *
       FROM jointsources_summary
       WHERE state = {$stateEncoded}
+        " . ($underJointSourceId ? "AND jointsource_id < {$underJointSourceId}" : "") . "
+      ORDER BY jointsource_id DESC
       LIMIT {$limit};");
 
     return createJointSourcesFromQueryResult($result);

@@ -20,11 +20,28 @@
 
     case "GET":
 
+      $limit = 20;
+
       if (array_key_exists("q", $_GET)) {
-        if (empty($_GET["q"])) $data = [];
-        else $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"]);
+        if (empty($_GET["q"])) {
+          $data = [];
+        } elseif (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
+          $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"], $limit, $_SERVER["HTTP_X_ICA_STATE"]);
+        } else {
+          $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"], $limit);
+        }
       } else {
-        $data = \ICA\JointSources\getJointSources();
+        if (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
+          $data = \ICA\JointSources\getJointSources($limit, $_SERVER["HTTP_X_ICA_STATE"]);
+        } else {
+          $data = \ICA\JointSources\getJointSources($limit);
+        }
+      }
+
+      // There is probably more data available
+      if (count($data) == $limit) {
+        end($data); // Move the internal pointer to the end of the array
+        header("X-ICA-State-Next: " . key($data));
       }
 
       respondJSON($data);

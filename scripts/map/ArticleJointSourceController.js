@@ -65,7 +65,7 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
 
   this.view.querySelectorAll("[data-ica-jointsource-meta-predicate]").forEach(function (element) {
     var metaPredicate = getElementProperty(element, "jointsource-meta-predicate");
-    if (empty(this.jointSource.meta[metaPredicate])) {
+    if (ICA.empty(this.jointSource.meta[metaPredicate])) {
       element.style.display = "none";
     } else {
       element.style.display = "";

@@ -40,6 +40,39 @@
 
   // API Request
 
+  ICA.APIResponse = function (data, next) {
+    this.data = data;
+    this.next = next;
+
+    if (next[3]) {
+      if (next[0] != "GET") {
+        throw new Error("Only GET response can be paginated");
+      }
+      this.paginated = true;
+    }
+  };
+
+  ICA.APIResponse.prototype.data = null;
+
+  ICA.APIResponse.prototype.next = null;
+
+  ICA.APIResponse.prototype.paginated = false;
+
+  ICA.APIResponse.prototype.requestNext = function () {
+    if (!this.next[3]) return Promise.reject(new ICA.APIResponse.EndOfResponse());
+    return ICA.requestAPI.apply(ICA, this.next);
+  };
+
+  ICA.APIResponse.getData = function getData(apiResponse) {
+    return apiResponse.data;
+  };
+
+  ICA.APIResponse.EndOfResponse = function () {
+    this.name = "End of Response";
+  };
+
+  ICA.APIResponse.EndOfResponse.prototype = Object.create(Error.prototype);
+
   ICA.api = "api/v1";
 
   ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false) {
@@ -94,18 +127,19 @@
         x.setRequestHeader("Authorization", "Bearer " + this.accountSession);
       }
       if (headers) for (var header in headers) {
-        x.setRequestHeader(header, headers[header]);
+        if (headers[header]) x.setRequestHeader(header, headers[header]);
       }
       x.send(data);
     }.bind(this));
   };
 
-  ICA.requestAPI = function (method, path, data) {
+  ICA.requestAPI = function (method, path, data, state) {
     return ICA.request(
       method,
       this.api + path,
       {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-ICA-State": state
       },
       JSON.stringify(data),
       "json",
@@ -113,12 +147,28 @@
     )
       .then(function (x) {
         var data = x.response;
-        if (typeof data == "object" && data.error) {
+        if (data && typeof data == "object" && data.error) {
           console.warn("Request caught error:", data);
           return Promise.reject(new Error(data.error));
         }
-        return data;
+        return new ICA.APIResponse(data, [method, path, data, x.getResponseHeader("X-ICA-State-Next")]);
       });
+  };
+
+  ICA.get = function (path, params, state) {
+    return this.requestAPI("GET", path, params, state);
+  };
+
+  ICA.post = function (path, params) {
+    return this.requestAPI("POST", path, params);
+  };
+
+  ICA.put = function (path, params) {
+    return this.requestAPI("PUT", path, params);
+  };
+
+  ICA.delete = function (path, params) {
+    return this.requestAPI("DELETE", path, params);
   };
 
   ICA.uploadFile = function (file) {
@@ -195,22 +245,6 @@
       }.bind(this));
   };
 
-  ICA.get = function (path, params) {
-    return this.requestAPI("GET", path, params);
-  };
-
-  ICA.post = function (path, params) {
-    return this.requestAPI("POST", path, params);
-  };
-
-  ICA.put = function (path, params) {
-    return this.requestAPI("PUT", path, params);
-  };
-
-  ICA.delete = function (path, params) {
-    return this.requestAPI("DELETE", path, params);
-  };
-
   ICA.getJointSources = function (params) {
     var data = [];
     for (var key in params) {
@@ -221,7 +255,7 @@
       ? "?" + data.join("&")
       : "")
     )
-      .then(touchJointSources);
+      .then(touchJointSourcesWithAPIResponse);
   };
 
   ICA.publishJointSource = function (jointSource) {
@@ -271,6 +305,7 @@
               }
             })
           })
+            .then(ICA.APIResponse.getData)
             .then(touchJointSources)
             .then(function () {
               console.log("ICA: Joint source posted");
@@ -328,6 +363,7 @@
                   });
                 }
                 return promise
+                  .then(ICA.APIResponse.getData)
                   .then(function (dataSources) {
                     touchSources(dataSources, jointSource);
                     console.log("ICA: Source posted");
@@ -381,14 +417,27 @@
   };
 
   ICA.getThemes = function () {
-    return ICA.get("/themes/");
+    return ICA.get("/themes/")
+      .then(ICA.APIResponse.getData);
   };
 
   ICA.getFileStats = function (fileId) {
-    return ICA.get("/files/" + fileId);
+    return ICA.get("/files/" + fileId)
+      .then(ICA.APIResponse.getData);
   };
 
   // Utility Functions
+
+  ICA.empty = function (data) {
+    if (data == undefined || data == null) return true;
+    if (Array.isArray(data)) {
+      return data.length == 0;
+    }
+    if (typeof data == "object") {
+      return Object.keys(data).length == 0;
+    }
+    return false;
+  };
 
   function touchJointSources(data) {
     var jointSources = [];
@@ -411,6 +460,15 @@
       }
       touchSources(dataJointSource.sources, jointSource);
     }
+    return jointSources;
+  }
+
+  function touchJointSourcesWithAPIResponse(apiResponse) {
+    var jointSources = touchJointSources(apiResponse.data);
+    jointSources.requestNext = function () {
+      return apiResponse.requestNext()
+        .then(touchJointSourcesWithAPIResponse);
+    };
     return jointSources;
   }
 
