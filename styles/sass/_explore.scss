@@ -72,10 +72,13 @@ $column-spacing: 8px;
     > .jointsource-status {
       flex: none;
       padding: 0.5em 1em 1em;
-      color: lighten($color-text, 40%);
       text-transform: lowercase;
-      opacity: 0;
-      transition: opacity ease 0.2s;
+
+      > * {
+        color: lighten($color-text, 40%);
+        opacity: 0;
+        transition: opacity ease 0.2s, color ease 0.2s;
+      }
 
       > :not(:last-child) {
         margin-right: 0.25em;
@@ -83,10 +86,10 @@ $column-spacing: 8px;
     }
 
     &:hover {
-      @include lift(1, 5);
-      border-color: #d4d4d4;
+      @include lift(1, 6);
+      border-color: #e0e0e0;
 
-      > .jointsource-status {
+      > .jointsource-status * {
         opacity: 1;
       }
     }
@@ -102,8 +105,12 @@ $column-spacing: 8px;
         }
       }
 
-      > .jointsource-status {
+      > .jointsource-status * {
         color: rgba($color-text-light, 0.60);
+
+        &:hover {
+          color: #fff !important;
+        }
       }
     }
   }
