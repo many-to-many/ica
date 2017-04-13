@@ -26,16 +26,21 @@ p {
 }
 
 a {
-  color: inherit !important;
+  color: $color-text;
   text-decoration: none;
   transition: color ease 0.2s;
 
-  &:not(.solid) {
+  &:active, &.active,
+  &:focus,
+  &:hover {
 
-    &:hover,
-    &.active {
+    &:not(.solid) {
       color: $color-accent !important;
     }
+  }
+
+  &:visited {
+    color: $color-text;
   }
 
   &:not([href]),
@@ -56,18 +61,4 @@ textarea {
 
 .color-accent {
   color: $color-accent !important;
-}
-
-.dark {
-
-  a {
-
-    &:not(.solid) {
-
-      &:hover,
-      &.active {
-        color: #fff !important;
-      }
-    }
-  }
 }
