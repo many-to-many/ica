@@ -8,7 +8,6 @@
   }
 
   .publisher-sources {
-    margin: 0 -1.5em;
 
     .publisher-source {
       @include card(0);
@@ -16,9 +15,6 @@
       max-width: none;
       max-height: none;
       overflow-y: visible;
-      border-radius: 0;
-      border-right: none;
-      border-left: none;
       margin: 1.5em 0;
 
       > .topbar {
