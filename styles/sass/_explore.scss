@@ -40,13 +40,13 @@ $column-spacing: 8px;
       @include fade(6em, 180deg, rgba(#000, 0.30));
 
       > .jointsource-backdrop-image {
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover;
-          background-position: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-size: cover;
+        background-position: center;
       }
     }
 
