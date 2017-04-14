@@ -28,7 +28,7 @@ $column-spacing: 8px;
     border: solid 1px #e8e8e8;
     @include lift(0, 2);
     transition: box-shadow ease 0.3s, border-color ease 0.3s;
-    font-size: 0.9em;
+    font-size: 0.875em;
 
     > .jointsource-backdrop {
       position: absolute;
@@ -71,7 +71,9 @@ $column-spacing: 8px;
 
     > .jointsource-status {
       flex: none;
+      display: flex;
       padding: 0.5em 1em 1em;
+      line-height: 1.25;
       text-transform: lowercase;
 
       > * {
@@ -83,14 +85,36 @@ $column-spacing: 8px;
       > :not(:last-child) {
         margin-right: 0.25em;
       }
+
+      .flex-space {
+        flex: 1 0 auto;
+      }
+
+      .audio-on-hover {
+        opacity: 0.4 !important;
+        box-sizing: border-box;
+        width: 1.25em;
+        height: 1.25em;
+        background-image: inline-image("icon-speaker.svg");
+        background-position: center;
+        background-size: 0.8em 0.8em;
+        background-repeat: no-repeat;
+        background-color: $color-text-light;
+        border-radius: 50%;
+        border: solid 1px #f0f0f0;
+        @include lift(0, 2);
+      }
     }
 
     &:hover {
       @include lift(1, 6);
       border-color: #e0e0e0;
 
-      > .jointsource-status * {
-        opacity: 1;
+      > .jointsource-status {
+
+        > * {
+          opacity: 1 !important;
+        }
       }
     }
 

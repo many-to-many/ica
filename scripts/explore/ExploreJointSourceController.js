@@ -79,6 +79,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
     }
   }
 
+  this.view.querySelector(".audio-on-hover").style.display = "none";
   var audioSources = this.jointSource.audioSources;
   if (audioSources.length > 0) {
     var audioSource = audioSources[0];
@@ -87,6 +88,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
     audioSource.getFileStats()
       .then(function (stats) {
         if (new Audio().canPlayType(stats.type) != "") {
+          this.querySelector(".audio-on-hover").style.display = "";
           this.audio = new Audio(audioSource.fileHandler.url);
         }
       }.bind(this.view));
