@@ -69,7 +69,7 @@ AppController.defineMethod("initView", function () {
           });
       }
     }
-  }.bind(this), 1000, true)
+  }.bind(this), 500, true)
     .componentOf = this;
 });
 

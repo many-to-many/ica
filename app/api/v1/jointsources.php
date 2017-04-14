@@ -20,7 +20,7 @@
 
     case "GET":
 
-      $limit = 20;
+      $limit = 40;
 
       if (array_key_exists("q", $_GET)) {
         if (empty($_GET["q"])) {
