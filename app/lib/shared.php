@@ -16,10 +16,13 @@
 
   define("LANG_0_ENCODED", 0);
   define("LANG_0", "0");
+  define("LANG_1_ENCODED", 1);
+  define("LANG_1", "1");
 
   function encodeLang($lang) {
     switch ($lang) {
       case LANG_0: return LANG_0_ENCODED;
+      case LANG_1: return LANG_1_ENCODED;
     }
     throw new \Exception("Unable to encode lang");
   }
@@ -27,6 +30,7 @@
   function decodeLang($code) {
     switch ($code) {
       case LANG_0_ENCODED: return LANG_0;
+      case LANG_1_ENCODED: return LANG_1;
     }
     throw new \Exception("Unable to decode lang");
   }

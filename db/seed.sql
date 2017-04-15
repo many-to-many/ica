@@ -1003,5 +1003,6 @@ COMMIT;
 START TRANSACTION;
 USE `ica`;
 INSERT INTO `ica`.`langs` (`lang`, `name`) VALUES (0, '0');
+INSERT INTO `ica`.`langs` (`lang`, `name`) VALUES (1, '1');
 
 COMMIT;
