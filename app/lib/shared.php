@@ -14,19 +14,19 @@
   define("TYPE_VIDEO_ENCODED", 4);
   define("TYPE_VIDEO", "video");
 
-  define("LANG_UNDEFINED_ENCODED", 0);
-  define("LANG_UNDEFINED", "*");
+  define("LANG_0_ENCODED", 0);
+  define("LANG_0", "0");
 
   function encodeLang($lang) {
     switch ($lang) {
-      case LANG_UNDEFINED: return LANG_UNDEFINED_ENCODED;
+      case LANG_0: return LANG_0_ENCODED;
     }
     throw new \Exception("Unable to encode lang");
   }
 
   function decodeLang($code) {
     switch ($code) {
-      case LANG_UNDEFINED_ENCODED: return LANG_UNDEFINED;
+      case LANG_0_ENCODED: return LANG_0;
     }
     throw new \Exception("Unable to decode lang");
   }

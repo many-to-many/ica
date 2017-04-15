@@ -268,11 +268,11 @@
             _id: jointSource.jointSourceId,
             meta: jointSource.meta
               ? {
-                title: jointSource.meta.title ? {"*": jointSource.meta.title} : null,
-                intro: jointSource.meta.intro ? {"*": jointSource.meta.intro} : null,
-                themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null,
-                participants: jointSource.meta.participants ? {"*": jointSource.meta.participants} : null,
-                region: jointSource.meta.region ? {"*": jointSource.meta.region} : null
+                title: jointSource.meta.title ? {"0": jointSource.meta.title} : null,
+                intro: jointSource.meta.intro ? {"0": jointSource.meta.intro} : null,
+                themes: jointSource.meta.themes ? {"0": jointSource.meta.themes} : null,
+                participants: jointSource.meta.participants ? {"0": jointSource.meta.participants} : null,
+                region: jointSource.meta.region ? {"0": jointSource.meta.region} : null
               }
               : {},
             sources: jointSource.mapSources(function (source) {
@@ -281,26 +281,26 @@
                 return {
                   _id: source.sourceId,
                   type: "image",
-                  content: {"*": source.content}
+                  content: {"0": source.content}
                 };
               case AudioSource:
                 return {
                   _id: source.sourceId,
                   type: "audio",
-                  content: {"*": source.content}
+                  content: {"0": source.content}
                 };
               case VideoSource:
                 return {
                   _id: source.sourceId,
                   type: "video",
-                  content: {"*": source.content}
+                  content: {"0": source.content}
                 };
               case TextSource:
               default:
                 return {
                   _id: source.sourceId,
                   type: "text",
-                  content: {"*": source.content}
+                  content: {"0": source.content}
                 };
               }
             })
@@ -316,11 +316,11 @@
         return ICA.put("/jointsources/{0}/".format(jointSource.jointSourceId), {
           meta: jointSource.meta
             ? {
-              title: jointSource.meta.title ? {"*": jointSource.meta.title} : null,
-              intro: jointSource.meta.intro ? {"*": jointSource.meta.intro} : null,
-              themes: jointSource.meta.themes ? {"*": jointSource.meta.themes} : null,
-              participants: jointSource.meta.participants ? {"*": jointSource.meta.participants} : null,
-              region: jointSource.meta.region ? {"*": jointSource.meta.region} : null
+              title: jointSource.meta.title ? {"0": jointSource.meta.title} : null,
+              intro: jointSource.meta.intro ? {"0": jointSource.meta.intro} : null,
+              themes: jointSource.meta.themes ? {"0": jointSource.meta.themes} : null,
+              participants: jointSource.meta.participants ? {"0": jointSource.meta.participants} : null,
+              region: jointSource.meta.region ? {"0": jointSource.meta.region} : null
             }
             : {}
         })
@@ -337,21 +337,21 @@
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "image",
-                    content: {"*": source.content}
+                    content: {"0": source.content}
                   });
                   break;
                 case AudioSource:
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "audio",
-                    content: {"*": source.content}
+                    content: {"0": source.content}
                   });
                   break;
                 case VideoSource:
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "video",
-                    content: {"*": source.content}
+                    content: {"0": source.content}
                   });
                   break;
                 case TextSource:
@@ -359,7 +359,7 @@
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "text",
-                    content: {"*": source.content}
+                    content: {"0": source.content}
                   });
                 }
                 return promise
@@ -374,7 +374,7 @@
                 jointSource.jointSourceId,
                 source.sourceId),
                 {
-                  content: {"*": source.content}
+                  content: {"0": source.content}
                 })
                 .then(function () {
                   console.log("ICA: Source revision posted");
@@ -449,11 +449,11 @@
       } else {
         jointSource = new JointSource(dataJointSource.meta
           ? {
-            title: dataJointSource.meta.title ? dataJointSource.meta.title["*"] : null,
-            intro: dataJointSource.meta.intro ? dataJointSource.meta.intro["*"] : null,
-            themes: dataJointSource.meta.themes ? dataJointSource.meta.themes["*"] : null,
-            participants: dataJointSource.meta.participants ? dataJointSource.meta.participants["*"] : null,
-            region: dataJointSource.meta.region ? dataJointSource.meta.region["*"] : null
+            title: dataJointSource.meta.title ? dataJointSource.meta.title["0"] : null,
+            intro: dataJointSource.meta.intro ? dataJointSource.meta.intro["0"] : null,
+            themes: dataJointSource.meta.themes ? dataJointSource.meta.themes["0"] : null,
+            participants: dataJointSource.meta.participants ? dataJointSource.meta.participants["0"] : null,
+            region: dataJointSource.meta.region ? dataJointSource.meta.region["0"] : null
           }
           : {}, jointSourceId);
         jointSources.push(jointSource);
@@ -482,17 +482,17 @@
       } else {
         switch (dataSource.type) {
         case "image":
-          source = new ImageSource(dataSource.content["*"], jointSource, sourceId);
+          source = new ImageSource(dataSource.content["0"], jointSource, sourceId);
           break;
         case "audio":
-          source = new AudioSource(dataSource.content["*"], jointSource, sourceId);
+          source = new AudioSource(dataSource.content["0"], jointSource, sourceId);
           break;
         case "video":
-          source = new VideoSource(dataSource.content["*"], jointSource, sourceId);
+          source = new VideoSource(dataSource.content["0"], jointSource, sourceId);
           break;
         case "text":
         default:
-          source = new TextSource(dataSource.content["*"], jointSource, sourceId);
+          source = new TextSource(dataSource.content["0"], jointSource, sourceId);
         }
         sources.push(source);
       }
