@@ -23,35 +23,45 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
     new PublisherJointSourceController(this.controller.jointSource, element);
   }.bind(this.view));
 
+  var sourcesElement = this.view.querySelector(".sources");
+  var sourceElement = sourcesElement.querySelector(".source");
+
   this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (e) {
     e.preventDefault();
-    var sourcesElement = this.querySelector(".sources");
-    var destIndex = Math.max(0, Math.round(sourcesElement.scrollLeft / sourcesElement.offsetWidth) - 1);
-    var destScrollLeft = sourcesElement.offsetWidth * destIndex;
-    sourcesElement.scrollLeft = destScrollLeft;
-  }.bind(this.view));
+
+    if (sourceElement.previousElementSibling) {
+      sourceElement.style.display = "none";
+      sourceElement = sourceElement.previousElementSibling;
+      sourceElement.style.display = "";
+      resizeSourcesHeight();
+    }
+  }.bind(sourcesElement));
 
   this.view.querySelector("[data-ica-action='next-source']").addEventListener("click", function (e) {
     e.preventDefault();
-    var sourcesElement = this.querySelector(".sources");
-    var destIndex = Math.min(sourcesElement.children.length, Math.round(sourcesElement.scrollLeft / sourcesElement.offsetWidth) + 1);
-    var destScrollLeft = sourcesElement.offsetWidth * destIndex;
-    sourcesElement.scrollLeft = destScrollLeft;
-  }.bind(this.view));
+
+    if (sourceElement.nextElementSibling) {
+      sourceElement.style.display = "none";
+      sourceElement = sourceElement.nextElementSibling;
+      sourceElement.style.display = "";
+      resizeSourcesHeight();
+    }
+  }.bind(sourcesElement));
 
   // Resize height of sources box
-
-  var resizeSourcesHeight = function resizeSourcesHeight() {
-    var sourceIndex = Math.round(this.scrollLeft / this.offsetWidth);
-    if (this.children[sourceIndex]) {
-      this.style.height = this.children[sourceIndex].offsetHeight + "px";
+  var resizeSourcesHeight = function () {
+    if (sourceElement) {
+      this.style.height = sourceElement.offsetHeight + "px";
     }
-    this.parentNode.parentNode.querySelector("[data-ica-jointsource-source-index]").textContent = sourceIndex + 1;
-    this.parentNode.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceIndex > 0 ? 1 : 0;
-    this.parentNode.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceIndex < this.children.length - 1 ? 1 : 0;
-  }.bind(this.view.querySelector(".sources"));
-
-  this.view.querySelector(".sources").addEventListener("scroll", resizeSourcesHeight);
+    for (var sourceIndex in this.children) {
+      if (sourceElement == this.children[sourceIndex]) {
+        this.parentNode.parentNode.querySelector("[data-ica-jointsource-source-index]").textContent = parseInt(sourceIndex) + 1;
+        break;
+      }
+    }
+    this.parentNode.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceElement.previousElementSibling ? 1 : 0;
+    this.parentNode.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceElement.nextElementSibling ? 1 : 0;
+  }.bind(sourcesElement);
 
   this.resizeSourcesHeightRoutine = new Routine(resizeSourcesHeight, 1000, false);
   this.resizeSourcesHeightRoutine.componentOf = this;
@@ -123,6 +133,8 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
       this.querySelector(".sources").appendChild(fragment);
       new ArticleTextSourceController(source, element).componentOf = this.controller;
     }
+
+    element.style.display = "none";
   }.bind(this.view));
 
   this.resizeSourcesHeightRoutine.restart();
