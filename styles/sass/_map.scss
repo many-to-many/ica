@@ -11,7 +11,7 @@
       min-height: 2em;
       display: flex;
       background-color: #fff;
-      border-bottom: solid 1px rgba(0, 0, 0, 0.10);
+      border-bottom: solid 1px #f4f4f4;
       @include lift($z-popup + $z-relative-topbar, 1.5);
 
       > * {
@@ -34,12 +34,12 @@
         }
 
         &.left {
-          border-right: solid 1px rgba(0, 0, 0, 0.10);
+          border-right: solid 1px #f4f4f4;
           background-image: inline-image("icon-left.svg");
         }
 
         &.right {
-          border-left: solid 1px rgba(0, 0, 0, 0.10);
+          border-left: solid 1px #f4f4f4;
           background-image: inline-image("icon-right.svg");
         }
       }
@@ -102,7 +102,7 @@
 
             > .jointsource-control {
               padding: 1.5em;
-              border-top: solid 1px rgba(0, 0, 0, 0.10);
+              border-top: solid 1px #f4f4f4;
             }
           }
 
