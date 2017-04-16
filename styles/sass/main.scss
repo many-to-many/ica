@@ -16,7 +16,7 @@ $font-mono: "Roboto Mono", monospace;
 /* Z-Index & Effects */
 
 @mixin shadow($index) {
-  box-shadow: 0 #{($index * 2/3) + "px"} #{($index * $index / 2) + "px"} rgba(#000, 0.02 * $index);
+  box-shadow: 0 #{($index / 2) + "px"} #{($index * $index / 2) + "px"} rgba(#000, 0.02 * $index);
 }
 
 @mixin lift($z-index, $shadow-index) {
@@ -24,8 +24,8 @@ $font-mono: "Roboto Mono", monospace;
   @include shadow($shadow-index);
 }
 
-$z-popup: 6;
-$z-relative-topbar: 2;
+$z-popup: 3;
+$z-relative-topbar: 1;
 
 @mixin fade($offset: 0.5em, $angle: 0deg, $to: transparent) {
   -webkit-mask: linear-gradient($angle, $to, black $offset);

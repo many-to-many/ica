@@ -107,7 +107,7 @@ $column-spacing: 8px;
     }
 
     &:hover {
-      @include lift(1, 6);
+      @include lift(1, $z-popup);
       border-color: #e0e0e0;
 
       > .jointsource-status {
