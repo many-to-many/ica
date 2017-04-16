@@ -9,14 +9,16 @@ BlobFileSource.defineMethod("construct", function construct() {
 
 BlobFileSource.defineMethod("init", function init(content, jointSource, sourceId) {
 
-  this.fileHandler.blob = content;
-  this.fileHandler.didUpdate();
+  if (content) {
+    this.fileHandler.blob = content["0"];
+    this.fileHandler.didUpdate();
+  }
 
 });
 
 BlobFileSource.defineMethod("didUpdate", function didUpdate() {
 
-  this.fileHandler.blob = this.content;
+  this.fileHandler.blob = content["0"];
   this.fileHandler.didUpdate();
 
 });
@@ -30,21 +32,24 @@ BlobFileSource.defineMethod("destruct", function destruct() {
 BlobFileSource.prototype.prePublish = function () {
   return Promise.resolve()
     .then(function () {
-      if (this.content && this.content instanceof Blob) {
-        return ICA.uploadFile(this.content)
+      if (this.content["0"] && this.content["0"] instanceof Blob) {
+        return ICA.uploadFile(this.content["0"])
           .then(function (fileId) {
-            this.content = fileId;
+            this.content["0"] = fileId;
           }.bind(this));
       }
     }.bind(this));
 };
 
 BlobFileSource.prototype.getFileStats = function () {
-  if (this.content instanceof Blob) {
-    return Promise.resolve({
-      size: this.content.size,
-      type: this.content.type
-    });
+  if (this.content["0"]) {
+    if (this.content["0"] instanceof Blob) {
+      return Promise.resolve({
+        size: this.content["0"].size,
+        type: this.content["0"].type
+      });
+    }
+    return ICA.getFileStats(this.content["0"]);
   }
-  return ICA.getFileStats(this.content);
+  return Promise.reject(new Error("File not exist"));
 };

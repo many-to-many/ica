@@ -287,13 +287,13 @@
                 return {
                   _id: source.sourceId,
                   type: "audio",
-                  content: {"0": source.content}
+                  content: source.content
                 };
               case VideoSource:
                 return {
                   _id: source.sourceId,
                   type: "video",
-                  content: {"0": source.content}
+                  content: source.content
                 };
               case TextSource:
               default:
@@ -330,8 +330,8 @@
           // Post new sources
           .then(function () {
             return Promise.all(jointSource.mapSources(function (source) {
+              var promise;
               if (source.sourceId < 0) {
-                var promise;
                 switch (source.constructor) {
                 case ImageSource:
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
@@ -344,14 +344,14 @@
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "audio",
-                    content: {"0": source.content}
+                    content: source.content
                   });
                   break;
                 case VideoSource:
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "video",
-                    content: {"0": source.content}
+                    content: source.content
                   });
                   break;
                 case TextSource:
@@ -369,13 +369,28 @@
                     console.log("ICA: Source posted");
                   });
               }
-              // Post new revision (only if necessary) TODO
-              return ICA.put("/jointsources/{0}/sources/{1}/".format(
-                jointSource.jointSourceId,
-                source.sourceId),
-                {
-                  content: {"0": source.content}
-                })
+              // TODO: Post new revision only if necessary
+              switch (source.constructor) {
+              case AudioSource:
+              case VideoSource:
+                promise = ICA.put("/jointsources/{0}/sources/{1}/".format(
+                  jointSource.jointSourceId,
+                  source.sourceId),
+                  {
+                    content: source.content
+                  });
+                break;
+              case TextSource:
+              case ImageSource:
+              default:
+                promise = ICA.put("/jointsources/{0}/sources/{1}/".format(
+                  jointSource.jointSourceId,
+                  source.sourceId),
+                  {
+                    content: {"0": source.content}
+                  });
+              }
+              return promise
                 .then(function () {
                   console.log("ICA: Source revision posted");
                 });
@@ -485,10 +500,10 @@
           source = new ImageSource(dataSource.content["0"], jointSource, sourceId);
           break;
         case "audio":
-          source = new AudioSource(dataSource.content["0"], jointSource, sourceId);
+          source = new AudioSource(dataSource.content, jointSource, sourceId);
           break;
         case "video":
-          source = new VideoSource(dataSource.content["0"], jointSource, sourceId);
+          source = new VideoSource(dataSource.content, jointSource, sourceId);
           break;
         case "text":
         default:

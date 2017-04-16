@@ -23,10 +23,11 @@ ArticleAudioSourceController.defineMethod("updateView", function updateView() {
     }.bind(this.view));
 
   if (this.source.fileHandler.blob) {
-    this.view.querySelector("source[data-ica-content]").src = this.source.fileHandler.url;
+    this.view.querySelector("source[data-ica-content='0']").src = this.source.fileHandler.url;
 
-    this.view.querySelector("a[data-ica-content]").href = this.source.fileHandler.url;
-    this.view.querySelector("a[data-ica-content]").textContent = this.source.fileHandler.url;
+    this.view.querySelector("a[data-ica-content='0']").href = this.source.fileHandler.url;
+    this.view.querySelector("a[data-ica-content='0']").textContent = this.source.fileHandler.url;
   }
 
+  ArticleTextSourceController.renderText(this.source.content["1"], this.view.querySelector(".text"));
 });

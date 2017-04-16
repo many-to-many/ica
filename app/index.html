@@ -103,9 +103,10 @@
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
           <section class="source-container">
-            <input type="file" data-ica-source-content accept="audio/*" hidden>
+            <input type="file" data-ica-source-content="0" accept="audio/*" hidden>
             <div class="waveform"></div>
             <audio class="player" controls></audio>
+            <div class="editor" data-ica-source-content="1"></div>
           </section>
         </article>
       </template>
@@ -117,7 +118,7 @@
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
           <section class="source-container">
-            <input type="file" data-ica-source-content accept="video/*" hidden>
+            <input type="file" data-ica-source-content="0" accept="video/*" hidden>
             <video class="player" controls></video>
           </section>
         </article>
@@ -165,7 +166,7 @@
         </section>
       </template>
       <template id="template-article-textsource">
-        <div class="source textsource"></div>
+        <div class="source textsource text"></div>
       </template>
       <template id="template-article-imagesource">
         <div class="source imagesource">
@@ -176,17 +177,18 @@
         <div class="source audiosource">
           <div class="waveform"></div>
           <audio class="player" controls>
-            <source data-ica-content></source>
+            <source data-ica-content="0"></source>
           </audio>
-          <span class="download">Audio source: <a data-ica-content target="_blank"></a></span>
+          <span class="download">Audio source: <a data-ica-content="0" target="_blank"></a></span>
+          <div class="text" data-ica-content="1"></div>
         </div>
       </template>
       <template id="template-article-videosource">
         <div class="source videosource">
           <video class="player" controls>
-            <source data-ica-content></source>
+            <source data-ica-content="0"></source>
           </video>
-          <span class="download">Video source: <a data-ica-content target="_blank"></a></span>
+          <span class="download">Video source: <a data-ica-content="0" target="_blank"></a></span>
         </div>
       </template>
       <!-- Template: Tokens -->

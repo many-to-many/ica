@@ -119,34 +119,7 @@
           }
 
           &.textsource {
-            padding: 0 1.5em;
 
-            & > p {
-              margin: 1.25em 0;
-              line-height: 1.5;
-
-              & > span {
-                display: inline;
-                padding: 0.1em 0;
-                transition: border-color ease 0.3s;
-                -webkit-user-select: text;
-
-                &:not([data-ica-textsource-extract=""]) {
-                  background-color: rgba($color-primary, 0.40);
-                  border-bottom: solid 3px transparent;
-
-                  // Debugging purpose
-                  // &::before {
-                  //   content: attr(data-ica-textsource-extract);
-                  //   position: absolute;
-                  //   font-size: 0.5em;
-                  //   margin-top: -1em;
-                  //   font-style: italic;
-                  //   color: #444;
-                  // }
-                }
-              }
-            }
           }
 
           &.imagesource {
@@ -164,6 +137,10 @@
               border-top: solid 1px #f4f4f4;
               border-bottom: solid 1px #f4f4f4;
             }
+
+            .text:not(:empty) {
+              border-top: solid 1px #f4f4f4;
+            }
           }
 
           &.videosource {
@@ -174,6 +151,37 @@
             display: block;
             padding: 1.5em;
           }
+        }
+      }
+    }
+  }
+
+  .text {
+    padding: 0 1.5em;
+
+    & > p {
+      margin: 1.25em 0;
+      line-height: 1.5;
+
+      & > span {
+        display: inline;
+        padding: 0.1em 0;
+        transition: border-color ease 0.3s;
+        -webkit-user-select: text;
+
+        &[data-ica-text-extract]:not([data-ica-text-extract=""]) {
+          background-color: rgba($color-primary, 0.40);
+          border-bottom: solid 3px transparent;
+
+          // Debugging purpose
+          // &::before {
+          //   content: attr(data-ica-textsource-extract);
+          //   position: absolute;
+          //   font-size: 0.5em;
+          //   margin-top: -1em;
+          //   font-style: italic;
+          //   color: #444;
+          // }
         }
       }
     }

@@ -105,7 +105,13 @@ Source.prototype.prePublish = function () {
 
 Source.prototype.cloneContent = function () {
   // Clone an object
-  return this.content;
+  var clone = this.content.constructor();
+  for (var key in this.content) {
+    if (this.content.hasOwnProperty(key)) {
+      clone[key] = this.content[key];
+    }
+  }
+  return clone;
 };
 
 Source.prototype.backup = function (force = false) {

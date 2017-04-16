@@ -21,9 +21,8 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
   var content = this.source.content;
   if (length) content = content.substring(0, length);
 
-  setElementProperty(this.view, "textsource-id", this.source.sourceId);
-  setElementProperty(this.view, "textsource-start", 0);
-  setElementProperty(this.view, "textsource-length", content.length);
+  setElementProperty(this.view, "text-start", 0);
+  setElementProperty(this.view, "text-length", content.length);
   var sourceParagraphs = content.split("\n");
   var sourceLength = 0;
   for (var sourceParagraphIndex in sourceParagraphs) {
@@ -34,9 +33,9 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
     var textSourceStart = sourceLength;
     var textSourceLength = sourceParagraph.length;
     var textSourceEnd = textSourceStart + textSourceLength;
-    setElementProperty(sourceParagraphElement, "textsource-paragraph", textSourceParagraph);
-    setElementProperty(sourceParagraphElement, "textsource-start", textSourceStart);
-    setElementProperty(sourceParagraphElement, "textsource-length", textSourceLength);
+    setElementProperty(sourceParagraphElement, "text-paragraph", textSourceParagraph);
+    setElementProperty(sourceParagraphElement, "text-start", textSourceStart);
+    setElementProperty(sourceParagraphElement, "text-length", textSourceLength);
 
     // Apply extract
     var textInserts = [];
@@ -119,7 +118,7 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
         new TextExtractController(span, extract);
         extractIds.push(extract.id);
       });
-      setElementProperty(span, "textsource-extract", extractIds.join(" "));
+      setElementProperty(span, "text-extract", extractIds.join(" "));
       return span;
     }
     var previousAbsoluteIndex = textSourceStart, previousRelativeIndex = 0;
@@ -129,8 +128,8 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
       let length = absoluteIndex - previousAbsoluteIndex;
 
       if (length > 0) {
-        setElementProperty(span, "textsource-start", previousAbsoluteIndex);
-        setElementProperty(span, "textsource-length", length);
+        setElementProperty(span, "text-start", previousAbsoluteIndex);
+        setElementProperty(span, "text-length", length);
         span.textContent = sourceParagraph.substring(previousRelativeIndex, relativeIndex);
         sourceParagraphElement.appendChild(span);
       }
@@ -141,8 +140,8 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
       previousRelativeIndex = relativeIndex;
     }
     if (textSourceEnd - previousAbsoluteIndex > 0) {
-      setElementProperty(span, "textsource-start", previousAbsoluteIndex);
-      setElementProperty(span, "textsource-length", textSourceEnd - previousAbsoluteIndex);
+      setElementProperty(span, "text-start", previousAbsoluteIndex);
+      setElementProperty(span, "text-length", textSourceEnd - previousAbsoluteIndex);
       span.textContent = sourceParagraph.substring(previousRelativeIndex, textSourceLength);
       sourceParagraphElement.appendChild(span);
     }
@@ -157,3 +156,39 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
     throw "error testing text source length";
   }
 });
+
+ArticleTextSourceController.renderText = function (content, view) {
+  if (!content || !view) return;
+
+  setElementProperty(view, "text-start", 0);
+  setElementProperty(view, "text-length", content.length);
+  var sourceParagraphs = content.split("\n");
+  var sourceLength = 0;
+  for (var sourceParagraphIndex in sourceParagraphs) {
+    var sourceParagraph = sourceParagraphs[sourceParagraphIndex];
+    var sourceParagraphElement = document.createElement("p");
+
+    var textSourceParagraph = sourceParagraphIndex;
+    var textSourceStart = sourceLength;
+    var textSourceLength = sourceParagraph.length;
+    var textSourceEnd = textSourceStart + textSourceLength;
+    setElementProperty(sourceParagraphElement, "text-paragraph", textSourceParagraph);
+    setElementProperty(sourceParagraphElement, "text-start", textSourceStart);
+    setElementProperty(sourceParagraphElement, "text-length", textSourceLength);
+
+    var previousAbsoluteIndex = textSourceStart, previousRelativeIndex = 0;
+    var span = document.createElement("span");
+    setElementProperty(span, "text-start", previousAbsoluteIndex);
+    setElementProperty(span, "text-length", textSourceEnd - previousAbsoluteIndex);
+    span.textContent = sourceParagraph.substring(previousRelativeIndex, textSourceLength);
+    sourceParagraphElement.appendChild(span);
+
+    // Add paragraph
+    sourceLength += sourceParagraph.length + 1; // Count in `\n`
+    view.appendChild(sourceParagraphElement);
+  }
+  if (sourceLength - 1 != content.length) {
+    console.log(sourceLength, content.length);
+    throw "error testing text source length";
+  }
+}
