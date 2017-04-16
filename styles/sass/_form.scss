@@ -87,11 +87,8 @@ textarea,
     overflow: hidden;
     margin: 0.5em calc(0.375em + 1px);
 
-    $fade-num: 18;
-    @for $i from 1 through $fade-num {
-      :nth-child(#{$i}) {
-        opacity: max(0.95 - $i * $i / ($fade-num * $fade-num / 0.50), 0.45);
-      }
+    .token {
+      background-color: rgba($color-primary, 0.75);
     }
   }
 }
