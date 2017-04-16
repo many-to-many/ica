@@ -56,7 +56,7 @@ PublisherAudioSourceController.defineMethod("updateView", function () {
     });
   }
 
-  this.quill.setText(this.source.content["1"]);
+  this.quill.setText(this.source.content["1"] || "");
 });
 
 PublisherAudioSourceController.defineMethod("uninitView", function () {
