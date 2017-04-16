@@ -9,20 +9,17 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
   if (!this.view) return;
 
   // Reset view
-  var parentNode = this.view.parentNode;
-  var sourceFragment = ArticleTextSourceController.createViewFragment();
-  var sourceElement = sourceFragment.querySelector(".source");
-  parentNode.replaceChild(sourceFragment, this.view);
-  this.uninitView();
-  this._view = sourceElement;
-  this.initView(false);
+  var view = this.view.querySelector(".text");
+  while (view.firstChild) {
+    view.removeChild(view.firstChild);
+  }
 
   // Select some content
   var content = this.source.content;
   if (length) content = content.substring(0, length);
 
-  setElementProperty(this.view, "text-start", 0);
-  setElementProperty(this.view, "text-length", content.length);
+  setElementProperty(view, "text-start", 0);
+  setElementProperty(view, "text-length", content.length);
   var sourceParagraphs = content.split("\n");
   var sourceLength = 0;
   for (var sourceParagraphIndex in sourceParagraphs) {
@@ -149,7 +146,7 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
     // Add paragraph
     // sourceParagraphElement.textContent = sourceParagraph;
     sourceLength += sourceParagraph.length + 1; // Count in `\n`
-    this.view.appendChild(sourceParagraphElement);
+    view.appendChild(sourceParagraphElement);
   }
   if (sourceLength - 1 != content.length) {
     console.log(sourceLength, content.length);
@@ -191,4 +188,4 @@ ArticleTextSourceController.renderText = function (content, view) {
     console.log(sourceLength, content.length);
     throw "error testing text source length";
   }
-}
+};
