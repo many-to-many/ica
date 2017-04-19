@@ -67,9 +67,9 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   if (imageSources.length > 0) {
     var imageSource = imageSources[0];
 
-    if (imageSource.content) {
+    if (imageSource.content["0"]) {
       this.view.classList.add("dark");
-      this.view.querySelector(".jointsource-backdrop-image").style.backgroundImage = imageSource.content
+      this.view.querySelector(".jointsource-backdrop-image").style.backgroundImage = imageSource.content["0"]
         ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url

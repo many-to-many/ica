@@ -281,7 +281,7 @@
                 return {
                   _id: source.sourceId,
                   type: "image",
-                  content: {"0": source.content}
+                  content: source.content
                 };
               case AudioSource:
                 return {
@@ -337,7 +337,7 @@
                   promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
                     _id: source.sourceId,
                     type: "image",
-                    content: {"0": source.content}
+                    content: source.content
                   });
                   break;
                 case AudioSource:
@@ -373,6 +373,7 @@
               switch (source.constructor) {
               case AudioSource:
               case VideoSource:
+              case ImageSource:
                 promise = ICA.put("/jointsources/{0}/sources/{1}/".format(
                   jointSource.jointSourceId,
                   source.sourceId),
@@ -381,7 +382,6 @@
                   });
                 break;
               case TextSource:
-              case ImageSource:
               default:
                 promise = ICA.put("/jointsources/{0}/sources/{1}/".format(
                   jointSource.jointSourceId,
@@ -497,7 +497,7 @@
       } else {
         switch (dataSource.type) {
         case "image":
-          source = new ImageSource(dataSource.content["0"], jointSource, sourceId);
+          source = new ImageSource(dataSource.content, jointSource, sourceId);
           break;
         case "audio":
           source = new AudioSource(dataSource.content, jointSource, sourceId);
