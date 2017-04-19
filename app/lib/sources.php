@@ -71,6 +71,20 @@
 
   }
 
+  function fixSourcesTitles() {
+
+    retainDatabaseTransaction();
+
+    $result = query("SELECT * FROM sources WHERE title_id = 0;");
+    while ($row = $result->fetch_assoc()) {
+      $titleId = \ICA\Contents\requestContentId();
+      query("UPDATE sources SET title_id = {$titleId} WHERE id = {$row['id']}");
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
   function insertSourceState($sourceId, $state = STATE_PUBLISHED) {
 
     global $DATABASE;
