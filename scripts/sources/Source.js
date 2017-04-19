@@ -18,7 +18,7 @@ Source.defineMethod("init", function init(content, jointSource, sourceId) {
   this._jointSource = jointSource;
   this.initJointSource();
   // Init content
-  this.content = content || "";
+  this.content = content || {};
   return [];
 });
 
