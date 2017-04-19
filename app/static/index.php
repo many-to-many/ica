@@ -67,7 +67,7 @@
           imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $imageWidth, $imageHeight);
 
           // Fix image orientation
-          $exif = exif_read_data(DIR_ROOT . "/data/{$file->path}");
+          $exif = @exif_read_data(DIR_ROOT . "/data/{$file->path}");
           if (!empty($exif["Orientation"])) {
             switch ($exif["Orientation"]) {
               case 3: $dst = imagerotate($dst, 180, 0); break;
