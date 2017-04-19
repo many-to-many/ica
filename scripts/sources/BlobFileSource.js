@@ -18,7 +18,7 @@ BlobFileSource.defineMethod("init", function init(content, jointSource, sourceId
 
 BlobFileSource.defineMethod("didUpdate", function didUpdate() {
 
-  this.fileHandler.blob = content["0"];
+  this.fileHandler.blob = this.content["0"];
   this.fileHandler.didUpdate();
 
 });
