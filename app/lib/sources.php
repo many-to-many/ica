@@ -52,13 +52,14 @@
     retainDatabaseTransaction();
 
     // Request content versioning unit id
+    $titleId = \ICA\Contents\requestContentId();
     $contentId = \ICA\Contents\requestContentId();
 
     // Create a new joint source
     $typeEncoded = encodeType($source->type);
     $result = query("INSERT INTO sources
-      (`jointsource_id`, `author_id`, `content_id`, `type`)
-      VALUES ({$jointSourceId}, {$accountId}, {$contentId}, {$typeEncoded});");
+      (`jointsource_id`, `author_id`, `title_id`, `content_id`, `type`)
+      VALUES ({$jointSourceId}, {$accountId}, {$titleId}, {$contentId}, {$typeEncoded});");
     $sourceId = $DATABASE->insert_id;
 
     $stateId = insertSourceState($sourceId, $state);
