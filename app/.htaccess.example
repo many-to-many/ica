@@ -7,18 +7,22 @@ RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
 
 # Remote: ica.mintkit.net
+# Remote: ica.mintkit.net
 
 # API calls
+RewriteCond %{HTTP_HOST} =many-to-many.net [NC,OR]
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^api/([^/]+)/(.*)$ /api/$1/index.php?p=$2 [QSA,NC,L]
 
 # Static file hosting
+RewriteCond %{HTTP_HOST} =many-to-many.net [NC,OR]
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^static/(.*)$ /static/index.php?p=$1 [QSA,NC,L]
 
 # Add .php to access file, but don't redirect
+RewriteCond %{HTTP_HOST} =many-to-many.net [NC,OR]
 RewriteCond %{HTTP_HOST} =ica.mintkit.net [NC]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
