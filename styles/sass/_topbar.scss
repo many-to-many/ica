@@ -12,10 +12,10 @@
   -webkit-overflow-scrolling: touch;
   @include lift($z-relative-topbar, 3);
 
-  &:before, &:after {
+  &::before, &::after {
     display: block;
     content: "";
-    flex: 0 0 0.5em;
+    flex: 0 0 0.75em;
   }
 
   body > & {
@@ -37,7 +37,7 @@
     font-size: 1em;
     line-height: 1;
     font-weight: bold;
-    padding: 1em;
+    padding: 1em 0.75em;
     flex: 1 0 auto;
   }
 
