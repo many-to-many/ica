@@ -13,7 +13,8 @@ PublisherTextSourceController.defineMethod("initView", function initView() {
     modules: {
       toolbar: false
     },
-    theme: ""
+    theme: "",
+    placeholder: "Enter text here..."
   });
   this.quill.on("text-change", function () {
     this.source.content = this.quill.getText().replace(/\n$/, "");

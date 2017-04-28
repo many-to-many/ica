@@ -37,7 +37,8 @@ PublisherAudioSourceController.defineMethod("initView", function () {
     modules: {
       toolbar: false
     },
-    theme: ""
+    theme: "",
+    placeholder: "Enter transcription/translation here..."
   });
   this.quill.on("text-change", function () {
     this.source.content["1"] = this.quill.getText().replace(/\n$/, "");

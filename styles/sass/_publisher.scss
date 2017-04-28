@@ -44,6 +44,14 @@
           overflow-y: auto;
           white-space: pre-wrap;
           word-wrap: break-word;
+
+          &::before {
+            display: block;
+            content: attr(data-placeholder);
+            margin: 1.25em 0;
+            line-height: 1.5;
+            color: #a9a9a9;
+          }
         }
         .ql-clipboard {
           left: -100000px;

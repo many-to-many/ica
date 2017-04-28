@@ -35,6 +35,10 @@ textarea,
     border-color: transparent;
   }
 
+  &::placeholder {
+    color: #a9a9a9;
+  }
+
   &[type="submit"],
   &[type="button"] {
     display: block;
