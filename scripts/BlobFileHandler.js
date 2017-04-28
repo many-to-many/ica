@@ -17,11 +17,13 @@ Object.defineProperty(BlobFileHandler.prototype, "url", {
   get: function () {
     if (this.blob) {
       if (this.blob instanceof Blob) return URL.createObjectURL(this.blob);
-      return "static/" + this.blob;
+      return (!this.cached ? "nocache/" : "") + "static/" + this.blob;
     }
     return null;
   }
 });
+
+BlobFileHandler.prototype.cached = true;
 
 BlobFileHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
   // Serve cached buffers if available
