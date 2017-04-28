@@ -30,7 +30,7 @@
         transition: opacity ease 0.2s, background-color ease 0.2s;
 
         &:hover {
-          background-color: rgba($color-primary, 0.10);
+          background-color: lighten($color-primary, 40%);
         }
 
         &.left {

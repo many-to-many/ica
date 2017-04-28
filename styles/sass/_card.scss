@@ -61,7 +61,7 @@ $card-width: 40em;
     margin: 0;
     padding: 0 1em;
     overflow-x: visible;
-    overflow-y: auto;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 
     &::before,

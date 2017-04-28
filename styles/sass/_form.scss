@@ -27,7 +27,7 @@ textarea,
 
   &:focus,
   &.active {
-    border-bottom-color: $color-accent;
+    border-bottom-color: $color-primary;
   }
 
   &[type="file"] {
@@ -88,7 +88,7 @@ textarea,
     margin: 0.5em calc(0.375em + 1px);
 
     .token {
-      background-color: rgba($color-primary, 0.75);
+      background-color: lighten($color-primary, 18%);
     }
   }
 }
