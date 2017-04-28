@@ -90,11 +90,12 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
 
     if (imageSource.content) {
       this.view.querySelector(".jointsource-backdrop").hidden = false;
-      this.view.querySelector(".jointsource-backdrop-image").style.backgroundImage = imageSource.content
+      var img = this.view.querySelector(".jointsource-backdrop-image");
+      img.style.backgroundImage = imageSource.content
         ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
-            : imageSource.fileHandler.url + "?width=" + (2 * this.view.offsetWidth * this.devicePixelRatio)
+            : imageSource.fileHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
           ) + ")"
         : "";
     }
