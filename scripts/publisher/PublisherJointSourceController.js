@@ -126,6 +126,9 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
       new PublisherTextSourceController(source, element).componentOf = this.controller;
     }
   }.bind(this.view));
+
+  // Display danger zone
+  this.view.querySelector("[data-ica-jointsource-filter='published']").hidden = this.jointSource.jointSourceId < 0;
 });
 
 PublisherJointSourceController.defineMethod("uninitView", function uninitView() {

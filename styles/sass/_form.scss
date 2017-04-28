@@ -69,14 +69,14 @@ textarea,
     }
 
     &[type="submit"],
-    &.color-accent {
-      border-color: $color-accent;
-      color: $color-accent !important;
+    &.color-primary {
+      border-color: $color-primary;
+      color: $color-primary !important;
 
       &:hover,
       &.active {
-        border-color: $color-accent;
-        background-color: mix($color-accent, #fff, 5%);
+        border-color: $color-primary;
+        background-color: mix($color-primary, #fff, 5%);
       }
     }
   }
