@@ -74,10 +74,12 @@
         // Close the window after saving account id
         window.close();
 
+        window.location = "index.html";
+
       } else {
 
         // Error with window opener
-        console.error("Cannot find window opener")
+        console.error("Cannot find window opener");
 
       }
 
