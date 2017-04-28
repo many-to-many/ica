@@ -1,70 +1,58 @@
 
 [data-ica-app-view="about"] {
 	margin: 0 auto;
-	max-width: 1024px;
-	position: static;
+	max-width: 900px;
+	overflow-x: hidden;
 
   h3 {
   	display: block;
   	text-align: center;
 		font-size: 1.6em;
 		font-weight: 500;
-		margin: 1em 0 0.5em 0;
 		-webkit-user-select: text;
   }
 
+	h4 {
+		text-align: center;
+		-webkit-user-select: text;
+	}
+
   p {
-  	margin: 0.5em 0;
 		font-family: $font-sans-serif-alt;
 		-webkit-user-select: text;
   }
 
-	/* CSS for team members profiles */
+	// Team members
 
-	#team {
+	.team {
 		text-align: center;
-	}
+		margin: 1.25em -1.25em -1.25em;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		overflow: hidden;
 
-	.img-circle {
-	    border-radius: 50%;
-	    display: block;
-	    margin: auto;
-	}
+		.team-member {
+			box-sizing: border-box;
+			flex: 0 0 300px;
+			padding: 0 1.25em;
 
-	.team-member {
-		padding: 0 1.5em;
-		max-width: 25%;
-		margin: auto;
-		position: relative;
-		display: inline-block;
-		vertical-align: top;
-	}
+			.img-circle {
+				display: block;
+				margin: 0 auto;
+		    border-radius: 50%;
+			}
 
-	.team-member h4 {
-		color: $color-primary;
-		font-size: 1.2em;
-		text-align: center;
-		margin-bottom: 0.3em;
-	}
+			h4 {
+				color: $color-primary;
+				text-align: center;
+				margin-bottom: 0.5em;
+			}
 
-	.team-member .role {
-		font-size: 1em;
-		text-align: center;
-		margin-top: 0;
-		color: rgba($color-text, 0.80);
-	}
-
-	.team-member p {
-		text-align: center;
-	}
-
-
-	/* Mobile landscape */
-	@media handheld, only screen and (max-width: 480px) {
-
-	  /* Column Widths */
-	  .team-member {max-width:98.5%; }
-
-	  .wrap {display: flex; flex-direction: column;}
+			.role {
+				margin-top: 0;
+				color: rgba($color-text, 0.80);
+			}
+		}
 	}
 }
