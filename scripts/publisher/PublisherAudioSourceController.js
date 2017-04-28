@@ -18,7 +18,7 @@ PublisherAudioSourceController.defineMethod("initView", function () {
 
   this.view.querySelector("[data-ica-source-content='0']").addEventListener("change", function (e) {
     var file = e.target.files[0];
-    this.controller.source.content = file;
+    this.controller.source.content["0"] = file;
     this.controller.source.didUpdate();
   }.bind(this.view));
 
