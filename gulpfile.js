@@ -6,7 +6,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const rename = require("gulp-rename");
 const uglify = require("gulp-uglify");
 const babel = require("gulp-babel");
-const autoprefixer = require('gulp-autoprefixer');
+const autoprefixer = require("gulp-autoprefixer");
 const browserSync = require("browser-sync").create();
 
 gulp.task("compass", function() {
@@ -20,7 +20,7 @@ gulp.task("compass", function() {
 gulp.task("css", ["compass"], function () {
   return gulp.src("styles/**/*.css")
     .pipe(autoprefixer({
-      browsers: ['last 2 versions'],
+      browsers: ["last 2 versions"],
       cascade: true
     }))
     .pipe(gulp.dest("app/assets"));
