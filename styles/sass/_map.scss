@@ -96,6 +96,7 @@
 
               p {
                 margin: 0.5em 0;
+                font-family: $font-sans-serif-alt;
               }
 
               [data-ica-jointsource-meta] {
@@ -158,6 +159,7 @@
     & > p {
       margin: 1.25em 0;
       line-height: 1.5;
+      font-family: $font-sans-serif-alt;
 
       & > span {
         display: inline;
