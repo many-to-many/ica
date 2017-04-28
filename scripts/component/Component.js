@@ -98,10 +98,6 @@ Component.createComponent = function (name) {
     return thisComponent.apply(this, arguments);
   };
   // eval("Component = function {0}() { return thisComponent.apply(this, arguments); };".format(name)); // NB: Debug
-  // Assign the new component with the user-defined name
-  Object.defineProperty(Component, "name", {
-    value: name
-  });
   // Init new component
   Component.componentName = name;
   Component.parentComponent = thisComponent;
