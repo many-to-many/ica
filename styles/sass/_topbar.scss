@@ -39,7 +39,7 @@
     font-weight: 700;
     padding: 1em 0.75em;
     flex: 1 0 auto;
-    color: rgba($color-text, 0.80);
+    color: lighten($color-text, 10%);
   }
 
   > .title-complex {
@@ -60,7 +60,7 @@
       font-weight: 500;
       padding-top: 0.1em;
       line-height: 1;
-      color: rgba($color-text, 0.80);
+      color: lighten($color-text, 10%);
     }
   }
 
@@ -70,7 +70,7 @@
     padding: 1em 0.75em;
     line-height: 1em;
     font-weight: 500;
-    color: rgba($color-text, 0.80);
+    color: lighten($color-text, 10%);
 
     &:after {
       display: block;
