@@ -41,34 +41,36 @@ AppController.defineMethod("initView", function () {
   }.bind(this.view));
 
   new Routine(function () {
-    for (var view of this.view.querySelectorAll("[data-ica-app-view]")) if (view.style.display != "none") {
-      var element = view.querySelector(".explore");
-      if (!element) continue;
-      var rect = element.getBoundingClientRect();
-      var explore = element.controller.model;
-      if (rect.bottom < 2 * document.body.offsetHeight
-        && explore.requestNextJointSources) {
-        // Need to load more content
-        console.count("Need to load more");
-        let requestNext = explore.requestNextJointSources;
-        explore.requestNextJointSources = undefined;
-        requestNext()
-          .then(function (jointSources) {
-            var explore = this.controller.model;
-            explore.requestNextJointSources = jointSources.requestNext;
-            explore.addItems(jointSources);
-            explore.didUpdate();
-          }.bind(element), function (err) {
-            if (err instanceof ICA.APIResponse.EndOfResponse) {
-              // End of response
-              console.log("Explore: End of response");
-            } else {
-              // Critical error
-              console.error(err.message);
-            }
-          });
+    this.view.querySelectorAll("[data-ica-app-view]").forEach(function (view) {
+      if (view.style.display != "none") {
+        var element = view.querySelector(".explore");
+        if (!element) return;
+        var rect = element.getBoundingClientRect();
+        var explore = element.controller.model;
+        if (rect.bottom < 2 * document.body.offsetHeight
+          && explore.requestNextJointSources) {
+          // Need to load more content
+          console.count("Need to load more");
+          let requestNext = explore.requestNextJointSources;
+          explore.requestNextJointSources = undefined;
+          requestNext()
+            .then(function (jointSources) {
+              var explore = this.controller.model;
+              explore.requestNextJointSources = jointSources.requestNext;
+              explore.addItems(jointSources);
+              explore.didUpdate();
+            }.bind(element), function (err) {
+              if (err instanceof ICA.APIResponse.EndOfResponse) {
+                // End of response
+                console.log("Explore: End of response");
+              } else {
+                // Critical error
+                console.error(err.message);
+              }
+            });
+        }
       }
-    }
+    });
   }.bind(this), 500, true)
     .componentOf = this;
 });
