@@ -32,23 +32,18 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
     new MapController(map, element);
   }.bind(this.view));
 
-  this.view.addEventListener("mouseover", function mouseOver() {
-    if (this.audio) {
-      if (!(this.audio instanceof Audio)) {
-        this.audio = new Audio(this.audio);
-      }
-      if (this.audio.paused) {
-        this.audio.play();
-      }
-    }
-  }.bind(this.view));
+  this.audioPreviewHandler = new AudioHandler();
 
-  this.view.addEventListener("mouseleave", function mouseLeave() {
-    if (this.audio && this.audio instanceof Audio) {
-      this.audio.pause();
-      this.audio.currentTime = 0;
-    }
-  }.bind(this.view));
+  this.view.addEventListener("mouseenter", function () {
+    this.audioPreviewHandler.play();
+  }.bind(this));
+
+  this.windowBlurEventListener = function () {
+    this.audioPreviewHandler.stop(300);
+  }.bind(this);
+
+  this.view.addEventListener("mouseleave", this.windowBlurEventListener);
+  window.addEventListener("blur", this.windowBlurEventListener);
 });
 
 ExploreJointSourceController.defineMethod("updateView", function updateView() {
@@ -89,19 +84,22 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   if (audioSources.length > 0) {
     var audioSource = audioSources[0];
 
-    delete this.audio;
+    this.audioPreviewHandler.audio = null;
     audioSource.getFileStats()
       .then(function (stats) {
         if (new Audio().canPlayType(stats.type) != "") {
-          this.querySelector(".audio-on-hover").style.display = "";
-          this.audio = audioSource.fileHandler.url;
+          this.view.querySelector(".audio-on-hover").style.display = "";
+          this.audioPreviewHandler.audio = audioSource.fileHandler.url;
         }
-      }.bind(this.view));
+      }.bind(this));
   }
 });
 
 ExploreJointSourceController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
+
+  window.removeEventListener("blur", this.windowBlurEventListener);
+  delete this.windowBlurEventListener;
 
   removeElementProperty(this.view, "jointsource-id");
 });
