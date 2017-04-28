@@ -51,6 +51,13 @@ ExploreController.defineMethod("updateView", function updateView() {
       console.warn("Unhandled item:", item.constructor);
     }
   }.bind(this));
+
+  [14, 7, 11, 18, 13, 12, 20, 6].forEach(function (jointSourceId, order) {
+    var element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(jointSourceId));
+    if (element) {
+      element.style.order = order - 1e5;
+    }
+  }.bind(this));
 });
 
 ExploreController.defineMethod("uninitView", function initView() {
