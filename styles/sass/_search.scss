@@ -1,13 +1,18 @@
 
 .search {
-  display: flex;
-  flex-wrap: wrap;
 
   > .search-control {
     box-sizing: border-box;
-    flex: none;
-    width: 300px;
-    padding: 0 1.25em 0 0.25em;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 60em;
+    margin: 0 (- $column-spacing) 0 0;
+    padding: 0 ($column-spacing / 2);
+
+    > * {
+      flex: 1 0 15em;
+      margin-right: $column-spacing;
+    }
   }
 
   > .explore {
