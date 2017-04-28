@@ -13,12 +13,15 @@
       background-color: #fff;
       border-bottom: solid 1px #f4f4f4;
       @include lift($z-popup + $z-relative-topbar, 1.5);
+      overflow-y: hidden;
 
       > * {
         line-height: 1.5;
         flex: 1 0 auto;
         text-align: center;
         padding: 0.25em 0;
+        font-family: $font-mono;
+        color: rgba($color-text, 0.80);
       }
 
       > .jointsource-nav-btn {
@@ -99,11 +102,6 @@
                 -webkit-user-select: text;
               }
             }
-
-            > .jointsource-control {
-              padding: 1.5em;
-              border-top: solid 1px #f4f4f4;
-            }
           }
 
           &.textsource {
@@ -136,6 +134,12 @@
 
           &.videosource {
 
+          }
+
+          > .jointsource-control,
+          > .source-control {
+            padding: 1.5em;
+            border-top: solid 1px #f4f4f4;
           }
 
           .download {

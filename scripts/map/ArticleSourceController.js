@@ -4,7 +4,10 @@ var ArticleSourceController = SourceController.createComponent("ArticleSourceCon
 ArticleSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  // setElementProperty(this.view, "source-id", this.source.sourceId);
+  this.view.querySelector("[data-ica-action='edit-jointsource']").addEventListener("click", function (e) {
+    e.preventDefault();
+    this.controller.componentOf.displayPublisherJointSourceView();
+  }.bind(this.view));
 
   this.view.addEventListener("click", function (e) {
     // e.preventDefault();

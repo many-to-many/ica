@@ -17,10 +17,7 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
 
   this.view.querySelector("[data-ica-action='edit-jointsource']").addEventListener("click", function (e) {
     e.preventDefault();
-    var fragment = PublisherJointSourceController.createViewFragment();
-    var element = fragment.querySelector(".publisher");
-    document.body.appendChild(fragment);
-    new PublisherJointSourceController(this.controller.jointSource, element);
+    this.controller.displayPublisherJointSourceView();
   }.bind(this.view));
 
   var sourcesElement = this.view.querySelector(".sources");
@@ -151,3 +148,10 @@ ArticleJointSourceController.defineMethod("uninitView", function uninitView() {
   }
 
 });
+
+ArticleJointSourceController.prototype.displayPublisherJointSourceView = function () {
+  var fragment = PublisherJointSourceController.createViewFragment();
+  var element = fragment.querySelector(".publisher");
+  document.body.appendChild(fragment);
+  new PublisherJointSourceController(this.jointSource, element);
+};

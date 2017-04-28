@@ -132,9 +132,7 @@
           <article class="article jointsource card">
             <header class="jointsource-nav">
               <a class="jointsource-nav-btn left" data-ica-action="previous-source"></a>
-              <div>
-                <span data-ica-jointsource-source-index></span>/<span data-ica-jointsource-number-of-sources></span>
-              </div>
+              <div><span data-ica-jointsource-source-index></span>/<span data-ica-jointsource-number-of-sources></span></div>
               <a class="jointsource-nav-btn right" data-ica-action="next-source"></a>
             </header>
             <section class="sources-container">
@@ -168,11 +166,17 @@
       <template id="template-article-textsource">
         <div class="source textsource">
           <div class="text"></div>
+          <section class="source-control">
+            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+          </section>
         </div>
       </template>
       <template id="template-article-imagesource">
         <div class="source imagesource">
           <img data-ica-content>
+          <section class="source-control">
+            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+          </section>
         </div>
       </template>
       <template id="template-article-audiosource">
@@ -183,6 +187,9 @@
           </audio>
           <span class="download">Audio source: <a data-ica-content="0" target="_blank"></a></span>
           <div class="text" data-ica-content="1"></div>
+          <section class="source-control">
+            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+          </section>
         </div>
       </template>
       <template id="template-article-videosource">
@@ -191,6 +198,9 @@
             <source data-ica-content="0"></source>
           </video>
           <span class="download">Video source: <a data-ica-content="0" target="_blank"></a></span>
+          <section class="source-control">
+            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+          </section>
         </div>
       </template>
       <!-- Template: Tokens -->
