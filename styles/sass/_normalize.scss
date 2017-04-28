@@ -35,7 +35,7 @@ a {
   &:hover {
 
     &:not(.solid) {
-      color: $color-primary;
+      color: $color-primary !important;
     }
   }
 
