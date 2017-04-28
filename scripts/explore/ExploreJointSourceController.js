@@ -33,13 +33,18 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
   }.bind(this.view));
 
   this.view.addEventListener("mouseover", function mouseOver() {
-    if (this.audio && this.audio.paused) {
-      this.audio.play();
+    if (this.audio) {
+      if (!(this.audio instanceof Audio)) {
+        this.audio = new Audio(this.audio);
+      }
+      if (this.audio.paused) {
+        this.audio.play();
+      }
     }
   }.bind(this.view));
 
   this.view.addEventListener("mouseleave", function mouseLeave() {
-    if (this.audio) {
+    if (this.audio && this.audio instanceof Audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
     }
@@ -89,7 +94,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
       .then(function (stats) {
         if (new Audio().canPlayType(stats.type) != "") {
           this.querySelector(".audio-on-hover").style.display = "";
-          this.audio = new Audio(audioSource.fileHandler.url);
+          this.audio = audioSource.fileHandler.url;
         }
       }.bind(this.view));
   }
