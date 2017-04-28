@@ -59,7 +59,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   this.initView(false);
 
   this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
-    element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")];
+    element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")] || "";
   }.bind(this));
 
   this.view.classList.remove("dark");
