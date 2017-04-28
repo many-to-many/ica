@@ -9,7 +9,7 @@ BlobFileSource.defineMethod("construct", function construct() {
 
 BlobFileSource.defineMethod("init", function init(content, jointSource, sourceId) {
 
-  if (content) {
+  if (content && content["0"]) {
     this.fileHandler.blob = content["0"];
     this.fileHandler.didUpdate();
   }
