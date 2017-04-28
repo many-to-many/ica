@@ -26,7 +26,7 @@ p {
 }
 
 a {
-  color: $color-text;
+  color: inherit;
   text-decoration: none;
   transition: color ease 0.2s;
 
@@ -35,12 +35,12 @@ a {
   &:hover {
 
     &:not(.solid) {
-      color: $color-primary !important;
+      color: $color-primary;
     }
   }
 
   &:visited {
-    color: $color-text;
+    color: inherit;
   }
 
   &:not([href]),
