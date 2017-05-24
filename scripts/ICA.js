@@ -75,7 +75,7 @@
 
   ICA.api = "api/v1";
 
-  ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false) {
+  ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false, notify = true) {
     return new Promise(function (resolve, reject) {
       var x = new XMLHttpRequest();
       x.open(method, url, true);
@@ -123,14 +123,16 @@
       }
 
       // Create progress notification
-      notifications.addNotification(new XHRProgressNotification(x));
-      notifications.didUpdate();
+      if (notify) {
+        notifications.addNotification(new XHRProgressNotification(x));
+        notifications.didUpdate();
+      }
 
       x.send(data);
     }.bind(this));
   };
 
-  ICA.requestAPI = function (method, path, data, state) {
+  ICA.requestAPI = function (method, path, data, state, notify) {
     return ICA.request(
       method,
       this.api + path,
@@ -140,7 +142,8 @@
       },
       JSON.stringify(data),
       "json",
-      true
+      true,
+      notify
     )
       .then(function (x) {
         var data = x.response;
@@ -152,30 +155,33 @@
       });
   };
 
-  ICA.get = function (path, params, state) {
-    return this.requestAPI("GET", path, params, state);
+  ICA.get = function (path, params, state, notify) {
+    return this.requestAPI("GET", path, params, state, notify);
   };
 
-  ICA.post = function (path, params) {
-    return this.requestAPI("POST", path, params);
+  ICA.post = function (path, params, notify) {
+    return this.requestAPI("POST", path, params, undefined, notify);
   };
 
-  ICA.put = function (path, params) {
-    return this.requestAPI("PUT", path, params);
+  ICA.put = function (path, params, notify) {
+    return this.requestAPI("PUT", path, params, undefined, notify);
   };
 
-  ICA.delete = function (path, params) {
-    return this.requestAPI("DELETE", path, params);
+  ICA.delete = function (path, params, notify) {
+    return this.requestAPI("DELETE", path, params, undefined, notify);
   };
 
-  ICA.uploadFile = function (file) {
+  ICA.uploadFile = function (file, notify) {
     return ICA.request(
       "post",
       this.api + "/files/",
       {
         "Content-Type": file.type
       },
-      file
+      file,
+      "json",
+      false,
+      notify
     )
       .then(function (fileId) {
         console.log("ICA: File uploaded");
@@ -183,7 +189,7 @@
       });
   };
 
-  ICA.uploadFileChunked = function (file) {
+  ICA.uploadFileChunked = function (file, notify) {
     return ICA.request(
       "post",
       this.api + "/files/",
@@ -193,7 +199,8 @@
       },
       null,
       "json",
-      true
+      true,
+      notify
     )
       .then(function (x) {
         var data = x.response;
@@ -429,12 +436,12 @@
   };
 
   ICA.getThemes = function () {
-    return ICA.get("/themes/")
+    return ICA.get("/themes/", undefined, undefined, false)
       .then(ICA.APIResponse.getData);
   };
 
   ICA.getFileStats = function (fileId) {
-    return ICA.get("/files/" + fileId)
+    return ICA.get("/files/" + fileId, undefined, undefined, false)
       .then(ICA.APIResponse.getData);
   };
 
