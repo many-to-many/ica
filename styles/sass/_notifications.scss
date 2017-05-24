@@ -10,7 +10,7 @@
   background-color: #fff;
   border-radius: 3px;
   overflow-x: hidden;
-  transition: opacity ease 0.3s, transform ease 0.3s;
+  transition: opacity ease 0.3s, transform ease 0.3s, bottom ease 0.6s;
   @include lift($z-popup + 1, $z-popup + 1);
 
   &.hidden {
