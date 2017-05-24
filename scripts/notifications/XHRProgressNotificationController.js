@@ -1,7 +1,7 @@
 
 var XHRProgressNotificationController = NotificationController.createComponent("XHRProgressNotificationController");
 
-XHRProgressNotification.createViewFragment = function () {
+XHRProgressNotificationController.createViewFragment = function () {
   return cloneTemplate("#template-notification-xhrprogress");
 };
 

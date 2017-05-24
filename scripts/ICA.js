@@ -123,7 +123,7 @@
       }
 
       // Create progress notification
-      var fragment = XHRProgressNotification.createViewFragment();
+      var fragment = XHRProgressNotificationController.createViewFragment();
       var element = fragment.querySelector(".notification");
       document.body.appendChild(fragment);
       new XHRProgressNotificationController(new XHRProgressNotification(x), element);
