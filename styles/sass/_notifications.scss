@@ -5,12 +5,17 @@
   left: 0;
   margin: 1em;
   padding: 0 1em;
-  min-width: 10em;
+  min-width: 16em;
   max-width: calc(100% - 2em);
   background-color: #fff;
   border-radius: 3px;
   overflow-x: hidden;
+  transition: opacity ease 0.3s, transform ease 0.6s;
   @include lift($z-popup + 1, $z-popup + 1);
+
+  &.hidden {
+    transform: translateX(-60px);
+  }
 
   h4 {
     margin: 1em 0;
@@ -25,7 +30,7 @@
       min-width: 0.25em;
       height: 100%;
       background-color: #aaa;
-      transition: width ease 0.1s;
+      transition: width ease 0.3s;
     }
   }
 }
