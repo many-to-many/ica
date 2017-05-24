@@ -9,6 +9,7 @@
   "scripts/component/ElementHandler.js",
   "scripts/component/InputHandler.js",
   "scripts/component/Routine.js",
+  "scripts/component/Waterfall.js",
   "scripts/Controller.js",
   "scripts/sources/JointSource.js",
   "scripts/sources/JointSourceController.js",
