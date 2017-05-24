@@ -20,10 +20,10 @@ XHRProgressNotificationController.defineMethod("destroy", function (destroyView 
   // Destroy view
   if (destroyView && this.view) {
     var view = this.view;
-    new Waterfall(null, 310) // Leave time for transition to finish
+    new Waterfall(null, 400) // Leave time for transition to finish
       .then(function () {
         view.classList.add("hidden");
-      }, 310)
+      }, 400)
       .then(function () {
         view.parentNode.removeChild(view);
       }.bind(this));
