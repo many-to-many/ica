@@ -3,6 +3,18 @@ var NotificationController = SingleModelController.createComponent("Notification
 
 NotificationController.defineAlias("model", "notification");
 
+NotificationController.defineMethod("initView", function () {
+  if (!this.view) return;
+
+  this.view.classList.add("hidden");
+});
+
+NotificationController.defineMethod("updateView", function () {
+  if (!this.view) return;
+
+  this.view.classList.remove("hidden");
+});
+
 NotificationController.defineMethod("destroy", function (destroyView = false) {
   // Destroy view
   if (destroyView && this.view) {
