@@ -1,0 +1,31 @@
+
+.notification {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 1em;
+  padding: 0 1em;
+  min-width: 10em;
+  max-width: calc(100% - 2em);
+  background-color: #fff;
+  border-radius: 3px;
+  overflow-x: hidden;
+  @include lift($z-popup + 1, $z-popup + 1);
+
+  h4 {
+    margin: 1em 0;
+  }
+
+  .meter {
+    margin: 0 -1em;
+    height: 5px;
+    background-color: #e4e4e4;
+
+    > .meter-bar {
+      min-width: 0.25em;
+      height: 100%;
+      background-color: #aaa;
+      transition: width ease 0.1s;
+    }
+  }
+}

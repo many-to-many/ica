@@ -79,19 +79,9 @@
     return new Promise(function (resolve, reject) {
       var x = new XMLHttpRequest();
       x.open(method, url, true);
+
       if (responseType && responseType != "x") x.responseType = responseType;
-      if (x.upload) x.upload.onprogress = function (e) {
-        if (e.lengthComputable) {
-          var percentComplete = (e.loaded / e.total) * 100;
-          console.log("Requesting: {0}%".format(percentComplete));
-        }
-      };
-      x.onprogress = function (e) {
-        if (e.lengthComputable) {
-          var percentComplete = (e.loaded / e.total) * 100;
-          console.log("Responding: {0}%".format(percentComplete));
-        }
-      };
+
       x.onreadystatechange = function () {
         if (x.readyState == 4) {
           if (returnXHR) {
@@ -123,12 +113,21 @@
           }
         }
       };
+
+      // Set request headers
       if (this.accountSession) {
         x.setRequestHeader("Authorization", "Bearer " + this.accountSession);
       }
       if (headers) for (var header in headers) {
         if (headers[header]) x.setRequestHeader(header, headers[header]);
       }
+
+      // Create progress notification
+      var fragment = XHRProgressNotification.createViewFragment();
+      var element = fragment.querySelector(".notification");
+      document.body.appendChild(fragment);
+      new XHRProgressNotificationController(new XHRProgressNotification(x), element);
+
       x.send(data);
     }.bind(this));
   };
