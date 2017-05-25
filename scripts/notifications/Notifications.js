@@ -11,17 +11,15 @@ Notifications.defineMethod("destruct", function destruct() {
   delete this.notifications;
 });
 
-Notifications.defineMethod("retainModel", function retainModel(article) {
-  this.notifications.push(article);
-});
+Notifications.prototype.addNotification = function (notification) {
+  this.notifications.push(notification);
+  this.retainModel(notification);
+};
 
-Notifications.defineMethod("releaseModel", function releaseModel(article) {
-  var index = this.notifications.indexOf(article);
+Notifications.prototype.removeNotification = function (notification) {
+  var index = this.notifications.indexOf(notification);
   if (index > -1) {
     this.notifications.splice(index, 1);
+    this.releaseModel(notification);
   }
-});
-
-Notifications.prototype.addNotification = function (notification) {
-  this.retainModel(notification);
 };

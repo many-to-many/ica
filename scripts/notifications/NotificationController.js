@@ -25,14 +25,17 @@ NotificationController.defineMethod("uninitView", function () {
 NotificationController.defineMethod("destroy", function (destroyView = false) {
   // Destroy view
   if (destroyView && this.view) {
-    var view = this.view, jointModels = Object.values(this.notification.jointModels);
+    var view = this.view,
+      model = this.notification,
+      jointModels = Object.values(this.notification.jointModels);
     new Waterfall(null, 300 + 50) // Leave time for transition to finish
       .then(function () {
         view.classList.add("hidden");
-      }, 300 + 600)
+      }, 300 + 50)
       .then(function () {
         view.parentNode.removeChild(view);
         jointModels.forEach(function (jointModel) {
+          jointModel.removeNotification(model);
           jointModel.didUpdate();
         });
       }.bind(this));
