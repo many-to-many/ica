@@ -146,7 +146,11 @@ PublisherJointSourceController.prototype.publish = function () {
       }
 
       this.destroy(true);
-      alert("Content published");
+
+      // Display notification
+      notifications.addNotification(new BasicNotification("Content published"));
+      notifications.didUpdate();
+
     }.bind(this))
     .catch(function (err) {
       // TODO: Alert boxes to be implemented

@@ -13,18 +13,28 @@ NotificationsController.defineMethod("updateView", function () {
     // Check existing element
     if (element) {
       element.style.bottom = bottom + "px";
-    } else switch (notification.constructor) {
-    case XHRProgressNotification:
+    } else {
       // Create new view
-      var fragment = XHRProgressNotificationController.createViewFragment();
-      element = fragment.querySelector(".notification");
-      element.style.bottom = bottom + "px";
-      this.view.appendChild(fragment);
-      new XHRProgressNotificationController(notification, element).componentOf = this;
-      break;
-    default:
-      console.warn("Unhandled item:", notification.constructor);
-      return false;
+      var fragment;
+      switch (notification.constructor) {
+      case XHRProgressNotification:
+        fragment = XHRProgressNotificationController.createViewFragment();
+        element = fragment.querySelector(".notification");
+        element.style.bottom = bottom + "px";
+        this.view.appendChild(fragment);
+        new XHRProgressNotificationController(notification, element).componentOf = this;
+        break;
+      case BasicNotification:
+        fragment = BasicNotificationController.createViewFragment();
+        element = fragment.querySelector(".notification");
+        element.style.bottom = bottom + "px";
+        this.view.appendChild(fragment);
+        new BasicNotificationController(notification, element).componentOf = this;
+        break;
+      default:
+        console.warn("Unhandled item:", notification.constructor);
+        return false;
+      }
     }
 
     bottom += element.offsetHeight + 8; // 16 px margin top & bottom
