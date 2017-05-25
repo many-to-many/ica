@@ -1,9 +1,10 @@
 
 var XHRProgressNotification = Notification.createComponent("XHRProgressNotification");
 
-XHRProgressNotification.defineMethod("init", function (x) {
+XHRProgressNotification.defineMethod("init", function (x, title = "Content loading...") {
 
   this.x = x;
+  this.title = title;
 
   if (x.upload) {
     x.upload.addEventListener("progress", function (e) {

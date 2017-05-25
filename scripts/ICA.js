@@ -124,7 +124,7 @@
 
       // Create progress notification
       if (notify) {
-        notifications.addNotification(new XHRProgressNotification(x));
+        notifications.addNotification(new XHRProgressNotification(x, notify !== true ? notify : null));
         notifications.didUpdate();
       }
 
