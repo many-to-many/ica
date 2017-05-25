@@ -52,6 +52,7 @@
         ) {
 
           // Convert and resize the image if not already made available
+          ini_set("memory_limit", "512M");
           $src = $imageCreateFunctions[$fileSubtype](DIR_ROOT . "/data/{$file->path}");
 
           list($imageWidth, $imageHeight) = getimagesize(DIR_ROOT . "/data/{$file->path}");
