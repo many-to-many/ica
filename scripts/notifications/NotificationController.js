@@ -28,10 +28,10 @@ NotificationController.defineMethod("destroy", function (destroyView = false) {
     var view = this.view,
       model = this.notification,
       jointModels = Object.values(this.notification.jointModels);
-    new Waterfall(null, 300 + 50) // Leave time for transition to finish
+    new Waterfall(null, 300 + 1) // Leave time for transition to finish
       .then(function () {
         view.classList.add("hidden");
-      }, 300 + 50)
+      }, 300 + 1)
       .then(function () {
         view.parentNode.removeChild(view);
         jointModels.forEach(function (jointModel) {
