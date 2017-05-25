@@ -148,7 +148,7 @@ PublisherJointSourceController.prototype.publish = function () {
       this.destroy(true);
 
       // Display notification
-      notifications.addNotification(new BasicNotification("Content published"));
+      notifications.addNotification(new BasicNotification("Conversation published!"));
       notifications.didUpdate();
 
     }.bind(this))
@@ -162,7 +162,10 @@ PublisherJointSourceController.prototype.publish = function () {
 PublisherJointSourceController.prototype.unpublish = function () {
   return this.jointSource.unpublish("Unpublishing conversation...")
     .then(function () {
-      alert("Content unpublished; to be available online for another week after deletion (recover not yet implemented)");
+      // Display notification
+      notifications.addNotification(new BasicNotification("Conversation unpublished"));
+      notifications.didUpdate();
+
       this.jointSource.destroy(true, true);
     }.bind(this))
     .catch(function (err) {
