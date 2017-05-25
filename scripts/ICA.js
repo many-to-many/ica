@@ -333,7 +333,7 @@
                 };
               }
             })
-          }, undefined, notify)
+          }, notify)
             .then(ICA.APIResponse.getData)
             .then(touchJointSources)
             .then(function () {
