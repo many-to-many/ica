@@ -17,19 +17,20 @@ NotificationsController.defineMethod("updateView", function () {
       // Create new view
       var fragment;
       switch (notification.constructor) {
-      case XHRProgressNotification:
-        fragment = XHRProgressNotificationController.createViewFragment();
-        element = fragment.querySelector(".notification");
-        element.style.bottom = bottom + "px";
-        this.view.appendChild(fragment);
-        new XHRProgressNotificationController(notification, element).componentOf = this;
-        break;
       case BasicNotification:
         fragment = BasicNotificationController.createViewFragment();
         element = fragment.querySelector(".notification");
         element.style.bottom = bottom + "px";
         this.view.appendChild(fragment);
         new BasicNotificationController(notification, element).componentOf = this;
+        break;
+      case ProgressNotification:
+      case XHRProgressNotification:
+        fragment = XHRProgressNotificationController.createViewFragment();
+        element = fragment.querySelector(".notification");
+        element.style.bottom = bottom + "px";
+        this.view.appendChild(fragment);
+        new XHRProgressNotificationController(notification, element).componentOf = this;
         break;
       default:
         console.warn("Unhandled item:", notification.constructor);

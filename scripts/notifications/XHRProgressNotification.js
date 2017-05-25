@@ -1,16 +1,15 @@
 
-var XHRProgressNotification = Notification.createComponent("XHRProgressNotification");
+var XHRProgressNotification = ProgressNotification.createComponent("XHRProgressNotification");
 
 XHRProgressNotification.defineMethod("init", function (x, title = "Content loading...") {
 
   this.x = x;
-  this.title = title;
 
   if (x.upload) {
     x.upload.addEventListener("progress", function (e) {
       if (e.lengthComputable) {
         this.requestProgressPct = e.loaded / e.total;
-        this.overallProgressPct = (this.requestProgressPct + this.respondProgressPct) / 2;
+        this.progressPct = (this.requestProgressPct + this.respondProgressPct) / 2;
         this.didUpdate();
       }
     }.bind(this));
@@ -19,7 +18,7 @@ XHRProgressNotification.defineMethod("init", function (x, title = "Content loadi
   x.addEventListener("progress", function (e) {
     if (e.lengthComputable) {
       this.respondProgressPct = e.loaded / e.total;
-      this.overallProgressPct = (this.requestProgressPct + this.respondProgressPct) / 2;
+      this.progressPct = (this.requestProgressPct + this.respondProgressPct) / 2;
       this.didUpdate();
     }
   }.bind(this));
@@ -27,9 +26,11 @@ XHRProgressNotification.defineMethod("init", function (x, title = "Content loadi
   x.addEventListener("load", function () {
     this.requestProgressPct = 1;
     this.respondProgressPct = 1;
-    this.overallProgressPct = 1;
+    this.progressPct = 1;
     this.didUpdate();
   }.bind(this));
+
+  return [title];
 
 });
 

@@ -47,6 +47,8 @@
   "scripts/notifications/NotificationController.js",
   "scripts/notifications/BasicNotification.js",
   "scripts/notifications/BasicNotificationController.js",
+  "scripts/notifications/ProgressNotification.js",
+  "scripts/notifications/ProgressNotificationController.js",
   "scripts/notifications/XHRProgressNotification.js",
   "scripts/notifications/XHRProgressNotificationController.js",
   "scripts/AudioHandler.js",
