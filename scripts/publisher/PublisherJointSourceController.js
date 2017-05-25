@@ -138,7 +138,7 @@ PublisherJointSourceController.defineMethod("uninitView", function uninitView() 
 });
 
 PublisherJointSourceController.prototype.publish = function () {
-  return this.jointSource.publish()
+  return this.jointSource.publish("Publishing conversation...")
     .then(function (jointSource) {
       if (jointSource) {
         appController.explore.addItems([jointSource]);
@@ -160,10 +160,11 @@ PublisherJointSourceController.prototype.publish = function () {
 };
 
 PublisherJointSourceController.prototype.unpublish = function () {
-  return this.jointSource.unpublish()
+  return this.jointSource.unpublish("Unpublishing conversation...")
     .then(function () {
       alert("Content unpublished; to be available online for another week after deletion (recover not yet implemented)");
-    })
+      this.jointSource.destroy(true, true);
+    }.bind(this))
     .catch(function (err) {
       // TODO: Alert boxes to be implemented
       console.warn(err);

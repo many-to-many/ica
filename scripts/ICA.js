@@ -75,7 +75,7 @@
 
   ICA.api = "api/v1";
 
-  ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false, notify = true) {
+  ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false, notify) {
     return new Promise(function (resolve, reject) {
       var x = new XMLHttpRequest();
       x.open(method, url, true);
@@ -124,7 +124,7 @@
 
       // Create progress notification
       if (notify) {
-        notifications.addNotification(new XHRProgressNotification(x, notify !== true ? notify : null));
+        notifications.addNotification(new XHRProgressNotification(x, notify));
         notifications.didUpdate();
       }
 
@@ -190,6 +190,12 @@
   };
 
   ICA.uploadFileChunked = function (file, notify) {
+    var notification = new ProgressNotification(notify);
+    if (notify) {
+      notifications.addNotification(notification);
+      notifications.didUpdate();
+    }
+
     return ICA.request(
       "post",
       this.api + "/files/",
@@ -199,12 +205,15 @@
       },
       null,
       "json",
-      true,
-      notify
+      true
     )
       .then(function (x) {
         var data = x.response;
         if (typeof data != "number") {
+
+          notification.progressPct = 1;
+          notification.didUpdate();
+
           if (typeof data == "object" && data.error) {
             console.warn("Request caught error:", data);
             return Promise.reject(new Error(data.error));
@@ -229,15 +238,27 @@
             .then(function (x) {
               if (x.status == 200) {
                 // File upload completed
+
+                notification.progressPct = 1;
+                notification.didUpdate();
+
                 return fileId;
               } else if (x.status == 308) {
                 // File upload incomplete
                 var matches = x.getResponseHeader("Range").match(/(\d*)-(\d*)/),
                   byteLast = parseInt(matches[2]);
                 console.log("ICA: File upload incomplete: {0}%".format(100 * (byteLast + 1) / file.size));
+
+                notification.progressPct = byteLast / (file.size - 1);
+                notification.didUpdate();
+
                 return putFile(url, byteLast + 1, byteLength);
               } else {
                 // Error uploading file chunk
+
+                notification.progressPct = 1;
+                notification.didUpdate();
+
                 return Promise.reject(); // TODO: Allow retry
               }
             });
@@ -249,20 +270,24 @@
       }.bind(this));
   };
 
-  ICA.getJointSources = function (params) {
+  ICA.getJointSources = function (params, notify) {
     var data = [];
     for (var key in params) {
       data.push(key + "=" + params[key]);
     }
-    return ICA.get("/jointsources/"
-      + (data.length > 0
-      ? "?" + data.join("&")
-      : "")
+    return ICA.get(
+      "/jointsources/"
+        + (data.length > 0
+        ? "?" + data.join("&")
+        : ""),
+      undefined,
+      undefined,
+      notify
     )
       .then(touchJointSourcesWithAPIResponse);
   };
 
-  ICA.publishJointSource = function (jointSource) {
+  ICA.publishJointSource = function (jointSource, notify) {
     return jointSource.prePublish()
       .then(function () {
         // if (jointSource.getNumberOfSources() == 0) throw new Error("Needs at least one source");
@@ -308,7 +333,7 @@
                 };
               }
             })
-          })
+          }, undefined, notify)
             .then(ICA.APIResponse.getData)
             .then(touchJointSources)
             .then(function () {
@@ -316,7 +341,20 @@
               return jointSource;
             });
         }
+
         // Update joint source and individual sources (only if necessary TODO)
+
+        var notification = new ProgressNotification(notify);
+        var numTasksTodo = 1, numTasksDone = 0;
+        function updateNotification() {
+          notification.progressPct = numTasksDone / numTasksTodo;
+          notification.didUpdate();
+        }
+        if (notify) {
+          notifications.addNotification(notification);
+          notifications.didUpdate();
+        }
+
         return ICA.put("/jointsources/{0}/".format(jointSource.jointSourceId), {
           meta: jointSource.meta
             ? {
@@ -334,6 +372,8 @@
           // Post new sources
           .then(function () {
             return Promise.all(jointSource.mapSources(function (source) {
+              ++numTasksTodo;
+
               var promise;
               if (source.sourceId < 0) {
                 switch (source.constructor) {
@@ -371,6 +411,9 @@
                   .then(function (dataSources) {
                     touchSources(dataSources, jointSource);
                     console.log("ICA: Source posted");
+
+                    ++numTasksDone;
+                    updateNotification();
                   });
               }
               // TODO: Post new revision only if necessary
@@ -397,6 +440,9 @@
               return promise
                 .then(function () {
                   console.log("ICA: Source revision posted");
+
+                  ++numTasksDone;
+                  updateNotification();
                 });
             }));
           })
@@ -404,44 +450,60 @@
           .then(function () {
             return Promise.all(jointSource.mapRecoverSources(function (source, sourceId) {
               if (!(sourceId in jointSource.sources)) {
-                return ICA.unpublishSource(source);
+                return ICA.unpublishSource(source)
+                  .then(function () {
+                    source.destroy(true, true);
+
+                    ++numTasksDone;
+                    updateNotification();
+                  });
               }
               return Promise.resolve();
             }));
           })
           .then(function () {
+
+            ++numTasksDone;
+            updateNotification();
+
             return;
           });
       });
   };
 
-  ICA.unpublishJointSource = function (jointSource) {
+  ICA.unpublishJointSource = function (jointSource, notify) {
     if (jointSource.jointSourceId < 0) return Promise.reject(new Error("Joint source not yet published"));
-    return ICA.delete("/jointsources/{0}/".format(jointSource.jointSourceId))
+    return ICA.delete("/jointsources/{0}/".format(jointSource.jointSourceId),
+      undefined,
+      notify
+    )
       .then(function () {
-        jointSource.destroy(true, true);
         console.log("ICA: Joint source deleted");
       });
   };
 
-  ICA.unpublishSource = function (source) {
+  ICA.unpublishSource = function (source, notify) {
     if (source.sourceId < 0) throw new Error("Source not yet published");
-    return ICA.delete("/jointsources/{0}/sources/{1}/".format(
-      source.jointSource.jointSourceId,
-      source.sourceId))
+    return ICA.delete(
+      "/jointsources/{0}/sources/{1}/".format(
+        source.jointSource.jointSourceId,
+        source.sourceId
+      ),
+      undefined,
+      notify
+    )
       .then(function () {
-        source.destroy(true, true);
         console.log("ICA: Source deleted");
       });
   };
 
   ICA.getThemes = function () {
-    return ICA.get("/themes/", undefined, undefined, false)
+    return ICA.get("/themes/")
       .then(ICA.APIResponse.getData);
   };
 
   ICA.getFileStats = function (fileId) {
-    return ICA.get("/files/" + fileId, undefined, undefined, false)
+    return ICA.get("/files/" + fileId)
       .then(ICA.APIResponse.getData);
   };
 

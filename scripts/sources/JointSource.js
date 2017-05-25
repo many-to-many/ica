@@ -158,8 +158,8 @@ JointSource.prototype.prePublish = function () {
   }));
 };
 
-JointSource.prototype.publish = function () {
-  return ICA.publishJointSource(this)
+JointSource.prototype.publish = function (notify) {
+  return ICA.publishJointSource(this, notify)
     .then(function (jointSource) {
       this.backup(true);
       this.forEachSource(function (source) {
@@ -173,11 +173,11 @@ JointSource.prototype.publish = function () {
     });
 };
 
-JointSource.prototype.unpublish = function () {
-  return ICA.unpublishJointSource(this)
+JointSource.prototype.unpublish = function (notify) {
+  return ICA.unpublishJointSource(this, notify)
     .then(function () {
-
-    }, function (err) {
+      
+    }.bind(this), function (err) {
       console.warn("Failed to unpublish:", err.message);
       throw err;
     });
