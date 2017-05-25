@@ -23,7 +23,7 @@ NotificationsController.defineMethod("updateView", function () {
       new XHRProgressNotificationController(notification, element).componentOf = this;
       break;
     default:
-      console.warn("Unhandled item:", item.constructor);
+      console.warn("Unhandled item:", notification.constructor);
       return false;
     }
 
