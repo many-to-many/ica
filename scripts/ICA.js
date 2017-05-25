@@ -450,6 +450,8 @@
           .then(function () {
             return Promise.all(jointSource.mapRecoverSources(function (source, sourceId) {
               if (!(sourceId in jointSource.sources)) {
+                ++numTasksTodo;
+                
                 return ICA.unpublishSource(source)
                   .then(function () {
                     source.destroy(true, true);
