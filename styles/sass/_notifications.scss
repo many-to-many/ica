@@ -33,6 +33,7 @@
       min-width: 0.25em;
       height: 100%;
       background-color: $color-primary;
+      box-shadow: 1px 0 2px $color-primary;
       transition: width ease 0.3s;
     }
   }
