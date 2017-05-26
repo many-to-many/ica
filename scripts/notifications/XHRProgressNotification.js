@@ -13,6 +13,12 @@ XHRProgressNotification.defineMethod("init", function (x, title = "Content loadi
         this.didUpdate();
       }
     }.bind(this));
+
+    x.upload.addEventListener("loadend", function () {
+      this.requestProgressPct = 1;
+      this.progressPct = 0.5;
+      this.didUpdate();
+    }.bind(this));
   }
 
   x.addEventListener("progress", function (e) {
@@ -23,7 +29,7 @@ XHRProgressNotification.defineMethod("init", function (x, title = "Content loadi
     }
   }.bind(this));
 
-  x.addEventListener("load", function () {
+  x.addEventListener("loadend", function () {
     this.requestProgressPct = 1;
     this.respondProgressPct = 1;
     this.progressPct = 1;

@@ -78,6 +78,13 @@
   ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false, notify) {
     return new Promise(function (resolve, reject) {
       var x = new XMLHttpRequest();
+
+      // Create progress notification
+      if (notify) {
+        notifications.addNotification(new XHRProgressNotification(x, notify));
+        notifications.didUpdate();
+      }
+
       x.open(method, url, true);
 
       if (responseType && responseType != "x") x.responseType = responseType;
@@ -120,12 +127,6 @@
       }
       if (headers) for (var header in headers) {
         if (headers[header]) x.setRequestHeader(header, headers[header]);
-      }
-
-      // Create progress notification
-      if (notify) {
-        notifications.addNotification(new XHRProgressNotification(x, notify));
-        notifications.didUpdate();
       }
 
       x.send(data);
@@ -451,7 +452,7 @@
             return Promise.all(jointSource.mapRecoverSources(function (source, sourceId) {
               if (!(sourceId in jointSource.sources)) {
                 ++numTasksTodo;
-                
+
                 return ICA.unpublishSource(source)
                   .then(function () {
                     source.destroy(true, true);
@@ -464,11 +465,13 @@
             }));
           })
           .then(function () {
-
+            ++numTasksDone;
+            updateNotification();
+          }, function (err) {
             ++numTasksDone;
             updateNotification();
 
-            return;
+            return Promise.reject(err);
           });
       });
   };
