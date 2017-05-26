@@ -62,3 +62,11 @@ textarea {
 .color-primary {
   color: $color-primary !important;
 }
+
+[hidden] {
+  display: none;
+}
+
+.hidden {
+  opacity: 0;
+}

@@ -19,7 +19,7 @@ Map.defineMethod("retainModel", function retainModel(article) {
   this.articles.push(article);
 });
 
-Map.defineMethod("releaseModel", function retainModel(article) {
+Map.defineMethod("releaseModel", function releaseModel(article) {
   var index = this.articles.indexOf(article);
   if (index > -1) {
     // Remove article and every one after the item too

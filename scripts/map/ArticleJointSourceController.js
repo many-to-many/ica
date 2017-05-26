@@ -137,8 +137,6 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
 
   this.resizeSourcesHeightRoutine.restart();
   this.view.querySelector("[data-ica-jointsource-number-of-sources]").textContent = this.jointSource.getNumberOfSources() + 1;
-
-  setElementProperty(this.view.querySelector(".sources"), "ready", "");
 });
 
 ArticleJointSourceController.defineMethod("uninitView", function uninitView() {

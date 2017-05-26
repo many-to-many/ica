@@ -1,0 +1,4 @@
+
+var XHRProgressNotificationController = ProgressNotificationController.createComponent("XHRProgressNotificationController");
+
+XHRProgressNotificationController.createViewFragment = ProgressNotificationController.createViewFragment;

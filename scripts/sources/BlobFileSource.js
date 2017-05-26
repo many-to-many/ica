@@ -33,7 +33,7 @@ BlobFileSource.prototype.prePublish = function () {
   return Promise.resolve()
     .then(function () {
       if (this.content["0"] && this.content["0"] instanceof Blob) {
-        return ICA.uploadFileChunked(this.content["0"])
+        return ICA.uploadFileChunked(this.content["0"], "Uploading file...")
           .then(function (fileId) {
             this.content["0"] = fileId;
           }.bind(this));

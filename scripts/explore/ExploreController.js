@@ -36,10 +36,10 @@ ExploreController.defineMethod("updateView", function updateView() {
     case JointSource:
       var jointSource = item;
       // Check existing element
-      if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(jointSource.jointSourceId))) break;
+      if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(jointSource.jointSourceId))) return;
 
       // Create new view
-      var fragment = ExploreJointSourceController.createViewFragment(jointSource);
+      var fragment = ExploreJointSourceController.createViewFragment();
       var element = fragment.querySelector(".jointsource");
       this.view.insertBefore(fragment, this.firstChild);
       new ExploreJointSourceController(jointSource, element).componentOf = this.controller;

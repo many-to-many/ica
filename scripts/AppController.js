@@ -80,6 +80,8 @@ AppController.defineMethod("initView", function () {
 window.addEventListener("load", function () {
   window.addEventListener("resize", resize);
 
+  notifications = new Notifications();
+  new NotificationsController(notifications, document.body);
   appController = new AppController(document.body);
 
   document.querySelector("[href='#main']").click();
