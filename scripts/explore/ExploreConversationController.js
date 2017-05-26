@@ -34,7 +34,8 @@ ExploreConversationController.defineMethod("initView", function initView() {
 
   this.audioPreviewHandler = new AudioHandler();
 
-  this.view.addEventListener("mouseenter", function () {
+  this.view.querySelector(".audio-on-hover").addEventListener("click", function () {
+    event.stopPropagation();
     this.audioPreviewHandler.play();
   }.bind(this));
 
