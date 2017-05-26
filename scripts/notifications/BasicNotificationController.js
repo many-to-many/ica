@@ -5,7 +5,7 @@ BasicNotificationController.createViewFragment = function () {
   return cloneTemplate("#template-notification-basic");
 };
 
-BasicNotificationController.defineMethod("initView", function () {
+BasicNotificationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.notificationTimeout = setTimeout(function () {
@@ -14,7 +14,7 @@ BasicNotificationController.defineMethod("initView", function () {
   }.bind(this), this.notification.duration);
 });
 
-BasicNotificationController.defineMethod("updateView", function () {
+BasicNotificationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelectorAll("[data-ica-notification]").forEach(function (element) {
@@ -29,7 +29,7 @@ BasicNotificationController.defineMethod("updateView", function () {
   }.bind(this));
 });
 
-BasicNotificationController.defineMethod("uninitView", function () {
+BasicNotificationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
   if (this.notificationTimeout) {

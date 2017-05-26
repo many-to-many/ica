@@ -3,26 +3,26 @@ var NotificationController = SingleModelController.createComponent("Notification
 
 NotificationController.defineAlias("model", "notification");
 
-NotificationController.defineMethod("initView", function () {
+NotificationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.view.classList.add("hidden");
   setElementProperty(this.view, "notification-id", this.notification.componentId);
 });
 
-NotificationController.defineMethod("updateView", function () {
+NotificationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.classList.remove("hidden");
 });
 
-NotificationController.defineMethod("uninitView", function () {
+NotificationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
   setElementProperty(this.view, "notification-id");
 });
 
-NotificationController.defineMethod("destroy", function (destroyView = false) {
+NotificationController.defineMethod("destroy", function destroy(destroyView = false) {
   // Destroy view
   if (destroyView && this.view) {
     var view = this.view,

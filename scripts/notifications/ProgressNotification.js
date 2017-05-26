@@ -1,7 +1,7 @@
 
 var ProgressNotification = Notification.createComponent("ProgressNotification");
 
-ProgressNotification.defineMethod("init", function (title = "Content loading...") {
+ProgressNotification.defineMethod("init", function init(title = "Content loading...") {
 
   this.title = title;
 

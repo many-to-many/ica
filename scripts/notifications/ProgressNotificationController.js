@@ -5,7 +5,7 @@ ProgressNotificationController.createViewFragment = function () {
   return cloneTemplate("#template-notification-progress");
 };
 
-ProgressNotificationController.defineMethod("updateView", function () {
+ProgressNotificationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelectorAll("[data-ica-notification]").forEach(function (element) {
@@ -16,8 +16,7 @@ ProgressNotificationController.defineMethod("updateView", function () {
     }
   }.bind(this));
 
-  this.view.querySelector(".meter > .meter-bar").style.width =
-    this.notification.progressPct * 100 + "%";
+  this.view.querySelector(".meter > .meter-bar").style.width = this.notification.progressPct * 100 + "%";
 
   if (this.notification.progressPct == 1) {
     this.notification.destroy(true, true);
