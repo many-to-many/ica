@@ -465,11 +465,11 @@
             }));
           })
           .then(function () {
-            ++numTasksDone;
-            updateNotification();
+            notification.progressPct = 1;
+            notification.didUpdate();
           }, function (err) {
-            ++numTasksDone;
-            updateNotification();
+            notification.progressPct = 1;
+            notification.didUpdate();
 
             return Promise.reject(err);
           });
