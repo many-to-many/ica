@@ -25,7 +25,7 @@ Source.defineMethod("init", function init(content, jointSource, sourceId) {
 Source.defineMethod("uninit", function uninit() {
   // Uninit content
   delete this.content;
-  // Uninit jointSOurce
+  // Uninit jointSource
   this.uninitJointSource();
   delete this._jointSource;
   // Uninit sourceId
