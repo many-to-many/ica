@@ -1,5 +1,6 @@
 [
   "node_modules/nodelist-foreach-polyfill/index.js",
+
   "scripts/component/Component.js",
   "scripts/component/Model.js",
   "scripts/component/JointModel.js",
@@ -10,7 +11,11 @@
   "scripts/component/InputHandler.js",
   "scripts/component/Routine.js",
   "scripts/component/Waterfall.js",
+
+  "scripts/common.js",
   "scripts/Controller.js",
+
+  "scripts/authors/Author.js",
   "scripts/sources/JointSource.js",
   "scripts/sources/JointSourceController.js",
   "scripts/sources/Source.js",
@@ -20,6 +25,11 @@
   "scripts/sources/ImageSource.js",
   "scripts/sources/AudioSource.js",
   "scripts/sources/VideoSource.js",
+
+  "scripts/comments/Comment.js",
+  "scripts/comments/CommentController.js",
+  "scripts/comments/JointSourceComment.js",
+
   "scripts/explore/Explore.js",
   "scripts/explore/ExploreController.js",
   "scripts/explore/ExploreJointSourceController.js",
@@ -27,12 +37,14 @@
   "scripts/explore/ExploreImageSourceController.js",
   "scripts/explore/ExploreAudioSourceController.js",
   "scripts/explore/ExploreVideoSourceController.js",
+
   "scripts/publisher/PublisherJointSourceController.js",
   "scripts/publisher/PublisherSourceController.js",
   "scripts/publisher/PublisherTextSourceController.js",
   "scripts/publisher/PublisherImageSourceController.js",
   "scripts/publisher/PublisherAudioSourceController.js",
   "scripts/publisher/PublisherVideoSourceController.js",
+
   "scripts/map/Map.js",
   "scripts/map/MapController.js",
   "scripts/map/ArticleJointSourceController.js",
@@ -41,6 +53,9 @@
   "scripts/map/ArticleImageSourceController.js",
   "scripts/map/ArticleAudioSourceController.js",
   "scripts/map/ArticleVideoSourceController.js",
+  "scripts/map/ArticleCommentController.js",
+  "scripts/map/ArticleJointSourceController.js",
+
   "scripts/notifications/Notifications.js",
   "scripts/notifications/NotificationsController.js",
   "scripts/notifications/Notification.js",
@@ -51,18 +66,26 @@
   "scripts/notifications/ProgressNotificationController.js",
   "scripts/notifications/XHRProgressNotification.js",
   "scripts/notifications/XHRProgressNotificationController.js",
+
   "scripts/AudioHandler.js",
+
   "scripts/BlobFileHandler.js",
+
   "scripts/CanvasHandler.js",
+
   "scripts/DropHandler.js",
+
   "scripts/TokenInputHandler.js",
   "scripts/TokenInputController.js",
   "scripts/TokenInputSuggestionsController.js",
   "scripts/TokenInputThemeSuggestionsController.js",
   "scripts/TokensHandler.js",
   "scripts/TokensController.js",
+
   "scripts/ImageController.js",
+
   "scripts/WaveformController.js",
+
   "scripts/ICA.js",
   "scripts/AppController.js"
 ]

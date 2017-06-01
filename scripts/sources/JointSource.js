@@ -8,6 +8,10 @@ JointSource.defineMethod("construct", function construct() {
   Object.defineProperty(this, "sources", {
     value: {}
   });
+  // Construct comments
+  Object.defineProperty(this, "comments", {
+    value: {}
+  });
   // Construct jointExtracts
   Object.defineProperty(this, "jointExtracts", {
     value: {}
@@ -47,17 +51,32 @@ JointSource.defineMethod("destruct", function destruct() {
   // Destruct meta handlers
   this.metaParticipantsHandler.destroy();
   this.metaThemesHandler.destroy();
-  // Destruct sources (in destroy)
-
+  // Destruct sources
+  for (var sourceId in this.sources) {
+    // Request source to release jointSource
+    this.sources[sourceId].jointSource = null;
+  }
+  // Destruct comments
+  for (var commentId in this.comments) {
+    // Request comment to release jointSource
+    this.comments[commentId].jointSource = null;
+  }
   // Destruct jointExtracts
 
 });
 
-JointSource.defineMethod("destroy", function destroy() {
-  // Destruct sources
-  for (var sourceId in this.sources) {
-    this.sources[sourceId].destroy.apply(this.sources[sourceId], arguments);
+JointSource.defineMethod("destroy", function destroy(destroySources = true, destroyComments = true, destroyControllers = false, destroyViews = false) {
+  if (destroySources) {
+    for (var sourceId in this.sources) {
+      this.sources[sourceId].destroy.apply(this.sources[sourceId], [destroyControllers, destroyViews]);
+    }
   }
+  if (destroyComments) {
+    for (var commentId in this.comments) {
+      this.comments[commentId].destroy.apply(this.comments[commentId], [destroyControllers, destroyViews]);
+    }
+  }
+  return [destroyControllers, destroyViews];
 });
 
 // JointSourceId
@@ -176,7 +195,7 @@ JointSource.prototype.publish = function (notify) {
 JointSource.prototype.unpublish = function (notify) {
   return ICA.unpublishJointSource(this, notify)
     .then(function () {
-      
+
     }.bind(this), function (err) {
       console.warn("Failed to unpublish:", err.message);
       throw err;
@@ -230,5 +249,13 @@ JointSource.prototype.recover = function () {
         source.initJointSource();
       }
     }
+  }
+};
+
+// Comments
+
+JointSource.prototype.forEachComment = function (callback) {
+  for (var commentId in this.comments) {
+    callback(this.comments[commentId], commentId);
   }
 };

@@ -36,7 +36,7 @@ textarea,
   }
 
   &::placeholder {
-    color: #a9a9a9;
+    color: lighten($color-text, 40%);
   }
 
   &[type="submit"],

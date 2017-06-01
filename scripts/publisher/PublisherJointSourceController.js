@@ -70,7 +70,7 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
     e.preventDefault();
 
     if (this.controller.jointSource.jointSourceId < 0) {
-      this.controller.jointSource.destroy(true, true);
+      this.controller.jointSource.destroy(true, true, true, true);
     } else {
       this.controller.destroy(true);
     }
@@ -166,7 +166,7 @@ PublisherJointSourceController.prototype.unpublish = function () {
       notifications.addNotification(new BasicNotification("Conversation unpublished"));
       notifications.didUpdate();
 
-      this.jointSource.destroy(true, true);
+      this.jointSource.destroy(true, true, true, true);
     }.bind(this))
     .catch(function (err) {
       // TODO: Alert boxes to be implemented

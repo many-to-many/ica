@@ -72,23 +72,19 @@ $column-spacing: 8px;
 
     > .jointsource-status {
       flex: none;
-      display: flex;
+      @include flex;
       padding: 0.5em 1em 1em 1.5em;
       line-height: 1.75;
       text-transform: lowercase;
 
       > * {
-        color: lighten($color-text, 40%);
+        color: lighten($color-text, 30%);
         opacity: 0;
         transition: opacity ease 0.2s, color ease 0.2s;
       }
 
       > :not(:last-child) {
         margin-right: 0.25em;
-      }
-
-      .flex-space {
-        flex: 1 0 auto;
       }
 
       .audio-on-hover {

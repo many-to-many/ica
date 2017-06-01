@@ -143,6 +143,90 @@
             border-top: solid 1px #f4f4f4;
           }
 
+          > .jointsource-comments {
+            padding: 1.5em;
+            border-top: solid 3px #f4f4f4;
+
+            h4 {
+              font-size: 1em;
+              font-weight: 400;
+              margin: 0 0 1em;
+              text-transform: uppercase;
+              color: lighten($color-text, 20%);
+            }
+
+            .comment {
+              @include flex;
+
+              + .comment {
+                margin-top: 0.5em;
+              }
+
+              > :first-child {
+                flex: 0 0 auto;
+                margin-right: 0.5em;
+                width: 1.5em;
+              }
+
+              .comment-author-avatar {
+                width: 1.5em;
+                height: 1.5em;
+                box-sizing: border-box;
+                background-color: lighten($color-primary, 20%);
+                border-radius: 50%;
+              }
+
+              .comment-author-name {
+                margin: 0 0 0.5em;
+                height: 1.5em;
+                font-size: 1em;
+                line-height: 1.5;
+                font-weight: 500;
+                -webkit-user-select: text;
+              }
+
+              .comment-card {
+                width: auto;
+                min-height: 2.5em;
+                padding: 0.5em 1em;
+                border: solid 1px #f4f4f4;
+                border-radius: 3px;
+                -webkit-user-select: text;
+
+                .editor {
+                  @include quill-editor;
+                  font-family: $font-sans-serif-alt;
+                }
+
+                p {
+                  margin: 0.5em 0;
+                }
+
+                .comment-status {
+                  @include flex;
+                  line-height: 1.5;
+                  margin: 0.5em 0;
+
+                  > * {
+                    flex: 0 0 auto;
+                    color: lighten($color-text, 30%);
+
+                    &:not(:last-child) {
+                      margin-right: 0.5em;
+                    }
+                  }
+                }
+              }
+
+              &.draft {
+
+                [data-ica-timestamp="authored"] {
+                  color: $color-primary;
+                }
+              }
+            }
+          }
+
           .download {
             display: block;
             padding: 1.5em;

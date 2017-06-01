@@ -9,9 +9,7 @@
 
     public $type;
 
-    public function __construct() {
-      $this->content = [];
-    }
+    public $content = [];
 
   }
 

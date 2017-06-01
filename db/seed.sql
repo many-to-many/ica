@@ -192,9 +192,9 @@ DROP TABLE IF EXISTS `ica`.`sources_states` ;
 
 CREATE TABLE IF NOT EXISTS `ica`.`sources_states` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `author_id` INT UNSIGNED NOT NULL,
   `source_id` INT UNSIGNED NOT NULL,
   `state` TINYINT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_sources_states_accounts1_idx` (`author_id` ASC),
@@ -320,8 +320,8 @@ DROP TABLE IF EXISTS `ica`.`contents_langs_states` ;
 CREATE TABLE IF NOT EXISTS `ica`.`contents_langs_states` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `lang_id` INT UNSIGNED NOT NULL,
-  `author_id` INT UNSIGNED NOT NULL,
   `state` TINYINT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `fk_contents_langs_states_accounts1_idx` (`author_id` ASC),
   INDEX `fk_contents_langs_states_states1_idx` (`state` ASC),
@@ -650,6 +650,96 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_states` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `ica`.`comments`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`comments` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`comments` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `content_id` INT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_comments_accounts1_idx` (`author_id` ASC),
+  INDEX `fk_comments_contents1_idx` (`content_id` ASC),
+  CONSTRAINT `fk_comments_contents1`
+    FOREIGN KEY (`content_id`)
+    REFERENCES `ica`.`contents` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_comments_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ica`.`jointsources_comments`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`jointsources_comments` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_comments` (
+  `jointsource_id` INT UNSIGNED NOT NULL,
+  `comment_id` INT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX `fk_jointsources_comments_jointsources1_idx` (`jointsource_id` ASC),
+  INDEX `fk_jointsources_comments_comments1_idx` (`comment_id` ASC),
+  INDEX `fk_jointsources_comments_accounts1_idx` (`author_id` ASC),
+  CONSTRAINT `fk_jointsources_comments_jointsources1`
+    FOREIGN KEY (`jointsource_id`)
+    REFERENCES `ica`.`jointsources` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jointsources_comments_comments1`
+    FOREIGN KEY (`comment_id`)
+    REFERENCES `ica`.`comments` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jointsources_comments_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ica`.`comments_states`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`comments_states` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`comments_states` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `comment_id` INT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `state` TINYINT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_comments_states_comments1_idx` (`comment_id` ASC),
+  INDEX `fk_comments_states_accounts1_idx` (`author_id` ASC),
+  INDEX `fk_comments_states_states1_idx` (`state` ASC),
+  CONSTRAINT `fk_comments_states_comments1`
+    FOREIGN KEY (`comment_id`)
+    REFERENCES `ica`.`comments` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_comments_states_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_comments_states_states1`
+    FOREIGN KEY (`state`)
+    REFERENCES `ica`.`states` (`state`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `ica` ;
 
 -- -----------------------------------------------------
@@ -721,6 +811,21 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_rev_latest` (`lang_
 -- Placeholder table for view `ica`.`jointsources_regions_langs_summary`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_summary` (`jointsource_id` INT, `lang_id` INT, `lang` INT, `state_id` INT, `state` INT, `rev_id` INT, `region_id` INT, `region` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`comments_state_latest`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`comments_state_latest` (`comment_id` INT, `state_id` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`comments_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`comments_summary` (`comment_id` INT, `state_id` INT, `state` INT, `content_id` INT, `author_id` INT, `timestamp_authored` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`jointsources_comments_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_comments_summary` (`jointsource_id` INT);
 
 -- -----------------------------------------------------
 -- View `ica`.`jointsources_state_latest`
@@ -967,6 +1072,53 @@ LEFT JOIN `jointsources_regions_langs_revs` AS tbl_rev
 	ON tbl_rev.id = tbl_rev_latest.rev_id
 LEFT JOIN `regions` AS tbl_region
 	ON tbl_region.id = tbl_rev.region_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`comments_state_latest`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`comments_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`comments_state_latest`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `comments_state_latest` AS
+SELECT
+	tbl_state.comment_id AS comment_id,
+	MAX(tbl_state.id) AS state_id
+FROM `comments_states` AS tbl_state
+GROUP BY comment_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`comments_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`comments_summary` ;
+DROP TABLE IF EXISTS `ica`.`comments_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `comments_summary` AS
+SELECT
+	tbl_comment.id AS comment_id,
+    tbl_state.id AS state_id,
+    tbl_state.state AS state,
+	tbl_comment.content_id AS content_id,
+    tbl_comment.author_id AS author_id,
+    UNIX_TIMESTAMP(tbl_comment.authored) AS timestamp_authored
+FROM `comments` AS tbl_comment
+LEFT JOIN `comments_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.comment_id = tbl_comment.id
+LEFT JOIN `comments_states` AS tbl_state
+	ON tbl_state.id = tbl_state_latest.state_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`jointsources_comments_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`jointsources_comments_summary` ;
+DROP TABLE IF EXISTS `ica`.`jointsources_comments_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `jointsources_comments_summary` AS
+SELECT
+	tbl_jointsource_comment.jointsource_id AS jointsource_id,
+	tbl_comment_summary.*
+FROM `jointsources_comments` AS tbl_jointsource_comment
+LEFT JOIN `comments_summary` AS tbl_comment_summary
+	ON tbl_jointsource_comment.comment_id = tbl_comment_summary.comment_id;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

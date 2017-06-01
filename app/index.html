@@ -141,7 +141,7 @@
               <a class="jointsource-nav-btn right" data-ica-action="next-source"></a>
             </header>
             <section class="sources-container">
-              <section class="sources">
+              <div class="sources">
                 <div class="source jointsource">
                   <div class="jointsource-backdrop" hidden>
                     <div class="jointsource-backdrop-image"></div>
@@ -162,8 +162,11 @@
                   <section class="jointsource-control">
                     <a data-ica-action="edit-jointsource">Edit Conversation</a>
                   </section>
+                  <section class="jointsource-comments">
+                    <h4>Comments</h4>
+                  </section>
                 </div>
-              </section>
+              </div>
             </section>
           </article>
         </section>
@@ -206,6 +209,24 @@
           <section class="source-control">
             <a data-ica-action="edit-jointsource">Edit Conversation</a>
           </section>
+        </div>
+      </template>
+      <template id="template-article-comment">
+        <div class="comment">
+          <div>
+            <div class="comment-author-avatar hide-repeated"></div>
+          </div>
+          <div class="flex-space">
+            <h5 class="comment-author-name hide-repeated" data-ica-author></h5>
+            <div class="comment-card">
+              <div class="editor" data-ica-comment-content></div>
+              <div class="comment-status">
+                <a data-ica-action="publish-comment">Publish</a>
+                <div class="flex-space"></div>
+                <span data-ica-timestamp="authored"></span>
+              </div>
+            </div>
+          </div>
         </div>
       </template>
       <!-- Template: Tokens -->

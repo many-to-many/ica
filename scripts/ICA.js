@@ -499,6 +499,43 @@
     )
       .then(function () {
         console.log("ICA: Source deleted");
+
+      });
+  };
+
+  ICA.getJointSourceComments = function (jointSource, notify) {
+    return ICA.get(
+      "/jointsources/{0}/comments/".format(jointSource.jointSourceId),
+      undefined,
+      undefined,
+      notify
+    )
+      .then(function (apiResponse) {
+        return touchJointSourceCommentsWithAPIResponse(apiResponse, jointSource);
+      });
+  };
+
+  ICA.publishJointSourceComment = function (comment, notify) {
+    if (comment.commentId < 0) {
+      return ICA.post("/jointsources/{0}/comments/".format(comment.jointSource.jointSourceId), {
+        _id: comment.commentId,
+        content: comment.content
+      }, notify)
+        .then(function (apiResponse) {
+          return touchJointSourceCommentsWithAPIResponse(apiResponse, comment.jointSource);
+        });
+    } else {
+      return Promise.reject(new Error("Editing not yet supported"));
+    }
+  };
+
+  ICA.getAuthor = function (authorId) {
+    return ICA.get("/authors/{0}/".format(authorId))
+      .then(function (apiResponse) {
+        var dataAuthor = apiResponse.data;
+        var author = new Author(authorId);
+        author.name = dataAuthor.name;
+        return author;
       });
   };
 
@@ -585,6 +622,35 @@
       // jointSource._timeLastUpdated = dataJointSource["updated"];
     }
     return sources;
+  }
+
+  function touchJointSourceComments(dataComments, jointSource) {
+    var comments = [];
+    for (var commentId in dataComments) {
+      var dataComment = dataComments[commentId], comment;
+      if (jointSource.comments[commentId]) continue; // Skip existing instance
+      if (dataComment._id) {
+        comment = Comment.comments[dataComment._id];
+        comment.commentId = commentId;
+        comment.authorId = dataComment.authorId;
+        comment.timestampAuthored = dataComment.timestampAuthored;
+      } else {
+        comment = new JointSourceComment(dataComment.content, jointSource, commentId, dataComment.authorId, dataComment.timestampAuthored);
+      }
+      comments.push(comment);
+    }
+    return comments;
+  }
+
+  function touchJointSourceCommentsWithAPIResponse(apiResponse, jointSource) {
+    var comments = touchJointSourceComments(ICA.APIResponse.getData(apiResponse), jointSource);
+    comments.requestNext = function () {
+      return apiResponse.requestNext()
+        .then(function (apiResponse) {
+          return touchJointSourceCommentsWithAPIResponse(apiResponse, jointSource);
+        });
+    };
+    return comments;
   }
 
   window.ICA = ICA;

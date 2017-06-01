@@ -5,6 +5,7 @@
   require_once(__DIR__ . "/shared.php");
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/sources.php");
+  require_once(__DIR__ . "/comments.php");
 
   /**
    * Abstract for joint source.
@@ -656,6 +657,45 @@
     }
 
     releaseDatabaseTransaction();
+
+  }
+
+  /**
+   * Returns a list of most recent Comment instances linked to the joint source.
+   */
+  function getJointSourceComments($jointSourceId, $limit = 50, $underCommentId = NULL) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT *
+      FROM jointsources_comments_summary
+      WHERE state = $stateEncoded AND jointsource_id = $jointSourceId
+        " . ($underCommentId ? "AND comment_id < $underCommentId" : "") . "
+      ORDER BY comment_id DESC
+      LIMIT $limit;");
+
+    return \ICA\Comments\createCommentsFromQueryResult($result);
+
+  }
+
+  /**
+   * Inserts a new comment record into the database linked to a joint source.
+   */
+  function insertJointSourceComment($jointSourceId, $comment, $state = STATE_PUBLISHED) {
+
+    global $DATABASE;
+    $accountId = \Session\getAccountId();
+
+    retainDatabaseTransaction();
+
+    $commentId = \ICA\Comments\insertComment($comment, $state);
+
+    $result = query("INSERT INTO jointsources_comments
+      (`jointsource_id`, `comment_id`, `author_id`)
+      VALUES ($jointSourceId, $commentId, $accountId);");
+
+    releaseDatabaseTransaction();
+
+    return $commentId;
 
   }
 
