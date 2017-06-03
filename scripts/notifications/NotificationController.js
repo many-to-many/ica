@@ -33,16 +33,15 @@ NotificationController.defineMethod("destroy", function destroy(destroyView = fa
     var view = this.view,
       model = this.notification,
       jointModels = Object.values(this.notification.jointModels);
-    new Waterfall(null, 300 + 1) // Leave time for transition to finish
+    new Waterfall(function () {
+      view.classList.add("hidden");
+    }, 300 + 1)
       .then(function () {
-        view.classList.add("hidden");
-      }, 300 + 1)
-      .then(function () {
-        view.parentNode.removeChild(view);
         jointModels.forEach(function (jointModel) {
           jointModel.removeNotification(model);
           jointModel.didUpdate();
         });
+        view.parentNode.removeChild(view);
       }.bind(this));
   }
   return [];
