@@ -52,7 +52,7 @@
     case "POST": \Session\requireVerification();
 
       // Validation
-      if (!$REQUEST_DATA) throw new Error("No request data");
+      if (!$REQUEST_DATA) throw new Exception("No request data");
       if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
       retainDatabaseTransaction();
@@ -90,7 +90,7 @@
     case "PUT": \Session\requireVerification();
 
       // Validation
-      if (!$REQUEST_DATA) throw new Error("No request data");
+      if (!$REQUEST_DATA) throw new Exception("No request data");
       if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
       \ICA\JointSources\putJointSourceMeta($jointSourceId, $REQUEST_DATA["meta"]);
@@ -130,7 +130,7 @@
       $accountId = \Session\getAccountId();
 
       // Validation
-      if (!$REQUEST_DATA) throw new Error("No request data");
+      if (!$REQUEST_DATA) throw new Exception("No request data");
 
       $comment = new \ICA\Comments\Comment;
       $comment->content = $REQUEST_DATA["content"];
@@ -149,7 +149,7 @@
 
     case "POST": \Session\requireVerification();
 
-      if (!$REQUEST_DATA) throw new Error("No request data");
+      if (!$REQUEST_DATA) throw new Exception("No request data");
 
       $source = new \ICA\Sources\Source;
       $source->type = $REQUEST_DATA["type"];
