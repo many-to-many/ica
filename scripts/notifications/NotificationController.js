@@ -13,6 +13,10 @@ NotificationController.defineMethod("initView", function initView() {
 NotificationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
+  this.view.querySelectorAll("[data-ica-notification]").forEach(function (element) {
+    element.textContent = this.notification[getElementProperty(element, "notification")];
+  }.bind(this));
+
   this.view.classList.remove("hidden");
 });
 
