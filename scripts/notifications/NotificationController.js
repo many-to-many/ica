@@ -7,6 +7,7 @@ NotificationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.view.classList.add("hidden");
+
   setElementProperty(this.view, "notification-id", this.notification.componentId);
 });
 
@@ -23,7 +24,7 @@ NotificationController.defineMethod("updateView", function updateView() {
 NotificationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
-  setElementProperty(this.view, "notification-id");
+  removeElementProperty(this.view, "notification-id");
 });
 
 NotificationController.defineMethod("destroy", function destroy(destroyView = false) {
