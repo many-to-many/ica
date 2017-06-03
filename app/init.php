@@ -8,9 +8,6 @@
     require_once(__DIR__ . "/config.php");
     require_once(__DIR__ . "/config.oauth2.php");
 
-    define("ICA_DEFAULT", "ICA_DEFAULT");
-    define("ICA_EXCEPTION", "ICA_EXCEPTION");
-
     /**
      * Database
      */
