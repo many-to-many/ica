@@ -1,55 +1,55 @@
 
 [data-ica-app-view="about"] {
-	margin: 0 auto;
-	max-width: 900px;
-	overflow-x: hidden;
+  margin: 0 auto;
+  max-width: 900px;
+  overflow-x: hidden;
 
   h3 {
     text-align: center;
     -webkit-user-select: text;
   }
 
-	h4 {
-		text-align: center;
-		-webkit-user-select: text;
-	}
-
-  p {
-		font-family: $font-sans-serif-alt;
-		-webkit-user-select: text;
+  h4 {
+    text-align: center;
+    -webkit-user-select: text;
   }
 
-	// Team members
+  p {
+    font-family: $font-sans-serif-alt;
+    -webkit-user-select: text;
+  }
 
-	.team {
-		text-align: center;
-		margin: 1.25em -1.25em -1.25em;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-around;
-		overflow: hidden;
+  // Team members
 
-		.team-member {
-			box-sizing: border-box;
-			flex: 0 0 300px;
-			padding: 0 1.25em;
+  .team {
+    text-align: center;
+    margin: 1.25em -1.25em -1.25em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow: hidden;
 
-			.img-circle {
-				display: block;
-				margin: 0 auto;
-		    border-radius: 50%;
-			}
+    .team-member {
+      box-sizing: border-box;
+      flex: 0 0 300px;
+      padding: 0 1.25em;
 
-			h4 {
-				color: $color-primary !important;
-				text-align: center;
-				margin-bottom: 0.5em;
-			}
+      .img-circle {
+        display: block;
+        margin: 0 auto;
+        border-radius: 50%;
+      }
 
-			.role {
-				margin-top: 0;
-				color: rgba($color-text, 0.80);
-			}
-		}
-	}
+      h4 {
+        color: $color-primary !important;
+        text-align: center;
+        margin-bottom: 0.5em;
+      }
+
+      .role {
+        margin-top: 0;
+        color: rgba($color-text, 0.80);
+      }
+    }
+  }
 }
