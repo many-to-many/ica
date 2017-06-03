@@ -11,7 +11,9 @@ ProgressNotificationController.defineMethod("updateView", function updateView() 
   this.view.querySelector(".meter > .meter-bar").style.width = this.notification.progressPct * 100 + "%";
 
   if (this.notification.progressPct == 1) {
-    this.notification.destroy(true, true);
+    setTimeout(function (notification) {
+      notification.destroy(true, true);
+    }.bind(null, this.notification), 300);
   }
 
 });
