@@ -16,6 +16,9 @@ NotificationsController.defineMethod("updateView", function () {
     } else {
       // Create new view
 
+      // Skip dummy notifications (placeholders)
+      if (!Component.components[notification.componentId]) continue;
+
       // Match controller
       var Controller;
       switch (notification.constructor) {
