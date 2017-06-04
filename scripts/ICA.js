@@ -14,6 +14,11 @@
             clearInterval(timer);
 
             if (new Date().getTime() - window.sessionStorage.getItem("_ica_oauth2_timestamp") < 1000) {
+
+              // Notify
+              notifications.addNotification(new BasicNotification("Logged in as Anonymous"));
+              notifications.didUpdate();
+
               resolve();
             } else {
               reject(new Error("Error synchronizing/failed to log in"));
@@ -23,6 +28,37 @@
       } else {
         console.error("Failed to open popup window");
       }
+    });
+  };
+
+  ICA.promptLogin = function () {
+    return new Promise(function (resolve, reject) {
+      var prompt = new BasicPrompt(
+        "Many-to-Many",
+        "Log in to Many-to-Many to participate in conversation(s) of all shapes, sizes, scales and media.",
+        [
+          new PromptAction("Cancel", function () {
+            reject(new Error("Not yet logged in"));
+          }),
+          new PromptAction("Log in or Sign up", function () {
+            ICA.login()
+              .then(function () {
+                if (prompt) {
+                  prompt.destroy(true, true, true, true);
+                  prompt = undefined;
+                }
+                resolve();
+              }, function (e) {
+                console.warn(e);
+              });
+            return false;
+          }, true)
+        ]
+      );
+      var fragment = BasicPromptController.createViewFragment();
+      var element = fragment.querySelector(".prompt");
+      document.body.appendChild(fragment);
+      new BasicPromptController(prompt, element);
     });
   };
 
@@ -147,12 +183,19 @@
       notify
     )
       .then(function (x) {
-        var data = x.response;
-        if (data && typeof data == "object" && data.error) {
-          console.warn("Request caught error:", data);
-          return Promise.reject(new Error(data.error));
+        switch (x.status) {
+        case 401: // Needs logging in
+          return ICA.promptLogin()
+            .then(function () {
+              return ICA.requestAPI(method, path, data, state, notify);
+            });
         }
-        return new ICA.APIResponse(data, [method, path, data, x.getResponseHeader("X-ICA-State-Next")]);
+        var response = x.response;
+        if (response && typeof response == "object" && response.error) {
+          console.warn("Request caught error:", response);
+          return Promise.reject(new Error(response.error));
+        }
+        return new ICA.APIResponse(response, [method, path, data, x.getResponseHeader("X-ICA-State-Next")]);
       });
   };
 
@@ -499,7 +542,6 @@
     )
       .then(function () {
         console.log("ICA: Source deleted");
-
       });
   };
 

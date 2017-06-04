@@ -18,6 +18,12 @@
     border-top: solid 3px #f4f4f4;
   }
 
+  .publisher-published-container {
+    margin: 1.5em -1.5em;
+    padding: 0 1.5em;
+    border-top: solid 3px lighten($color-primary, 20%);
+  }
+
   .publisher-sources {
 
     .publisher-source {
@@ -84,6 +90,6 @@
   .publisher-sources-control {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: -0.5em;
+    margin: 0 -0.5em -0.5em 0;
   }
 }

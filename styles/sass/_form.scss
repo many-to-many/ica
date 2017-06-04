@@ -20,7 +20,7 @@ textarea,
   line-height: 1.5;
   background: none;
   border: solid 1px transparent;
-  border-bottom-color: #cdcdcd;
+  border-bottom-color: lighten($color-text, 40%);
   border-radius: 0;
   font-family: $font-sans-serif;
   color: $color-text !important;
@@ -52,10 +52,10 @@ textarea,
     transition: background-color ease 0.1s;
 
     &:hover {
-      @include lift(0, 3);
+      @include shadow(3);
     }
 
-    $button-color: lighten($color-text, 25%);
+    $button-color: lighten($color-text, 20%);
 
     &[type="button"] {
       border-color: $button-color;
@@ -93,7 +93,7 @@ textarea,
     margin: 0.5em calc(0.375em + 1px);
 
     .token {
-      background-color: lighten($color-primary, 18%);
+      background-color: lighten($color-primary, 20%);
     }
   }
 }

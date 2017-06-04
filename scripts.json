@@ -67,6 +67,12 @@
   "scripts/notifications/XHRProgressNotification.js",
   "scripts/notifications/XHRProgressNotificationController.js",
 
+  "scripts/prompts/PromptAction.js",
+  "scripts/prompts/Prompt.js",
+  "scripts/prompts/PromptController.js",
+  "scripts/prompts/BasicPrompt.js",
+  "scripts/prompts/BasicPromptController.js",
+
   "scripts/AudioHandler.js",
 
   "scripts/BlobFileHandler.js",

@@ -186,20 +186,11 @@ JointSource.prototype.publish = function (notify) {
       });
 
       return jointSource;
-    }.bind(this), function (err) {
-      console.warn("Failed to publish:", err.message);
-      throw err;
-    });
+    }.bind(this));
 };
 
 JointSource.prototype.unpublish = function (notify) {
-  return ICA.unpublishJointSource(this, notify)
-    .then(function () {
-
-    }.bind(this), function (err) {
-      console.warn("Failed to unpublish:", err.message);
-      throw err;
-    });
+  return ICA.unpublishJointSource(this, notify);
 };
 
 JointSource.prototype.cloneMeta = function () {

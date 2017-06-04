@@ -58,7 +58,7 @@
                 <textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" data-ica-suggestions="themes" placeholder="List themes here... (Hit enter after each theme)"></textarea>
               </section>
               <section class="publisher-sources-container">
-                <h3>Upload media here</h3>
+                <h4>Upload media here</h4>
                 <section class="publisher-sources"></section>
                 <section class="publisher-sources-control">
                   <input type="button" value="Plain Text" data-ica-action="add-source/text">
@@ -67,7 +67,7 @@
                   <input type="button" value="Video Clip" data-ica-action="add-source/video">
                 </section>
               </section>
-              <section data-ica-jointsource-filter="published">
+              <section class="publisher-published-container" data-ica-jointsource-filter="published">
                 <h4 class="color-primary">Danger Zone</h4>
                 <input type="button" class="color-primary" value="Unpublish the Conversation" data-ica-action="unpublish">
               </section>
@@ -78,7 +78,7 @@
       <template id="template-publisher-textsource">
         <article class="publisher-source publisher-textsource">
           <header class="topbar">
-            <h4>Plain Text</h4>
+            <h5>Plain Text</h5>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
           <section class="source-container">
@@ -89,7 +89,7 @@
       <template id="template-publisher-imagesource">
         <article class="publisher-source publisher-imagesource">
           <header class="topbar">
-            <h4>Image</h4>
+            <h5>Image</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
@@ -102,7 +102,7 @@
       <template id="template-publisher-audiosource">
         <article class="publisher-source publisher-audiosource">
           <header class="topbar">
-            <h4>Audio</h4>
+            <h5>Audio</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
@@ -117,7 +117,7 @@
       <template id="template-publisher-videosource">
         <article class="publisher-source publisher-videosource">
           <header class="topbar">
-            <h4>Video</h4>
+            <h5>Video</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
@@ -276,6 +276,22 @@
         <div class="notification">
           <h4 data-ica-notification="title"></h4>
           <div class="meter"><div class="meter-bar" style="width: 0%;"></div></div>
+        </div>
+      </template>
+      <!-- Template: Prompts -->
+      <template id="template-prompt-action">
+        <input class="action" type="button">
+      </template>
+      <template id="template-prompt-basic">
+        <div class="prompt">
+          <div class="prompt-card">
+            <section class="prompt-container">
+              <h3 data-ica-prompt="title"></h3>
+              <p data-ica-prompt="message"></p>
+              <section class="actions">
+              </section>
+            </section>
+          </div>
         </div>
       </template>
     </div>

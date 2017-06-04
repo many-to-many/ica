@@ -57,10 +57,7 @@ JointSourceComment.prototype.publish = function (notify) {
       this.backup(true);
 
       return comment;
-    }.bind(this), function (err) {
-      console.warn("Failed to publish:", err.message);
-      throw err;
-    });
+    }.bind(this));
 };
 
 JointSourceComment.prototype.cloneContent = function () {

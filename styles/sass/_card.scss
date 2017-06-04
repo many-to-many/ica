@@ -1,7 +1,7 @@
 
 $card-width: 40em;
 
-@mixin card($z: $z-popup) {
+@mixin card($z: $z-popup, $card-width: $card-width) {
   box-sizing: border-box;
   display: block;
   width: $card-width;

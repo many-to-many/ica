@@ -153,14 +153,43 @@ PublisherJointSourceController.prototype.publish = function () {
 
     }.bind(this))
     .catch(function (err) {
-      // TODO: Alert boxes to be implemented
       console.warn(err);
-      alert(err.message);
+
+      // Display notification
+      notifications.addNotification(new BasicNotification("Failed to publish conversation", err ? err.message : undefined));
+      notifications.didUpdate();
     });
 };
 
 PublisherJointSourceController.prototype.unpublish = function () {
-  return this.jointSource.unpublish("Unpublishing conversation...")
+  return new Promise(function (resolve, reject) {
+    var prompt = new BasicPrompt(
+      "Unpublishing \"{0}\"...".format(this.jointSource.meta.title),
+      "Are you sure you would like to continue?",
+      [
+        new PromptAction(
+          "Abort",
+          function () {
+            reject(new Error("Process aborted"));
+          }
+        ),
+        new PromptAction(
+          "Continue",
+          function () {
+            resolve();
+          },
+          true
+        )
+      ]
+    );
+    var fragment = BasicPromptController.createViewFragment();
+    var element = fragment.querySelector(".prompt");
+    document.body.appendChild(fragment);
+    new BasicPromptController(prompt, element);
+  }.bind(this))
+    .then(function () {
+      return this.jointSource.unpublish("Unpublishing conversation...");
+    }.bind(this))
     .then(function () {
       // Display notification
       notifications.addNotification(new BasicNotification("Conversation unpublished"));
@@ -169,9 +198,11 @@ PublisherJointSourceController.prototype.unpublish = function () {
       this.jointSource.destroy(true, true, true, true);
     }.bind(this))
     .catch(function (err) {
-      // TODO: Alert boxes to be implemented
       console.warn(err);
-      alert(err.message);
+
+      // Display notification
+      notifications.addNotification(new BasicNotification("Failed to unpublish comment", err ? err.message : undefined));
+      notifications.didUpdate();
     });
 };
 
@@ -204,5 +235,5 @@ function getFormattedInputValue(input) {
       return input.value;
     }
   }
-  return null;
+  return undefined;
 }

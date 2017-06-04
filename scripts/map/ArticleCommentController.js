@@ -94,8 +94,10 @@ ArticleCommentController.prototype.publish = function () {
 
     }.bind(this))
     .catch(function (err) {
-      // TODO: Alert boxes to be implemented
       console.warn(err);
-      alert(err.message);
+
+      // Display notification
+      notifications.addNotification(new BasicNotification("Failed to publish comment", err ? err.message : undefined));
+      notifications.didUpdate();
     });
 };
