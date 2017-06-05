@@ -111,7 +111,7 @@
 
   ICA.api = "api/v1";
 
-  ICA.request = function (method, url, headers, data, responseType = "json", returnXHR = false, notify) {
+  ICA.request = function (method, url, headers, data, notify) {
     return new Promise(function (resolve, reject) {
       var x = new XMLHttpRequest();
 
@@ -123,44 +123,18 @@
 
       x.open(method, url, true);
 
-      if (responseType && responseType != "x") x.responseType = responseType;
+      x.responseType = "json";
 
-      x.onreadystatechange = function () {
-        if (x.readyState == 4) {
-          if (returnXHR) {
-            resolve(x);
-            return;
-          }
-          if (x.status == 200) {
-            switch (x.responseType) {
-            case "blob":
-              resolve(new Blob(
-                [x.response],
-                {
-                  type: x.getResponseHeader("Content-Type")
-                    || "text/plain"
-                }));
-              break;
-            case "json":
-              resolve(x.response);
-              break;
-            default:
-              if (x.getResponseHeader("Content-Type") == "application/json") {
-                resolve(JSON.parse(x.responseText));
-                break;
-              }
-              resolve(x.responseText);
-            }
-          } else {
-            reject(new Error("Something else other than 200 was returned"));
-          }
-        }
-      };
+      x.addEventListener("load", function () {
+        resolve(x);
+      });
+      x.addEventListener("error", function () {
+        reject(x);
+      });
+      x.addEventListener("abort", function () {
+        reject(x);
+      });
 
-      // Set request headers
-      if (this.accountSession) {
-        x.setRequestHeader("Authorization", "Bearer " + this.accountSession);
-      }
       if (headers) for (var header in headers) {
         if (headers[header]) x.setRequestHeader(header, headers[header]);
       }
@@ -169,17 +143,16 @@
     }.bind(this));
   };
 
-  ICA.requestAPI = function (method, path, data, state, notify) {
+  ICA._requestAPI = function (method, path, headers = {}, data, notify) {
+    if (this.accountSession) {
+      headers["Authorization"] = "Bearer " + this.accountSession;
+    }
+
     return ICA.request(
       method,
       this.api + path,
-      {
-        "Content-Type": "application/json",
-        "X-ICA-State": state
-      },
-      JSON.stringify(data),
-      "json",
-      true,
+      headers,
+      data,
       notify
     )
       .then(function (x) {
@@ -187,7 +160,7 @@
         case 401: // Needs logging in
           return ICA.promptLogin()
             .then(function () {
-              return ICA.requestAPI(method, path, data, state, notify);
+              return ICA._requestAPI(method, path, headers, data, notify);
             });
         }
         var response = x.response;
@@ -195,7 +168,23 @@
           console.warn("Request caught error:", response);
           return Promise.reject(new Error(response.error));
         }
-        return new ICA.APIResponse(response, [method, path, data, x.getResponseHeader("X-ICA-State-Next")]);
+        return x;
+      });
+  };
+
+  ICA.requestAPI = function (method, path, data, state, notify) {
+    return ICA._requestAPI(
+      method,
+      path,
+      {
+        "Content-Type": "application/json",
+        "X-ICA-State": state
+      },
+      JSON.stringify(data),
+      notify
+    )
+      .then(function (x) {
+        return new ICA.APIResponse(x.response, [method, path, data, x.getResponseHeader("X-ICA-State-Next")]);
       });
   };
 
@@ -216,18 +205,17 @@
   };
 
   ICA.uploadFile = function (file, notify) {
-    return ICA.request(
+    return ICA._requestAPI(
       "post",
-      this.api + "/files/",
+      "/files/",
       {
         "Content-Type": file.type
       },
       file,
-      "json",
-      false,
       notify
     )
-      .then(function (fileId) {
+      .then(function (x) {
+        var fileId = x.response;
         console.log("ICA: File uploaded");
         return fileId;
       });
@@ -240,44 +228,30 @@
       notifications.didUpdate();
     }
 
-    return ICA.request(
+    return ICA._requestAPI(
       "post",
-      this.api + "/files/",
+      "/files/",
       {
         "X-Upload-Content-Type": file.type,
         "X-Upload-Content-Length": file.size
-      },
-      null,
-      "json",
-      true
+      }
     )
       .then(function (x) {
-        var data = x.response;
-        if (typeof data != "number") {
-
-          notification.progressPct = 1;
-          notification.didUpdate();
-
-          if (typeof data == "object" && data.error) {
-            console.warn("Request caught error:", data);
-            return Promise.reject(new Error(data.error));
-          }
+        var fileId = x.response;
+        if (typeof fileId != "number") {
           return Promise.reject(new Error("Error starting file upload"));
         }
-        var fileId = data;
 
-        function putFile(url, byteStart = 0, byteLength = 5 * 1024 * 1024) {
+        function putFile(path, byteStart = 0, byteLength = 5 * 1024 * 1024) {
           var byteEnd = Math.min(file.size, byteStart + byteLength);
-          return ICA.request(
+          return ICA._requestAPI(
             "put",
-            url,
+            path,
             {
               "Content-Type": file.type,
               "Content-Range": "bytes {0}-{1}/{2}".format(byteStart, byteEnd - 1, file.size)
             },
-            file.slice(byteStart, byteEnd),
-            null,
-            true
+            file.slice(byteStart, byteEnd)
           )
             .then(function (x) {
               if (x.status == 200) {
@@ -296,22 +270,22 @@
                 notification.progressPct = byteLast / (file.size - 1);
                 notification.didUpdate();
 
-                return putFile(url, byteLast + 1, byteLength);
+                return putFile(path, byteLast + 1, byteLength);
               } else {
-                // Error uploading file chunk
-
-                notification.progressPct = 1;
-                notification.didUpdate();
-
-                return Promise.reject(); // TODO: Allow retry
+                return Promise.reject(new Error("Error uploading file chunk")); // TODO: Allow retry
               }
             });
         }
 
         // Start uploading file chunks
-        return putFile(this.api + "/files/" + fileId);
-        // return fileId;
-      }.bind(this));
+        return putFile("/files/" + fileId);
+      }.bind(this))
+      .catch(function (err) {
+        notification.progressPct = 1;
+        notification.didUpdate();
+
+        throw err;
+      });
   };
 
   ICA.getConversations = function (params, notify) {
