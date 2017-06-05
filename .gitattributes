@@ -1,2 +1,0 @@
-images/icons.ai filter=lfs diff=lfs merge=lfs -text
-db/model.mwb filter=lfs diff=lfs merge=lfs -text
