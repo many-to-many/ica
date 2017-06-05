@@ -206,7 +206,7 @@
 
   ICA.uploadFile = function (file, notify) {
     return ICA._requestAPI(
-      "post",
+      "POST",
       "/files/",
       {
         "Content-Type": file.type
@@ -229,7 +229,7 @@
     }
 
     return ICA._requestAPI(
-      "post",
+      "POST",
       "/files/",
       {
         "X-Upload-Content-Type": file.type,
@@ -245,7 +245,7 @@
         function putFile(path, byteStart = 0, byteLength = 5 * 1024 * 1024) {
           var byteEnd = Math.min(file.size, byteStart + byteLength);
           return ICA._requestAPI(
-            "put",
+            "PUT",
             path,
             {
               "Content-Type": file.type,
