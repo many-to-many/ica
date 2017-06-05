@@ -62,16 +62,6 @@ ArticleJointSourceController.defineMethod("initView", function initView() {
   new TokensController(this.jointSource.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
   new TokensController(this.jointSource.metaThemesHandler, this.view.querySelector("[data-ica-jointsource-meta='themes']")).componentOf = this;
 
-  // Comments
-
-  ICA.getJointSourceComments(this.jointSource)
-    .then(function (comments) {
-      this.jointSource.requestNextComments = comments.requestNext;
-      this.jointSource.didUpdate();
-    }.bind(this), function (err) {
-      console.error(err.message);
-    });
-
 });
 
 ArticleJointSourceController.defineMethod("updateView", function updateView() {
@@ -142,56 +132,8 @@ ArticleJointSourceController.defineMethod("updateView", function updateView() {
     element.style.display = "none";
   }.bind(this.view));
 
-  // Temporary comment
-  if (this.tempComment && this.tempComment.commentId >= 0) {
-    this.tempComment = null;
-  }
-  if (!this.tempComment) {
-    this.tempComment = new JointSourceComment(null, this.jointSource);
-    var fragment = ArticleCommentController.createViewFragment();
-    var element = fragment.querySelector(".comment");
-    this.view.querySelector(".jointsource-comments").appendChild(fragment);
-    new ArticleCommentController(this.tempComment, element).componentOf = this;
-  }
-
-  var previousElement;
-  this.jointSource.forEachComment(function (comment) {
-    var element = this.view.querySelector("[data-ica-comment-id='{0}']".format(comment.commentId));
-    if (!element) {
-      var fragment = ArticleCommentController.createViewFragment();
-      element = fragment.querySelector(".comment");
-      if (previousElement) {
-        insertAfter(element, previousElement);
-      } else {
-        var parent = this.view.querySelector(".jointsource-comments");
-        parent.insertBefore(fragment, parent.querySelector(".comment"));
-      }
-      new ArticleCommentController(comment, element).componentOf = this;
-    }
-
-    previousElement = element;
-  }.bind(this));
-
-  this.view.querySelectorAll(".jointsource-comments > .comment + .comment").forEach(function (element) {
-    var hide = element.previousElementSibling
-      ? element.previousElementSibling.controller.comment.authorId == element.controller.comment.authorId
-      : false;
-    element.querySelectorAll(".hide-repeated").forEach(function (element) {
-      element.hidden = hide;
-    });
-  });
-
   this.sourceElementUpdated();
   this.view.querySelector("[data-ica-jointsource-number-of-sources]").textContent = this.jointSource.getNumberOfSources() + 1;
-
-});
-
-ArticleJointSourceController.defineMethod("uninitView", function uninitView() {
-  if (!this.view) return;
-
-  // Destroy temporary comment
-  this.tempComment.destroy(true, true, true, true);
-  delete this.tempComment;
 
 });
 

@@ -3,7 +3,6 @@
   require_once(DIR_ROOT . "/lib/shared.php");
   require_once(DIR_ROOT . "/lib/jointsources.php");
   require_once(DIR_ROOT . "/lib/sources.php");
-  require_once(DIR_ROOT . "/lib/comments.php");
 
   $REQUEST_BODY = file_get_contents("php://input");
   if ($REQUEST_BODY && $REQUEST_METHOD == "GET") $REQUEST_METHOD = "POST";
@@ -104,44 +103,6 @@
       \ICA\JointSources\insertJointSourceState($jointSourceId, STATE_UNPUBLISHED);
 
       respondJSON([]);
-
-      break;
-
-  } elseif (list($jointSourceId) = handle(["jointsources", REQUEST_PARAMETER, "comments"])) switch ($REQUEST_METHOD) {
-
-    case "GET":
-
-      $limit = 40;
-
-      $data = \ICA\JointSources\getJointSourceComments($jointSourceId, $limit);
-
-      // There is probably more data available
-      if (count($data) == $limit) {
-        end($data); // Move the internal pointer to the end of the array
-        header("X-ICA-State-Next: " . key($data));
-      }
-
-      respondJSON($data);
-
-      break;
-
-    case "POST": \Session\requireVerification();
-
-      $accountId = \Session\getAccountId();
-
-      // Validation
-      if (!$REQUEST_DATA) throw new Exception("No request data");
-
-      $comment = new \ICA\Comments\Comment;
-      $comment->content = $REQUEST_DATA["content"];
-
-      $commentId = \ICA\JointSources\insertJointSourceComment($jointSourceId, $comment);
-
-      respondJSON([$commentId => [
-        "_id" => $REQUEST_DATA["_id"],
-        "authorId" => $accountId,
-        "timestampAuthored" => time() // TODO: Use time recorded in the database
-      ]]);
 
       break;
 

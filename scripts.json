@@ -26,10 +26,6 @@
   "scripts/sources/AudioSource.js",
   "scripts/sources/VideoSource.js",
 
-  "scripts/comments/Comment.js",
-  "scripts/comments/CommentController.js",
-  "scripts/comments/JointSourceComment.js",
-
   "scripts/explore/Explore.js",
   "scripts/explore/ExploreController.js",
   "scripts/explore/ExploreJointSourceController.js",
@@ -53,7 +49,6 @@
   "scripts/map/ArticleImageSourceController.js",
   "scripts/map/ArticleAudioSourceController.js",
   "scripts/map/ArticleVideoSourceController.js",
-  "scripts/map/ArticleCommentController.js",
   "scripts/map/ArticleJointSourceController.js",
 
   "scripts/notifications/Notifications.js",
