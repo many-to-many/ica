@@ -201,7 +201,7 @@ PublisherJointSourceController.prototype.unpublish = function () {
       console.warn(err);
 
       // Display notification
-      notifications.addNotification(new BasicNotification("Failed to unpublish comment", err ? err.message : undefined));
+      notifications.addNotification(new BasicNotification("Failed to unpublish conversation", err ? err.message : undefined));
       notifications.didUpdate();
     });
 };

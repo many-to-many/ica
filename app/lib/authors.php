@@ -16,7 +16,7 @@
     if ($result->num_rows == 0) return [];
 
     $data = [];
-    // Iterate through comments
+    // Iterate through authors
     while ($row = $result->fetch_assoc()) {
       $authorId = $row["id"];
 
