@@ -10,10 +10,10 @@ AppController.defineMethod("initView", function () {
     this.view.querySelector(".explore")
   ).componentOf = this;
 
-  ICA.getJointSources()
-    .then(function (jointSources) {
-      this.explore.requestNextJointSources = jointSources.requestNext;
-      this.explore.addItems(jointSources);
+  ICA.getConversations()
+    .then(function (conversations) {
+      this.explore.requestNextConversations = conversations.requestNext;
+      this.explore.addItems(conversations);
       this.explore.didUpdate();
     }.bind(this), function (err) {
       console.error(err.message);
@@ -25,14 +25,14 @@ AppController.defineMethod("initView", function () {
     this.view.querySelector(".search .explore")
   ).componentOf = this;
 
-  this.view.querySelectorAll(".search .search-control [data-ica-jointsource-query-meta]").forEach(function (element) {
+  this.view.querySelectorAll(".search .search-control [data-ica-conversation-query-meta]").forEach(function (element) {
     element.addEventListener("input", function (evt) {
-      ICA.getJointSources({
-        q: this.querySelector(".search .search-control [data-ica-jointsource-query-meta='title']").value
+      ICA.getConversations({
+        q: this.querySelector(".search .search-control [data-ica-conversation-query-meta='title']").value
       })
-         .then(function (jointSources) {
-           this.controller.searchExplore.requestNextJointSources = jointSources.requestNext;
-           this.controller.searchExplore.putItems(jointSources);
+         .then(function (conversations) {
+           this.controller.searchExplore.requestNextConversations = conversations.requestNext;
+           this.controller.searchExplore.putItems(conversations);
            this.controller.searchExplore.didUpdate();
          }.bind(this), function (err) {
            console.error(err.toString());
@@ -48,16 +48,16 @@ AppController.defineMethod("initView", function () {
         var rect = element.getBoundingClientRect();
         var explore = element.controller.model;
         if (rect.bottom < 2 * document.body.offsetHeight
-          && explore.requestNextJointSources) {
+          && explore.requestNextConversations) {
           // Need to load more content
           console.count("Need to load more");
-          let requestNext = explore.requestNextJointSources;
-          explore.requestNextJointSources = undefined;
+          let requestNext = explore.requestNextConversations;
+          explore.requestNextConversations = undefined;
           requestNext()
-            .then(function (jointSources) {
+            .then(function (conversations) {
               var explore = this.controller.model;
-              explore.requestNextJointSources = jointSources.requestNext;
-              explore.addItems(jointSources);
+              explore.requestNextConversations = conversations.requestNext;
+              explore.addItems(conversations);
               explore.didUpdate();
             }.bind(element), function (err) {
               if (err instanceof ICA.APIResponse.EndOfResponse) {

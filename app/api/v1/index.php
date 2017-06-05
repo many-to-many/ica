@@ -2,7 +2,7 @@
 
   require_once(__DIR__ . "/init.php");
 
-  if (handle(["jointsources"], true)) require_once(__DIR__ . "/jointsources.php");
+  if (handle(["conversations"], true)) require_once(__DIR__ . "/conversations.php");
   elseif (handle(["files"], true)) require_once(__DIR__ . "/files.php");
   elseif (handle(["themes"], true)) require_once(__DIR__ . "/themes.php");
   elseif (handle(["authors"], true)) require_once(__DIR__ . "/authors.php");

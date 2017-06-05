@@ -55,14 +55,34 @@ DROP TABLE IF EXISTS `ica`.`jointsources` ;
 
 CREATE TABLE IF NOT EXISTS `ica`.`jointsources` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_jointsources_accounts2_idx` (`author_id` ASC),
+  CONSTRAINT `fk_jointsources_accounts2`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ica`.`conversations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`conversations` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`conversations` (
+  `id` INT UNSIGNED NOT NULL,
   `title_id` INT UNSIGNED NOT NULL,
   `intro_id` INT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
   INDEX `fk_jointsources_accounts1_idx` (`author_id` ASC),
   INDEX `fk_jointsources_contents1_idx` (`title_id` ASC),
   INDEX `fk_jointsources_contents2_idx` (`intro_id` ASC),
+  INDEX `fk_conversations_jointsource1_idx` (`id` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_jointsources_accounts1`
     FOREIGN KEY (`author_id`)
     REFERENCES `ica`.`accounts` (`id`)
@@ -76,6 +96,11 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources` (
   CONSTRAINT `fk_jointsources_contents2`
     FOREIGN KEY (`intro_id`)
     REFERENCES `ica`.`contents` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_conversations_jointsource1`
+    FOREIGN KEY (`id`)
+    REFERENCES `ica`.`jointsources` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -94,23 +119,23 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_states`
+-- Table `ica`.`conversations_states`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_states` ;
+DROP TABLE IF EXISTS `ica`.`conversations_states` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_states` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_states` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `jointsource_id` INT UNSIGNED NOT NULL,
+  `conversation_id` INT UNSIGNED NOT NULL,
   `state` TINYINT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_jointsources_states_jointsources1_idx` (`jointsource_id` ASC),
+  INDEX `fk_jointsources_states_jointsources1_idx` (`conversation_id` ASC),
   PRIMARY KEY (`id`),
   INDEX `fk_jointsources_states_accounts1_idx` (`author_id` ASC),
   INDEX `fk_jointsources_states_states1_idx` (`state` ASC),
   CONSTRAINT `fk_jointsources_states_jointsources1`
-    FOREIGN KEY (`jointsource_id`)
-    REFERENCES `ica`.`jointsources` (`id`)
+    FOREIGN KEY (`conversation_id`)
+    REFERENCES `ica`.`conversations` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_states_accounts1`
@@ -154,9 +179,9 @@ CREATE TABLE IF NOT EXISTS `ica`.`sources` (
   PRIMARY KEY (`id`),
   INDEX `fk_sources_accounts1_idx` (`author_id` ASC),
   INDEX `fk_sources_consts_sourcetypes1_idx` (`type` ASC),
-  INDEX `fk_sources_jointsources1_idx` (`jointsource_id` ASC),
   INDEX `fk_sources_contents1_idx` (`content_id` ASC),
   INDEX `fk_sources_contents2_idx` (`title_id` ASC),
+  INDEX `fk_sources_jointsources1_idx` (`jointsource_id` ASC),
   CONSTRAINT `fk_sources_accounts1`
     FOREIGN KEY (`author_id`)
     REFERENCES `ica`.`accounts` (`id`)
@@ -366,25 +391,25 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_themes`
+-- Table `ica`.`conversations_themes`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_themes` ;
+DROP TABLE IF EXISTS `ica`.`conversations_themes` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_themes` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_themes` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `jointsource_id` INT UNSIGNED NOT NULL,
+  `conversation_id` INT UNSIGNED NOT NULL,
   `theme_id` INT UNSIGNED NOT NULL,
   `lang` INT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_jointsources_themes_jointsources1_idx` (`jointsource_id` ASC),
+  INDEX `fk_jointsources_themes_jointsources1_idx` (`conversation_id` ASC),
   INDEX `fk_jointsources_themes_themes1_idx` (`theme_id` ASC),
   INDEX `fk_jointsources_themes_langs1_idx` (`lang` ASC),
   INDEX `fk_jointsources_themes_accounts1_idx` (`author_id` ASC),
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_jointsources_themes_jointsources1`
-    FOREIGN KEY (`jointsource_id`)
-    REFERENCES `ica`.`jointsources` (`id`)
+    FOREIGN KEY (`conversation_id`)
+    REFERENCES `ica`.`conversations` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_themes_themes1`
@@ -406,11 +431,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_themes_states`
+-- Table `ica`.`conversations_themes_states`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_themes_states` ;
+DROP TABLE IF EXISTS `ica`.`conversations_themes_states` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_themes_states` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_themes_states` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `state` TINYINT UNSIGNED NOT NULL,
   `deleg_id` INT UNSIGNED NOT NULL,
@@ -432,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_themes_states` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_themes_states_jointsources_themes1`
     FOREIGN KEY (`deleg_id`)
-    REFERENCES `ica`.`jointsources_themes` (`id`)
+    REFERENCES `ica`.`conversations_themes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -459,25 +484,25 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_participants`
+-- Table `ica`.`conversations_participants`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_participants` ;
+DROP TABLE IF EXISTS `ica`.`conversations_participants` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_participants` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_participants` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `jointsource_id` INT UNSIGNED NOT NULL,
+  `conversation_id` INT UNSIGNED NOT NULL,
   `participant_id` INT UNSIGNED NOT NULL,
   `lang` INT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_jointsources_participants_jointsources1_idx` (`jointsource_id` ASC),
+  INDEX `fk_jointsources_participants_jointsources1_idx` (`conversation_id` ASC),
   INDEX `fk_jointsources_participants_participants1_idx` (`participant_id` ASC),
   INDEX `fk_jointsources_participants_accounts1_idx` (`author_id` ASC),
   INDEX `fk_jointsources_participants_langs1_idx` (`lang` ASC),
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_jointsources_participants_jointsources1`
-    FOREIGN KEY (`jointsource_id`)
-    REFERENCES `ica`.`jointsources` (`id`)
+    FOREIGN KEY (`conversation_id`)
+    REFERENCES `ica`.`conversations` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_participants_participants1`
@@ -499,11 +524,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_participants_states`
+-- Table `ica`.`conversations_participants_states`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_participants_states` ;
+DROP TABLE IF EXISTS `ica`.`conversations_participants_states` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_participants_states` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_participants_states` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `deleg_id` INT UNSIGNED NOT NULL,
   `state` TINYINT UNSIGNED NOT NULL,
@@ -525,30 +550,30 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_participants_states` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_participants_states_jointsources_participants1`
     FOREIGN KEY (`deleg_id`)
-    REFERENCES `ica`.`jointsources_participants` (`id`)
+    REFERENCES `ica`.`conversations_participants` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_regions_langs`
+-- Table `ica`.`conversations_regions_langs`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_regions_langs` ;
+DROP TABLE IF EXISTS `ica`.`conversations_regions_langs` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `jointsource_id` INT UNSIGNED NOT NULL,
+  `conversation_id` INT UNSIGNED NOT NULL,
   `lang` INT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_jointsources_regions_jointsources1_idx` (`jointsource_id` ASC),
+  INDEX `fk_jointsources_regions_jointsources1_idx` (`conversation_id` ASC),
   PRIMARY KEY (`id`),
   INDEX `fk_jointsources_regions_accounts2_idx` (`author_id` ASC),
   INDEX `fk_jointsources_regions_langs_langs1_idx` (`lang` ASC),
   CONSTRAINT `fk_jointsources_regions_langs_jointsources1`
-    FOREIGN KEY (`jointsource_id`)
-    REFERENCES `ica`.`jointsources` (`id`)
+    FOREIGN KEY (`conversation_id`)
+    REFERENCES `ica`.`conversations` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_regions_langs_accounts1`
@@ -586,11 +611,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_regions_langs_revs`
+-- Table `ica`.`conversations_regions_langs_revs`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_regions_langs_revs` ;
+DROP TABLE IF EXISTS `ica`.`conversations_regions_langs_revs` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_revs` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_revs` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `lang_id` INT NOT NULL,
   `region_id` INT NOT NULL,
@@ -602,7 +627,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_revs` (
   INDEX `fk_jointsources_regions_langs_revs_accounts1_idx` (`author_id` ASC),
   CONSTRAINT `fk_jointsources_regions_langs_revs_jointsources_regions_langs1`
     FOREIGN KEY (`lang_id`)
-    REFERENCES `ica`.`jointsources_regions_langs` (`id`)
+    REFERENCES `ica`.`conversations_regions_langs` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_regions_langs_revs_regions1`
@@ -619,11 +644,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`jointsources_regions_langs_states`
+-- Table `ica`.`conversations_regions_langs_states`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_regions_langs_states` ;
+DROP TABLE IF EXISTS `ica`.`conversations_regions_langs_states` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_states` (
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_states` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `lang_id` INT NOT NULL,
   `state` TINYINT UNSIGNED NOT NULL,
@@ -631,109 +656,19 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_states` (
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_jointsources_regions_langs_states_jointsources_regions_l_idx` (`lang_id` ASC),
-  INDEX `fk_jointsources_regions_langs_states_states1_idx` (`state` ASC),
   INDEX `fk_jointsources_regions_langs_states_accounts1_idx` (`author_id` ASC),
+  INDEX `fk_jointsources_regions_langs_states_states1_idx` (`state` ASC),
   CONSTRAINT `fk_jointsources_regions_langs_states_jointsources_regions_lan1`
     FOREIGN KEY (`lang_id`)
-    REFERENCES `ica`.`jointsources_regions_langs` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_jointsources_regions_langs_states_states1`
-    FOREIGN KEY (`state`)
-    REFERENCES `ica`.`states` (`state`)
+    REFERENCES `ica`.`conversations_regions_langs` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_jointsources_regions_langs_states_accounts1`
     FOREIGN KEY (`author_id`)
     REFERENCES `ica`.`accounts` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `ica`.`comments`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`comments` ;
-
-CREATE TABLE IF NOT EXISTS `ica`.`comments` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `content_id` INT UNSIGNED NOT NULL,
-  `author_id` INT UNSIGNED NOT NULL,
-  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  INDEX `fk_comments_accounts1_idx` (`author_id` ASC),
-  INDEX `fk_comments_contents1_idx` (`content_id` ASC),
-  CONSTRAINT `fk_comments_contents1`
-    FOREIGN KEY (`content_id`)
-    REFERENCES `ica`.`contents` (`id`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_comments_accounts1`
-    FOREIGN KEY (`author_id`)
-    REFERENCES `ica`.`accounts` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `ica`.`jointsources_comments`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`jointsources_comments` ;
-
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_comments` (
-  `jointsource_id` INT UNSIGNED NOT NULL,
-  `comment_id` INT UNSIGNED NOT NULL,
-  `author_id` INT UNSIGNED NOT NULL,
-  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_jointsources_comments_jointsources1_idx` (`jointsource_id` ASC),
-  INDEX `fk_jointsources_comments_comments1_idx` (`comment_id` ASC),
-  INDEX `fk_jointsources_comments_accounts1_idx` (`author_id` ASC),
-  CONSTRAINT `fk_jointsources_comments_jointsources1`
-    FOREIGN KEY (`jointsource_id`)
-    REFERENCES `ica`.`jointsources` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_jointsources_comments_comments1`
-    FOREIGN KEY (`comment_id`)
-    REFERENCES `ica`.`comments` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_jointsources_comments_accounts1`
-    FOREIGN KEY (`author_id`)
-    REFERENCES `ica`.`accounts` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `ica`.`comments_states`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`comments_states` ;
-
-CREATE TABLE IF NOT EXISTS `ica`.`comments_states` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `comment_id` INT UNSIGNED NOT NULL,
-  `author_id` INT UNSIGNED NOT NULL,
-  `state` TINYINT UNSIGNED NOT NULL,
-  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  INDEX `fk_comments_states_comments1_idx` (`comment_id` ASC),
-  INDEX `fk_comments_states_accounts1_idx` (`author_id` ASC),
-  INDEX `fk_comments_states_states1_idx` (`state` ASC),
-  CONSTRAINT `fk_comments_states_comments1`
-    FOREIGN KEY (`comment_id`)
-    REFERENCES `ica`.`comments` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_comments_states_accounts1`
-    FOREIGN KEY (`author_id`)
-    REFERENCES `ica`.`accounts` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_comments_states_states1`
+  CONSTRAINT `fk_jointsources_regions_langs_states_states1`
     FOREIGN KEY (`state`)
     REFERENCES `ica`.`states` (`state`)
     ON DELETE NO ACTION
@@ -743,14 +678,14 @@ ENGINE = InnoDB;
 USE `ica` ;
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_state_latest`
+-- Placeholder table for view `ica`.`conversations_state_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_state_latest` (`jointsource_id` INT, `state_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_state_latest` (`conversation_id` INT, `state_id` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_summary`
+-- Placeholder table for view `ica`.`conversations_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_summary` (`jointsource_id` INT, `state_id` INT, `state` INT, `title_id` INT, `intro_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_summary` (`conversation_id` INT, `state_id` INT, `state` INT, `title_id` INT, `intro_id` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`sources_state_latest`
@@ -778,86 +713,71 @@ CREATE TABLE IF NOT EXISTS `ica`.`contents_langs_state_latest` (`lang_id` INT, `
 CREATE TABLE IF NOT EXISTS `ica`.`contents_langs_rev_latest` (`lang_id` INT, `rev_id` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_themes_state_latest`
+-- Placeholder table for view `ica`.`conversations_themes_state_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_themes_state_latest` (`deleg_id` INT, `state_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_themes_state_latest` (`deleg_id` INT, `state_id` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_themes_summary`
+-- Placeholder table for view `ica`.`conversations_themes_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_themes_summary` (`jointsource_id` INT, `deleg_id` INT, `theme_id` INT, `theme` INT, `state_id` INT, `state` INT, `lang` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_themes_summary` (`conversation_id` INT, `deleg_id` INT, `theme_id` INT, `theme` INT, `state_id` INT, `state` INT, `lang` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_participants_summary`
+-- Placeholder table for view `ica`.`conversations_participants_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_participants_summary` (`jointsource_id` INT, `deleg_id` INT, `participant_id` INT, `participant` INT, `state_id` INT, `state` INT, `lang` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_participants_summary` (`conversation_id` INT, `deleg_id` INT, `participant_id` INT, `participant` INT, `state_id` INT, `state` INT, `lang` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_participants_state_latest`
+-- Placeholder table for view `ica`.`conversations_participants_state_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_participants_state_latest` (`deleg_id` INT, `state_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_participants_state_latest` (`deleg_id` INT, `state_id` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_regions_langs_state_latest`
+-- Placeholder table for view `ica`.`conversations_regions_langs_state_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_state_latest` (`lang_id` INT, `state_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_state_latest` (`lang_id` INT, `state_id` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_regions_langs_rev_latest`
+-- Placeholder table for view `ica`.`conversations_regions_langs_rev_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_rev_latest` (`lang_id` INT, `rev_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_rev_latest` (`lang_id` INT, `rev_id` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_regions_langs_summary`
+-- Placeholder table for view `ica`.`conversations_regions_langs_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_regions_langs_summary` (`jointsource_id` INT, `lang_id` INT, `lang` INT, `state_id` INT, `state` INT, `rev_id` INT, `region_id` INT, `region` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_summary` (`conversation_id` INT, `lang_id` INT, `lang` INT, `state_id` INT, `state` INT, `rev_id` INT, `region_id` INT, `region` INT);
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`comments_state_latest`
+-- View `ica`.`conversations_state_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`comments_state_latest` (`comment_id` INT, `state_id` INT);
-
--- -----------------------------------------------------
--- Placeholder table for view `ica`.`comments_summary`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`comments_summary` (`comment_id` INT, `state_id` INT, `state` INT, `content_id` INT, `author_id` INT, `timestamp_authored` INT);
-
--- -----------------------------------------------------
--- Placeholder table for view `ica`.`jointsources_comments_summary`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_comments_summary` (`jointsource_id` INT);
-
--- -----------------------------------------------------
--- View `ica`.`jointsources_state_latest`
--- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_state_latest` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_state_latest`;
+DROP VIEW IF EXISTS `ica`.`conversations_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`conversations_state_latest`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_state_latest` AS
+CREATE  OR REPLACE VIEW `conversations_state_latest` AS
 SELECT
-	tbl_state.jointsource_id AS jointsource_id,
+	tbl_state.conversation_id AS conversation_id,
 	MAX(tbl_state.id) AS state_id
-FROM `jointsources_states` AS tbl_state
-GROUP BY jointsource_id;
+FROM `conversations_states` AS tbl_state
+GROUP BY conversation_id;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_summary`
+-- View `ica`.`conversations_summary`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_summary` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_summary`;
+DROP VIEW IF EXISTS `ica`.`conversations_summary` ;
+DROP TABLE IF EXISTS `ica`.`conversations_summary`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_summary` AS
+CREATE  OR REPLACE VIEW `conversations_summary` AS
 SELECT
-	tbl_jointsource.id AS jointsource_id,
+	tbl_conversation.id AS conversation_id,
     tbl_state.id AS state_id,
     tbl_state.state AS state,
-	tbl_jointsource.title_id AS title_id,
-    tbl_jointsource.intro_id AS intro_id
+	tbl_conversation.title_id AS title_id,
+    tbl_conversation.intro_id AS intro_id
     -- themes, participants, regions are excluded
-FROM `jointsources` AS tbl_jointsource
-LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
-	ON tbl_state_latest.jointsource_id = tbl_jointsource.id
-LEFT JOIN `jointsources_states` AS tbl_state
+FROM `conversations` AS tbl_conversation
+LEFT JOIN `conversations_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.conversation_id = tbl_conversation.id
+LEFT JOIN `conversations_states` AS tbl_state
 	ON tbl_state.id = tbl_state_latest.state_id;
 
 -- -----------------------------------------------------
@@ -946,114 +866,114 @@ FROM `contents_langs_revs` AS tbl_rev
 GROUP BY lang_id;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_themes_state_latest`
+-- View `ica`.`conversations_themes_state_latest`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_themes_state_latest` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_themes_state_latest`;
+DROP VIEW IF EXISTS `ica`.`conversations_themes_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`conversations_themes_state_latest`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_themes_state_latest` AS
+CREATE  OR REPLACE VIEW `conversations_themes_state_latest` AS
 SELECT
 	tbl_state.deleg_id AS deleg_id,
 	MAX(tbl_state.id) AS state_id
-FROM `jointsources_themes_states` AS tbl_state
+FROM `conversations_themes_states` AS tbl_state
 GROUP BY deleg_id;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_themes_summary`
+-- View `ica`.`conversations_themes_summary`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_themes_summary` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_themes_summary`;
+DROP VIEW IF EXISTS `ica`.`conversations_themes_summary` ;
+DROP TABLE IF EXISTS `ica`.`conversations_themes_summary`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_themes_summary` AS
+CREATE  OR REPLACE VIEW `conversations_themes_summary` AS
 SELECT
-	tbl_deleg.jointsource_id AS jointsource_id,
+	tbl_deleg.conversation_id AS conversation_id,
 	tbl_deleg.id AS deleg_id,
     tbl_theme.id AS theme_id,
     tbl_theme.theme AS theme,
     tbl_state.id AS state_id,
     tbl_state.state AS state,
     tbl_deleg.lang AS lang
-FROM `jointsources_themes` AS tbl_deleg
-LEFT JOIN `jointsources_themes_state_latest` AS tbl_state_latest
+FROM `conversations_themes` AS tbl_deleg
+LEFT JOIN `conversations_themes_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.deleg_id = tbl_deleg.id
-LEFT JOIN `jointsources_themes_states` AS tbl_state
+LEFT JOIN `conversations_themes_states` AS tbl_state
 	ON tbl_state.id = tbl_state_latest.state_id
 LEFT JOIN `themes` AS tbl_theme
 	ON tbl_theme.id = tbl_deleg.theme_id;
 	;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_participants_summary`
+-- View `ica`.`conversations_participants_summary`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_participants_summary` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_participants_summary`;
+DROP VIEW IF EXISTS `ica`.`conversations_participants_summary` ;
+DROP TABLE IF EXISTS `ica`.`conversations_participants_summary`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_participants_summary` AS
+CREATE  OR REPLACE VIEW `conversations_participants_summary` AS
 SELECT
-	tbl_deleg.jointsource_id AS jointsource_id,
+	tbl_deleg.conversation_id AS conversation_id,
 	tbl_deleg.id AS deleg_id,
     tbl_participant.id AS participant_id,
     tbl_participant.participant AS participant,
     tbl_state.id AS state_id,
     tbl_state.state AS state,
     tbl_deleg.lang AS lang
-FROM `jointsources_participants` AS tbl_deleg
-LEFT JOIN `jointsources_participants_state_latest` AS tbl_state_latest
+FROM `conversations_participants` AS tbl_deleg
+LEFT JOIN `conversations_participants_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.deleg_id = tbl_deleg.id
-LEFT JOIN `jointsources_participants_states` AS tbl_state
+LEFT JOIN `conversations_participants_states` AS tbl_state
 	ON tbl_state.id = tbl_state_latest.state_id
 LEFT JOIN `participants` AS tbl_participant
 	ON tbl_participant.id = tbl_deleg.participant_id;
 	;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_participants_state_latest`
+-- View `ica`.`conversations_participants_state_latest`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_participants_state_latest` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_participants_state_latest`;
+DROP VIEW IF EXISTS `ica`.`conversations_participants_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`conversations_participants_state_latest`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_participants_state_latest` AS
+CREATE  OR REPLACE VIEW `conversations_participants_state_latest` AS
 SELECT
 	tbl_state.deleg_id AS deleg_id,
 	MAX(tbl_state.id) AS state_id
-FROM `jointsources_participants_states` AS tbl_state
+FROM `conversations_participants_states` AS tbl_state
 GROUP BY deleg_id;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_regions_langs_state_latest`
+-- View `ica`.`conversations_regions_langs_state_latest`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_regions_langs_state_latest` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_regions_langs_state_latest`;
+DROP VIEW IF EXISTS `ica`.`conversations_regions_langs_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`conversations_regions_langs_state_latest`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_regions_langs_state_latest` AS
+CREATE  OR REPLACE VIEW `conversations_regions_langs_state_latest` AS
 SELECT
 	tbl_state.lang_id AS lang_id,
 	MAX(tbl_state.id) AS state_id
-FROM `jointsources_regions_langs_states` AS tbl_state
+FROM `conversations_regions_langs_states` AS tbl_state
 GROUP BY lang_id;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_regions_langs_rev_latest`
+-- View `ica`.`conversations_regions_langs_rev_latest`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_regions_langs_rev_latest` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_regions_langs_rev_latest`;
+DROP VIEW IF EXISTS `ica`.`conversations_regions_langs_rev_latest` ;
+DROP TABLE IF EXISTS `ica`.`conversations_regions_langs_rev_latest`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_regions_langs_rev_latest` AS
+CREATE  OR REPLACE VIEW `conversations_regions_langs_rev_latest` AS
 SELECT
 	tbl_rev.lang_id AS lang_id,
 	MAX(tbl_rev.id) AS rev_id
-FROM `jointsources_regions_langs_revs` AS tbl_rev
+FROM `conversations_regions_langs_revs` AS tbl_rev
 GROUP BY lang_id;
 
 -- -----------------------------------------------------
--- View `ica`.`jointsources_regions_langs_summary`
+-- View `ica`.`conversations_regions_langs_summary`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_regions_langs_summary` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_regions_langs_summary`;
+DROP VIEW IF EXISTS `ica`.`conversations_regions_langs_summary` ;
+DROP TABLE IF EXISTS `ica`.`conversations_regions_langs_summary`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_regions_langs_summary` AS
+CREATE  OR REPLACE VIEW `conversations_regions_langs_summary` AS
 SELECT
-	tbl_lang.jointsource_id AS jointsource_id,
+	tbl_lang.conversation_id AS conversation_id,
     tbl_lang.id AS lang_id,
     tbl_lang.lang AS lang,
     tbl_state.id AS state_id,
@@ -1061,64 +981,17 @@ SELECT
     tbl_rev.id AS rev_id,
     tbl_region.id AS region_id,
     tbl_region.region AS region
-FROM `jointsources_regions_langs` AS tbl_lang
-LEFT JOIN `jointsources_regions_langs_state_latest` AS tbl_state_latest
+FROM `conversations_regions_langs` AS tbl_lang
+LEFT JOIN `conversations_regions_langs_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.lang_id = tbl_lang.id
-LEFT JOIN `jointsources_regions_langs_rev_latest` AS tbl_rev_latest
+LEFT JOIN `conversations_regions_langs_rev_latest` AS tbl_rev_latest
 	ON tbl_rev_latest.lang_id = tbl_lang.id
-LEFT JOIN `jointsources_regions_langs_states` AS tbl_state
+LEFT JOIN `conversations_regions_langs_states` AS tbl_state
 	ON tbl_state.id = tbl_state_latest.state_id
-LEFT JOIN `jointsources_regions_langs_revs` AS tbl_rev
+LEFT JOIN `conversations_regions_langs_revs` AS tbl_rev
 	ON tbl_rev.id = tbl_rev_latest.rev_id
 LEFT JOIN `regions` AS tbl_region
 	ON tbl_region.id = tbl_rev.region_id;
-
--- -----------------------------------------------------
--- View `ica`.`comments_state_latest`
--- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`comments_state_latest` ;
-DROP TABLE IF EXISTS `ica`.`comments_state_latest`;
-USE `ica`;
-CREATE  OR REPLACE VIEW `comments_state_latest` AS
-SELECT
-	tbl_state.comment_id AS comment_id,
-	MAX(tbl_state.id) AS state_id
-FROM `comments_states` AS tbl_state
-GROUP BY comment_id;
-
--- -----------------------------------------------------
--- View `ica`.`comments_summary`
--- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`comments_summary` ;
-DROP TABLE IF EXISTS `ica`.`comments_summary`;
-USE `ica`;
-CREATE  OR REPLACE VIEW `comments_summary` AS
-SELECT
-	tbl_comment.id AS comment_id,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
-	tbl_comment.content_id AS content_id,
-    tbl_comment.author_id AS author_id,
-    UNIX_TIMESTAMP(tbl_comment.authored) AS timestamp_authored
-FROM `comments` AS tbl_comment
-LEFT JOIN `comments_state_latest` AS tbl_state_latest
-	ON tbl_state_latest.comment_id = tbl_comment.id
-LEFT JOIN `comments_states` AS tbl_state
-	ON tbl_state.id = tbl_state_latest.state_id;
-
--- -----------------------------------------------------
--- View `ica`.`jointsources_comments_summary`
--- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`jointsources_comments_summary` ;
-DROP TABLE IF EXISTS `ica`.`jointsources_comments_summary`;
-USE `ica`;
-CREATE  OR REPLACE VIEW `jointsources_comments_summary` AS
-SELECT
-	tbl_jointsource_comment.jointsource_id AS jointsource_id,
-	tbl_comment_summary.*
-FROM `jointsources_comments` AS tbl_jointsource_comment
-LEFT JOIN `comments_summary` AS tbl_comment_summary
-	ON tbl_jointsource_comment.comment_id = tbl_comment_summary.comment_id;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

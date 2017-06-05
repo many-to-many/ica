@@ -4,7 +4,7 @@
 
   .article {
 
-    .jointsource-nav {
+    .conversation-nav {
       position: -webkit-sticky;
       top: 0;
       margin: 0 -1.5em;
@@ -24,7 +24,7 @@
         color: rgba($color-text, 0.80);
       }
 
-      > .jointsource-nav-btn {
+      > .conversation-nav-btn {
         box-sizing: border-box;
         flex: 0 0 3em;
         background-size: 1em 1em;
@@ -57,14 +57,14 @@
         > .source {
           box-sizing: border-box;
 
-          &.jointsource {
+          &.conversation {
 
-            > .jointsource-backdrop {
+            > .conversation-backdrop {
               position: relative;
               height: 0.6 * $card-width;
               max-height: 40vw;
 
-              > .jointsource-backdrop-image {
+              > .conversation-backdrop-image {
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -75,7 +75,7 @@
               }
             }
 
-            > .jointsource-meta {
+            > .conversation-meta {
               margin: 1.5em 0;
               padding: 0 1.5em;
 
@@ -97,7 +97,7 @@
                 font-family: $font-sans-serif-alt;
               }
 
-              [data-ica-jointsource-meta] {
+              [data-ica-conversation-meta] {
                 -webkit-user-select: text;
               }
             }
@@ -135,7 +135,7 @@
 
           }
 
-          > .jointsource-control,
+          > .conversation-control,
           > .source-control {
             padding: 1.5em;
             border-top: solid 1px #f4f4f4;

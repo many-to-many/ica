@@ -1,31 +1,31 @@
 
-var ExploreJointSourceController = JointSourceController.createComponent("ExploreJointSourceController");
+var ExploreConversationController = ConversationController.createComponent("ExploreConversationController");
 
-ExploreJointSourceController.createViewFragment = function () {
-  return cloneTemplate("#template-explore-jointsource");
+ExploreConversationController.createViewFragment = function () {
+  return cloneTemplate("#template-explore-conversation");
 };
 
-ExploreJointSourceController.defineAlias("model", "jointSource");
+ExploreConversationController.defineAlias("model", "conversation");
 
-ExploreJointSourceController.defineMethod("initView", function initView() {
+ExploreConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  setElementProperty(this.view, "jointsource-id", this.jointSource.jointSourceId);
-  this.view.style.order = - this.jointSource.jointSourceId;
+  setElementProperty(this.view, "conversation-id", this.conversation.conversationId);
+  this.view.style.order = - this.conversation.conversationId;
 
-  this.view.querySelector("[data-ica-action='edit-jointsource']").addEventListener("click", function (e) {
+  this.view.querySelector("[data-ica-action='edit-conversation']").addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
-    var fragment = PublisherJointSourceController.createViewFragment();
+    var fragment = PublisherConversationController.createViewFragment();
     var element = fragment.querySelector(".publisher");
     document.body.appendChild(fragment);
-    new PublisherJointSourceController(this.controller.jointSource, element);
+    new PublisherConversationController(this.controller.conversation, element);
   }.bind(this.view));
 
   this.view.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
-    var map = new Map([this.controller.jointSource]);
+    var map = new Map([this.controller.conversation]);
     var fragment = MapController.createViewFragment();
     var element = fragment.querySelector(".map");
     document.body.appendChild(fragment);
@@ -46,30 +46,30 @@ ExploreJointSourceController.defineMethod("initView", function initView() {
   window.addEventListener("blur", this.windowBlurEventListener);
 });
 
-ExploreJointSourceController.defineMethod("updateView", function updateView() {
+ExploreConversationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   // Reset view
   var parentNode = this.view.parentNode;
   var fragment = this.constructor.createViewFragment();
-  var element = fragment.querySelector(".jointsource");
+  var element = fragment.querySelector(".conversation");
   parentNode.replaceChild(fragment, this.view);
   this.uninitView();
   this._view = element;
   this.initView(false);
 
-  this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
-    element.textContent = this.jointSource.meta[getElementProperty(element, "jointsource-meta")] || "";
+  this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
+    element.textContent = this.conversation.meta[getElementProperty(element, "conversation-meta")] || "";
   }.bind(this));
 
   this.view.classList.remove("dark");
-  var imageSources = this.jointSource.imageSources;
+  var imageSources = this.conversation.imageSources;
   if (imageSources.length > 0) {
     var imageSource = imageSources[0];
 
     if (imageSource.content["0"]) {
       this.view.classList.add("dark");
-      this.view.querySelector(".jointsource-backdrop-image").style.backgroundImage = imageSource.content["0"]
+      this.view.querySelector(".conversation-backdrop-image").style.backgroundImage = imageSource.content["0"]
         ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
@@ -80,7 +80,7 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   }
 
   this.view.querySelector(".audio-on-hover").style.display = "none";
-  var audioSources = this.jointSource.audioSources;
+  var audioSources = this.conversation.audioSources;
   if (audioSources.length > 0) {
     var audioSource = audioSources[0];
 
@@ -95,11 +95,11 @@ ExploreJointSourceController.defineMethod("updateView", function updateView() {
   }
 });
 
-ExploreJointSourceController.defineMethod("uninitView", function uninitView() {
+ExploreConversationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
   window.removeEventListener("blur", this.windowBlurEventListener);
   delete this.windowBlurEventListener;
 
-  removeElementProperty(this.view, "jointsource-id");
+  removeElementProperty(this.view, "conversation-id");
 });

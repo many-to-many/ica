@@ -1,9 +1,9 @@
 
-var JointSource = Model.createComponent("JointSource");
+var Conversation = Model.createComponent("Conversation");
 
-JointSource.jointSources = {count: 0};
+Conversation.conversations = {count: 0};
 
-JointSource.defineMethod("construct", function construct() {
+Conversation.defineMethod("construct", function construct() {
   // Construct sources
   Object.defineProperty(this, "sources", {
     value: {}
@@ -21,10 +21,10 @@ JointSource.defineMethod("construct", function construct() {
   this.metaThemesHandler = new TokensHandler();
 });
 
-JointSource.defineMethod("init", function init(meta, jointSourceId) {
-  // Init jointSourceId
-  this._jointSourceId = jointSourceId || - ++JointSource.jointSources.count;
-  this.initJointSourceId();
+Conversation.defineMethod("init", function init(meta, conversationId) {
+  // Init conversationId
+  this._conversationId = conversationId || - ++Conversation.conversations.count;
+  this.initConversationId();
   // Init meta
   this.meta = meta || {};
   this.metaParticipantsHandler.tokens = this.meta.participants;
@@ -32,40 +32,40 @@ JointSource.defineMethod("init", function init(meta, jointSourceId) {
   return [];
 });
 
-JointSource.defineMethod("didUpdate", function didUpdate() {
+Conversation.defineMethod("didUpdate", function didUpdate() {
   this.metaParticipantsHandler.tokens = this.meta.participants;
   this.metaParticipantsHandler.didUpdate();
   this.metaThemesHandler.tokens = this.meta.themes;
   this.metaThemesHandler.didUpdate();
 });
 
-JointSource.defineMethod("uninit", function uninit() {
+Conversation.defineMethod("uninit", function uninit() {
   // Uninit meta
   delete this.meta;
-  // Uninit jointSourceId
-  this.uninitJointSourceId();
-  delete this._jointSourceId;
+  // Uninit conversationId
+  this.uninitConversationId();
+  delete this._conversationId;
 });
 
-JointSource.defineMethod("destruct", function destruct() {
+Conversation.defineMethod("destruct", function destruct() {
   // Destruct meta handlers
   this.metaParticipantsHandler.destroy();
   this.metaThemesHandler.destroy();
   // Destruct sources
   for (var sourceId in this.sources) {
-    // Request source to release jointSource
-    this.sources[sourceId].jointSource = null;
+    // Request source to release conversation
+    this.sources[sourceId].conversation = null;
   }
   // Destruct comments
   for (var commentId in this.comments) {
-    // Request comment to release jointSource
-    this.comments[commentId].jointSource = null;
+    // Request comment to release conversation
+    this.comments[commentId].conversation = null;
   }
   // Destruct jointExtracts
 
 });
 
-JointSource.defineMethod("destroy", function destroy(destroySources = true, destroyComments = true, destroyControllers = false, destroyViews = false) {
+Conversation.defineMethod("destroy", function destroy(destroySources = true, destroyComments = true, destroyControllers = false, destroyViews = false) {
   if (destroySources) {
     for (var sourceId in this.sources) {
       this.sources[sourceId].destroy.apply(this.sources[sourceId], [destroyControllers, destroyViews]);
@@ -79,33 +79,33 @@ JointSource.defineMethod("destroy", function destroy(destroySources = true, dest
   return [destroyControllers, destroyViews];
 });
 
-// JointSourceId
+// ConversationId
 
-Object.defineProperty(JointSource.prototype, "jointSourceId", {
+Object.defineProperty(Conversation.prototype, "conversationId", {
   get: function () {
-    return this._jointSourceId;
+    return this._conversationId;
   },
   set: function (value) {
-    if (this._jointSourceId == value) return;
-    this.uninitJointSourceId();
-    this._jointSourceId = value;
-    this.initJointSourceId();
+    if (this._conversationId == value) return;
+    this.uninitConversationId();
+    this._conversationId = value;
+    this.initConversationId();
   }
 });
 
-JointSource.defineMethod("initJointSourceId", function initJointSourceId() {
-  if (!this.jointSourceId) return;
-  JointSource.jointSources[this.jointSourceId] = this;
+Conversation.defineMethod("initConversationId", function initConversationId() {
+  if (!this.conversationId) return;
+  Conversation.conversations[this.conversationId] = this;
 });
 
-JointSource.defineMethod("uninitJointSourceId", function uninitJointSourceId() {
-  if (!this.jointSourceId) return;
-  delete JointSource.jointSources[this.jointSourceId];
+Conversation.defineMethod("uninitConversationId", function uninitConversationId() {
+  if (!this.conversationId) return;
+  delete Conversation.conversations[this.conversationId];
 });
 
 // Sources
 
-Object.defineProperty(JointSource.prototype, "imageSources", {
+Object.defineProperty(Conversation.prototype, "imageSources", {
   get: function () {
     return this.filterSources(function (source) {
       return source instanceof ImageSource;
@@ -113,7 +113,7 @@ Object.defineProperty(JointSource.prototype, "imageSources", {
   }
 });
 
-Object.defineProperty(JointSource.prototype, "audioSources", {
+Object.defineProperty(Conversation.prototype, "audioSources", {
   get: function () {
     return this.filterSources(function (source) {
       return source instanceof AudioSource;
@@ -121,7 +121,7 @@ Object.defineProperty(JointSource.prototype, "audioSources", {
   }
 });
 
-JointSource.prototype.mapSources = function (callback) {
+Conversation.prototype.mapSources = function (callback) {
   var result = [];
   for (var sourceId in this.sources) {
     result.push(callback(this.sources[sourceId], sourceId));
@@ -129,13 +129,13 @@ JointSource.prototype.mapSources = function (callback) {
   return result;
 };
 
-JointSource.prototype.forEachSource = function (callback) {
+Conversation.prototype.forEachSource = function (callback) {
   for (var sourceId in this.sources) {
     callback(this.sources[sourceId], sourceId);
   }
 };
 
-JointSource.prototype.filterSources = function (filter) {
+Conversation.prototype.filterSources = function (filter) {
   var result = [];
   for (var sourceId in this.sources) {
     if (filter(this.sources[sourceId], sourceId)) {
@@ -145,7 +145,7 @@ JointSource.prototype.filterSources = function (filter) {
   return result;
 };
 
-JointSource.prototype.mapRecoverSources = function (callback) {
+Conversation.prototype.mapRecoverSources = function (callback) {
   var result = [];
   if (this._backup_sources) {
     for (var sourceId in this._backup_sources) {
@@ -155,7 +155,7 @@ JointSource.prototype.mapRecoverSources = function (callback) {
   return result;
 };
 
-JointSource.prototype.getNumberOfSources = function () {
+Conversation.prototype.getNumberOfSources = function () {
   var sum = 0;
   this.forEachSource(function () {
     sum++;
@@ -163,7 +163,7 @@ JointSource.prototype.getNumberOfSources = function () {
   return sum;
 };
 
-JointSource.prototype.forEachJointExtract = function (callback) {
+Conversation.prototype.forEachJointExtract = function (callback) {
   for (var jointExtractId in this.jointExtracts) {
     callback(this.jointExtracts[jointExtractId], jointExtractId);
   }
@@ -171,29 +171,29 @@ JointSource.prototype.forEachJointExtract = function (callback) {
 
 // Publisher
 
-JointSource.prototype.prePublish = function () {
+Conversation.prototype.prePublish = function () {
   return Promise.all(this.mapSources(function (source) {
     return source.prePublish();
   }));
 };
 
-JointSource.prototype.publish = function (notify) {
-  return ICA.publishJointSource(this, notify)
-    .then(function (jointSource) {
+Conversation.prototype.publish = function (notify) {
+  return ICA.publishConversation(this, notify)
+    .then(function (conversation) {
       this.backup(true);
       this.forEachSource(function (source) {
         source.backup(true);
       });
 
-      return jointSource;
+      return conversation;
     }.bind(this));
 };
 
-JointSource.prototype.unpublish = function (notify) {
-  return ICA.unpublishJointSource(this, notify);
+Conversation.prototype.unpublish = function (notify) {
+  return ICA.unpublishConversation(this, notify);
 };
 
-JointSource.prototype.cloneMeta = function () {
+Conversation.prototype.cloneMeta = function () {
   var meta = {};
   for (var name in this.meta) {
     meta[name] = this.meta[name];
@@ -201,7 +201,7 @@ JointSource.prototype.cloneMeta = function () {
   return meta;
 };
 
-JointSource.prototype.cloneSources = function () {
+Conversation.prototype.cloneSources = function () {
   var sources = {};
   for (var sourceId in this.sources) {
     sources[sourceId] = this.sources[sourceId];
@@ -209,7 +209,7 @@ JointSource.prototype.cloneSources = function () {
   return sources;
 };
 
-JointSource.prototype.backup = function (force = false) {
+Conversation.prototype.backup = function (force = false) {
   // Backup original for user editing
   if (!this._backup_meta || force) {
     this._backup_meta = this.cloneMeta();
@@ -219,7 +219,7 @@ JointSource.prototype.backup = function (force = false) {
   }
 };
 
-JointSource.prototype.recover = function () {
+Conversation.prototype.recover = function () {
   if (this._backup_meta) {
     this.meta = this._backup_meta;
     delete this._backup_meta;
@@ -237,7 +237,7 @@ JointSource.prototype.recover = function () {
     for (let sourceId in _backup_sources) {
       if (!(sourceId in this.sources)) {
         let source = _backup_sources[sourceId];
-        source.initJointSource();
+        source.initConversation();
       }
     }
   }
@@ -245,7 +245,7 @@ JointSource.prototype.recover = function () {
 
 // Comments
 
-JointSource.prototype.forEachComment = function (callback) {
+Conversation.prototype.forEachComment = function (callback) {
   for (var commentId in this.comments) {
     callback(this.comments[commentId], commentId);
   }

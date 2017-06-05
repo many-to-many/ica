@@ -13,10 +13,10 @@
     $result = query("SELECT
         tbl_deleg.theme AS theme,
         COUNT(*) AS freq
-      FROM jointsources_themes_summary AS tbl_deleg
-      INNER JOIN jointsources_summary AS tbl_jointsource
-        ON tbl_jointsource.jointsource_id = tbl_deleg.jointsource_id
-        AND tbl_jointsource.state = {$stateEncoded}
+      FROM conversations_themes_summary AS tbl_deleg
+      INNER JOIN conversations_summary AS tbl_conversation
+        ON tbl_conversation.conversation_id = tbl_deleg.conversation_id
+        AND tbl_conversation.state = {$stateEncoded}
       WHERE tbl_deleg.state = {$stateEncoded}
       GROUP BY theme
       ORDER BY freq DESC, theme ASC

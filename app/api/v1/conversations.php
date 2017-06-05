@@ -1,7 +1,7 @@
 <?php
 
   require_once(DIR_ROOT . "/lib/shared.php");
-  require_once(DIR_ROOT . "/lib/jointsources.php");
+  require_once(DIR_ROOT . "/lib/conversations.php");
   require_once(DIR_ROOT . "/lib/sources.php");
 
   $REQUEST_BODY = file_get_contents("php://input");
@@ -16,7 +16,7 @@
     }
   } else $REQUEST_DATA = $REQUEST_BODY;
 
-  if (handle(["jointsources"])) switch ($REQUEST_METHOD) {
+  if (handle(["conversations"])) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -26,15 +26,15 @@
         if (empty($_GET["q"])) {
           $data = [];
         } elseif (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
-          $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"], $limit, $_SERVER["HTTP_X_ICA_STATE"]);
+          $data = \ICA\Conversations\getConversationsByMetaTitle($_GET["q"], $limit, $_SERVER["HTTP_X_ICA_STATE"]);
         } else {
-          $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"], $limit);
+          $data = \ICA\Conversations\getConversationsByMetaTitle($_GET["q"], $limit);
         }
       } else {
         if (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
-          $data = \ICA\JointSources\getJointSources($limit, $_SERVER["HTTP_X_ICA_STATE"]);
+          $data = \ICA\Conversations\getConversations($limit, $_SERVER["HTTP_X_ICA_STATE"]);
         } else {
-          $data = \ICA\JointSources\getJointSources($limit);
+          $data = \ICA\Conversations\getConversations($limit);
         }
       }
 
@@ -56,10 +56,10 @@
 
       retainDatabaseTransaction();
 
-      $jointSource = new \ICA\JointSources\JointSource;
-      $jointSource->meta = $REQUEST_DATA["meta"];
+      $conversation = new \ICA\Conversations\Conversation;
+      $conversation->meta = $REQUEST_DATA["meta"];
 
-      $jointSourceId = \ICA\JointSources\insertJointSource($jointSource);
+      $conversationId = \ICA\Conversations\insertConversation($conversation);
 
       $dataSources = [];
       // For each source
@@ -68,7 +68,7 @@
         $source->type = $requestDataSource["type"];
         $source->content = $requestDataSource["content"];
 
-        $sourceId = \ICA\Sources\insertSource($jointSourceId, $source);
+        $sourceId = \ICA\Sources\insertSource($conversationId, $source);
 
         $dataSources[$sourceId] = [
           "_id" => $requestDataSource["_id"]
@@ -77,14 +77,14 @@
 
       releaseDatabaseTransaction();
 
-      respondJSON([$jointSourceId => [
+      respondJSON([$conversationId => [
         "_id" => $REQUEST_DATA["_id"],
         "sources" => $dataSources
       ]]);
 
       break;
 
-  } elseif (list($jointSourceId) = handle(["jointsources", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
+  } elseif (list($conversationId) = handle(["conversations", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
 
     case "PUT": \Session\requireVerification();
 
@@ -92,7 +92,7 @@
       if (!$REQUEST_DATA) throw new Exception("No request data");
       if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
-      \ICA\JointSources\putJointSourceMeta($jointSourceId, $REQUEST_DATA["meta"]);
+      \ICA\Conversations\putConversationMeta($conversationId, $REQUEST_DATA["meta"]);
 
       respondJSON([]);
 
@@ -100,23 +100,25 @@
 
     case "DELETE":
 
-      \ICA\JointSources\insertJointSourceState($jointSourceId, STATE_UNPUBLISHED);
+      \ICA\Conversations\insertConversationState($conversationId, STATE_UNPUBLISHED);
 
       respondJSON([]);
 
       break;
 
-  } elseif (list($jointSourceId) = handle(["jointsources", REQUEST_PARAMETER, "sources"])) switch ($REQUEST_METHOD) {
+  } elseif (list($conversationId) = handle(["conversations", REQUEST_PARAMETER, "sources"])) switch ($REQUEST_METHOD) {
 
     case "POST": \Session\requireVerification();
 
       if (!$REQUEST_DATA) throw new Exception("No request data");
 
+      $conversation = \ICA\Conversations\getConversation($conversationId);
+
       $source = new \ICA\Sources\Source;
       $source->type = $REQUEST_DATA["type"];
       $source->content = $REQUEST_DATA["content"];
 
-      $sourceId = \ICA\Sources\insertSource($jointSourceId, $source);
+      $sourceId = \ICA\Sources\insertSource($conversationId, $source);
 
       respondJSON([$sourceId => [
         "_id" => $REQUEST_DATA["_id"]
@@ -124,11 +126,11 @@
 
       break;
 
-  } elseif (list($jointSourceId, $sourceId) = handle(["jointsources", REQUEST_PARAMETER, "sources", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
+  } elseif (list($conversationId, $sourceId) = handle(["conversations", REQUEST_PARAMETER, "sources", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
 
     case "PUT": \Session\requireVerification();
 
-      \ICA\Sources\partialPutJointSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
+      \ICA\Sources\partialPutConversationContentRevision($sourceId, $REQUEST_DATA["content"]);
 
       respondJSON([]);
 

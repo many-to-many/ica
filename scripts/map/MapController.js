@@ -29,15 +29,15 @@ MapController.defineMethod("updateView", function updateView() {
   // Adding elements
   this.map.articles.map(function (article) {
     switch (article.constructor) {
-    case JointSource:
+    case Conversation:
       // Check existing element
-      if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(article.jointSourceId))) return;
+      if (this.view.querySelector("[data-ica-conversation-id='{0}']".format(article.conversationId))) return;
 
       // Create new view
-      var fragment = ArticleJointSourceController.createViewFragment();
+      var fragment = ArticleConversationController.createViewFragment();
       var element = fragment.querySelector(".article");
       this.view.appendChild(fragment);
-      new ArticleJointSourceController(article, element).componentOf = this;
+      new ArticleConversationController(article, element).componentOf = this;
       break;
     }
   }.bind(this));

@@ -1,45 +1,45 @@
 
-var PublisherJointSourceController = JointSourceController.createComponent("PublisherJointSourceController");
+var PublisherConversationController = ConversationController.createComponent("PublisherConversationController");
 
-PublisherJointSourceController.createViewFragment = function () {
+PublisherConversationController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
 };
 
 // Model
 
-PublisherJointSourceController.defineMethod("initModel", function initModel() {
+PublisherConversationController.defineMethod("initModel", function initModel() {
   if (!this.model) return;
-  this.jointSource.backup();
+  this.conversation.backup();
 });
 
-PublisherJointSourceController.defineMethod("uninitModel", function uninitModel() {
+PublisherConversationController.defineMethod("uninitModel", function uninitModel() {
   if (!this.model) return;
-  this.jointSource.recover();
-  this.jointSource.didUpdate();
+  this.conversation.recover();
+  this.conversation.didUpdate();
 });
 
 // View
 
-PublisherJointSourceController.defineMethod("initView", function initView() {
+PublisherConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   document.body.style.overflow = "hidden"; // Disable background scrolling
 
-  this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
+  this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
     // Event listeners
     element.addEventListener("change", function (e) {
       // User input change
-      this.controller.jointSource.meta[getElementProperty(element, "jointsource-meta")] = getFormattedInputValue(element);
-      this.controller.jointSource.didUpdate();
+      this.controller.conversation.meta[getElementProperty(element, "conversation-meta")] = getFormattedInputValue(element);
+      this.controller.conversation.didUpdate();
     }.bind(this.view));
     element.addEventListener("ica-change", function (e) {
       // Simulated input change
-      this.controller.jointSource.meta[getElementProperty(element, "jointsource-meta")] = getFormattedInputValue(element);
-      this.controller.jointSource.didUpdate();
+      this.controller.conversation.meta[getElementProperty(element, "conversation-meta")] = getFormattedInputValue(element);
+      this.controller.conversation.didUpdate();
     }.bind(this.view));
 
     // Init input values
-    setInputValue(element, this.jointSource.meta[getElementProperty(element, "jointsource-meta")]);
+    setInputValue(element, this.conversation.meta[getElementProperty(element, "conversation-meta")]);
   }.bind(this));
 
   this.view.querySelectorAll("[data-ica-action^='add-source']").forEach(function (element) {
@@ -48,29 +48,29 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
 
       switch (getElementProperty(element, "action")) {
       case "add-source/text":
-        new TextSource(null, this.controller.jointSource);
+        new TextSource(null, this.controller.conversation);
         break;
       case "add-source/image":
-        new ImageSource(null, this.controller.jointSource);
+        new ImageSource(null, this.controller.conversation);
         break;
       case "add-source/audio":
-        new AudioSource(null, this.controller.jointSource);
+        new AudioSource(null, this.controller.conversation);
         break;
       case "add-source/video":
-        new VideoSource(null, this.controller.jointSource);
+        new VideoSource(null, this.controller.conversation);
         break;
       default:
         return;
       }
-      this.controller.jointSource.didUpdate();
+      this.controller.conversation.didUpdate();
     }.bind(this));
   }.bind(this.view));
 
   this.view.querySelector("[data-ica-action='abort']").addEventListener("click", function (e) {
     e.preventDefault();
 
-    if (this.controller.jointSource.jointSourceId < 0) {
-      this.controller.jointSource.destroy(true, true, true, true);
+    if (this.controller.conversation.conversationId < 0) {
+      this.controller.conversation.destroy(true, true, true, true);
     } else {
       this.controller.destroy(true);
     }
@@ -89,11 +89,11 @@ PublisherJointSourceController.defineMethod("initView", function initView() {
   }.bind(this.view));
 });
 
-PublisherJointSourceController.defineMethod("updateView", function updateView() {
+PublisherConversationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   // Update views based on sources in joint source
-  this.jointSource.forEachSource(function (source) {
+  this.conversation.forEachSource(function (source) {
     var element = this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId));
     if (element) return;
 
@@ -128,20 +128,20 @@ PublisherJointSourceController.defineMethod("updateView", function updateView() 
   }.bind(this.view));
 
   // Display danger zone
-  this.view.querySelector("[data-ica-jointsource-filter='published']").hidden = this.jointSource.jointSourceId < 0;
+  this.view.querySelector("[data-ica-conversation-filter='published']").hidden = this.conversation.conversationId < 0;
 });
 
-PublisherJointSourceController.defineMethod("uninitView", function uninitView() {
+PublisherConversationController.defineMethod("uninitView", function uninitView() {
   document.body.style.overflow = ""; // Enable background scrolling
 
   if (!this.view) return;
 });
 
-PublisherJointSourceController.prototype.publish = function () {
-  return this.jointSource.publish("Publishing conversation...")
-    .then(function (jointSource) {
-      if (jointSource) {
-        appController.explore.addItems([jointSource]);
+PublisherConversationController.prototype.publish = function () {
+  return this.conversation.publish("Publishing conversation...")
+    .then(function (conversation) {
+      if (conversation) {
+        appController.explore.addItems([conversation]);
         appController.explore.didUpdate();
       }
 
@@ -161,10 +161,10 @@ PublisherJointSourceController.prototype.publish = function () {
     });
 };
 
-PublisherJointSourceController.prototype.unpublish = function () {
+PublisherConversationController.prototype.unpublish = function () {
   return new Promise(function (resolve, reject) {
     var prompt = new BasicPrompt(
-      "Unpublishing \"{0}\"...".format(this.jointSource.meta.title),
+      "Unpublishing \"{0}\"...".format(this.conversation.meta.title),
       "Are you sure you would like to continue?",
       [
         new PromptAction(
@@ -188,14 +188,14 @@ PublisherJointSourceController.prototype.unpublish = function () {
     new BasicPromptController(prompt, element);
   }.bind(this))
     .then(function () {
-      return this.jointSource.unpublish("Unpublishing conversation...");
+      return this.conversation.unpublish("Unpublishing conversation...");
     }.bind(this))
     .then(function () {
       // Display notification
       notifications.addNotification(new BasicNotification("Conversation unpublished"));
       notifications.didUpdate();
 
-      this.jointSource.destroy(true, true, true, true);
+      this.conversation.destroy(true, true, true, true);
     }.bind(this))
     .catch(function (err) {
       console.warn(err);

@@ -18,10 +18,10 @@ ExploreController.defineMethod("updateView", function updateView() {
     if (this.explore.items.indexOf(item) > -1) return true;
 
     switch (item.constructor) {
-    case JointSource:
-      var jointSource = item;
+    case Conversation:
+      var conversation = item;
 
-      var element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(jointSource.jointSourceId));
+      var element = this.view.querySelector("[data-ica-conversation-id='{0}']".format(conversation.conversationId));
       if (element) {
         element.controller.destroy(true);
       }
@@ -33,16 +33,16 @@ ExploreController.defineMethod("updateView", function updateView() {
 
   this.explore.items.reverse().map(function (item) {
     switch (item.constructor) {
-    case JointSource:
-      var jointSource = item;
+    case Conversation:
+      var conversation = item;
       // Check existing element
-      if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(jointSource.jointSourceId))) return;
+      if (this.view.querySelector("[data-ica-conversation-id='{0}']".format(conversation.conversationId))) return;
 
       // Create new view
-      var fragment = ExploreJointSourceController.createViewFragment();
-      var element = fragment.querySelector(".jointsource");
+      var fragment = ExploreConversationController.createViewFragment();
+      var element = fragment.querySelector(".conversation");
       this.view.insertBefore(fragment, this.firstChild);
-      new ExploreJointSourceController(jointSource, element).componentOf = this.controller;
+      new ExploreConversationController(conversation, element).componentOf = this.controller;
 
       this.viewItems.push(item);
 

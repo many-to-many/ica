@@ -314,13 +314,13 @@
       }.bind(this));
   };
 
-  ICA.getJointSources = function (params, notify) {
+  ICA.getConversations = function (params, notify) {
     var data = [];
     for (var key in params) {
       data.push(key + "=" + params[key]);
     }
     return ICA.get(
-      "/jointsources/"
+      "/conversations/"
         + (data.length > 0
         ? "?" + data.join("&")
         : ""),
@@ -328,27 +328,27 @@
       undefined,
       notify
     )
-      .then(touchJointSourcesWithAPIResponse);
+      .then(touchConversationsWithAPIResponse);
   };
 
-  ICA.publishJointSource = function (jointSource, notify) {
-    return jointSource.prePublish()
+  ICA.publishConversation = function (conversation, notify) {
+    return conversation.prePublish()
       .then(function () {
-        // if (jointSource.getNumberOfSources() == 0) throw new Error("Needs at least one source");
-        if (jointSource.jointSourceId < 0) {
+        // if (conversation.getNumberOfSources() == 0) throw new Error("Needs at least one source");
+        if (conversation.conversationId < 0) {
           // Post new joint source
-          return ICA.post("/jointsources/", {
-            _id: jointSource.jointSourceId,
-            meta: jointSource.meta
+          return ICA.post("/conversations/", {
+            _id: conversation.conversationId,
+            meta: conversation.meta
               ? {
-                title: jointSource.meta.title ? {"0": jointSource.meta.title} : null,
-                intro: jointSource.meta.intro ? {"0": jointSource.meta.intro} : null,
-                themes: jointSource.meta.themes ? {"0": jointSource.meta.themes} : null,
-                participants: jointSource.meta.participants ? {"0": jointSource.meta.participants} : null,
-                region: jointSource.meta.region ? {"0": jointSource.meta.region} : null
+                title: conversation.meta.title ? {"0": conversation.meta.title} : null,
+                intro: conversation.meta.intro ? {"0": conversation.meta.intro} : null,
+                themes: conversation.meta.themes ? {"0": conversation.meta.themes} : null,
+                participants: conversation.meta.participants ? {"0": conversation.meta.participants} : null,
+                region: conversation.meta.region ? {"0": conversation.meta.region} : null
               }
               : {},
-            sources: jointSource.mapSources(function (source) {
+            sources: conversation.mapSources(function (source) {
               switch (source.constructor) {
               case ImageSource:
                 return {
@@ -379,10 +379,10 @@
             })
           }, notify)
             .then(ICA.APIResponse.getData)
-            .then(touchJointSources)
+            .then(touchConversations)
             .then(function () {
               console.log("ICA: Joint source posted");
-              return jointSource;
+              return conversation;
             });
         }
 
@@ -399,14 +399,14 @@
           notifications.didUpdate();
         }
 
-        return ICA.put("/jointsources/{0}/".format(jointSource.jointSourceId), {
-          meta: jointSource.meta
+        return ICA.put("/conversations/{0}/".format(conversation.conversationId), {
+          meta: conversation.meta
             ? {
-              title: jointSource.meta.title ? {"0": jointSource.meta.title} : null,
-              intro: jointSource.meta.intro ? {"0": jointSource.meta.intro} : null,
-              themes: jointSource.meta.themes ? {"0": jointSource.meta.themes} : null,
-              participants: jointSource.meta.participants ? {"0": jointSource.meta.participants} : null,
-              region: jointSource.meta.region ? {"0": jointSource.meta.region} : null
+              title: conversation.meta.title ? {"0": conversation.meta.title} : null,
+              intro: conversation.meta.intro ? {"0": conversation.meta.intro} : null,
+              themes: conversation.meta.themes ? {"0": conversation.meta.themes} : null,
+              participants: conversation.meta.participants ? {"0": conversation.meta.participants} : null,
+              region: conversation.meta.region ? {"0": conversation.meta.region} : null
             }
             : {}
         })
@@ -415,28 +415,28 @@
           })
           // Post new sources
           .then(function () {
-            return Promise.all(jointSource.mapSources(function (source) {
+            return Promise.all(conversation.mapSources(function (source) {
               ++numTasksTodo;
 
               var promise;
               if (source.sourceId < 0) {
                 switch (source.constructor) {
                 case ImageSource:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  promise = ICA.post("/conversations/{0}/sources/".format(conversation.conversationId), {
                     _id: source.sourceId,
                     type: "image",
                     content: source.content
                   });
                   break;
                 case AudioSource:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  promise = ICA.post("/conversations/{0}/sources/".format(conversation.conversationId), {
                     _id: source.sourceId,
                     type: "audio",
                     content: source.content
                   });
                   break;
                 case VideoSource:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  promise = ICA.post("/conversations/{0}/sources/".format(conversation.conversationId), {
                     _id: source.sourceId,
                     type: "video",
                     content: source.content
@@ -444,7 +444,7 @@
                   break;
                 case TextSource:
                 default:
-                  promise = ICA.post("/jointsources/{0}/sources/".format(jointSource.jointSourceId), {
+                  promise = ICA.post("/conversations/{0}/sources/".format(conversation.conversationId), {
                     _id: source.sourceId,
                     type: "text",
                     content: {"0": source.content}
@@ -453,7 +453,7 @@
                 return promise
                   .then(ICA.APIResponse.getData)
                   .then(function (dataSources) {
-                    touchSources(dataSources, jointSource);
+                    touchSources(dataSources, conversation);
                     console.log("ICA: Source posted");
 
                     ++numTasksDone;
@@ -465,8 +465,8 @@
               case AudioSource:
               case VideoSource:
               case ImageSource:
-                promise = ICA.put("/jointsources/{0}/sources/{1}/".format(
-                  jointSource.jointSourceId,
+                promise = ICA.put("/conversations/{0}/sources/{1}/".format(
+                  conversation.conversationId,
                   source.sourceId),
                   {
                     content: source.content
@@ -474,8 +474,8 @@
                 break;
               case TextSource:
               default:
-                promise = ICA.put("/jointsources/{0}/sources/{1}/".format(
-                  jointSource.jointSourceId,
+                promise = ICA.put("/conversations/{0}/sources/{1}/".format(
+                  conversation.conversationId,
                   source.sourceId),
                   {
                     content: {"0": source.content}
@@ -492,8 +492,8 @@
           })
           // Unpublish sources removed
           .then(function () {
-            return Promise.all(jointSource.mapRecoverSources(function (source, sourceId) {
-              if (!(sourceId in jointSource.sources)) {
+            return Promise.all(conversation.mapRecoverSources(function (source, sourceId) {
+              if (!(sourceId in conversation.sources)) {
                 ++numTasksTodo;
 
                 return ICA.unpublishSource(source)
@@ -519,9 +519,9 @@
       });
   };
 
-  ICA.unpublishJointSource = function (jointSource, notify) {
-    if (jointSource.jointSourceId < 0) return Promise.reject(new Error("Joint source not yet published"));
-    return ICA.delete("/jointsources/{0}/".format(jointSource.jointSourceId),
+  ICA.unpublishConversation = function (conversation, notify) {
+    if (conversation.conversationId < 0) return Promise.reject(new Error("Joint source not yet published"));
+    return ICA.delete("/conversations/{0}/".format(conversation.conversationId),
       undefined,
       notify
     )
@@ -533,8 +533,8 @@
   ICA.unpublishSource = function (source, notify) {
     if (source.sourceId < 0) throw new Error("Source not yet published");
     return ICA.delete(
-      "/jointsources/{0}/sources/{1}/".format(
-        source.jointSource.jointSourceId,
+      "/conversations/{0}/sources/{1}/".format(
+        source.conversation.conversationId,
         source.sourceId
       ),
       undefined,
@@ -578,40 +578,40 @@
     return false;
   };
 
-  function touchJointSources(data) {
-    var jointSources = [];
-    for (var jointSourceId in data) {
-      var dataJointSource = data[jointSourceId], jointSource;
-      if (dataJointSource._id) {
-        jointSource = JointSource.jointSources[dataJointSource._id];
-        jointSource.jointSourceId = jointSourceId;
+  function touchConversations(data) {
+    var conversations = [];
+    for (var conversationId in data) {
+      var dataConversation = data[conversationId], conversation;
+      if (dataConversation._id) {
+        conversation = Conversation.conversations[dataConversation._id];
+        conversation.conversationId = conversationId;
       } else {
-        jointSource = new JointSource(dataJointSource.meta
+        conversation = new Conversation(dataConversation.meta
           ? {
-            title: dataJointSource.meta.title ? dataJointSource.meta.title["0"] : null,
-            intro: dataJointSource.meta.intro ? dataJointSource.meta.intro["0"] : null,
-            themes: dataJointSource.meta.themes ? dataJointSource.meta.themes["0"] : null,
-            participants: dataJointSource.meta.participants ? dataJointSource.meta.participants["0"] : null,
-            region: dataJointSource.meta.region ? dataJointSource.meta.region["0"] : null
+            title: dataConversation.meta.title ? dataConversation.meta.title["0"] : null,
+            intro: dataConversation.meta.intro ? dataConversation.meta.intro["0"] : null,
+            themes: dataConversation.meta.themes ? dataConversation.meta.themes["0"] : null,
+            participants: dataConversation.meta.participants ? dataConversation.meta.participants["0"] : null,
+            region: dataConversation.meta.region ? dataConversation.meta.region["0"] : null
           }
-          : {}, jointSourceId);
-        jointSources.push(jointSource);
+          : {}, conversationId);
+        conversations.push(conversation);
       }
-      touchSources(dataJointSource.sources, jointSource);
+      touchSources(dataConversation.sources, conversation);
     }
-    return jointSources;
+    return conversations;
   }
 
-  function touchJointSourcesWithAPIResponse(apiResponse) {
-    var jointSources = touchJointSources(apiResponse.data);
-    jointSources.requestNext = function () {
+  function touchConversationsWithAPIResponse(apiResponse) {
+    var conversations = touchConversations(apiResponse.data);
+    conversations.requestNext = function () {
       return apiResponse.requestNext()
-        .then(touchJointSourcesWithAPIResponse);
+        .then(touchConversationsWithAPIResponse);
     };
-    return jointSources;
+    return conversations;
   }
 
-  function touchSources(dataSources, jointSource) {
+  function touchSources(dataSources, conversation) {
     var sources = [];
     for (var sourceId in dataSources) {
       var dataSource = dataSources[sourceId], source;
@@ -621,21 +621,21 @@
       } else {
         switch (dataSource.type) {
         case "image":
-          source = new ImageSource(dataSource.content, jointSource, sourceId);
+          source = new ImageSource(dataSource.content, conversation, sourceId);
           break;
         case "audio":
-          source = new AudioSource(dataSource.content, jointSource, sourceId);
+          source = new AudioSource(dataSource.content, conversation, sourceId);
           break;
         case "video":
-          source = new VideoSource(dataSource.content, jointSource, sourceId);
+          source = new VideoSource(dataSource.content, conversation, sourceId);
           break;
         case "text":
         default:
-          source = new TextSource(dataSource.content["0"], jointSource, sourceId);
+          source = new TextSource(dataSource.content["0"], conversation, sourceId);
         }
         sources.push(source);
       }
-      // jointSource._timeLastUpdated = dataJointSource["updated"];
+      // conversation._timeLastUpdated = dataConversation["updated"];
     }
     return sources;
   }

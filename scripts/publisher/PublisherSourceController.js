@@ -21,7 +21,7 @@ PublisherSourceController.defineMethod("initView", function initView() {
     if (this.controller.source.sourceId < 0) {
       this.controller.source.destroy(true, true);
     } else {
-      this.controller.source.uninitJointSource(); // This should be undone when the joint source is recovered
+      this.controller.source.uninitConversation(); // This should be undone when the joint source is recovered
       this.controller.destroy(true);
     }
   }.bind(this.view));

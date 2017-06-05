@@ -10,13 +10,13 @@ Source.defineMethod("construct", function construct() {
   });
 });
 
-Source.defineMethod("init", function init(content, jointSource, sourceId) {
+Source.defineMethod("init", function init(content, conversation, sourceId) {
   // Init sourceId
   this._sourceId = sourceId || - ++Source.sources.count;
   this.initSourceId();
-  // Init jointSource
-  this._jointSource = jointSource;
-  this.initJointSource();
+  // Init conversation
+  this._conversation = conversation;
+  this.initConversation();
   // Init content
   this.content = content || {};
   return [];
@@ -25,9 +25,9 @@ Source.defineMethod("init", function init(content, jointSource, sourceId) {
 Source.defineMethod("uninit", function uninit() {
   // Uninit content
   delete this.content;
-  // Uninit jointSource
-  this.uninitJointSource();
-  delete this._jointSource;
+  // Uninit conversation
+  this.uninitConversation();
+  delete this._conversation;
   // Uninit sourceId
   this.uninitSourceId();
   delete this._sourceId;
@@ -38,28 +38,28 @@ Source.defineMethod("destruct", function destruct() {
 
 });
 
-// JointSource
+// Conversation
 
-Object.defineProperty(Source.prototype, "jointSource", {
+Object.defineProperty(Source.prototype, "conversation", {
   get: function () {
-    return this._jointSource;
+    return this._conversation;
   },
   set: function (value) {
-    if (this._jointSource == value) return;
-    this.uninitJointSource();
-    this._jointSource = value;
-    this.initJointSource();
+    if (this._conversation == value) return;
+    this.uninitConversation();
+    this._conversation = value;
+    this.initConversation();
   }
 });
 
-Source.defineMethod("initJointSource", function initJointSource() {
-  if (!this.jointSource) return;
-  this.jointSource.sources[this.sourceId] = this;
+Source.defineMethod("initConversation", function initConversation() {
+  if (!this.conversation) return;
+  this.conversation.sources[this.sourceId] = this;
 });
 
-Source.defineMethod("uninitJointSource", function uninitJointSource() {
-  if (!this.jointSource) return;
-  delete this.jointSource.sources[this.sourceId];
+Source.defineMethod("uninitConversation", function uninitConversation() {
+  if (!this.conversation) return;
+  delete this.conversation.sources[this.sourceId];
 });
 
 // SourceId
@@ -79,13 +79,13 @@ Object.defineProperty(Source.prototype, "sourceId", {
 Source.defineMethod("initSourceId", function initSourceId() {
   if (!this.sourceId) return;
   Source.sources[this.sourceId] = this;
-  this.initJointSource();
+  this.initConversation();
 });
 
 Source.defineMethod("uninitSourceId", function uninitSourceId() {
   if (!this.sourceId) return;
-  // Uninit jointSource as it refers to sourceId
-  this.uninitJointSource();
+  // Uninit conversation as it refers to sourceId
+  this.uninitConversation();
   delete Source.sources[this.sourceId];
 });
 
