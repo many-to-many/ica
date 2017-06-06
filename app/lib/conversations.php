@@ -8,7 +8,7 @@
   require_once(__DIR__ . "/jointsources.php");
 
   /**
-   * Abstract for joint source.
+   * Abstract for conversation.
    */
   class Conversation {
 
@@ -24,7 +24,7 @@
     if ($result->num_rows == 0) return [];
 
     $data = [];
-    // Iterate through joint sources
+    // Iterate through conversations
     while ($row = $result->fetch_assoc()) {
       $conversationId = $row["conversation_id"];
       if (empty($data[$conversationId])) {
@@ -37,7 +37,7 @@
         $conversation->meta["participants"] = getConversationMetaParticipantsOfLatestRevision($conversationId);
         $conversation->meta["region"] = getConversationMetaRegionOfLatestRevision($conversationId);
 
-        // Run all sources joint by joint source
+        // Run all sources joint by conversation
         $conversation->sources = \ICA\Sources\getSources($conversationId);
 
         $data[$conversationId] = $conversation;
@@ -97,7 +97,7 @@
   }
 
   /**
-   * Inserts a new joint source record into the database.
+   * Inserts a new conversation record into the database.
    */
   function insertConversation($conversation, $state = STATE_PUBLISHED) {
 
@@ -106,14 +106,14 @@
 
     retainDatabaseTransaction();
 
-    // Request joint source id
+    // Request conversation id
     $conversationId = \ICA\JointSources\requestJointSourceId(JOINTSOURCE_CONVERSATION);
 
     // Request content versioning unit id
     $titleId = \ICA\Contents\requestContentId();
     $introId = \ICA\Contents\requestContentId();
 
-    // Create a new joint source
+    // Create a new conversation
     $result = query("INSERT INTO conversations
       (`author_id`, `title_id`, `intro_id`, `id`)
       VALUES ($accountId, $titleId, $introId, $conversationId);");
@@ -133,7 +133,7 @@
   }
 
   /**
-   * Inserts a new state for the specified joint source.
+   * Inserts a new state for the specified conversation.
    */
   function insertConversationState($conversationId, $state = STATE_PUBLISHED) {
 
@@ -142,7 +142,7 @@
   }
 
   /**
-   * Partially puts the meta for the specified joint source.
+   * Partially puts the meta for the specified conversation.
    */
   function partialPutConversationMeta($conversationId, $meta) {
 
@@ -150,7 +150,7 @@
       FROM conversations
       WHERE id = {$conversationId};");
     if ($result->num_rows == 0) {
-      return false; // Joint source not found
+      return false; // conversation not found
     }
 
     $row = $result->fetch_assoc();
@@ -168,7 +168,7 @@
   }
 
   /**
-   * Puts the meta for the specified joint source.
+   * Puts the meta for the specified conversation.
    */
   function putConversationMeta($conversationId, $meta) {
 
@@ -176,7 +176,7 @@
       FROM conversations
       WHERE id = {$conversationId};");
     if ($result->num_rows == 0) {
-      return false; // Joint source not found
+      return false; // conversation not found
     }
 
     $row = $result->fetch_assoc();
@@ -194,7 +194,7 @@
   }
 
   /**
-   * Joint source meta title
+   * conversation meta title
    */
 
   /**
@@ -219,7 +219,7 @@
   }
 
   /**
-   * Joint source meta introduction
+   * conversation meta introduction
    */
 
   /**
@@ -244,7 +244,7 @@
   }
 
   /**
-   * Joint source meta theme delegations
+   * conversation meta theme delegations
    */
 
   /**
@@ -271,7 +271,7 @@
   }
 
   /**
-   * Partially puts the cluster of themes for the joint source.
+   * Partially puts the cluster of themes for the conversation.
    */
   function partialPutConversationMetaThemes($conversationId, $metaThemes, $state = STATE_PUBLISHED) {
 
@@ -303,7 +303,7 @@
           $themeId = $row["id"];
         }
 
-        // Get joint source-theme delegate
+        // Get conversation-theme delegate
         $result = query("SELECT *
           FROM conversations_themes_summary
           WHERE conversation_id = {$conversationId}
@@ -353,7 +353,7 @@
   }
 
   /**
-   * Puts the cluster of themes for the joint source.
+   * Puts the cluster of themes for the conversation.
    */
   function putConversationMetaThemes($conversationId, $metaThemes) {
 
@@ -383,7 +383,7 @@
   }
 
   /**
-   * Joint source meta participant delegations
+   * conversation meta participant delegations
    */
 
   /**
@@ -410,7 +410,7 @@
   }
 
   /**
-   * Partially puts the cluster of participants for the joint source.
+   * Partially puts the cluster of participants for the conversation.
    */
   function partialPutConversationMetaParticipants($conversationId, $metaParticipants, $state = STATE_PUBLISHED) {
 
@@ -442,7 +442,7 @@
           $participantId = $row["id"];
         }
 
-        // Get joint source-participant delegate
+        // Get conversation-participant delegate
         $result = query("SELECT *
           FROM conversations_participants_summary
           WHERE conversation_id = {$conversationId}
@@ -492,7 +492,7 @@
   }
 
   /**
-   * Puts the cluster of participants for the joint source.
+   * Puts the cluster of participants for the conversation.
    */
   function putConversationMetaParticipants($conversationId, $metaParticipants) {
 
@@ -522,7 +522,7 @@
   }
 
   /**
-   * Joint source meta region
+   * conversation meta region
    */
 
   /**
@@ -546,7 +546,7 @@
   }
 
   /**
-   * Partially puts the language-specific regions for the joint source.
+   * Partially puts the language-specific regions for the conversation.
    */
   function partialPutConversationMetaRegion($conversationId, $metaRegion, $state = STATE_PUBLISHED) {
 
@@ -576,7 +576,7 @@
         $regionId = $row["id"];
       }
 
-      // Get joint source-region language
+      // Get conversation-region language
       $result = query("SELECT *
         FROM conversations_regions_langs_summary
         WHERE conversation_id = {$conversationId}
@@ -636,7 +636,7 @@
   }
 
   /**
-   * Puts the language-specific region for the joint source.
+   * Puts the language-specific region for the conversation.
    */
   function putConversationMetaRegion($conversationId, $metaRegion) {
 
