@@ -137,17 +137,7 @@
    */
   function insertConversationState($conversationId, $state = STATE_PUBLISHED) {
 
-    global $DATABASE;
-    $accountId = \Session\getAccountId();
-
-    $stateEncoded = encodeState($state);
-
-    $result = query("INSERT INTO conversations_states
-      (`conversation_id`, `author_id`, `state`)
-      VALUES ($conversationId, $accountId, $stateEncoded);");
-    $stateId = $DATABASE->insert_id;
-
-    return $stateId;
+    \ICA\JointSources\insertJointSourceState($conversationId, $state);
 
   }
 

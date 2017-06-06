@@ -119,25 +119,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`conversations_states`
+-- Table `ica`.`jointsources_states`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`conversations_states` ;
+DROP TABLE IF EXISTS `ica`.`jointsources_states` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`conversations_states` (
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_states` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `conversation_id` INT UNSIGNED NOT NULL,
+  `jointsource_id` INT UNSIGNED NOT NULL,
   `state` TINYINT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `fk_jointsources_states_jointsources1_idx` (`conversation_id` ASC),
   PRIMARY KEY (`id`),
   INDEX `fk_jointsources_states_accounts1_idx` (`author_id` ASC),
   INDEX `fk_jointsources_states_states1_idx` (`state` ASC),
-  CONSTRAINT `fk_jointsources_states_jointsources1`
-    FOREIGN KEY (`conversation_id`)
-    REFERENCES `ica`.`conversations` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+  INDEX `fk_conversations_states_jointsources1_idx` (`jointsource_id` ASC),
   CONSTRAINT `fk_jointsources_states_accounts1`
     FOREIGN KEY (`author_id`)
     REFERENCES `ica`.`accounts` (`id`)
@@ -146,6 +141,11 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations_states` (
   CONSTRAINT `fk_jointsources_states_states1`
     FOREIGN KEY (`state`)
     REFERENCES `ica`.`states` (`state`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_conversations_states_jointsources1`
+    FOREIGN KEY (`jointsource_id`)
+    REFERENCES `ica`.`jointsources` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -678,9 +678,9 @@ ENGINE = InnoDB;
 USE `ica` ;
 
 -- -----------------------------------------------------
--- Placeholder table for view `ica`.`conversations_state_latest`
+-- Placeholder table for view `ica`.`jointsources_state_latest`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`conversations_state_latest` (`conversation_id` INT, `state_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_state_latest` (`jointsource_id` INT, `state_id` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`conversations_summary`
@@ -748,17 +748,17 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_rev_latest` (`lang
 CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_summary` (`conversation_id` INT, `lang_id` INT, `lang` INT, `state_id` INT, `state` INT, `rev_id` INT, `region_id` INT, `region` INT);
 
 -- -----------------------------------------------------
--- View `ica`.`conversations_state_latest`
+-- View `ica`.`jointsources_state_latest`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `ica`.`conversations_state_latest` ;
-DROP TABLE IF EXISTS `ica`.`conversations_state_latest`;
+DROP VIEW IF EXISTS `ica`.`jointsources_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`jointsources_state_latest`;
 USE `ica`;
-CREATE  OR REPLACE VIEW `conversations_state_latest` AS
+CREATE  OR REPLACE VIEW `jointsources_state_latest` AS
 SELECT
-	tbl_state.conversation_id AS conversation_id,
+	tbl_state.jointsource_id AS jointsource_id,
 	MAX(tbl_state.id) AS state_id
-FROM `conversations_states` AS tbl_state
-GROUP BY conversation_id;
+FROM `jointsources_states` AS tbl_state
+GROUP BY jointsource_id;
 
 -- -----------------------------------------------------
 -- View `ica`.`conversations_summary`
@@ -769,15 +769,15 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `conversations_summary` AS
 SELECT
 	tbl_conversation.id AS conversation_id,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
 	tbl_conversation.title_id AS title_id,
-    tbl_conversation.intro_id AS intro_id
-    -- themes, participants, regions are excluded
+	tbl_conversation.intro_id AS intro_id
+	-- themes, participants, regions are excluded
 FROM `conversations` AS tbl_conversation
-LEFT JOIN `conversations_state_latest` AS tbl_state_latest
-	ON tbl_state_latest.conversation_id = tbl_conversation.id
-LEFT JOIN `conversations_states` AS tbl_state
+LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.jointsource_id = tbl_conversation.id
+LEFT JOIN `jointsources_states` AS tbl_state
 	ON tbl_state.id = tbl_state_latest.state_id;
 
 -- -----------------------------------------------------
