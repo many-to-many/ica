@@ -1,7 +1,7 @@
 
-var ArticleSourceController = SourceController.createComponent("ArticleSourceController");
+var MapConversationSourceController = SourceController.createComponent("MapConversationSourceController");
 
-ArticleSourceController.defineMethod("initView", function initView() {
+MapConversationSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.view.querySelector("[data-ica-action='edit-conversation']").addEventListener("click", function (e) {

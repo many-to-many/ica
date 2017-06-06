@@ -1,11 +1,11 @@
 
-var ArticleTextSourceController = ArticleSourceController.createComponent("ArticleTextSourceController");
+var MapConversationTextSourceController = MapConversationSourceController.createComponent("MapConversationTextSourceController");
 
-ArticleTextSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-article-textsource");
+MapConversationTextSourceController.createViewFragment = function (source) {
+  return cloneTemplate("#template-map-conversation-textsource");
 };
 
-ArticleTextSourceController.defineMethod("updateView", function updateView(length = 0) {
+MapConversationTextSourceController.defineMethod("updateView", function updateView(length = 0) {
   if (!this.view) return;
 
   // Reset view
@@ -154,7 +154,7 @@ ArticleTextSourceController.defineMethod("updateView", function updateView(lengt
   }
 });
 
-ArticleTextSourceController.renderText = function (content, view) {
+MapConversationTextSourceController.renderText = function (content, view) {
   if (!content || !view) return;
 
   setElementProperty(view, "text-start", 0);

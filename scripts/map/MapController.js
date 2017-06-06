@@ -34,10 +34,10 @@ MapController.defineMethod("updateView", function updateView() {
       if (this.view.querySelector("[data-ica-conversation-id='{0}']".format(article.conversationId))) return;
 
       // Create new view
-      var fragment = ArticleConversationController.createViewFragment();
+      var fragment = MapConversationController.createViewFragment();
       var element = fragment.querySelector(".article");
       this.view.appendChild(fragment);
-      new ArticleConversationController(article, element).componentOf = this;
+      new MapConversationController(article, element).componentOf = this;
       break;
     }
   }.bind(this));

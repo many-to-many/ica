@@ -1,13 +1,13 @@
 
-var ArticleConversationController = ConversationController.createComponent("ArticleConversationController");
+var MapConversationController = ConversationController.createComponent("MapConversationController");
 
-ArticleConversationController.createViewFragment = function () {
-  return cloneTemplate("#template-article");
+MapConversationController.createViewFragment = function () {
+  return cloneTemplate("#template-map-conversation");
 };
 
 // View
 
-ArticleConversationController.defineMethod("initView", function initView() {
+MapConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.view.addEventListener("click", function (e) {
@@ -64,7 +64,7 @@ ArticleConversationController.defineMethod("initView", function initView() {
 
 });
 
-ArticleConversationController.defineMethod("updateView", function updateView() {
+MapConversationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelectorAll("[data-ica-conversation-meta-predicate]").forEach(function (element) {
@@ -104,29 +104,29 @@ ArticleConversationController.defineMethod("updateView", function updateView() {
     var fragment, element;
     switch (source.constructor) {
     case ImageSource:
-      fragment = ArticleImageSourceController.createViewFragment();
+      fragment = MapConversationImageSourceController.createViewFragment();
       element = fragment.querySelector(".source");
       this.querySelector(".sources").appendChild(fragment);
-      new ArticleImageSourceController(source, element).componentOf = this.controller;
+      new MapConversationImageSourceController(source, element).componentOf = this.controller;
       break;
     case AudioSource:
-      fragment = ArticleAudioSourceController.createViewFragment();
+      fragment = MapConversationAudioSourceController.createViewFragment();
       element = fragment.querySelector(".source");
       this.querySelector(".sources").appendChild(fragment);
-      new ArticleAudioSourceController(source, element).componentOf = this.controller;
+      new MapConversationAudioSourceController(source, element).componentOf = this.controller;
       break;
     case VideoSource:
-      fragment = ArticleVideoSourceController.createViewFragment();
+      fragment = MapConversationVideoSourceController.createViewFragment();
       element = fragment.querySelector(".source");
       this.querySelector(".sources").appendChild(fragment);
-      new ArticleVideoSourceController(source, element).componentOf = this.controller;
+      new MapConversationVideoSourceController(source, element).componentOf = this.controller;
       break;
     case TextSource:
     default:
-      fragment = ArticleTextSourceController.createViewFragment();
+      fragment = MapConversationTextSourceController.createViewFragment();
       element = fragment.querySelector(".source");
       this.querySelector(".sources").appendChild(fragment);
-      new ArticleTextSourceController(source, element).componentOf = this.controller;
+      new MapConversationTextSourceController(source, element).componentOf = this.controller;
     }
 
     element.style.display = "none";
@@ -137,7 +137,7 @@ ArticleConversationController.defineMethod("updateView", function updateView() {
 
 });
 
-ArticleConversationController.prototype.displayPublisherConversationView = function () {
+MapConversationController.prototype.displayPublisherConversationView = function () {
   var fragment = PublisherConversationController.createViewFragment();
   var element = fragment.querySelector(".publisher");
   document.body.appendChild(fragment);
