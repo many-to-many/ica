@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_conversation` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_jointsources_accounts2_idx` (`author_id` ASC),
   CONSTRAINT `fk_jointsources_accounts2`

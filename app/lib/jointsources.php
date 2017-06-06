@@ -2,18 +2,22 @@
 
   namespace ICA\JointSources;
 
+  define("JOINTSOURCE_CONVERSATION", 1);
+
   /**
    * Request new storage space for joint source.
    */
-  function requestJointSourceId() {
+  function requestJointSourceId($jointSourceExt = 0) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
 
+    $isConversation = $jointSourceExt & JOINTSOURCE_CONVERSATION > 0;
+
     // Create & save a new joint source
     $result = query("INSERT INTO jointsources
-      (`author_id`)
-      VALUES ($accountId);");
+      (`author_id`, `is_conversation`)
+      VALUES ($accountId, $isConversation);");
 
     $jointSourceId = $DATABASE->insert_id;
     return $jointSourceId;

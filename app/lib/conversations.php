@@ -107,7 +107,7 @@
     retainDatabaseTransaction();
 
     // Request joint source id
-    $conversationId = \ICA\JointSources\requestJointSourceId();
+    $conversationId = \ICA\JointSources\requestJointSourceId(JOINTSOURCE_CONVERSATION);
 
     // Request content versioning unit id
     $titleId = \ICA\Contents\requestContentId();
