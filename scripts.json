@@ -17,16 +17,17 @@
 
   "scripts/authors/Author.js",
 
+  "scripts/jointsources/Source.js",
+  "scripts/jointsources/SourceController.js",
+  "scripts/jointsources/BlobFileSource.js",
+  "scripts/jointsources/TextSource.js",
+  "scripts/jointsources/ImageSource.js",
+  "scripts/jointsources/AudioSource.js",
+  "scripts/jointsources/VideoSource.js",
+
   "scripts/conversations/Conversation.js",
   "scripts/conversations/ConversationController.js",
 
-  "scripts/sources/Source.js",
-  "scripts/sources/SourceController.js",
-  "scripts/sources/BlobFileSource.js",
-  "scripts/sources/TextSource.js",
-  "scripts/sources/ImageSource.js",
-  "scripts/sources/AudioSource.js",
-  "scripts/sources/VideoSource.js",
 
   "scripts/explore/Explore.js",
   "scripts/explore/ExploreController.js",
