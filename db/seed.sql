@@ -49,6 +49,18 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `ica`.`jointsources_types`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`jointsources_types` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_types` (
+  `type` TINYINT UNSIGNED NOT NULL,
+  `name` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (`type`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `ica`.`jointsources`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `ica`.`jointsources` ;
@@ -57,12 +69,18 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_conversation` TINYINT(1) NOT NULL DEFAULT 0,
+  `type` TINYINT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_jointsources_accounts2_idx` (`author_id` ASC),
+  INDEX `fk_jointsources_jointsources_types1_idx` (`type` ASC),
   CONSTRAINT `fk_jointsources_accounts2`
     FOREIGN KEY (`author_id`)
     REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jointsources_jointsources_types1`
+    FOREIGN KEY (`type`)
+    REFERENCES `ica`.`jointsources_types` (`type`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -153,11 +171,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ica`.`types`
+-- Table `ica`.`sources_types`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ica`.`types` ;
+DROP TABLE IF EXISTS `ica`.`sources_types` ;
 
-CREATE TABLE IF NOT EXISTS `ica`.`types` (
+CREATE TABLE IF NOT EXISTS `ica`.`sources_types` (
   `type` TINYINT UNSIGNED NOT NULL,
   `name` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`type`))
@@ -190,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`sources` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_sources_consts_sourcetypes1`
     FOREIGN KEY (`type`)
-    REFERENCES `ica`.`types` (`type`)
+    REFERENCES `ica`.`sources_types` (`type`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_sources_jointsources1`
@@ -676,6 +694,103 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_states` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `ica`.`references`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`references` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`references` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `referee_jointsource_id` INT UNSIGNED NOT NULL,
+  `referrer_jointsource_id` INT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_references_jointsources1_idx` (`referee_jointsource_id` ASC),
+  INDEX `fk_references_jointsources2_idx` (`referrer_jointsource_id` ASC),
+  INDEX `fk_references_accounts1_idx` (`author_id` ASC),
+  CONSTRAINT `fk_references_jointsources1`
+    FOREIGN KEY (`referee_jointsource_id`)
+    REFERENCES `ica`.`jointsources` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_references_jointsources2`
+    FOREIGN KEY (`referrer_jointsource_id`)
+    REFERENCES `ica`.`jointsources` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_references_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ica`.`references_states`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`references_states` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`references_states` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `reference_id` INT UNSIGNED NOT NULL,
+  `state` TINYINT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX `fk_jointsources_references_states_jointsources_references1_idx` (`reference_id` ASC),
+  PRIMARY KEY (`id`),
+  INDEX `fk_jointsources_references_states_states1_idx` (`state` ASC),
+  INDEX `fk_jointsources_references_states_accounts1_idx` (`author_id` ASC),
+  CONSTRAINT `fk_jointsources_references_states_jointsources_references1`
+    FOREIGN KEY (`reference_id`)
+    REFERENCES `ica`.`references` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jointsources_references_states_states1`
+    FOREIGN KEY (`state`)
+    REFERENCES `ica`.`states` (`state`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jointsources_references_states_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `ica`.`responses`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`responses` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`responses` (
+  `id` INT UNSIGNED NOT NULL,
+  `message_id` INT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_responses_contents1_idx` (`message_id` ASC),
+  INDEX `fk_responses_accounts1_idx` (`author_id` ASC),
+  CONSTRAINT `fk_responses_jointsources1`
+    FOREIGN KEY (`id`)
+    REFERENCES `ica`.`jointsources` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_responses_contents1`
+    FOREIGN KEY (`message_id`)
+    REFERENCES `ica`.`contents` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_responses_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `ica` ;
 
 -- -----------------------------------------------------
@@ -747,6 +862,31 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_rev_latest` (`lang
 -- Placeholder table for view `ica`.`conversations_regions_langs_summary`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ica`.`conversations_regions_langs_summary` (`conversation_id` INT, `lang_id` INT, `lang` INT, `state_id` INT, `state` INT, `rev_id` INT, `region_id` INT, `region` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`responses_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`responses_summary` (`response_id` INT, `state_id` INT, `state` INT, `message_id` INT, `author_id` INT, `authored` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`jointsources_responses_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_responses_summary` (`jointsource_id` INT, `reference_state_id` INT, `reference_state` INT, `response_id` INT, `response_message_id` INT, `response_author_id` INT, `response_authored` INT, `response_state_id` INT, `response_state` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`references_state_latest`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`references_state_latest` (`reference_id` INT, `state_id` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`references_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`references_summary` (`reference_id` INT, `referee_jointsource_id` INT, `referrer_jointsource_id` INT, `state_id` INT, `state` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`jointsources_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_summary` (`jointsource_id` INT, `state_id` INT, `state` INT);
 
 -- -----------------------------------------------------
 -- View `ica`.`jointsources_state_latest`
@@ -994,9 +1134,111 @@ LEFT JOIN `conversations_regions_langs_revs` AS tbl_rev
 LEFT JOIN `regions` AS tbl_region
 	ON tbl_region.id = tbl_rev.region_id;
 
+-- -----------------------------------------------------
+-- View `ica`.`responses_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`responses_summary` ;
+DROP TABLE IF EXISTS `ica`.`responses_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `responses_summary` AS
+SELECT
+	tbl_response.id AS response_id,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
+	tbl_response.message_id AS message_id,
+    tbl_response.author_id AS author_id,
+    tbl_response.authored AS authored
+FROM `responses` AS tbl_response
+LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.jointsource_id = tbl_response.id
+LEFT JOIN `jointsources_states` AS tbl_state
+	ON tbl_state.id = tbl_state_latest.state_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`jointsources_responses_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`jointsources_responses_summary` ;
+DROP TABLE IF EXISTS `ica`.`jointsources_responses_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `jointsources_responses_summary` AS
+SELECT
+	tbl_reference.referee_jointsource_id AS jointsource_id,
+    tbl_reference.state_id AS reference_state_id,
+    tbl_reference.state AS reference_state,
+	tbl_response.response_id AS response_id,
+    tbl_response.message_id AS response_message_id,
+    tbl_response.author_id AS response_author_id,
+    tbl_response.authored AS response_authored,
+    tbl_response.state_id AS response_state_id,
+    tbl_response.state AS response_state
+FROM `references_summary` AS tbl_reference
+INNER JOIN `responses_summary` AS tbl_response
+	ON tbl_response.response_id = tbl_reference.referrer_jointsource_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`references_state_latest`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`references_state_latest` ;
+DROP TABLE IF EXISTS `ica`.`references_state_latest`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `references_state_latest` AS
+SELECT
+	tbl_state.reference_id AS reference_id,
+	MAX(tbl_state.id) AS state_id
+FROM `references_states` AS tbl_state
+GROUP BY reference_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`references_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`references_summary` ;
+DROP TABLE IF EXISTS `ica`.`references_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `references_summary` AS
+SELECT
+	tbl_reference.id AS reference_id,
+    tbl_reference.referee_jointsource_id AS referee_jointsource_id,
+    tbl_reference.referrer_jointsource_id AS referrer_jointsource_id,
+    tbl_state.id AS state_id,
+    tbl_state.state AS state
+FROM `references` AS tbl_reference
+LEFT JOIN `references_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.reference_id = tbl_reference.id
+LEFT JOIN `references_states` AS tbl_state
+	ON tbl_state.id = tbl_state_latest.state_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`jointsources_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`jointsources_summary` ;
+DROP TABLE IF EXISTS `ica`.`jointsources_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `jointsources_summary` AS
+SELECT
+	tbl_jointsource.id AS jointsource_id,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state
+FROM `jointsources` AS tbl_jointsource
+LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.jointsource_id = tbl_jointsource.id
+LEFT JOIN `jointsources_states` AS tbl_state
+	ON tbl_state.id = tbl_state_latest.state_id;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `ica`.`jointsources_types`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `ica`;
+INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (0, 'undefined');
+INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (1, 'conversation');
+INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (2, 'response');
+
+COMMIT;
+
 
 -- -----------------------------------------------------
 -- Data for table `ica`.`states`
@@ -1010,15 +1252,15 @@ COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `ica`.`types`
+-- Data for table `ica`.`sources_types`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `ica`;
-INSERT INTO `ica`.`types` (`type`, `name`) VALUES (1, 'text');
-INSERT INTO `ica`.`types` (`type`, `name`) VALUES (2, 'audio');
-INSERT INTO `ica`.`types` (`type`, `name`) VALUES (3, 'image');
-INSERT INTO `ica`.`types` (`type`, `name`) VALUES (4, 'video');
-INSERT INTO `ica`.`types` (`type`, `name`) VALUES (0, 'undefined');
+INSERT INTO `ica`.`sources_types` (`type`, `name`) VALUES (1, 'text');
+INSERT INTO `ica`.`sources_types` (`type`, `name`) VALUES (2, 'audio');
+INSERT INTO `ica`.`sources_types` (`type`, `name`) VALUES (3, 'image');
+INSERT INTO `ica`.`sources_types` (`type`, `name`) VALUES (4, 'video');
+INSERT INTO `ica`.`sources_types` (`type`, `name`) VALUES (0, 'undefined');
 
 COMMIT;
 

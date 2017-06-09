@@ -146,4 +146,6 @@
 
   }
 
+  require_once(__DIR__ . "/jointsources.php");
+
 ?>
