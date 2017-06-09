@@ -1,6 +1,6 @@
 <?php
 
-  define("REQUEST_PARAMETER", "$");
+  define("REQUEST_PARAMETER", "{}");
 
   function handle($path, $wildcard = false) {
 
