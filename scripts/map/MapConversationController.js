@@ -62,6 +62,31 @@ MapConversationController.defineMethod("initView", function initView() {
   new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
   new TokensController(this.conversation.metaThemesHandler, this.view.querySelector("[data-ica-conversation-meta='themes']")).componentOf = this;
 
+  // Responses
+
+  this.conversation.getResponses()
+    .then(function (responses) {
+      if (!this.view) return;
+
+      for (var response of responses.reverse()) {
+        var element = this.view.querySelector("[data-ica-response-id='{0}']".format(response.responseId));
+        if (!element) {
+          var fragment = MapConversationResponseController.createViewFragment();
+          element = fragment.querySelector(".response");
+          this.view.querySelector(".responses").appendChild(fragment);
+          new MapConversationResponseController(response, element).componentOf = this;
+        }
+      }
+    }.bind(this), console.warn);
+
+  // Draft response
+  this.draftResponse = new Response(undefined);
+  JointSource.addJointSourceReference(this.conversation.conversationId, this.draftResponse.responseId);
+  var fragment = MapConversationResponseController.createViewFragment();
+  var element = fragment.querySelector(".response");
+  this.view.querySelector(".responses").appendChild(fragment);
+  new MapConversationResponseController(this.draftResponse, element).componentOf = this;
+
 });
 
 MapConversationController.defineMethod("updateView", function updateView() {
@@ -135,6 +160,32 @@ MapConversationController.defineMethod("updateView", function updateView() {
   this.sourceElementUpdated();
   this.view.querySelector("[data-ica-conversation-number-of-sources]").textContent = this.conversation.getNumberOfSources() + 1;
 
+  // Responses
+
+  // Temporary response
+  if (this.draftResponse && this.draftResponse.responseId >= 0) {
+    this.draftResponse = undefined;
+  }
+  if (!this.draftResponse) {
+    // Create draft response and link reference to conversation
+    this.draftResponse = new Response(undefined);
+    JointSource.addJointSourceReference(this.conversation.conversationId, this.draftResponse.responseId);
+
+    var fragment = MapConversationResponseController.createViewFragment();
+    var element = fragment.querySelector(".response");
+    this.view.querySelector(".responses").insertBefore(fragment, this.view.querySelector(".responses").firstElementChild);
+    new MapConversationResponseController(this.draftResponse, element).componentOf = this;
+  }
+
+});
+
+MapConversationController.defineMethod("uninitView", function uninitView() {
+  if (!this.view) return;
+
+  // Destroy temporary comment
+  JointSource.removeJointSourceReference(this.conversation.conversationId, this.draftResponse.responseId);
+  this.draftResponse.destroy(true, true, true, true);
+  delete this.draftResponse;
 });
 
 MapConversationController.prototype.displayPublisherConversationView = function () {

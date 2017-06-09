@@ -5,19 +5,6 @@ PublisherConversationController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
 };
 
-// Model
-
-PublisherConversationController.defineMethod("initModel", function initModel() {
-  if (!this.model) return;
-  this.conversation.backup();
-});
-
-PublisherConversationController.defineMethod("uninitModel", function uninitModel() {
-  if (!this.model) return;
-  this.conversation.recover();
-  this.conversation.didUpdate();
-});
-
 // View
 
 PublisherConversationController.defineMethod("initView", function initView() {

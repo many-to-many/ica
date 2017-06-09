@@ -18,7 +18,7 @@ PublisherTextSourceController.defineMethod("initView", function initView() {
   });
   this.quill.on("text-change", function (delta, oldDelta, source) {
     if (source == "user") {
-      this.source.content = this.quill.getText().replace(/\s*\n$/, "");
+      this.source.content = this.quill.getText().replace(/\s*$/, "");
     }
   }.bind(this));
 });

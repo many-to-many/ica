@@ -1,5 +1,5 @@
 
-var ConversationController = SingleModelController.createComponent("ConversationController");
+var ConversationController = JointSourceController.createComponent("ConversationController");
 
 ConversationController.defineAlias("model", "conversation");
 

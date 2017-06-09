@@ -132,9 +132,9 @@
         <article class="map"></article>
       </template>
       <template id="template-map-conversation">
-        <section class="card-group">
-          <span style="position: fixed; top: 1em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
-          <article class="article conversation card">
+        <div class="article card-group">
+          <span style="position: absolute; top: 1em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
+          <article class="conversation card">
             <header class="conversation-nav">
               <a class="conversation-nav-btn left" data-ica-action="previous-source"></a>
               <div><span data-ica-conversation-source-index></span>/<span data-ica-conversation-number-of-sources></span></div>
@@ -142,11 +142,11 @@
             </header>
             <section class="sources-container">
               <div class="sources">
-                <div class="source conversation">
-                  <div class="conversation-backdrop" hidden>
+                <article class="source conversation-hero">
+                  <section class="conversation-backdrop" hidden>
                     <div class="conversation-backdrop-image"></div>
-                  </div>
-                  <div class="conversation-meta">
+                  </section>
+                  <section class="conversation-meta">
                     <h3 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title">Title</h3>
                     <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
                     <p data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></p>
@@ -158,15 +158,30 @@
                       <h4>Themes</h4>
                       <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
                     </div>
-                  </div>
+                  </section>
                   <section class="conversation-control">
                     <a data-ica-action="edit-conversation">Edit Conversation</a>
                   </section>
-                </div>
+                </article>
               </div>
             </section>
           </article>
-        </section>
+          <h4>Responses</h4>
+          <div class="responses"></div>
+        </div>
+      </template>
+      <template id="template-map-conversation-response">
+        <article class="response card">
+          <section class="response-message">
+            <div class="editor" data-ica-response-message></div>
+          </section>
+          <section class="response-control">
+            <a data-ica-action="publish-response">Publish</a>
+            <div class="flex-space"></div>
+            <span data-ica-response-author='name'>Author</span>
+            <span data-ica-response-timestamp="authored">Timestamp</span>
+          </section>
+        </article>
       </template>
       <template id="template-map-conversation-textsource">
         <div class="source textsource">

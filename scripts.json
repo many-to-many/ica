@@ -17,6 +17,8 @@
 
   "scripts/authors/Author.js",
 
+  "scripts/jointsources/JointSource.js",
+  "scripts/jointsources/JointSourceController.js",
   "scripts/jointsources/Source.js",
   "scripts/jointsources/SourceController.js",
   "scripts/jointsources/BlobFileSource.js",
@@ -28,6 +30,8 @@
   "scripts/conversations/Conversation.js",
   "scripts/conversations/ConversationController.js",
 
+  "scripts/responses/Response.js",
+  "scripts/responses/ResponseController.js",
 
   "scripts/explore/Explore.js",
   "scripts/explore/ExploreController.js",
@@ -47,12 +51,12 @@
   "scripts/map/Map.js",
   "scripts/map/MapController.js",
   "scripts/map/MapConversationController.js",
+  "scripts/map/MapConversationResponseController.js",
   "scripts/map/MapConversationSourceController.js",
   "scripts/map/MapConversationTextSourceController.js",
   "scripts/map/MapConversationImageSourceController.js",
   "scripts/map/MapConversationAudioSourceController.js",
   "scripts/map/MapConversationVideoSourceController.js",
-  "scripts/map/MapConversationController.js",
 
   "scripts/notifications/Notifications.js",
   "scripts/notifications/NotificationsController.js",

@@ -72,7 +72,7 @@ $card-width: 40em;
       min-height: 10%;
     }
 
-    > .card {
+    .card {
       width: $card-width;
       max-width: 100% !important;
       height: auto !important;
@@ -81,9 +81,8 @@ $card-width: 40em;
       flex: none;
       overflow-y: visible;
 
-      &:not(:last-child) {
-        margin-right: auto;
-        margin-bottom: 2em;
+      + .card {
+        margin-top: 2em;
       }
     }
   }

@@ -2,7 +2,15 @@
 .map {
   @include popup-series;
 
-  .article {
+  h4 {
+    margin: 2em 0 1em 1.5em;
+    font-size: 1em;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: lighten($color-text, 20%);
+  }
+
+  .conversation {
 
     .conversation-nav {
       position: -webkit-sticky;
@@ -57,7 +65,7 @@
         > .source {
           box-sizing: border-box;
 
-          &.conversation {
+          &.conversation-hero {
 
             > .conversation-backdrop {
               position: relative;
@@ -85,7 +93,7 @@
 
               h4 {
                 margin: 1.25em 0 0.625em 0;
-                font-size: 0.8em;
+                font-size: 0.875em;
                 font-weight: 400;
                 text-transform: uppercase;
                 color: lighten($color-text, 20%);
@@ -145,6 +153,34 @@
             display: block;
             padding: 1.5em;
           }
+        }
+      }
+    }
+  }
+
+  .responses {
+
+    .response {
+
+      + .response {
+        margin-top: 1em;
+      }
+
+      .response-message {
+
+        .editor {
+          @include quill-editor;
+          font-family: $font-sans-serif-alt;
+        }
+      }
+
+      .response-control {
+        @include flex;
+        font-size: 0.875em;
+        color: lighten($color-text, 30%);
+
+        > :not(:last-child) {
+          margin-right: 0.5em;
         }
       }
     }

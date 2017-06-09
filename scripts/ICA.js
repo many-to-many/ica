@@ -519,6 +519,33 @@
       });
   };
 
+  ICA.getJointSourceResponses = function (jointSourceId) {
+    return ICA.get("/jointsources/{0}/responses/".format(jointSourceId))
+      .then(touchResponsesWithAPIResponse);
+  };
+
+  ICA.publishResponse = function (response, notify) {
+    return response.prePublish()
+      .then(function () {
+        if (response.responseId < 0) {
+          // Post new joint source
+          return ICA.post("/responses/", {
+            _id: response.responseId,
+            message: response.message || {},
+            refereeJointSourceIds: Object.keys(response.referees)
+          }, notify)
+            .then(ICA.APIResponse.getData)
+            .then(touchResponses)
+            .then(function () {
+              console.log("ICA: Response posted");
+              return response;
+            });
+        }
+
+        throw new Error("Editing not yet supported");
+      });
+  };
+
   ICA.getAuthor = function (authorId) {
     return ICA.get("/authors/{0}/".format(authorId))
       .then(function (apiResponse) {
@@ -557,7 +584,7 @@
     for (var conversationId in data) {
       var dataConversation = data[conversationId], conversation;
       if (dataConversation._id) {
-        conversation = Conversation.conversations[dataConversation._id];
+        conversation = JointSource.jointSources[dataConversation._id];
         conversation.conversationId = conversationId;
       } else {
         conversation = new Conversation(dataConversation.meta
@@ -609,9 +636,52 @@
         }
         sources.push(source);
       }
-      // conversation._timeLastUpdated = dataConversation["updated"];
     }
     return sources;
+  }
+
+  function touchResponses(data) {
+    var responses = [];
+    for (var responseId in data) {
+      var dataResponse = data[responseId], response;
+      if (dataResponse._id) {
+        response = JointSource.jointSources[dataResponse._id];
+        response.jointSourceId = responseId;
+        response.authorId = dataResponse._authorId;
+      } else if (JointSource.jointSources[responseId]) {
+        response = JointSource.jointSources[responseId];
+        // Update content
+        response.message = dataResponse.message || {};
+        response.authorId = dataResponse._authorId;
+        // Reset references
+        JointSource.removeAllJointSourceReferees(responseId);
+        // Add references
+        for (let jointSourceId of dataResponse.refereeJointSourceIds) {
+          JointSource.addJointSourceReference(jointSourceId, responseId);
+        }
+      } else {
+        response = new Response(dataResponse.message || {}, responseId);
+        response.authorId = dataResponse._authorId;
+        // Add references
+        for (let jointSourceId of dataResponse.refereeJointSourceIds) {
+          JointSource.addJointSourceReference(jointSourceId, responseId);
+        }
+      }
+      [response._timestampAuthored, response._authorId] =
+        [dataResponse._timestampAuthored, dataResponse._authorId];
+      response.didUpdate();
+      responses.push(response);
+    }
+    return responses;
+  }
+
+  function touchResponsesWithAPIResponse(apiResponse) {
+    var responses = touchResponses(apiResponse.data);
+    responses.requestNext = function () {
+      return apiResponse.requestNext()
+        .then(touchResponsesWithAPIResponse);
+    };
+    return responses;
   }
 
   window.ICA = ICA;
