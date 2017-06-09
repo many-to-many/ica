@@ -115,8 +115,8 @@
 
     // Create a new conversation
     $result = query("INSERT INTO conversations
-      (`author_id`, `title_id`, `intro_id`, `id`)
-      VALUES ($accountId, $titleId, $introId, $conversationId);");
+      (`id`, `title_id`, `intro_id`, `author_id`)
+      VALUES ($conversationId, $titleId, $introId, $accountId);");
 
     $stateId = insertConversationState($conversationId, $state);
 
