@@ -111,7 +111,7 @@
     $row = $result->fetch_assoc();
 
     if ($row["author_id"] != $accountId) {
-      throw new \Exception("Unable to update response");
+      throw new \Exception("Account unable to update this response");
     }
 
     putResponseMessage($row["message_id"], $response->message);
