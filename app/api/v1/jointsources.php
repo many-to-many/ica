@@ -1,41 +1,19 @@
 <?php
 
-  require_once(DIR_ROOT . "/lib/shared.php");
-  require_once(DIR_ROOT . "/lib/jointsources.php");
-  require_once(DIR_ROOT . "/lib/sources.php");
+  require_once(DIR_ROOT . "/lib/responses.php");
 
-  $REQUEST_BODY = file_get_contents("php://input");
-  if ($REQUEST_BODY && $REQUEST_METHOD == "GET") $REQUEST_METHOD = "POST";
-  if (isset($_SERVER["CONTENT_TYPE"])) {
-    switch ($_SERVER["CONTENT_TYPE"]) {
-      case "application/json":
-        $REQUEST_DATA = json_decode($REQUEST_BODY, true);
-        break;
-      default:
-        $REQUEST_DATA = $REQUEST_BODY;
-    }
-  } else $REQUEST_DATA = $REQUEST_BODY;
-
-  if (handle(["jointsources"])) switch ($REQUEST_METHOD) {
+  if (list($jointSourceId) = handle("jointsources/{}/responses")
+    ?: handle("conversations/{}/responses")
+    ?: handle("responses/{}/responses")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
       $limit = 40;
 
-      if (array_key_exists("q", $_GET)) {
-        if (empty($_GET["q"])) {
-          $data = [];
-        } elseif (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
-          $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"], $limit, $_SERVER["HTTP_X_ICA_STATE"]);
-        } else {
-          $data = \ICA\JointSources\getJointSourcesByMetaTitle($_GET["q"], $limit);
-        }
+      if (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
+        $data = \ICA\Responses\getJointSourceResponses($jointSourceId, $limit, $_SERVER["HTTP_X_ICA_STATE"]);
       } else {
-        if (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
-          $data = \ICA\JointSources\getJointSources($limit, $_SERVER["HTTP_X_ICA_STATE"]);
-        } else {
-          $data = \ICA\JointSources\getJointSources($limit);
-        }
+        $data = \ICA\Responses\getJointSourceResponses($jointSourceId, $limit);
       }
 
       // There is probably more data available
@@ -48,98 +26,55 @@
 
       break;
 
-    case "POST": \Session\requireVerification();
+  } else if (list($jointSourceId) = handle("jointsources/{}/refereeJointSourceIds")
+    ?: handle("conversations/{}/refereeJointSourceIds")
+    ?: handle("responses/{}/refereeJointSourceIds")) switch ($REQUEST_METHOD) {
 
-      // Validation
-      if (!$REQUEST_DATA) throw new Error("No request data");
-      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
+    case "GET":
 
-      retainDatabaseTransaction();
+      $data = \ICA\JointSources\getRefereeJointSourceIds($jointSourceId);
 
-      $jointSource = new \ICA\JointSources\JointSource;
-      $jointSource->meta = $REQUEST_DATA["meta"];
-
-      $jointSourceId = \ICA\JointSources\insertJointSource($jointSource);
-
-      $dataSources = [];
-      // For each source
-      foreach ($REQUEST_DATA["sources"] as $requestDataSource) {
-        $source = new \ICA\Sources\Source;
-        $source->type = $requestDataSource["type"];
-        $source->content = $requestDataSource["content"];
-
-        $sourceId = \ICA\Sources\insertSource($jointSourceId, $source);
-
-        $dataSources[$sourceId] = [
-          "_id" => $requestDataSource["_id"]
-        ];
-      }
-
-      releaseDatabaseTransaction();
-
-      respondJSON([$jointSourceId => [
-        "_id" => $REQUEST_DATA["_id"],
-        "sources" => $dataSources
-      ]]);
+      respondJSON($data);
 
       break;
 
-  } elseif (list($jointSourceId) = handle(["jointsources", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
+  } else if (list($jointSourceId, $refereeJointSourceId) = handle("jointsources/{}/refereeJointSourceIds/{}")
+    ?: handle("conversations/{}/refereeJointSourceIds/{}")
+    ?: handle("responses/{}/refereeJointSourceIds/{}")) switch ($REQUEST_METHOD) {
 
-    case "PUT": \Session\requireVerification();
+    case "POST":
 
-      // Validation
-      if (!$REQUEST_DATA) throw new Error("No request data");
-      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
+      $data = \ICA\JointSources\touchReference($refereeJointSourceId, $jointSourceId);
 
-      \ICA\JointSources\putJointSourceMeta($jointSourceId, $REQUEST_DATA["meta"]);
-
-      respondJSON([]);
+      respondJSON($data);
 
       break;
 
-    case "DELETE":
+  } else if (list($jointSourceId) = handle("jointsources/{}/referrerJointSourceIds")
+    ?: handle("conversations/{}/referrerJointSourceIds")
+    ?: handle("responses/{}/referrerJointSourceIds")) switch ($REQUEST_METHOD) {
 
-      \ICA\JointSources\insertJointSourceState($jointSourceId, STATE_UNPUBLISHED);
+    case "GET":
 
-      respondJSON([]);
+      $data = \ICA\JointSources\getReferrerJointSourceIds($jointSourceId);
 
-      break;
-
-  } elseif (list($jointSourceId) = handle(["jointsources", REQUEST_PARAMETER, "sources"])) switch ($REQUEST_METHOD) {
-
-    case "POST": \Session\requireVerification();
-
-      $source = new \ICA\Sources\Source;
-      $source->type = $REQUEST_DATA["type"];
-      $source->content = $REQUEST_DATA["content"];
-
-      $sourceId = \ICA\Sources\insertSource($jointSourceId, $source);
-
-      respondJSON([$sourceId => [
-        "_id" => $REQUEST_DATA["_id"]
-      ]]);
+      respondJSON($data);
 
       break;
 
-  } elseif (list($jointSourceId, $sourceId) = handle(["jointsources", REQUEST_PARAMETER, "sources", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
+  } else if (list($jointSourceId, $referrerJointSourceId) = handle("jointsources/{}/referrerJointSourceIds/{}")
+    ?: handle("conversations/{}/referrerJointSourceIds/{}")
+    ?: handle("responses/{}/referrerJointSourceIds/{}")) switch ($REQUEST_METHOD) {
 
-    case "PUT": \Session\requireVerification();
+    case "POST":
 
-      \ICA\Sources\partialPutJointSourceContentRevision($sourceId, $REQUEST_DATA["content"]);
+      $data = \ICA\JointSources\touchReference($jointSourceId, $referrerJointSourceId);
 
-      respondJSON([]);
-
-      break;
-
-    case "DELETE": \Session\requireVerification();
-
-      \ICA\Sources\insertSourceState($sourceId, STATE_UNPUBLISHED);
-
-      respondJSON([]);
+      respondJSON($data);
 
       break;
 
   }
+
 
 ?>

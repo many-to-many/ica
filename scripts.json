@@ -1,5 +1,6 @@
 [
   "node_modules/nodelist-foreach-polyfill/index.js",
+
   "scripts/component/Component.js",
   "scripts/component/Model.js",
   "scripts/component/JointModel.js",
@@ -10,37 +11,53 @@
   "scripts/component/InputHandler.js",
   "scripts/component/Routine.js",
   "scripts/component/Waterfall.js",
+
+  "scripts/common.js",
   "scripts/Controller.js",
-  "scripts/sources/JointSource.js",
-  "scripts/sources/JointSourceController.js",
-  "scripts/sources/Source.js",
-  "scripts/sources/SourceController.js",
-  "scripts/sources/BlobFileSource.js",
-  "scripts/sources/TextSource.js",
-  "scripts/sources/ImageSource.js",
-  "scripts/sources/AudioSource.js",
-  "scripts/sources/VideoSource.js",
+
+  "scripts/authors/Author.js",
+
+  "scripts/jointsources/JointSource.js",
+  "scripts/jointsources/JointSourceController.js",
+  "scripts/jointsources/Source.js",
+  "scripts/jointsources/SourceController.js",
+  "scripts/jointsources/BlobFileSource.js",
+  "scripts/jointsources/TextSource.js",
+  "scripts/jointsources/ImageSource.js",
+  "scripts/jointsources/AudioSource.js",
+  "scripts/jointsources/VideoSource.js",
+
+  "scripts/conversations/Conversation.js",
+  "scripts/conversations/ConversationController.js",
+
+  "scripts/responses/Response.js",
+  "scripts/responses/ResponseController.js",
+
   "scripts/explore/Explore.js",
   "scripts/explore/ExploreController.js",
-  "scripts/explore/ExploreJointSourceController.js",
+  "scripts/explore/ExploreConversationController.js",
   "scripts/explore/ExploreTextSourceController.js",
   "scripts/explore/ExploreImageSourceController.js",
   "scripts/explore/ExploreAudioSourceController.js",
   "scripts/explore/ExploreVideoSourceController.js",
-  "scripts/publisher/PublisherJointSourceController.js",
+
+  "scripts/publisher/PublisherConversationController.js",
   "scripts/publisher/PublisherSourceController.js",
   "scripts/publisher/PublisherTextSourceController.js",
   "scripts/publisher/PublisherImageSourceController.js",
   "scripts/publisher/PublisherAudioSourceController.js",
   "scripts/publisher/PublisherVideoSourceController.js",
+
   "scripts/map/Map.js",
   "scripts/map/MapController.js",
-  "scripts/map/ArticleJointSourceController.js",
-  "scripts/map/ArticleSourceController.js",
-  "scripts/map/ArticleTextSourceController.js",
-  "scripts/map/ArticleImageSourceController.js",
-  "scripts/map/ArticleAudioSourceController.js",
-  "scripts/map/ArticleVideoSourceController.js",
+  "scripts/map/MapConversationController.js",
+  "scripts/map/MapConversationResponseController.js",
+  "scripts/map/MapConversationSourceController.js",
+  "scripts/map/MapConversationTextSourceController.js",
+  "scripts/map/MapConversationImageSourceController.js",
+  "scripts/map/MapConversationAudioSourceController.js",
+  "scripts/map/MapConversationVideoSourceController.js",
+
   "scripts/notifications/Notifications.js",
   "scripts/notifications/NotificationsController.js",
   "scripts/notifications/Notification.js",
@@ -51,18 +68,32 @@
   "scripts/notifications/ProgressNotificationController.js",
   "scripts/notifications/XHRProgressNotification.js",
   "scripts/notifications/XHRProgressNotificationController.js",
+
+  "scripts/prompts/PromptAction.js",
+  "scripts/prompts/Prompt.js",
+  "scripts/prompts/PromptController.js",
+  "scripts/prompts/BasicPrompt.js",
+  "scripts/prompts/BasicPromptController.js",
+
   "scripts/AudioHandler.js",
+
   "scripts/BlobFileHandler.js",
+
   "scripts/CanvasHandler.js",
+
   "scripts/DropHandler.js",
+
   "scripts/TokenInputHandler.js",
   "scripts/TokenInputController.js",
   "scripts/TokenInputSuggestionsController.js",
   "scripts/TokenInputThemeSuggestionsController.js",
   "scripts/TokensHandler.js",
   "scripts/TokensController.js",
+
   "scripts/ImageController.js",
+
   "scripts/WaveformController.js",
+
   "scripts/ICA.js",
   "scripts/AppController.js"
 ]

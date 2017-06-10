@@ -1,11 +1,11 @@
 
-var ArticleVideoSourceController = ArticleSourceController.createComponent("ArticleVideoSourceController");
+var MapConversationVideoSourceController = MapConversationSourceController.createComponent("MapConversationVideoSourceController");
 
-ArticleVideoSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-article-videosource");
+MapConversationVideoSourceController.createViewFragment = function (source) {
+  return cloneTemplate("#template-map-conversation-videosource");
 };
 
-ArticleVideoSourceController.defineMethod("updateView", function updateView() {
+MapConversationVideoSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   var displayPlayer = function displayPlayer(display) {

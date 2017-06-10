@@ -16,7 +16,7 @@
       $code
     );
     $response = json_decode(file_get_contents($requestUri));
-    if (!$response) throw new Error("Failed to get access token");
+    if (!$response) throw new Exception("Failed to get access token");
     $token = $response->access_token;
 
     // Get user information
@@ -26,7 +26,7 @@
       $token
     );
     $response = json_decode(file_get_contents($requestUri));
-    if (!$response) throw new Error("Failed to get user identifier");
+    if (!$response) throw new Exception("Failed to get user identifier");
     $identifier = $response->identifier;
 
     // Confirm user identifier

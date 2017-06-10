@@ -13,18 +13,18 @@
     <!-- Begin templates -->
     <div hidden>
       <!-- Template: Explore -->
-      <template id="template-explore-jointsource">
-        <article class="jointsource">
-          <div class="jointsource-backdrop">
-            <div class="jointsource-backdrop-image"></div>
+      <template id="template-explore-conversation">
+        <article class="conversation">
+          <div class="conversation-backdrop">
+            <div class="conversation-backdrop-image"></div>
           </div>
-          <section class="jointsource-meta">
-            <h3 data-ica-jointsource-meta="title">Title</h3>
-            <p data-ica-jointsource-meta="region"></p>
-            <p data-ica-jointsource-meta="intro"></p>
+          <section class="conversation-meta">
+            <h3 data-ica-conversation-meta="title">Title</h3>
+            <p data-ica-conversation-meta="region"></p>
+            <p data-ica-conversation-meta="intro"></p>
           </section>
-          <section class="jointsource-status">
-            <a data-ica-action="edit-jointsource">Edit</a>
+          <section class="conversation-status">
+            <a data-ica-action="edit-conversation">Edit</a>
             <div class="flex-space"></div>
             <div class="audio-on-hover"></div>
           </section>
@@ -47,18 +47,18 @@
               </section>
               <section class="publisher-meta-container">
                 <label>What would you like to call the conversation?</label>
-                <input data-ica-jointsource-meta="title" placeholder="Enter title here...">
+                <input data-ica-conversation-meta="title" placeholder="Enter title here...">
                 <label>Where did the conversation take place?</label>
-                <input data-ica-jointsource-meta="region" type="text" placeholder="Enter region here...">
+                <input data-ica-conversation-meta="region" type="text" placeholder="Enter region here...">
                 <label>What would you like people to know about the conversation?</label>
-                <textarea data-ica-jointsource-meta="intro" placeholder="Introduce your conversation here..." rows="1"></textarea>
+                <textarea data-ica-conversation-meta="intro" placeholder="Introduce your conversation here..." rows="1"></textarea>
                 <label>Who participated in the conversation?</label>
-                <textarea data-ica-jointsource-meta="participants" data-ica-format="tokens" placeholder="List participants here... (Hit enter after each participant)"></textarea>
+                <textarea data-ica-conversation-meta="participants" data-ica-format="tokens" placeholder="List participants here... (Hit enter after each participant)"></textarea>
                 <label>What themes emerge from your conversation?</label>
-                <textarea data-ica-jointsource-meta="themes" data-ica-format="tokens" data-ica-suggestions="themes" placeholder="List themes here... (Hit enter after each theme)"></textarea>
+                <textarea data-ica-conversation-meta="themes" data-ica-format="tokens" data-ica-suggestions="themes" placeholder="List themes here... (Hit enter after each theme)"></textarea>
               </section>
               <section class="publisher-sources-container">
-                <h3>Upload media here</h3>
+                <h4>Upload media here</h4>
                 <section class="publisher-sources"></section>
                 <section class="publisher-sources-control">
                   <input type="button" value="Plain Text" data-ica-action="add-source/text">
@@ -67,7 +67,7 @@
                   <input type="button" value="Video Clip" data-ica-action="add-source/video">
                 </section>
               </section>
-              <section data-ica-jointsource-filter="published">
+              <section class="publisher-published-container" data-ica-conversation-filter="published">
                 <h4 class="color-primary">Danger Zone</h4>
                 <input type="button" class="color-primary" value="Unpublish the Conversation" data-ica-action="unpublish">
               </section>
@@ -78,7 +78,7 @@
       <template id="template-publisher-textsource">
         <article class="publisher-source publisher-textsource">
           <header class="topbar">
-            <h4>Plain Text</h4>
+            <h5>Plain Text</h5>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
           <section class="source-container">
@@ -89,7 +89,7 @@
       <template id="template-publisher-imagesource">
         <article class="publisher-source publisher-imagesource">
           <header class="topbar">
-            <h4>Image</h4>
+            <h5>Image</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
@@ -102,7 +102,7 @@
       <template id="template-publisher-audiosource">
         <article class="publisher-source publisher-audiosource">
           <header class="topbar">
-            <h4>Audio</h4>
+            <h5>Audio</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
@@ -117,7 +117,7 @@
       <template id="template-publisher-videosource">
         <article class="publisher-source publisher-videosource">
           <header class="topbar">
-            <h4>Video</h4>
+            <h5>Video</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
           </header>
@@ -131,60 +131,75 @@
       <template id="template-map">
         <article class="map"></article>
       </template>
-      <template id="template-article">
-        <section class="card-group">
-          <span style="position: fixed; top: 1em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
-          <article class="article jointsource card">
-            <header class="jointsource-nav">
-              <a class="jointsource-nav-btn left" data-ica-action="previous-source"></a>
-              <div><span data-ica-jointsource-source-index></span>/<span data-ica-jointsource-number-of-sources></span></div>
-              <a class="jointsource-nav-btn right" data-ica-action="next-source"></a>
+      <template id="template-map-conversation">
+        <div class="article card-group">
+          <span style="position: absolute; top: 1em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
+          <article class="conversation card">
+            <header class="conversation-nav">
+              <a class="conversation-nav-btn left" data-ica-action="previous-source"></a>
+              <div><span data-ica-conversation-source-index></span>/<span data-ica-conversation-number-of-sources></span></div>
+              <a class="conversation-nav-btn right" data-ica-action="next-source"></a>
             </header>
             <section class="sources-container">
-              <section class="sources">
-                <div class="source jointsource">
-                  <div class="jointsource-backdrop" hidden>
-                    <div class="jointsource-backdrop-image"></div>
-                  </div>
-                  <div class="jointsource-meta">
-                    <h3 data-ica-jointsource-meta-predicate="title" data-ica-jointsource-meta="title">Title</h3>
-                    <p data-ica-jointsource-meta-predicate="region" data-ica-jointsource-meta="region"></p>
-                    <p data-ica-jointsource-meta-predicate="intro" data-ica-jointsource-meta="intro"></p>
-                    <div data-ica-jointsource-meta-predicate="participants">
-                      <h4>Participants</h4>
-                      <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
-                    </div>
-                    <div data-ica-jointsource-meta-predicate="themes">
-                      <h4>Themes</h4>
-                      <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
-                    </div>
-                  </div>
-                  <section class="jointsource-control">
-                    <a data-ica-action="edit-jointsource">Edit Conversation</a>
+              <div class="sources">
+                <article class="source conversation-hero">
+                  <section class="conversation-backdrop" hidden>
+                    <div class="conversation-backdrop-image"></div>
                   </section>
-                </div>
-              </section>
+                  <section class="conversation-meta">
+                    <h3 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title">Title</h3>
+                    <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
+                    <p data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></p>
+                    <div data-ica-conversation-meta-predicate="participants">
+                      <h4>Participants</h4>
+                      <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>
+                    </div>
+                    <div data-ica-conversation-meta-predicate="themes">
+                      <h4>Themes</h4>
+                      <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
+                    </div>
+                  </section>
+                  <section class="conversation-control">
+                    <a data-ica-action="edit-conversation">Edit Conversation</a>
+                  </section>
+                </article>
+              </div>
             </section>
           </article>
-        </section>
+          <h4>Responses</h4>
+          <div class="responses"></div>
+        </div>
       </template>
-      <template id="template-article-textsource">
+      <template id="template-map-conversation-response">
+        <article class="response card">
+          <section class="response-message">
+            <div class="editor" data-ica-response-message></div>
+          </section>
+          <section class="response-control">
+            <a data-ica-action="publish-response">Publish</a>
+            <div class="flex-space"></div>
+            <span data-ica-response-author='name'>Author</span>
+            <span data-ica-response-timestamp="authored">Timestamp</span>
+          </section>
+        </article>
+      </template>
+      <template id="template-map-conversation-textsource">
         <div class="source textsource">
           <div class="text"></div>
           <section class="source-control">
-            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+            <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
         </div>
       </template>
-      <template id="template-article-imagesource">
+      <template id="template-map-conversation-imagesource">
         <div class="source imagesource">
           <img data-ica-content>
           <section class="source-control">
-            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+            <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
         </div>
       </template>
-      <template id="template-article-audiosource">
+      <template id="template-map-conversation-audiosource">
         <div class="source audiosource">
           <div class="waveform"></div>
           <audio class="player" controls>
@@ -193,18 +208,18 @@
           <span class="download">Audio source: <a data-ica-content="0" target="_blank"></a></span>
           <div class="text" data-ica-content="1"></div>
           <section class="source-control">
-            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+            <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
         </div>
       </template>
-      <template id="template-article-videosource">
+      <template id="template-map-conversation-videosource">
         <div class="source videosource">
           <video class="player" controls>
             <source data-ica-content="0"></source>
           </video>
           <span class="download">Video source: <a data-ica-content="0" target="_blank"></a></span>
           <section class="source-control">
-            <a data-ica-action="edit-jointsource">Edit Conversation</a>
+            <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
         </div>
       </template>
@@ -257,6 +272,22 @@
           <div class="meter"><div class="meter-bar" style="width: 0%;"></div></div>
         </div>
       </template>
+      <!-- Template: Prompts -->
+      <template id="template-prompt-action">
+        <input class="action" type="button">
+      </template>
+      <template id="template-prompt-basic">
+        <div class="prompt">
+          <div class="prompt-card">
+            <section class="prompt-container">
+              <h3 data-ica-prompt="title"></h3>
+              <p data-ica-prompt="message"></p>
+              <section class="actions">
+              </section>
+            </section>
+          </div>
+        </div>
+      </template>
     </div>
     <!-- Begin main -->
     <header class="topbar">
@@ -275,15 +306,15 @@
         <div class="search-control form">
           <section>
             <label>Search by Keyword</label>
-            <input data-ica-jointsource-query-meta="title" type="text" placeholder="Keywords">
+            <input data-ica-conversation-query-meta="title" type="text" placeholder="Keywords">
           </section>
           <section>
             <label>Search by Themes (under&nbsp;construction)</label>
-            <input data-ica-jointsource-query-meta="themes" type="text" placeholder="Themes" data-ica-format="tokens">
+            <input data-ica-conversation-query-meta="themes" type="text" placeholder="Themes" data-ica-format="tokens">
           </section>
           <section>
             <label>Search by Locations (under&nbsp;construction)</label>
-            <input data-ica-jointsource-query-meta="locations" type="text" placeholder="Locations">
+            <input data-ica-conversation-query-meta="locations" type="text" placeholder="Locations">
           </section>
         </div>
         <div class="explore"></div>

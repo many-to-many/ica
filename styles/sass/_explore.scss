@@ -14,7 +14,7 @@ $column-spacing: 8px;
     flex: 0 0 $column-width - $column-spacing;
   }
 
-  .jointsource {
+  .conversation {
     box-sizing: border-box;
     position: relative;
     margin: $column-spacing / 2;
@@ -30,7 +30,7 @@ $column-spacing: 8px;
     transition: box-shadow ease 0.3s, border-color ease 0.3s;
     font-size: 0.875em;
 
-    > .jointsource-backdrop {
+    > .conversation-backdrop {
       position: absolute;
       top: 0;
       right: 0;
@@ -39,7 +39,7 @@ $column-spacing: 8px;
       z-index: -1;
       @include fade(8em, 180deg, rgba(#000, 0.50));
 
-      > .jointsource-backdrop-image {
+      > .conversation-backdrop-image {
         position: absolute;
         top: 0;
         right: 0;
@@ -50,7 +50,7 @@ $column-spacing: 8px;
       }
     }
 
-    > .jointsource-meta {
+    > .conversation-meta {
       flex: 1 1 auto;
       padding: 0 1.5em;
       height: auto;
@@ -58,8 +58,6 @@ $column-spacing: 8px;
       @include fade(30%);
 
       h3 {
-        font-size: 1.5em;
-        font-weight: 500;
         margin-top: 1em;
         margin-bottom: 0.5em;
       }
@@ -70,25 +68,21 @@ $column-spacing: 8px;
       }
     }
 
-    > .jointsource-status {
+    > .conversation-status {
       flex: none;
-      display: flex;
+      @include flex;
       padding: 0.5em 1em 1em 1.5em;
       line-height: 1.75;
       text-transform: lowercase;
 
       > * {
-        color: lighten($color-text, 40%);
+        color: lighten($color-text, 30%);
         opacity: 0;
         transition: opacity ease 0.2s, color ease 0.2s;
       }
 
       > :not(:last-child) {
         margin-right: 0.25em;
-      }
-
-      .flex-space {
-        flex: 1 0 auto;
       }
 
       .audio-on-hover {
@@ -111,7 +105,7 @@ $column-spacing: 8px;
       @include lift(1, $z-popup);
       border-color: #e0e0e0;
 
-      > .jointsource-status {
+      > .conversation-status {
 
         > * {
           opacity: 1 !important;
@@ -123,14 +117,14 @@ $column-spacing: 8px;
       background-color: #000;
       color: $color-text-light;
 
-      > .jointsource-meta {
+      > .conversation-meta {
 
-        > [data-ica-jointsource-meta="intro"] {
+        > [data-ica-conversation-meta="intro"] {
           display: none;
         }
       }
 
-      > .jointsource-status * {
+      > .conversation-status * {
         color: rgba($color-text-light, 0.60);
 
         &:hover {

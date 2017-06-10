@@ -7,7 +7,7 @@ NotificationsController.defineMethod("updateView", function () {
   if (!this.view) return;
 
   var bottom = 0;
-  this.notifications.notifications = this.notifications.notifications.filter(function (notification) {
+  for (let notification of this.notifications.notifications) {
     var element = this.view.querySelector("[data-ica-notification-id='{0}']".format(notification.componentId));
 
     // Check existing element
@@ -15,6 +15,9 @@ NotificationsController.defineMethod("updateView", function () {
       element.style.bottom = bottom + "px";
     } else {
       // Create new view
+
+      // Skip dummy notifications (placeholders)
+      if (!Component.components[notification.componentId]) continue;
 
       // Match controller
       var Controller;
@@ -24,7 +27,7 @@ NotificationsController.defineMethod("updateView", function () {
       case XHRProgressNotification: Controller = XHRProgressNotificationController; break;
       default:
         console.warn("Unhandled item:", notification.constructor);
-        return false;
+        continue;
       }
 
       // Create view
@@ -36,7 +39,5 @@ NotificationsController.defineMethod("updateView", function () {
     }
 
     bottom += element.offsetHeight + 8; // 16 px margin top & bottom
-
-    return true;
-  }.bind(this));
+  }
 });

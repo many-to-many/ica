@@ -8,9 +8,6 @@
     require_once(__DIR__ . "/config.php");
     require_once(__DIR__ . "/config.oauth2.php");
 
-    define("ICA_DEFAULT", "ICA_DEFAULT");
-    define("ICA_EXCEPTION", "ICA_EXCEPTION");
-
     /**
      * Database
      */
@@ -147,14 +144,16 @@
       if ($_SERVER["HTTP_AUTHORIZATION"]) {
         return verify(substr($_SERVER["HTTP_AUTHORIZATION"], 7));
       }
-      throw new \Exception("Not yet logged in");
+
+      respondHeaderResponseCode(401, "Unauthorized");
+      exit();
 
     }
 
     function getAccountId() {
 
-      if (requireVerification()) return $_SESSION["_ica_account_id"];
-      throw new \Exception("Not yet logged in");
+      requireVerification();
+      return $_SESSION["_ica_account_id"];
 
     }
 

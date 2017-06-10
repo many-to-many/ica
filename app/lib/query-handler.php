@@ -1,6 +1,6 @@
 <?php
 
-  define("REQUEST_PARAMETER", "$");
+  define("REQUEST_PARAMETER", "{}");
 
   function handle($path, $wildcard = false) {
 
@@ -27,9 +27,16 @@
 
   }
 
+  $HEADER_RESPONSE_CODE_RESPONDED = false;
   function respondHeaderResponseCode($code, $text) {
-    $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-    header("{$protocol} {$code} {$text}");
+    global $HEADER_RESPONSE_CODE_RESPONDED;
+
+    if (!$HEADER_RESPONSE_CODE_RESPONDED) {
+      $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
+      header("{$protocol} {$code} {$text}");
+
+      $HEADER_RESPONSE_CODE_RESPONDED = true;
+    }
   }
 
   function respondJSON($data) {

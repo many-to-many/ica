@@ -19,7 +19,6 @@ Object.defineProperty(BlobFileHandler.prototype, "url", {
       if (this.blob instanceof Blob) return URL.createObjectURL(this.blob);
       return (!this.cached ? "nocache/" : "") + "static/" + this.blob;
     }
-    return null;
   }
 });
 

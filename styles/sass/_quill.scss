@@ -1,0 +1,39 @@
+
+@mixin quill-editor {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 1em;
+  outline: none;
+  -webkit-user-select: text;
+
+  // Adapted from: https://cdn.quilljs.com/1.2.2/quill.snow.css
+  .ql-editor {
+    box-sizing: border-box;
+    cursor: text;
+    outline: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+    &.ql-blank::before {
+      position: absolute;
+      display: block;
+      content: attr(data-placeholder);
+      line-height: 1.5;
+      color: lighten($color-text, 40%);
+    }
+  }
+
+  .ql-clipboard {
+    left: -100000px;
+    height: 1px;
+    overflow-y: hidden;
+    position: absolute;
+    top: 50%;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

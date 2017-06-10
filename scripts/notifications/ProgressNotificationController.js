@@ -8,18 +8,12 @@ ProgressNotificationController.createViewFragment = function () {
 ProgressNotificationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  this.view.querySelectorAll("[data-ica-notification]").forEach(function (element) {
-    switch (getElementProperty(element, "notification")) {
-    case "title":
-      element.textContent = this.notification.title;
-      break;
-    }
-  }.bind(this));
-
   this.view.querySelector(".meter > .meter-bar").style.width = this.notification.progressPct * 100 + "%";
 
   if (this.notification.progressPct == 1) {
-    this.notification.destroy(true, true);
+    setTimeout(function (notification) {
+      notification.destroy(true, true);
+    }.bind(null, this.notification), 300);
   }
 
 });

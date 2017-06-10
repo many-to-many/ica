@@ -14,21 +14,6 @@ BasicNotificationController.defineMethod("initView", function initView() {
   }.bind(this), this.notification.duration);
 });
 
-BasicNotificationController.defineMethod("updateView", function updateView() {
-  if (!this.view) return;
-
-  this.view.querySelectorAll("[data-ica-notification]").forEach(function (element) {
-    switch (getElementProperty(element, "notification")) {
-    case "title":
-      element.textContent = this.notification.title;
-      break;
-    case "message":
-      element.textContent = this.notification.message;
-      break;
-    }
-  }.bind(this));
-});
-
 BasicNotificationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 

@@ -92,10 +92,10 @@ Controller.defineMethod("initView", function initView(updateView = []) {
 
         anchorHistory.pop(); // Escape current anchor
 
-        var publisherFragment = PublisherJointSourceController.createViewFragment();
+        var publisherFragment = PublisherConversationController.createViewFragment();
         var publisherElement = publisherFragment.querySelector(".publisher");
         document.body.appendChild(publisherFragment);
-        new PublisherJointSourceController(new JointSource(), publisherElement);
+        new PublisherConversationController(new Conversation(), publisherElement);
 
         return; // Does not focus on publisher
       case "#account":

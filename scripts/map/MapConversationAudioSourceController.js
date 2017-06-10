@@ -1,11 +1,11 @@
 
-var ArticleAudioSourceController = ArticleSourceController.createComponent("ArticleAudioSourceController");
+var MapConversationAudioSourceController = MapConversationSourceController.createComponent("MapConversationAudioSourceController");
 
-ArticleAudioSourceController.createViewFragment = function (source) {
-  return cloneTemplate("#template-article-audiosource");
+MapConversationAudioSourceController.createViewFragment = function (source) {
+  return cloneTemplate("#template-map-conversation-audiosource");
 };
 
-ArticleAudioSourceController.defineMethod("updateView", function updateView() {
+MapConversationAudioSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   var displayPlayer = function displayPlayer(display) {
@@ -29,5 +29,5 @@ ArticleAudioSourceController.defineMethod("updateView", function updateView() {
     this.view.querySelector("a[data-ica-content='0']").textContent = this.source.fileHandler.url;
   }
 
-  ArticleTextSourceController.renderText(this.source.content["1"], this.view.querySelector(".text"));
+  MapConversationTextSourceController.renderText(this.source.content["1"], this.view.querySelector(".text"));
 });

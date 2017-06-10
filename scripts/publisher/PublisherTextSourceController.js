@@ -16,8 +16,10 @@ PublisherTextSourceController.defineMethod("initView", function initView() {
     theme: "",
     placeholder: "Enter text here..."
   });
-  this.quill.on("text-change", function () {
-    this.source.content = this.quill.getText().replace(/\n$/, "");
+  this.quill.on("text-change", function (delta, oldDelta, source) {
+    if (source == "user") {
+      this.source.content = this.quill.getText().replace(/\s*$/, "");
+    }
   }.bind(this));
 });
 

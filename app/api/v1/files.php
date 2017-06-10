@@ -37,7 +37,7 @@
     return $size;
   }
 
-  if (handle(["files"])) switch ($REQUEST_METHOD) {
+  if (handle("files")) switch ($REQUEST_METHOD) {
 
     case "POST": \Session\requireVerification();
 
@@ -66,7 +66,7 @@
 
       break;
 
-  } elseif (list($fileId) = handle(["files", REQUEST_PARAMETER])) switch ($REQUEST_METHOD) {
+  } elseif (list($fileId) = handle("files/{}")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
