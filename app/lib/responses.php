@@ -98,6 +98,27 @@
 
   }
 
+  function putResponse($responseId, $response) {
+
+    $accountId = \Session\getAccountId();
+
+    $result = query("SELECT *
+      FROM responses
+      WHERE id = $responseId;");
+    if ($result->num_rows == 0) {
+      return false; // Response not found
+    }
+
+    $row = $result->fetch_assoc();
+
+    if ($row["author_id"] != $accountId) {
+      throw new \Exception("Unable to update response");
+    }
+
+    putResponseMessage($row["message_id"], $response->message);
+
+  }
+
   /**
    * Inserts a new state for the specified response.
    */
@@ -112,6 +133,10 @@
   }
 
   function partialPutResponseMessage($messageId, $message) {
+    \ICA\Contents\partialPutContentLanguages($messageId, $message);
+  }
+
+  function putResponseMessage($messageId, $message) {
     \ICA\Contents\partialPutContentLanguages($messageId, $message);
   }
 

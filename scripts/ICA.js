@@ -534,15 +534,21 @@
             message: response.message || {},
             refereeJointSourceIds: Object.keys(response.referees)
           }, notify)
-            .then(ICA.APIResponse.getData)
-            .then(touchResponses)
+            .then(touchResponsesWithAPIResponse)
             .then(function () {
               console.log("ICA: Response posted");
               return response;
             });
         }
-
-        throw new Error("Editing not yet supported");
+        // Update existing response
+        return ICA.put("/responses/{0}/".format(response.responseId), {
+          message: response.message || {}
+        }, notify)
+          .then(touchResponsesWithAPIResponse)
+          .then(function () {
+            console.log("ICA: Response updated");
+            return response;
+          });
       });
   };
 
