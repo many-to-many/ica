@@ -72,7 +72,6 @@
    */
   function insertResponse($response, $state = STATE_PUBLISHED) {
 
-    global $DATABASE;
     $accountId = \Session\getAccountId();
 
     retainDatabaseTransaction();
