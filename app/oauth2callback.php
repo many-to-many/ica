@@ -19,7 +19,8 @@
     if (!$response) throw new Exception("Failed to get access token");
     $token = $response->access_token;
 
-    // Get user information
+    // Get user identifier
+
     $requestUri = sprintf(
       "%s/TokenInfo?access_token=%s",
       OAUTH2_URI,
@@ -32,21 +33,40 @@
     // Confirm user identifier
     if (isset($identifier) && $identifier) {
 
-      $account = \Accounts\getAccountByIdentifier($identifier);
-      if (!isset($account) || !$account) {
-
+      $accountId = \Accounts\getAccountIdByIdentifier($identifier);
+      if (!$accountId) {
         // Account not yet registered
-        $account = \Accounts\registerAccountByIdentifier($identifier);
-
+        $accountId = \Accounts\registerAccountByIdentifier($identifier);
       }
 
       // Account assume registered if no error emitted
 
     } else throw new Exception("Identifier not found");
 
+    // Get user names
+
+    $requestUri = sprintf(
+      "%s/account/names?access_token=%s",
+      MINTKIT_API,
+      $token
+    );
+    $response = json_decode(file_get_contents($requestUri), true);
+    if (!$response) throw new Exception("Failed to get user names");
+    $names = $response;
+
+    if (!empty($names["en"])) {
+      $name = implode(" ", [$names["en"]["first"], $names["en"]["last"]]);
+    } else {
+      $arrNames = array_values($names);
+      $name = count($arrNames) > 0 ? $arrNames[0]["first"] : "";
+    }
+
+    // Update user name
+    \Accounts\updateAccountName($accountId, $name);
+
   }
 
-  \Session\init(isset($account) && $account ? $account->id : "");
+  \Session\init($accountId);
 
   $items = [
     "_ica_account_id" => $_SESSION["_ica_account_id"],

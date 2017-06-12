@@ -17,6 +17,8 @@
 
     define("URI_HOST", "http" . (($_SERVER["SERVER_PORT"] == 443) ? "s://" : "://") . $_SERVER["HTTP_HOST"]);
 
+    define("MINTKIT_API", "https://apis.mintkit.net/v2.1");
+    
   } else die("Site host not supported");
 
   date_default_timezone_set(TIME_ZONE);

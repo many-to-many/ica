@@ -69,38 +69,19 @@
 
   namespace Accounts {
 
-    /**
-     * Account
-     */
-
-    class Account {
-
-      public $id;
-
-      public $identifier;
-
-    }
-
-    function getAccountByIdentifier($identifier) {
+    function getAccountIdByIdentifier($identifier) {
 
       global $DATABASE;
 
-      $result = $DATABASE->query("SELECT *
+      $result = $DATABASE->query("SELECT `id`
         FROM `accounts`
         WHERE `identifier` = '$identifier'
         LIMIT 1;");
 
       if (isset($result) && $result) { // Statement executed
-        if ($result->num_rows > 0) {
-
-          $row = $result->fetch_assoc();
-          $account = new Account;
-          $account->id = $row["id"];
-          $account->identifier = $row["identifier"];
-
-          return $account;
-
-        } else return NULL;
+        if ($result->num_rows == 0) return false;
+        $row = $result->fetch_assoc();
+        return $row["id"];
       } else throw new Exception($DATABASE->error);
 
     }
@@ -109,14 +90,22 @@
 
       global $DATABASE;
 
-      $result = $DATABASE->query("INSERT INTO `accounts`
+      $DATABASE->query("INSERT INTO `accounts`
         (`identifier`) VALUES ('$identifier');");
 
-      if (isset($result) && $result) { // Statement executed
+      return getAccountIdByIdentifier($identifier); // Double confirmation
 
-        return getAccountByIdentifier($identifier); // Double confirmation
+    }
 
-      } else throw new Exception($DATABASE->error);
+    function updateAccountName($accountId, $name) {
+
+      global $DATABASE;
+
+      $nameEncoded = $DATABASE->real_escape_string($name);
+
+      $DATABASE->query("UPDATE `accounts`
+        SET `name` = '$nameEncoded'
+        WHERE `id` = $accountId;");
 
     }
 
