@@ -69,20 +69,20 @@ MapConversationResponseController.defineMethod("updateView", function updateView
 
 MapConversationResponseController.prototype.publish = function () {
   return this.response.publish("Publishing response...")
-  .then(function (response) {
+    .then(function (response) {
 
-    this.updateView();
-    this.componentOf.updateView(); // Signal creating new temporary comment instance
+      this.updateView();
+      this.componentOf.updateView(); // Signal creating new temporary comment instance
 
-    // Display notification
-    notifications.addNotification(new BasicNotification("Response published!"));
-    notifications.didUpdate();
-  }.bind(this))
-  .catch(function (err) {
-    console.warn(err);
+      // Display notification
+      notifications.addNotification(new BasicNotification("Response published!"));
+      notifications.didUpdate();
+    }.bind(this))
+    .catch(function (err) {
+      console.warn(err);
 
-    // Display notification
-    notifications.addNotification(new BasicNotification("Failed to publish response", err ? err.message : undefined));
-    notifications.didUpdate();
-  });
+      // Display notification
+      notifications.addNotification(new BasicNotification("Failed to publish response", err ? err.message : undefined));
+      notifications.didUpdate();
+    });
 };
