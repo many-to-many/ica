@@ -112,14 +112,17 @@ MapConversationController.defineMethod("updateView", function updateView() {
 
     if (imageSource.content) {
       this.view.querySelector(".conversation-backdrop").hidden = false;
-      var img = this.view.querySelector(".conversation-backdrop-image");
-      img.style.backgroundImage = imageSource.content
+
+      var backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
+      var backgroundImage = imageSource.content
         ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
-            : imageSource.fileHandler.url + "?width=" + (img.offsetWidth * this.devicePixelRatio)
+            : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
           ) + ")"
         : "";
+      if (backdropImageElement.style.backgroundImage != backgroundImage)
+        backdropImageElement.style.backgroundImage = backgroundImage;
     }
   }
 

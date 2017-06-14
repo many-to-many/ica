@@ -69,13 +69,17 @@ ExploreConversationController.defineMethod("updateView", function updateView() {
 
     if (imageSource.content["0"]) {
       this.view.classList.add("dark");
-      this.view.querySelector(".conversation-backdrop-image").style.backgroundImage = imageSource.content["0"]
+
+      var backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
+      var backgroundImage = imageSource.content["0"]
         ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
-            : imageSource.fileHandler.url + "?width=" + (this.view.offsetWidth * this.devicePixelRatio)
+            : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
           ) + ")"
         : "";
+      if (backdropImageElement.style.backgroundImage != backgroundImage)
+        backdropImageElement.style.backgroundImage = backgroundImage;
     }
   }
 
