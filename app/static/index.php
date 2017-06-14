@@ -56,14 +56,24 @@
           $src = $imageCreateFunctions[$fileSubtype](DIR_ROOT . "/data/{$file->path}");
 
           list($imageWidth, $imageHeight) = getimagesize(DIR_ROOT . "/data/{$file->path}");
+          if ($width > 0 && $height > 0) {
+            $fitWidth = $imageWidth * $height / $imageHeight;
+            $fitHeight = $width * $imageHeight / $imageWidth;
+            if ($fitWidth > $width) {
+              $width = $fitWidth;
+            } else if ($fitHeight > $height) {
+              $height = $fitHeight;
+            }
+          }
           if ($width <= 0 && $height > 0) {
             $width = $imageWidth * $height / $imageHeight;
           } elseif ($height <= 0 && $width > 0) {
-            $height= $width * $imageHeight / $imageWidth;
+            $height = $width * $imageHeight / $imageWidth;
           } elseif ($width <= 0 && $height <= 0) {
             $width = $imageWidth;
             $height = $imageHeight;
           }
+
           $dst = imagecreatetruecolor($width, $height);
           imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $imageWidth, $imageHeight);
 

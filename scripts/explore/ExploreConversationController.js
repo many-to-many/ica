@@ -76,6 +76,7 @@ ExploreConversationController.defineMethod("updateView", function updateView() {
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
             : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
+              + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
           ) + ")"
         : "";
       if (backdropImageElement.style.backgroundImage != backgroundImage)
