@@ -63,7 +63,7 @@ MapConversationResponseController.defineMethod("updateView", function updateView
           + (author.authorId == ICA.accountId ? " (me)" : "");
       }.bind(this));
   } else {
-    this.view.querySelector("[data-ica-response-author]").textContent = "Anonymous (me)";
+    this.view.querySelector("[data-ica-response-author]").textContent = "";
   }
 });
 
