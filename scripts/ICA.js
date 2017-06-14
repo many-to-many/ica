@@ -4,31 +4,57 @@
 
   // User Authentication
 
+  var _ica = JSON.parse(window.sessionStorage.getItem("_ica")) || {};
+
   ICA.login = function () {
     return new Promise(function (resolve, reject) {
       var oauthWindow = window.open("oauth2login", "Log in via MintKit", "location=0,status=0,width=600,height=700");
+
+      var loginCallbackData;
+      window.loginCallback = function (data) {
+        loginCallbackData = data;
+      };
 
       if (oauthWindow) {
         var timer = setInterval(function () {
           if (oauthWindow.closed) {
             clearInterval(timer);
+            delete window.loginCallback;
 
-            if (new Date().getTime() - window.sessionStorage.getItem("_ica_oauth2_timestamp") < 1000) {
+            if (Math.abs(new Date().getTime() / 1000 - loginCallbackData.timestampLogin) < 1000) {
+              ICA.getAuthor(loginCallbackData.accountId)
+                .then(function (author) {
+                  _ica.accountId = loginCallbackData.accountId;
+                  _ica.sessionId = loginCallbackData.sessionId;
 
-              // Notify
-              notifications.addNotification(new BasicNotification("Logged in as Anonymous"));
-              notifications.didUpdate();
+                  window.sessionStorage.setItem("_ica", JSON.stringify(_ica));
 
-              resolve();
+                  // Display notification
+                  notifications.addNotification(new BasicNotification("Logged in as " + author.name));
+                  notifications.didUpdate();
+
+                  resolve();
+                }, function () {
+                  reject(new Error("Error fetching author info"));
+                });
             } else {
-              reject(new Error("Error synchronizing/failed to log in"));
+              reject(new Error("Error synchronizing time"));
             }
           }
         }, 1000);
       } else {
-        console.error("Failed to open popup window");
+        reject(new Error("Failed to open popup window"));
       }
-    });
+    })
+      .catch(function (err) {
+        console.warn(err);
+
+        // Display notification
+        notifications.addNotification(new BasicNotification("Failed to log in", err ? err.message : undefined));
+        notifications.didUpdate();
+
+        throw err;
+      });
   };
 
   ICA.promptLogin = function () {
@@ -48,8 +74,6 @@
                   prompt = undefined;
                 }
                 resolve();
-              }, function (e) {
-                console.warn(e);
               });
             return false;
           }, true)
@@ -64,13 +88,13 @@
 
   Object.defineProperty(ICA, "accountId", {
     get: function () {
-      return window.sessionStorage.getItem("_ica_account_id");
+      return _ica.accountId;
     }
   });
 
   Object.defineProperty(ICA, "accountSession", {
     get: function () {
-      return window.sessionStorage.getItem("_ica_account_session");
+      return _ica.sessionId;
     }
   });
 

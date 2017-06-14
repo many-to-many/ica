@@ -116,15 +116,19 @@
     function init($accountId) {
 
       $_SESSION["_ica_account_id"] = $accountId;
-      $_SESSION["_ica_account_session"] = substr(md5(microtime()), 0, 6);
+
+      $sessionId = substr(md5(microtime()), 0, 6);
+      $_SESSION["_ica_session_id"] = $sessionId;
+
+      return $sessionId;
 
     }
 
     function verify($accountSession) {
 
       return isset($_SESSION["_ica_account_id"])
-        && isset($_SESSION["_ica_account_session"])
-        && $_SESSION["_ica_account_session"] == $accountSession;
+        && isset($_SESSION["_ica_session_id"])
+        && $_SESSION["_ica_session_id"] == $accountSession;
 
     }
 

@@ -28,6 +28,7 @@
       }
 
       // Populate data from db
+      $author->name = $row["name"];
     }
     return $data;
 

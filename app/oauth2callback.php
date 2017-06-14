@@ -66,12 +66,7 @@
 
   }
 
-  \Session\init($accountId);
-
-  $items = [
-    "_ica_account_id" => $_SESSION["_ica_account_id"],
-    "_ica_account_session" => $_SESSION["_ica_account_session"],
-  ];
+  $sessionId = \Session\init($accountId);
 
 } catch (Exception $e) {
 
@@ -82,29 +77,20 @@
 <html>
   <head>
     <script type="text/javascript">
-
       if (window.opener) {
-
-        window.opener.sessionStorage.setItem("_ica_oauth2_timestamp", new Date().getTime());
-
-        // Set session storage on window opener
-        var items = <?=json_encode($items)?>;
-        for (var key in items) window.opener.sessionStorage.setItem(key, items[key]);
-
-        // Close the window after saving account id
+        window.opener.loginCallback(<?=json_encode([
+          "accountId" => $accountId,
+          "sessionId" => $sessionId,
+          "timestampLogin" => time()
+        ])?>);
         window.close();
-
         window.location = "index.html";
-
       } else {
-
         // Error with window opener
         console.error("Cannot find window opener");
-
+        alert("Cannot find window opener");
       }
-
     </script>
   </head>
-  <body>
-  </body>
+  <body></body>
 </html>

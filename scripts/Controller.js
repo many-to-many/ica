@@ -106,7 +106,6 @@ Controller.defineMethod("initView", function initView(updateView = []) {
 
           ICA.login()
             .then(function () {
-              console.log("Logged in");
               continueAnchor.click();
             })
             .catch(function (e) {
