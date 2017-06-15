@@ -74,6 +74,14 @@
             $height = $imageHeight;
           }
 
+          $width = (int) $width;
+          $height = (int) $height;
+
+          $path = DIR_ROOT . "/cache/{$file->path}/{$width}x{$height}-{$requestImageSubtype}";
+          if (file_exists($path)) {
+            respondFile($path, "image/{$requestImageSubtype}");
+          }
+
           $dst = imagecreatetruecolor($width, $height);
           imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $imageWidth, $imageHeight);
 
