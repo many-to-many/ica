@@ -147,6 +147,13 @@
 
           &.videosource {
 
+            > .plyr {
+              border-bottom: solid 3px #f4f4f4;
+            }
+
+            > .source-control {
+              border-top: none;
+            }
           }
 
           > .plyr {

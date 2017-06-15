@@ -9,9 +9,7 @@ MapConversationAudioSourceController.defineMethod("updateView", function updateV
   if (!this.view) return;
 
   var displayPlayer = function displayPlayer(display) {
-    this.querySelectorAll(".source > :not(.download)").forEach(function (element) {
-      element.style.display = display ? "" : "none";
-    });
+    this.querySelector(".plyr").hidden = !display;
   }.bind(this.view);
 
   displayPlayer(false);
