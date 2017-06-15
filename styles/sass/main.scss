@@ -38,7 +38,7 @@ $z-relative-topbar: 8;
   display: flex;
 
   > .flex-space {
-    flex-grow: 1;
+    flex: 1 0 auto;
   }
 }
 

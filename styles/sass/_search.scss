@@ -10,13 +10,15 @@
     padding: 0 ($column-spacing / 2);
 
     > * {
-      flex: 1 0 15em;
+      flex: 1 0 auto;
+      width: 15em;
       margin-right: $column-spacing;
     }
   }
 
   > .explore {
-    flex: 1 0 300px;
+    flex: 1 0 auto;
+    width: 300px;
     margin: 0;
   }
 }

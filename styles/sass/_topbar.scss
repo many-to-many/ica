@@ -16,7 +16,8 @@
   &::before, &::after {
     display: block;
     content: "";
-    flex: 0 0 0.75em;
+    flex: 0 0 auto;
+    width: 0.75em;
   }
 
   body > & {

@@ -11,7 +11,7 @@ $column-spacing: 8px;
   cursor: default;
 
   > * {
-    flex: 0 0 $column-width - $column-spacing;
+    flex: none;
   }
 
   .conversation {

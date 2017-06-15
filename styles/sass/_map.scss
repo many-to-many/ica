@@ -35,7 +35,8 @@
 
       > .conversation-nav-btn {
         box-sizing: border-box;
-        flex: 0 0 3em;
+        flex: none;
+        width: 3em;
         background-size: 1em 1em;
         background-position: center;
         background-repeat: no-repeat;
