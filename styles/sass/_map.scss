@@ -134,7 +134,7 @@
 
           &.audiosource {
 
-            .plyr {
+            > .plyr {
               position: -webkit-sticky;
               top: 2em;
               padding: 0 0.875em;
