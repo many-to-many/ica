@@ -73,6 +73,15 @@ JointSource.defineMethod("destroy", function destroy(destroySources = true, dest
   return [destroyControllers, destroyViews];
 });
 
+JointSource.defineMethod("didUpdate", function didUpdate() {
+  for (var referrerJointSourceId in this.referrers) {
+    if (this.referrers[referrerJointSourceId]) this.referrers[referrerJointSourceId].refereeDidUpdate(this);
+  }
+  for (var refereeJointSourceId in this.referees) {
+    if (this.referees[refereeJointSourceId]) this.referees[refereeJointSourceId].referrerDidUpdate(this);
+  }
+});
+
 // JointSourceId
 
 Object.defineProperty(JointSource.prototype, "jointSourceId", {
@@ -153,6 +162,14 @@ JointSource.removeAllJointSourceReferees = function (referrerJointSourceId) {
     }
   }
 };
+
+JointSource.defineMethod("referrerDidUpdate", function referrerDidUpdate(referrer) {
+
+});
+
+JointSource.defineMethod("refereeDidUpdate", function refereeDidUpdate(referee) {
+
+});
 
 // Sources
 
