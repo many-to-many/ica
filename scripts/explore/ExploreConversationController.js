@@ -48,16 +48,7 @@ ExploreConversationController.defineMethod("initView", function initView() {
 
 ExploreConversationController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
-
-  // Reset view
-  var parentNode = this.view.parentNode;
-  var fragment = this.constructor.createViewFragment();
-  var element = fragment.querySelector(".conversation");
-  parentNode.replaceChild(fragment, this.view);
-  this.uninitView();
-  this._view = element;
-  this.initView(false);
-
+  
   this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
     element.textContent = this.conversation.meta[getElementProperty(element, "conversation-meta")] || "";
   }.bind(this));
