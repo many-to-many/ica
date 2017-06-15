@@ -64,11 +64,13 @@
 
         > .source {
           box-sizing: border-box;
+          padding: 0 1.5em;
 
-          &.conversation-hero {
+          &.meta {
 
             > .conversation-backdrop {
               position: relative;
+              margin: 0 -1.5em;
               height: 0.6 * $card-width;
               max-height: 40vw;
 
@@ -79,13 +81,12 @@
                 bottom: 0;
                 left: 0;
                 background-size: cover;
-                background-position: top;
+                background-position: center;
               }
             }
 
             > .conversation-meta {
               margin: 1.5em 0;
-              padding: 0 1.5em;
 
               h3 {
                 margin: 0.5em 0;
@@ -117,25 +118,28 @@
 
           &.imagesource {
 
-            > img {
-              box-sizing: border-box;
-              display: block;
-              width: 100%;
+            > .source-image {
+              margin: 0 -1.5em;
+
+              > img {
+                box-sizing: border-box;
+                display: block;
+                width: 100%;
+              }
             }
           }
 
           &.audiosource {
 
             .plyr {
-              position: static;
               position: -webkit-sticky;
               top: 2em;
-              border-top: solid 1px #f4f4f4;
+              padding: 0 0.875em;
               border-bottom: solid 1px #f4f4f4;
             }
 
-            .text:not(:empty) {
-              border-top: solid 1px #f4f4f4;
+            .text:empty {
+              margin-top: -1px;
             }
           }
 
@@ -143,15 +147,23 @@
 
           }
 
-          > .conversation-control,
-          > .source-control {
-            padding: 1.5em;
-            border-top: solid 1px #f4f4f4;
+          > .plyr {
+            margin: 0 -1.5em;
+            max-width: none;
+            background-color: #fff;
           }
 
-          .download {
-            display: block;
+          > .conversation-control,
+          > .source-control {
+            @include flex;
+            margin: 0 -1.5em;
             padding: 1.5em;
+            color: lighten($color-text, 30%);
+            border-top: solid 1px #f4f4f4;
+
+            > :not(:last-child) {
+              margin-right: 0.5em;
+            }
           }
         }
       }
@@ -191,7 +203,6 @@
   }
 
   .text {
-    padding: 0 1.5em;
     overflow: auto;
 
     & > p {

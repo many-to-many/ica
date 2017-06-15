@@ -19,13 +19,12 @@ $card-width: 40em;
 
   > .topbar {
     position: -webkit-sticky;
-    margin-right: -1.5em;
-    margin-left: -1.5em;
     top: 0;
+    margin: 0 -1.5em;
     @include lift($z + $z-relative-topbar, $z-relative-topbar);
   }
 
-  > section {
+  > * {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
   }

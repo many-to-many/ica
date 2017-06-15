@@ -142,7 +142,7 @@
             </header>
             <section class="sources-container">
               <div class="sources">
-                <article class="source conversation-hero">
+                <article class="source meta">
                   <section class="conversation-backdrop" hidden>
                     <div class="conversation-backdrop-image"></div>
                   </section>
@@ -185,7 +185,7 @@
       </template>
       <template id="template-map-conversation-textsource">
         <div class="source textsource">
-          <div class="text"></div>
+          <section class="text"></section>
           <section class="source-control">
             <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
@@ -193,7 +193,9 @@
       </template>
       <template id="template-map-conversation-imagesource">
         <div class="source imagesource">
-          <img data-ica-content>
+          <section class="source-image">
+            <img data-ica-content>
+          </section>
           <section class="source-control">
             <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
@@ -201,14 +203,14 @@
       </template>
       <template id="template-map-conversation-audiosource">
         <div class="source audiosource">
-          <div class="waveform"></div>
           <audio class="player" controls>
             <source data-ica-content="0"></source>
           </audio>
-          <span class="download">Audio source: <a data-ica-content="0" target="_blank"></a></span>
-          <div class="text" data-ica-content="1"></div>
+          <section class="text" data-ica-content="1"></section>
           <section class="source-control">
             <a data-ica-action="edit-conversation">Edit Conversation</a>
+            <div class="flex-space"></div>
+            <a data-ica-content="0" target="_blank"></a>
           </section>
         </div>
       </template>
@@ -217,9 +219,10 @@
           <video class="player" controls>
             <source data-ica-content="0"></source>
           </video>
-          <span class="download">Video source: <a data-ica-content="0" target="_blank"></a></span>
           <section class="source-control">
             <a data-ica-action="edit-conversation">Edit Conversation</a>
+            <div class="flex-space"></div>
+            <a data-ica-content="0" target="_blank"></a>
           </section>
         </div>
       </template>
