@@ -12,10 +12,10 @@ $card-width: 40em;
   margin: auto;
   padding: 0 1.5em;
   background-color: #ffffff;
-  border: solid 1px #e4e4e4;
+  border: solid 1px #ededed;
   border-radius: 3px;
   overflow-y: auto;
-  @include lift(0, $z);
+  @include shadow($z);
 
   > .topbar {
     position: -webkit-sticky;
