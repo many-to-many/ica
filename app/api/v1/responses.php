@@ -33,12 +33,14 @@
       $responseId = \ICA\Responses\insertResponse($response);
 
       // Update references
-      foreach ($REQUEST_DATA["refereeJointSourceIds"] as $jointSourceId) {
-        \ICA\JointSources\touchReference($jointSourceId, $responseId);
-      }
-      foreach ($REQUEST_DATA["referrerJointSourceIds"] as $jointSourceId) {
-        \ICA\JointSources\touchReference($responseId, $jointSourceId);
-      }
+      if (!empty($REQUEST_DATA["refereeJointSourceIds"]))
+        foreach ($REQUEST_DATA["refereeJointSourceIds"] as $jointSourceId) {
+          \ICA\JointSources\touchReference($jointSourceId, $responseId);
+        }
+      if (!empty($REQUEST_DATA["referrerJointSourceIds"]))
+        foreach ($REQUEST_DATA["referrerJointSourceIds"] as $jointSourceId) {
+          \ICA\JointSources\touchReference($responseId, $jointSourceId);
+        }
 
       releaseDatabaseTransaction();
 
