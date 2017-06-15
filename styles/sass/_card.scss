@@ -68,8 +68,7 @@ $card-width: 40em;
     &::after {
       display: block;
       content: "";
-      flex: 1 0 0;
-      min-height: 10%;
+      flex: 1 0 4em;
     }
 
     .card {
