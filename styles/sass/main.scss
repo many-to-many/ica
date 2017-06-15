@@ -22,13 +22,8 @@ $font-mono: "Roboto Mono", monospace;
   box-shadow: 0 #{($index / 3) + "px"} #{($index * $index / 3) + "px"} rgba(#000, 0.02 * $index);
 }
 
-@mixin lift($z-index, $shadow-index) {
-  z-index: $z-index;
-  @include shadow($shadow-index);
-}
-
-$z-popup: 3;
-$z-relative-topbar: 2;
+$z-popup: 10;
+$z-relative-topbar: 8;
 
 @mixin fade($offset: 0.5em, $angle: 0deg, $to: transparent) {
   -webkit-mask: linear-gradient($angle, $to, black $offset);

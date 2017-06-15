@@ -10,7 +10,8 @@
   font-weight: 700;
   cursor: default;
   -webkit-overflow-scrolling: touch;
-  @include lift($z-relative-topbar, 3);
+  z-index: $z-relative-topbar;
+  @include shadow(2);
 
   &::before, &::after {
     display: block;

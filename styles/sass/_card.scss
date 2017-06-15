@@ -1,7 +1,8 @@
 
 $card-width: 40em;
 
-@mixin card($z: $z-popup, $card-width: $card-width) {
+@mixin card($card-width: $card-width) {
+  position: relative;
   box-sizing: border-box;
   display: block;
   width: $card-width;
@@ -15,13 +16,15 @@ $card-width: 40em;
   border: solid 1px #ededed;
   border-radius: 3px;
   overflow-y: auto;
-  @include shadow($z);
+  z-index: 3;
+  @include shadow(3);
 
   > .topbar {
     position: -webkit-sticky;
     top: 0;
     margin: 0 -1.5em;
-    @include lift($z + $z-relative-topbar, $z-relative-topbar);
+    z-index: $z-relative-topbar;
+    @include shadow(2);
   }
 
   > * {
@@ -30,7 +33,7 @@ $card-width: 40em;
   }
 }
 
-@mixin series($card-z: $z-popup) {
+@mixin series {
   display: flex;
   height: 100%;
   justify-content: flex-start;

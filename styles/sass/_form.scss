@@ -49,10 +49,10 @@ textarea,
     background-color: #fefefe;
     border-radius: 6px;
     font-weight: 500;
-    transition: background-color ease 0.1s;
+    transition: background-color ease 0.1s, box-shadow ease 0.1s;
 
     &:hover {
-      @include shadow(3);
+      @include shadow(2);
     }
 
     $button-color: lighten($color-text, 20%);

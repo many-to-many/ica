@@ -20,7 +20,8 @@
       display: flex;
       background-color: #fff;
       border-bottom: solid 1px #f4f4f4;
-      @include lift($z-popup + $z-relative-topbar, 1.5);
+      z-index: $z-relative-topbar;
+      @include shadow(2);
       overflow-y: hidden;
 
       > * {

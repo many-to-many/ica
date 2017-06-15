@@ -27,7 +27,7 @@
   .publisher-sources {
 
     .publisher-source {
-      @include card(0);
+      @include card;
       width: auto;
       max-width: none;
       max-height: none;

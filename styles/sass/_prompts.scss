@@ -7,10 +7,10 @@
   bottom: 0;
   left: 0;
   background-color: rgba($color-background, 0.90);
-  @include lift ($z-popup, 0);
+  z-index: $z-popup;
 
   .prompt-card {
-    @include card($z-popup, 30em);
+    @include card(30em);
 
     h3 {
       margin-top: 1em;
