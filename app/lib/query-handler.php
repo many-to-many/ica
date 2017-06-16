@@ -49,6 +49,19 @@
 
     // From: https://github.com/pomle/php-serveFilePartial/blob/master/ServeFilePartial.inc.php
 
+    $filemtime = filemtime($path);
+
+    header("Cache-Control: max-age=" . (60 * 60 * 24 * 365));
+    header("Last-Modified: " . gmdate(DATE_RFC1123, $filemtime));
+    header("Expires: " . gmdate(DATE_RFC1123, $filemtime + 60 * 60 * 24 * 365));
+
+    if (!empty($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
+      if (strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"]) == $filemtime) {
+        respondHeaderResponseCode(304, "Not Modified");
+        exit();
+      }
+    }
+
     $filesize = filesize($path);
 
     if (isset($_SERVER['HTTP_RANGE'])) {
