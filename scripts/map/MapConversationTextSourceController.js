@@ -157,6 +157,11 @@ MapConversationTextSourceController.defineMethod("updateView", function updateVi
 MapConversationTextSourceController.renderText = function (content, view) {
   if (!content || !view) return;
 
+  // Clear view
+  while (view.firstChild) {
+    view.removeChild(view.firstChild);
+  }
+
   setElementProperty(view, "text-start", 0);
   setElementProperty(view, "text-length", content.length);
   var sourceParagraphs = content.split("\n");
