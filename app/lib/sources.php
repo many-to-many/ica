@@ -99,7 +99,7 @@
 
   }
 
-  function partialPutJointSourceContentRevision($sourceId, $content) {
+  function partialPutSourceContent($sourceId, $content) {
 
     $result = query("SELECT content_id
       FROM sources
