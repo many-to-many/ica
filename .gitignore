@@ -1,14 +1,14 @@
 
 .idea
+tmp
 
 node_modules
 npm-debug.log
 
 .sass-cache
 
-styles/main.css
-
-app/assets/*
+app/scripts/*
+app/styles/*
 app/data/*
 app/cache/*
 

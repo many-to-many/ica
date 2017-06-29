@@ -9,28 +9,32 @@ const babel = require("gulp-babel");
 const autoprefixer = require("gulp-autoprefixer");
 const browserSync = require("browser-sync").create();
 
+// Styles
+
 gulp.task("compass", function() {
-  return gulp.src("styles/**/*.scss")
+  return gulp.src("./styles/**/*.scss")
     .pipe(compass({
-      css: "styles",
-      sass: "styles/sass"
+      css: "./tmp/styles",
+      sass: "./styles"
     }));
 });
 
-gulp.task("css", ["compass"], function () {
-  return gulp.src("styles/**/*.css")
+gulp.task("styles", ["compass"], function () {
+  return gulp.src("./tmp/styles/**/*.css")
     .pipe(autoprefixer({
       browsers: ["last 2 versions"],
       cascade: true
     }))
-    .pipe(gulp.dest("app/assets"));
+    .pipe(gulp.dest("./app/styles"));
 });
 
-gulp.task("css-watch", ["css"], function () {
+gulp.task("styles-watch", ["styles"], function () {
   browserSync.reload("*.css");
 });
 
-gulp.task("js", function () {
+// Scripts
+
+gulp.task("scripts", function () {
   return gulp.src(require("./scripts.json"))
     .pipe(sourcemaps.init())
     .pipe(babel({
@@ -44,27 +48,31 @@ gulp.task("js", function () {
     .pipe(uglify())
     .pipe(rename("main.min.js"))
     .pipe(sourcemaps.write("."))
-    .pipe(gulp.dest("app/assets"));
+    .pipe(gulp.dest("./app/scripts"));
 });
 
-gulp.task("js-watch", ["js"], function () {
+gulp.task("scripts-watch", ["scripts"], function () {
   browserSync.reload("*.js");
 });
 
+// Vendor
+
 gulp.task("quill", function () {
   return gulp.src([
-    "node_modules/quill/dist/quill.min.js",
-    "node_modules/quill/dist/quill.min.js.map"
+    "./node_modules/quill/dist/quill.min.js",
+    "./node_modules/quill/dist/quill.min.js.map"
   ])
-    .pipe(gulp.dest("app/assets"));
+    .pipe(gulp.dest("./app/scripts"));
 });
 
 gulp.task("plyr", function () {
-  return gulp.src("node_modules/plyr/dist/plyr.js")
-    .pipe(gulp.dest("app/assets"));
+  return gulp.src("./node_modules/plyr/dist/plyr.js")
+    .pipe(gulp.dest("./app/scripts"));
 });
 
-gulp.task("build", ["quill", "plyr", "compass", "css", "js"]);
+// Tasks
+
+gulp.task("build", ["quill", "plyr", "compass", "styles", "scripts"]);
 
 gulp.task("proxy", ["build"], function () {
   var config = require("./config.json");
@@ -74,11 +82,11 @@ gulp.task("proxy", ["build"], function () {
     ghostMode: false
   });
 
-  gulp.watch("**/*.html").on("change", function () {
+  gulp.watch("./app/**.html").on("change", function () {
     browserSync.reload();
   });
-  gulp.watch("styles/**/*.scss", ["css-watch"]);
-  gulp.watch("scripts/**/*.js", ["js-watch"]);
+  gulp.watch("./styles/**", ["styles-watch"]);
+  gulp.watch("./scripts/**", ["scripts-watch"]);
 });
 
 gulp.task("default", ["proxy"]);
