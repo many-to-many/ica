@@ -8,11 +8,13 @@ const uglify = require("gulp-uglify");
 const babel = require("gulp-babel");
 const autoprefixer = require("gulp-autoprefixer");
 const browserSync = require("browser-sync").create();
+const plumber = require("gulp-plumber");
 
 // Styles
 
 gulp.task("compass", function() {
   return gulp.src("./styles/**/*.scss")
+    .pipe(plumber())
     .pipe(compass({
       css: "./tmp/styles",
       sass: "./styles"
@@ -21,6 +23,7 @@ gulp.task("compass", function() {
 
 gulp.task("styles", ["compass"], function () {
   return gulp.src("./tmp/styles/**/*.css")
+    .pipe(plumber())
     .pipe(autoprefixer({
       browsers: ["last 2 versions"],
       cascade: true
@@ -36,6 +39,7 @@ gulp.task("styles-watch", ["styles"], function () {
 
 gulp.task("scripts", function () {
   return gulp.src(require("./scripts.json"))
+    .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: [
