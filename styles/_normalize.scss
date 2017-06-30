@@ -75,3 +75,17 @@ textarea {
 .hidden {
   opacity: 0;
 }
+
+.dark {
+
+  a {
+    &:active, &.active,
+    &:focus,
+    &:hover {
+
+      &:not(.solid) {
+        color: $color-text-light !important;
+      }
+    }
+  }
+}
