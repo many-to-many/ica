@@ -34,6 +34,10 @@ Response.prototype.publish = function (notify) {
     }.bind(this));
 };
 
+Response.prototype.unpublish = function (notify) {
+  return ICA.unpublishResponse(this, notify);
+};
+
 Response.prototype.cloneMessage = function () {
   var message = {};
   for (var index in this.message) {

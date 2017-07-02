@@ -576,6 +576,17 @@
       });
   };
 
+  ICA.unpublishResponse = function (response, notify) {
+    if (response.responseId < 0) return Promise.reject(new Error("Joint source not yet published"));
+    return ICA.delete("/responses/{0}/".format(response.responseId),
+      undefined,
+      notify
+    )
+      .then(function () {
+        console.log("ICA: Response deleted");
+      });
+  };
+
   ICA.getAuthor = function (authorId) {
     return ICA.get("/authors/{0}/".format(authorId))
       .then(function (apiResponse) {

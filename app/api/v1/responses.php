@@ -69,6 +69,14 @@
 
       break;
 
+    case "DELETE": \Session\requireVerification();
+
+      \ICA\Responses\insertResponseState($responseId, STATE_UNPUBLISHED);
+
+      respondJSON([]);
+
+      break;
+
   }
 
   require_once(__DIR__ . "/jointsources.php");
