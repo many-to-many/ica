@@ -343,7 +343,8 @@
                 intro: conversation.meta.intro ? {"0": conversation.meta.intro} : null,
                 themes: conversation.meta.themes ? {"0": conversation.meta.themes} : null,
                 participants: conversation.meta.participants ? {"0": conversation.meta.participants} : null,
-                region: conversation.meta.region ? {"0": conversation.meta.region} : null
+                region: conversation.meta.region ? {"0": conversation.meta.region} : null,
+                others: conversation.meta.others ? {"0": conversation.meta.others} : null
               }
               : {},
             sources: conversation.mapSources(function (source) {
@@ -404,7 +405,8 @@
               intro: conversation.meta.intro ? {"0": conversation.meta.intro} : null,
               themes: conversation.meta.themes ? {"0": conversation.meta.themes} : null,
               participants: conversation.meta.participants ? {"0": conversation.meta.participants} : null,
-              region: conversation.meta.region ? {"0": conversation.meta.region} : null
+              region: conversation.meta.region ? {"0": conversation.meta.region} : null,
+              others: conversation.meta.others ? {"0": conversation.meta.others} : null
             }
             : {}
         })
@@ -634,7 +636,8 @@
             intro: dataConversation.meta.intro ? dataConversation.meta.intro["0"] : null,
             themes: dataConversation.meta.themes ? dataConversation.meta.themes["0"] : null,
             participants: dataConversation.meta.participants ? dataConversation.meta.participants["0"] : null,
-            region: dataConversation.meta.region ? dataConversation.meta.region["0"] : null
+            region: dataConversation.meta.region ? dataConversation.meta.region["0"] : null,
+            others: dataConversation.meta.others ? dataConversation.meta.others["0"] : null
           }
           : {}, conversationId);
         conversations.push(conversation);

@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations` (
   `id` INT UNSIGNED NOT NULL,
   `title_id` INT UNSIGNED NOT NULL,
   `intro_id` INT UNSIGNED NOT NULL,
+  `others_id` INT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `fk_jointsources_accounts1_idx` (`author_id` ASC),
@@ -103,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations` (
   INDEX `fk_jointsources_contents2_idx` (`intro_id` ASC),
   INDEX `fk_conversations_jointsource1_idx` (`id` ASC),
   PRIMARY KEY (`id`),
+  INDEX `fk_conversations_contents1_idx` (`others_id` ASC),
   CONSTRAINT `fk_jointsources_accounts1`
     FOREIGN KEY (`author_id`)
     REFERENCES `ica`.`accounts` (`id`)
@@ -121,6 +123,11 @@ CREATE TABLE IF NOT EXISTS `ica`.`conversations` (
   CONSTRAINT `fk_conversations_jointsource1`
     FOREIGN KEY (`id`)
     REFERENCES `ica`.`jointsources` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_conversations_contents1`
+    FOREIGN KEY (`others_id`)
+    REFERENCES `ica`.`contents` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -802,7 +809,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_state_latest` (`jointsource_id` I
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`conversations_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`conversations_summary` (`conversation_id` INT, `state_id` INT, `state` INT, `title_id` INT, `intro_id` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`conversations_summary` (`conversation_id` INT, `state_id` INT, `state` INT, `title_id` INT, `intro_id` INT, `others_id` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`sources_state_latest`
@@ -914,7 +921,8 @@ SELECT
 	tbl_state.id AS state_id,
 	tbl_state.state AS state,
 	tbl_conversation.title_id AS title_id,
-	tbl_conversation.intro_id AS intro_id
+	tbl_conversation.intro_id AS intro_id,
+  tbl_conversation.others_id AS others_id
 	-- themes, participants, regions are excluded
 FROM `conversations` AS tbl_conversation
 LEFT JOIN `jointsources_state_latest` AS tbl_state_latest

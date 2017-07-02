@@ -56,6 +56,8 @@
                 <textarea data-ica-conversation-meta="participants" data-ica-format="tokens" placeholder="List participants here... (Hit enter after each participant)"></textarea>
                 <label>What themes emerge from your conversation?</label>
                 <textarea data-ica-conversation-meta="themes" data-ica-format="tokens" data-ica-suggestions="themes" placeholder="List themes here... (Hit enter after each theme)"></textarea>
+                <label>Other reflections</label>
+                <textarea data-ica-conversation-meta="others" placeholder="More thoughts about this conversation..." rows="1"></textarea>
               </section>
               <section class="publisher-sources-container">
                 <h4>Upload media here</h4>
@@ -147,9 +149,13 @@
                     <div class="conversation-backdrop-image"></div>
                   </section>
                   <section class="conversation-meta">
-                    <h3 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title">Title</h3>
+                    <h3 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title"></h3>
                     <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
                     <p data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></p>
+                    <div data-ica-conversation-meta-predicate="others">
+                      <h4>Other reflections</h4>
+                      <p data-ica-conversation-meta="others"></p>
+                    </div>
                     <div data-ica-conversation-meta-predicate="participants">
                       <h4>Participants</h4>
                       <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>

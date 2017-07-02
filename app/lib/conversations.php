@@ -36,6 +36,7 @@
         $conversation->meta["themes"] = getConversationMetaThemesOfLatestRevision($conversationId);
         $conversation->meta["participants"] = getConversationMetaParticipantsOfLatestRevision($conversationId);
         $conversation->meta["region"] = getConversationMetaRegionOfLatestRevision($conversationId);
+        $conversation->meta["others"] = getConversationMetaOthersOfLatestRevision($row["others_id"]);
 
         // Run all sources joint by conversation
         $conversation->sources = \ICA\Sources\getSources($conversationId);
@@ -112,11 +113,12 @@
     // Request content versioning unit id
     $titleId = \ICA\Contents\requestContentId();
     $introId = \ICA\Contents\requestContentId();
+    $othersId = \ICA\Contents\requestContentId();
 
     // Create a new conversation
     $result = query("INSERT INTO conversations
-      (`id`, `title_id`, `intro_id`, `author_id`)
-      VALUES ($conversationId, $titleId, $introId, $accountId);");
+      (`id`, `title_id`, `intro_id`, `others_id`, `author_id`)
+      VALUES ($conversationId, $titleId, $introId, $othersId, $accountId);");
 
     $stateId = insertConversationState($conversationId, $state);
 
@@ -125,6 +127,7 @@
     if (!empty($conversation->meta["themes"])) partialPutConversationMetaThemes($conversationId, $conversation->meta["themes"]);
     if (!empty($conversation->meta["participants"])) partialPutConversationMetaParticipants($conversationId, $conversation->meta["participants"]);
     if (!empty($conversation->meta["region"])) partialPutConversationMetaRegion($conversationId, $conversation->meta["region"]);
+    if (!empty($conversation->meta["others"])) partialPutConversationMetaOthers($othersId, $conversation->meta["others"]);
 
     releaseDatabaseTransaction();
 
@@ -162,6 +165,7 @@
     if (!empty($meta["themes"])) partialPutConversationMetaThemes($conversationId, $meta["themes"]);
     if (!empty($meta["participants"])) partialPutConversationMetaParticipants($conversationId, $meta["participants"]);
     if (!empty($meta["region"])) partialPutConversationMetaRegion($conversationId, $meta["region"]);
+    if (!empty($meta["others"])) partialPutConversationMetaOthers($row["others_id"], $meta["others"]);
 
     releaseDatabaseTransaction();
 
@@ -188,6 +192,7 @@
     if (!empty($meta["themes"])) putConversationMetaThemes($conversationId, $meta["themes"]);
     if (!empty($meta["participants"])) putConversationMetaParticipants($conversationId, $meta["participants"]);
     if (!empty($meta["region"])) putConversationMetaRegion($conversationId, $meta["region"]);
+    if (!empty($meta["others"])) putConversationMetaOthers($row["others_id"], $meta["others"]);
 
     releaseDatabaseTransaction();
 
@@ -239,8 +244,8 @@
   /**
    * Puts a new meta introduction with the content id of the text.
    */
-  function putConversationMetaIntro($titleId, $metaTitle) {
-    \ICA\Contents\putContentLanguages($titleId, $metaTitle);
+  function putConversationMetaIntro($introId, $metaTitle) {
+    \ICA\Contents\putContentLanguages($introId, $metaTitle);
   }
 
   /**
@@ -657,6 +662,45 @@
       if (!array_key_exists($lang, $metaRegion)) {
         insertConversationMetaRegionLanguageState($row["lang_id"], STATE_UNPUBLISHED);
       }
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  /**
+   * conversation meta other reflections
+   */
+
+  /**
+   * Returns the latest revision of the other reflections.
+   */
+  function getConversationMetaOthersOfLatestRevision($othersId) {
+    return \ICA\Contents\getContentLanguagesOfLatestRevision($othersId);
+  }
+
+  /**
+   * Partially puts a new meta other reflections with the content id of the text.
+   */
+  function partialPutConversationMetaOthers($othersId, $metaOthers) {
+    \ICA\Contents\partialPutContentLanguages($othersId, $metaOthers);
+  }
+
+  /**
+   * Puts a new meta other reflections with the content id of the text.
+   */
+  function putConversationMetaOthers($othersId, $metaOthers) {
+    \ICA\Contents\putContentLanguages($othersId, $metaOthers);
+  }
+
+  function fixConversationMetaOthers() {
+
+    retainDatabaseTransaction();
+
+    $result = query("SELECT * FROM conversations WHERE others_id = 0;");
+    while ($row = $result->fetch_assoc()) {
+      $othersId = \ICA\Contents\requestContentId();
+      query("UPDATE conversations SET others_id = {$othersId} WHERE id = {$row['id']}");
     }
 
     releaseDatabaseTransaction();
