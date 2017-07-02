@@ -8,23 +8,29 @@ AudioHandler.defineMethod("construct", function construct() {
 });
 
 AudioHandler.prototype.play = function () {
-  if (this.paused && this.audio) {
-    this.paused = false;
+  if (this.audio) {
+    // If the audio handler is not paused, sync the state of the audio handler to that of the audio object
+    // Otherwise, the audio handler is paused, and should start playing the audio
+    this.paused |= this.audio.paused;
 
-    if (!(this.audio instanceof Audio)) {
-      this.audio = new Audio(this.audio);
+    if (this.paused) {
+      this.paused = false;
+
+      if (!(this.audio instanceof Audio)) {
+        this.audio = new Audio(this.audio);
+      }
+
+      // Stop audio fade out
+      if (this.fadeOutRoutine) {
+        this.fadeOutRoutine.end();
+      }
+
+      // Play audio
+      this.audio.volume = 1.0;
+      this.audio.play();
+
+      console.log("AudioHandler: Playing audio");
     }
-
-    // Stop audio fade out
-    if (this.fadeOutRoutine) {
-      this.fadeOutRoutine.end();
-    }
-
-    // Play audio
-    this.audio.volume = 1.0;
-    this.audio.play();
-
-    console.log("AudioHandler: Playing audio");
   }
 };
 

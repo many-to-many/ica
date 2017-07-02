@@ -34,16 +34,19 @@ ExploreConversationController.defineMethod("initView", function initView() {
 
   this.audioPreviewHandler = new AudioHandler();
 
-  this.view.addEventListener("mouseenter", function () {
+  this.view.querySelector(".audio-on-hover").addEventListener("click", function () {
+    event.stopPropagation();
     this.audioPreviewHandler.play();
+    this.view.querySelector(".audio-on-hover").classList.add("active");
   }.bind(this));
 
-  this.windowBlurEventListener = function () {
+  this.blurEventListener = function () {
     this.audioPreviewHandler.stop(300);
+    this.view.querySelector(".audio-on-hover").classList.remove("active");
   }.bind(this);
 
-  this.view.addEventListener("mouseleave", this.windowBlurEventListener);
-  window.addEventListener("blur", this.windowBlurEventListener);
+  this.view.addEventListener("mouseleave", this.blurEventListener);
+  window.addEventListener("blur", this.blurEventListener);
 });
 
 ExploreConversationController.defineMethod("updateView", function updateView() {
@@ -94,8 +97,8 @@ ExploreConversationController.defineMethod("updateView", function updateView() {
 ExploreConversationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
-  window.removeEventListener("blur", this.windowBlurEventListener);
-  delete this.windowBlurEventListener;
+  window.removeEventListener("blur", this.blurEventListener);
+  delete this.blurEventListener;
 
   removeElementProperty(this.view, "conversation-id");
 });

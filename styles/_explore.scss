@@ -26,7 +26,6 @@ $column-spacing: 8px;
     flex-direction: column;
     overflow: hidden;
     border: solid 1px #ededed;
-    font-size: 0.875em;
     @include shadow(3);
     transition: box-shadow ease 0.3s, border-color ease 0.3s;
 
@@ -50,6 +49,7 @@ $column-spacing: 8px;
     }
 
     > .conversation-meta {
+      font-size: 0.875em;
       flex: 1 1 auto;
       padding: 0 1.5em;
       height: auto;
@@ -79,7 +79,7 @@ $column-spacing: 8px;
       > * {
         color: lighten($color-text, 30%);
         opacity: 0;
-        transition: opacity ease 0.2s, color ease 0.2s;
+        transition: opacity ease 0.3s, color ease 0.3s;
       }
 
       > :not(:last-child) {
@@ -87,18 +87,37 @@ $column-spacing: 8px;
       }
 
       .audio-on-hover {
+        @include flex;
         opacity: 0.5 !important;
-        box-sizing: border-box;
-        width: 1.75em;
-        height: 1.75em;
-        background-image: inline-image("icon-speaker.svg");
-        background-position: center;
-        background-size: 0.9em 0.9em;
-        background-repeat: no-repeat;
-        background-color: $color-text-light;
-        border-radius: 50%;
-        border: solid 1px #f0f0f0;
-        @include shadow(5);
+
+        .audio-on-hover-label {
+          margin-right: 0.5em;
+          transition: color ease 0.3s;
+        }
+
+        .audio-on-hover-speaker {
+          box-sizing: border-box;
+          width: 1.75em;
+          height: 1.75em;
+          background: $color-text-light inline-image("icon-speaker.svg") no-repeat center;
+          background-size: 0.9em 0.9em;
+          border-radius: 50%;
+          border: solid 1px #f0f0f0;
+          @include shadow(3);
+          transition: box-shadow ease 0.3s;
+        }
+
+        &:hover,
+        &.active {
+
+          .audio-on-hover-label {
+            color: $color-primary;
+          }
+
+          .audio-on-hover-speaker {
+            @include shadow(5);
+          }
+        }
       }
     }
 
@@ -125,11 +144,21 @@ $column-spacing: 8px;
         }
       }
 
-      > .conversation-status * {
-        color: rgba($color-text-light, 0.60);
+      > .conversation-status {
 
-        &:hover {
-          color: #fff !important;
+        > * {
+          color: rgba($color-text-light, 0.60);
+        }
+
+        .audio-on-hover {
+
+          &:hover,
+          &.active {
+
+            .audio-on-hover-label {
+              color: $color-text-light;
+            }
+          }
         }
       }
     }
