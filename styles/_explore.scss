@@ -26,7 +26,6 @@ $column-spacing: 8px;
     flex-direction: column;
     overflow: hidden;
     border: solid 1px #ededed;
-    font-size: 0.875em;
     @include shadow(3);
     transition: box-shadow ease 0.3s, border-color ease 0.3s;
 
@@ -50,6 +49,7 @@ $column-spacing: 8px;
     }
 
     > .conversation-meta {
+      font-size: 0.875em;
       flex: 1 1 auto;
       padding: 0 1.5em;
       height: auto;
