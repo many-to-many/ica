@@ -123,7 +123,7 @@
    */
   function insertResponseState($responseId, $state = STATE_PUBLISHED) {
 
-    \ICA\JointSources\insertJointSourceState($responseId, $state);
+    return \ICA\JointSources\insertJointSourceState($responseId, $state);
 
   }
 

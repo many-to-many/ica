@@ -140,7 +140,7 @@
    */
   function insertConversationState($conversationId, $state = STATE_PUBLISHED) {
 
-    \ICA\JointSources\insertJointSourceState($conversationId, $state);
+    return \ICA\JointSources\insertJointSourceState($conversationId, $state);
 
   }
 
