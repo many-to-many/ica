@@ -3,6 +3,7 @@ language: node_js
 node_js:
   - "node"
 before_install:
+  - rvm install 2.0.0
   - gem install sass
   - gem install compass
 install: npm install --save-dev
