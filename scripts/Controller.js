@@ -78,16 +78,8 @@ Controller.defineMethod("initView", function initView(updateView = []) {
       while (anchorHistory.length > 50) anchorHistory.shift();
 
       switch (this.getAttribute("href")) {
-      case "#main":
-
-        switchAppView("main");
-
-        break;
-      case "#search":
-
-        switchAppView("search");
-
-        break;
+      case "#main": switchAppView("main"); break;
+      case "#search": switchAppView("search"); break;
       case "#publisher":
 
         anchorHistory.pop(); // Escape current anchor
@@ -130,6 +122,10 @@ Controller.defineMethod("initView", function initView(updateView = []) {
         });
       this.classList.add("active");
     }.bind(element));
+
+    if (element.classList.contains("default")) {
+      element.click();
+    }
 
     element._anchorGroupInit = true;
   });

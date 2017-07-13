@@ -83,6 +83,4 @@ window.addEventListener("load", function () {
   notifications = new Notifications();
   new NotificationsController(notifications, document.body);
   appController = new AppController(document.body);
-
-  document.querySelector("[href='#main']").click();
 });
