@@ -312,7 +312,7 @@
       });
   };
 
-  ICA.getConversations = function (params, notify) {
+  ICA.getConversations = function (params) {
     var data = [];
     for (var key in params) {
       data.push(key + "=" + params[key]);
@@ -321,11 +321,7 @@
       "/conversations/"
         + (data.length > 0
         ? "?" + data.join("&")
-        : ""),
-      undefined,
-      undefined,
-      notify
-    )
+        : ""))
       .then(touchConversationsWithAPIResponse);
   };
 
@@ -411,7 +407,7 @@
             : {}
         })
           .then(function () {
-            console.log("ICA: Joint source revision posted");
+            console.log("ICA: Conversation revision posted");
           })
           // Post new sources
           .then(function () {
