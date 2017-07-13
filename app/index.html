@@ -14,19 +14,28 @@
     <div hidden>
       <!-- Template: Explore -->
       <template id="template-explore-conversation">
-        <article class="conversation">
+        <article class="jointsource conversation">
           <div class="conversation-backdrop">
             <div class="conversation-backdrop-image"></div>
           </div>
-          <section class="conversation-meta">
+          <section class="jointsource-meta">
             <h3 data-ica-conversation-meta="title">Title</h3>
             <p data-ica-conversation-meta="region"></p>
             <p data-ica-conversation-meta="intro"></p>
           </section>
-          <section class="conversation-status">
-            <a data-ica-action="edit-conversation">Edit</a>
+          <section class="jointsource-status">
             <div class="flex-space"></div>
             <div class="audio-on-hover"><span class="audio-on-hover-label">Audio Preview</span><div class="audio-on-hover-speaker"></div></div>
+          </section>
+        </article>
+      </template>
+      <template id="template-explore-discussion">
+        <article class="jointsource discussion">
+          <section class="jointsource-meta">
+            <h3 data-ica-discussion="title">Title</h3>
+          </section>
+          <section class="jointsource-status">
+            <!-- <a data-ica-action="edit-discussion">Edit</a> -->
           </section>
         </article>
       </template>
@@ -133,50 +142,74 @@
       <template id="template-map">
         <article class="map"></article>
       </template>
-      <template id="template-map-conversation">
+      <template id="template-map-article-conversation">
         <div class="article card-group">
           <span style="position: absolute; top: 1.5em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
-          <article class="conversation card">
-            <header class="conversation-nav">
-              <a class="conversation-nav-btn left" data-ica-action="previous-source"></a>
-              <div><span data-ica-conversation-source-index></span>/<span data-ica-conversation-number-of-sources></span></div>
-              <a class="conversation-nav-btn right" data-ica-action="next-source"></a>
-            </header>
-            <section class="sources-container">
-              <div class="sources">
-                <article class="source meta">
-                  <section class="conversation-backdrop" hidden>
-                    <div class="conversation-backdrop-image"></div>
-                  </section>
-                  <section class="conversation-meta">
-                    <h3 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title"></h3>
-                    <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
-                    <p data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></p>
-                    <div data-ica-conversation-meta-predicate="others">
-                      <h4>Other reflections</h4>
-                      <p data-ica-conversation-meta="others"></p>
-                    </div>
-                    <div data-ica-conversation-meta-predicate="participants">
-                      <h4>Participants</h4>
-                      <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>
-                    </div>
-                    <div data-ica-conversation-meta-predicate="themes">
-                      <h4>Themes</h4>
-                      <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
-                    </div>
-                  </section>
-                  <section class="conversation-control">
-                    <a data-ica-action="edit-conversation">Edit Conversation</a>
-                  </section>
-                </article>
-              </div>
-            </section>
-          </article>
+          <article class="jointsource conversation"></article>
           <h4>Responses</h4>
           <div class="responses"></div>
         </div>
       </template>
-      <template id="template-map-conversation-response">
+      <template id="template-map-conversation">
+        <article class="jointsource conversation card">
+          <header class="conversation-nav">
+            <a class="conversation-nav-btn left" data-ica-action="previous-source"></a>
+            <div><span data-ica-conversation-source-index></span>/<span data-ica-conversation-number-of-sources></span></div>
+            <a class="conversation-nav-btn right" data-ica-action="next-source"></a>
+          </header>
+          <section class="sources-container">
+            <div class="sources">
+              <article class="source meta">
+                <section class="conversation-backdrop" hidden>
+                  <div class="conversation-backdrop-image"></div>
+                </section>
+                <section class="conversation-meta">
+                  <h3 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title"></h3>
+                  <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
+                  <p data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></p>
+                  <div data-ica-conversation-meta-predicate="others">
+                    <h4>Other reflections</h4>
+                    <p data-ica-conversation-meta="others"></p>
+                  </div>
+                  <div data-ica-conversation-meta-predicate="participants">
+                    <h4>Participants</h4>
+                    <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>
+                  </div>
+                  <div data-ica-conversation-meta-predicate="themes">
+                    <h4>Themes</h4>
+                    <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
+                  </div>
+                </section>
+                <section class="conversation-control">
+                  <a data-ica-action="edit-conversation">Edit Conversation</a>
+                </section>
+              </article>
+            </div>
+          </section>
+        </article>
+      </template>
+      <template id="template-map-article-discussion">
+        <div class="article card-group">
+          <span style="position: absolute; top: 1.5em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
+          <article class="jointsource discussion"></article>
+          <h4>Discussion Thread</h4>
+          <div class="thread"></div>
+        </div>
+      </template>
+      <template id="template-map-discussion">
+        <article class="jointsource discussion card">
+          <section class="sources-container">
+            <div class="sources">
+              <article class="source meta">
+                <section class="conversation-meta">
+                  <h3 data-ica-discussion-predicate="title" data-ica-discussion="title"></h3>
+                </section>
+              </article>
+            </div>
+          </section>
+        </article>
+      </template>
+      <template id="template-map-response">
         <article class="response card">
           <section class="response-message">
             <div class="editor" data-ica-response-message></div>
@@ -301,33 +334,47 @@
     </div>
     <!-- Begin main -->
     <header class="topbar">
-      <h1 class="title-complex"><span>Many-to-Many</span><span class="subtitle">Rethinking the Ethnographic Archive</span></h1>
-      <a href="#main" class="topbar-item" data-ica-anchor-group="topbar">Explore</a>
-      <a href="#search" class="topbar-item" data-ica-anchor-group="topbar">Search</a>
-      <a href="#publisher" class="topbar-item" data-ica-anchor-group="topbar">Share (a) Conversation</a>
-      <a href="#account" class="topbar-item" data-ica-anchor-group="topbar">Log in</a>
-      <a href="#about" class="topbar-item" data-ica-anchor-group="topbar">About</a>
+      <div class="topbar-colspan" data-ica-width-multiple="300">
+        <h1 class="title-complex"><span>Many-to-Many</span><span class="subtitle">Rethinking the Ethnographic Archive</span></h1>
+        <a href="#main" class="topbar-item default" data-ica-anchor-group="topbar" data-ica-anchor-default>Explore</a>
+        <a href="#publisher" class="topbar-item" data-ica-anchor-group="topbar">Share (a) Conversation</a>
+        <a href="#account" class="topbar-item" data-ica-anchor-group="topbar">Log in</a>
+        <a href="#about" class="topbar-item" data-ica-anchor-group="topbar">About</a>
+      </div>
     </header>
     <section class="app-view" data-ica-width-multiple="300">
       <div data-ica-app-view="main" class="main">
-        <div class="explore"></div>
-      </div>
-      <div data-ica-app-view="search" class="search">
-        <div class="search-control form">
-          <section>
-            <label>Search by Keyword</label>
-            <input data-ica-conversation-query-meta="title" type="text" placeholder="Keywords">
-          </section>
-          <section>
-            <label>Search by Themes (under&nbsp;construction)</label>
-            <input data-ica-conversation-query-meta="themes" type="text" placeholder="Themes" data-ica-format="tokens">
-          </section>
-          <section>
-            <label>Search by Locations (under&nbsp;construction)</label>
-            <input data-ica-conversation-query-meta="locations" type="text" placeholder="Locations">
-          </section>
+        <header class="topbar">
+          <div class="topbar-colspan" data-ica-width-multiple="300">
+            <a href="#main/conversations" class="topbar-item default" data-ica-anchor-group="main-topbar">Conversations</a>
+            <a href="#main/discussions" class="topbar-item" data-ica-anchor-group="main-topbar">Discussions</a>
+            <div class="flex-space"></div>
+            <a href="#main/search" class="topbar-item" data-ica-anchor-group="main-topbar">Search</a>
+          </div>
+        </header>
+        <div data-ica-app-view="main/conversations" class="conversations">
+          <div class="explore"></div>
         </div>
-        <div class="explore"></div>
+        <div data-ica-app-view="main/discussions" class="discussions">
+          <div class="explore"></div>
+        </div>
+        <div data-ica-app-view="main/search" class="search">
+          <div class="search-control form">
+            <section>
+              <label>Search by Keyword</label>
+              <input data-ica-conversation-query-meta="title" type="text" placeholder="Keywords">
+            </section>
+            <section>
+              <label>Search by Themes (under&nbsp;construction)</label>
+              <input data-ica-conversation-query-meta="themes" type="text" placeholder="Themes" data-ica-format="tokens">
+            </section>
+            <section>
+              <label>Search by Locations (under&nbsp;construction)</label>
+              <input data-ica-conversation-query-meta="locations" type="text" placeholder="Locations">
+            </section>
+          </div>
+          <div class="explore"></div>
+        </div>
       </div>
       <div data-ica-app-view="account">
         <h3>You're logged in</h3>

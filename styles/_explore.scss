@@ -1,7 +1,4 @@
 
-$column-width: 300px;
-$column-spacing: 8px;
-
 .explore {
   display: flex;
   flex-direction: row;
@@ -14,7 +11,7 @@ $column-spacing: 8px;
     flex: none;
   }
 
-  .conversation {
+  .jointsource {
     box-sizing: border-box;
     position: relative;
     margin: $column-spacing / 2;
@@ -25,30 +22,11 @@ $column-spacing: 8px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: solid 1px #ededed;
+    border: solid 1px $color-border;
     @include shadow(3);
     transition: box-shadow ease 0.3s, border-color ease 0.3s;
 
-    > .conversation-backdrop {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      @include fade(8em, 180deg, rgba(#000, 0.50));
-
-      > .conversation-backdrop-image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-size: cover;
-        background-position: center;
-      }
-    }
-
-    > .conversation-meta {
+    > .jointsource-meta {
       font-size: 0.875em;
       flex: 1 1 auto;
       padding: 0 1.5em;
@@ -68,7 +46,7 @@ $column-spacing: 8px;
       }
     }
 
-    > .conversation-status {
+    > .jointsource-status {
       flex: none;
       @include flex;
       padding: 0.5em 1em 1em 1.5em;
@@ -123,9 +101,9 @@ $column-spacing: 8px;
 
     &:hover {
       @include shadow(6);
-      border-color: #dadada;
+      border-color: darken($color-border, 10%);
 
-      > .conversation-status {
+      > .jointsource-status {
 
         > * {
           opacity: 1 !important;
@@ -137,14 +115,14 @@ $column-spacing: 8px;
       background-color: #000;
       color: $color-text-light;
 
-      > .conversation-meta {
+      > .jointsource-meta {
 
         > [data-ica-conversation-meta="intro"] {
           display: none;
         }
       }
 
-      > .conversation-status {
+      > .jointsource-status {
 
         > * {
           color: rgba($color-text-light, 0.60);
@@ -162,5 +140,32 @@ $column-spacing: 8px;
         }
       }
     }
+  }
+
+  .conversation {
+
+    > .conversation-backdrop {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      @include fade(8em, 180deg, rgba(#000, 0.50));
+
+      > .conversation-backdrop-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        left: 0;
+        background-size: cover;
+        background-position: center;
+      }
+    }
+  }
+
+  .discussion {
+
   }
 }

@@ -1,10 +1,10 @@
 
 .topbar {
-  display: flex;
+  @include flex;
   box-sizing: content-box;
   height: 3em;
   background-color: #fff;
-  border-bottom: solid 1px #ededed;
+  border-bottom: solid 1px $color-border;
   overflow-x: auto;
   justify-content: flex-start;
   font-weight: 700;
@@ -13,22 +13,13 @@
   z-index: $z-relative-topbar;
   @include shadow(2);
 
-  &::before, &::after {
-    display: block;
-    content: "";
-    flex: 0 0 auto;
-    width: 0.75em;
-  }
-
-  body > & {
-    position: fixed;
-    top: 0;
-    right : 0;
-    left: 0;
-
-    & ~ .app-view {
-      padding-top: 3em;
-    }
+  > .topbar-colspan {
+    @include flex;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0 ($column-spacing / 2);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   h1,
@@ -41,12 +32,16 @@
     font-size: 1em;
     line-height: 1;
     font-weight: 700;
-    padding: 1em 0.75em;
+    padding: 1em 0;
     flex: 1 0 auto;
     color: lighten($color-text, 10%);
+
+    &:not(:last-child) {
+      margin-right: 1.25em;
+    }
   }
 
-  > .title-complex {
+  .title-complex {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -68,33 +63,51 @@
     }
   }
 
-  > .topbar-item {
+  .topbar-item {
     position: relative;
     flex: 0 0 auto;
-    padding: 1em 0.75em;
+    padding: 1em 0;
     line-height: 1em;
     font-weight: 500;
     color: lighten($color-text, 10%);
 
-    &:after {
-      display: block;
-      position: absolute;
-      content: "";
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: 0;
-      background-color: transparent;
+    &:not(:last-child) {
+      margin-right: 1.25em;
+    }
+  }
 
-      transition: height ease 0.2s, background-color ease 0.2s;
+  body > & {
+    position: fixed;
+    top: 0;
+    right : 0;
+    left: 0;
+
+    & ~ .app-view {
+      padding-top: 3em;
     }
 
-    &:hover,
-    &.active {
+    .topbar-item {
 
       &:after {
-        height: 1px;
-        background-color: $color-primary !important;
+        display: block;
+        position: absolute;
+        content: "";
+        right: -0.25em;
+        bottom: 0;
+        left: -0.25em;
+        height: 0;
+        background-color: transparent;
+
+        transition: height ease 0.2s, background-color ease 0.2s;
+      }
+
+      &:hover,
+      &.active {
+
+        &:after {
+          height: 1px;
+          background-color: $color-primary !important;
+        }
       }
     }
   }

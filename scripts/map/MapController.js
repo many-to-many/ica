@@ -28,18 +28,20 @@ MapController.defineMethod("updateView", function updateView() {
 
   // Adding elements
   this.map.articles.map(function (article) {
-    switch (article.constructor) {
-    case Conversation:
-      // Check existing element
-      if (this.view.querySelector("[data-ica-conversation-id='{0}']".format(article.conversationId))) return;
+    // Check existing element
+    if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(article.conversationId))) return;
 
-      // Create new view
-      var fragment = MapConversationController.createViewFragment();
-      var element = fragment.querySelector(".article");
-      this.view.appendChild(fragment);
-      new MapConversationController(article, element).componentOf = this;
-      break;
+    // Create new view
+    var Controller;
+    switch (article.constructor) {
+    case Conversation: Controller = MapArticleConversationController; break;
+    case Discussion: Controller = MapArticleDiscussionController; break;
+    default: return;
     }
+    var fragment = Controller.createViewFragment();
+    var element = fragment.querySelector(".article");
+    this.view.appendChild(fragment);
+    new Controller(article, element).componentOf = this;
   }.bind(this));
 });
 

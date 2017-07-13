@@ -1,14 +1,19 @@
 
-var MapConversationResponseController = ResponseController.createComponent("MapConversationResponseController");
+var MapResponseController = ResponseController.createComponent("MapResponseController");
 
-MapConversationResponseController.createViewFragment = function () {
-  return cloneTemplate("#template-map-conversation-response");
+MapResponseController.createViewFragment = function () {
+  return cloneTemplate("#template-map-response");
 };
 
 // View
 
-MapConversationResponseController.defineMethod("initView", function initView() {
+MapResponseController.defineMethod("initView", function initView() {
   if (!this.view) return;
+
+  this.view.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }.bind(this.view));
 
   var editor = this.view.querySelector("[data-ica-response-message]");
   this.quill = new Quill(editor, {
@@ -50,7 +55,7 @@ MapConversationResponseController.defineMethod("initView", function initView() {
 
 });
 
-MapConversationResponseController.defineMethod("updateView", function updateView() {
+MapResponseController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelector("[data-ica-action='unpublish-response']").hidden =
@@ -78,7 +83,7 @@ MapConversationResponseController.defineMethod("updateView", function updateView
   }
 });
 
-MapConversationResponseController.prototype.publish = function () {
+MapResponseController.prototype.publish = function () {
   return this.response.publish("Publishing response...")
     .then(function (response) {
 
@@ -98,7 +103,7 @@ MapConversationResponseController.prototype.publish = function () {
     });
 };
 
-MapConversationResponseController.prototype.unpublish = function () {
+MapResponseController.prototype.unpublish = function () {
   return new Promise(function (resolve, reject) {
     var prompt = new BasicPrompt(
       "Unpublishing the response...",
@@ -128,7 +133,7 @@ MapConversationResponseController.prototype.unpublish = function () {
       return this.response.unpublish("Unpublishing response...");
     }.bind(this))
     .then(function () {
-      this.response.destroy(true, true, true, true);
+      this.response.destroy(true, true, true);
 
       // Display notification
       notifications.addNotification(new BasicNotification("Response unpublished!"));

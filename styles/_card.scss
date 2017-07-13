@@ -13,7 +13,7 @@ $card-width: 40em;
   margin: auto;
   padding: 0 1.5em;
   background-color: #ffffff;
-  border: solid 1px #ededed;
+  border: solid 1px $color-border;
   border-radius: 3px;
   overflow-y: auto;
   z-index: 3;
@@ -23,8 +23,10 @@ $card-width: 40em;
     position: -webkit-sticky;
     top: 0;
     margin: 0 -1.5em;
+    padding: 0 1.5em;
     z-index: $z-relative-topbar;
     @include shadow(2);
+    border-radius: 1px 1px 0 0; // Fix sharp corners
   }
 
   > * {
