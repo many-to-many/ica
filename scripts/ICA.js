@@ -554,7 +554,8 @@
           return ICA.post("/responses/", {
             _id: response.responseId,
             message: response.message || {},
-            refereeJointSourceIds: Object.keys(response.referees)
+            refereeJointSourceIds: Object.keys(response.referees),
+            referrerJointSourceIds: Object.keys(response.referrers)
           }, notify)
             .then(touchResponsesWithAPIResponse)
             .then(function () {
