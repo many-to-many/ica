@@ -57,7 +57,7 @@ PublisherConversationController.defineMethod("initView", function initView() {
     e.preventDefault();
 
     if (this.controller.conversation.conversationId < 0) {
-      this.controller.conversation.destroy(true, true, true, true);
+      this.controller.conversation.destroy(true, true, true);
     } else {
       this.controller.destroy(true);
     }
@@ -182,7 +182,7 @@ PublisherConversationController.prototype.unpublish = function () {
       notifications.addNotification(new BasicNotification("Conversation unpublished"));
       notifications.didUpdate();
 
-      this.conversation.destroy(true, true, true, true);
+      this.conversation.destroy(true, true, true);
     }.bind(this))
     .catch(function (err) {
       console.warn(err);

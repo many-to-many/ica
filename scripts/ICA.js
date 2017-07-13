@@ -70,7 +70,7 @@
             ICA.login()
               .then(function () {
                 if (prompt) {
-                  prompt.destroy(true, true, true, true);
+                  prompt.destroy(true, true, true);
                   prompt = undefined;
                 }
                 resolve();

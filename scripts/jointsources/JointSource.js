@@ -49,25 +49,14 @@ JointSource.defineMethod("destruct", function destruct() {
     // Request source to release jointSource
     this.sources[sourceId].jointSource = null;
   }
-  // Destruct responses
-  for (var responseId in this.responses) {
-    // Request response to release jointSource
-    this.responses[responseId].detachJointSource(this);
-    this.responses[responseId].softAttachJointSource(this.jointSourceId);
-  }
   // Destruct jointExtracts
 
 });
 
-JointSource.defineMethod("destroy", function destroy(destroySources = true, destroyResponses = true, destroyControllers = false, destroyViews = false) {
+JointSource.defineMethod("destroy", function destroy(destroySources = true, destroyControllers = false, destroyViews = false) {
   if (destroySources) {
     for (var sourceId in this.sources) {
       this.sources[sourceId].destroy.apply(this.sources[sourceId], [destroyControllers, destroyViews]);
-    }
-  }
-  if (destroyResponses) {
-    for (var responseId in this.responses) {
-      this.responses[responseId].destroy.apply(this.responses[responseId], [destroyControllers, destroyViews]);
     }
   }
   return [destroyControllers, destroyViews];
@@ -242,12 +231,6 @@ JointSource.prototype.cloneSources = function () {
 JointSource.prototype.forEachJointExtract = function (callback) {
   for (var jointExtractId in this.jointExtracts) {
     callback(this.jointExtracts[jointExtractId], jointExtractId);
-  }
-};
-
-JointSource.prototype.forEachResponse = function (callback) {
-  for (var responseId in this.responses) {
-    callback(this.responses[responseId], responseId);
   }
 };
 
