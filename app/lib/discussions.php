@@ -111,7 +111,7 @@
         AND reference_state = $referenceStateEncoded
         AND response_state = $responseStateEncoded 
         " . ($underResponseId ? "AND response_id < $underResponseId" : "") . "
-      ORDER BY discussion_id DESC
+      ORDER BY response_id DESC
       LIMIT $limit;");
 
     return \ICA\Responses\createResponsesFromQueryResult($result);

@@ -26,20 +26,26 @@ MapArticleDiscussionController.defineMethod("initView", function initView() {
 
   // Responses in discussion
 
-  this.discussion.getResponsesInDiscussion()
-    .then(function (responses) {
+  let renderResponses = function (responses) {
 
-      for (let response of responses.reverse()) {
-        let element = this.view.querySelector("[data-ica-response-id='{0}']".format(response.responseId));
-        if (!element) {
-          let fragment = MapResponseController.createViewFragment();
-          element = fragment.querySelector(".response");
-          let parentNode = this.view.querySelector(".thread");
-          parentNode.insertBefore(fragment, parentNode.firstElementChild);
-          new MapResponseController(response, element).componentOf = this;
-        }
+    for (let response of responses.reverse()) {
+      let element = this.view.querySelector("[data-ica-response-id='{0}']".format(response.responseId));
+      if (!element) {
+        let fragment = MapResponseController.createViewFragment();
+        element = fragment.querySelector(".response");
+        let parentNode = this.view.querySelector(".thread");
+        parentNode.insertBefore(fragment, parentNode.firstElementChild);
+        new MapResponseController(response, element).componentOf = this;
       }
-    }.bind(this), console.warn);
+    }
+
+    if (responses.requestNext) {
+      responses.requestNext().then(renderResponses, console.warn);
+    }
+  }.bind(this);
+
+  this.discussion.getResponsesInDiscussion()
+    .then(renderResponses, console.warn);
 
 });
 
