@@ -189,6 +189,55 @@
 
   .response {
 
+    .response-nav {
+      @include flex;
+      margin: 0 -0.75em;
+      padding: 1em 0.75em;
+      border-bottom: solid 1px $color-border;
+
+      > * {
+        padding: 0.5em 0;
+        line-height:1;
+      }
+
+      > :not(:last-child) {
+        margin-right: 0.5em;
+      }
+
+      > .response-meta {
+        flex: 1 0 auto;
+        padding: 0;
+
+        .response-author {
+          display: block;
+          font-size: 1em;
+          line-height: 1.2;
+          height: 1.2em;
+          margin: 0;
+          font-weight: 500;
+        }
+
+        .response-timestamp-authored {
+          display: block;
+          font-size: 0.75em;
+          margin: 0;
+          padding-top: 0.1em;
+          line-height: 1;
+          color: lighten($color-text, 30%);
+          font-weight: 500;
+        }
+      }
+
+      > .response-control {
+        @include flex;
+        color: lighten($color-text, 30%);
+
+        > :not(:last-child) {
+          margin-right: 0.5em;
+        }
+      }
+    }
+
     .response-message {
 
       .editor {
@@ -201,15 +250,6 @@
       }
     }
 
-    .response-control {
-      @include flex;
-      font-size: 0.875em;
-      color: lighten($color-text, 30%);
-
-      > :not(:last-child) {
-        margin-right: 0.5em;
-      }
-    }
   }
 
   .responses,
@@ -218,6 +258,10 @@
     .response + .response {
       margin-top: 1em;
     }
+  }
+
+  .thread {
+    margin-top: 1em;
   }
 
   .text {

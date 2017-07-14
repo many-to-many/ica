@@ -67,7 +67,7 @@ MapResponseController.defineMethod("updateView", function updateView() {
 
   this.view.querySelector("[data-ica-response-timestamp='authored']").textContent =
     this.response._timestampAuthored
-    ? new Date(this.response._timestampAuthored * 1000) .toLocaleDateString("en-us")
+    ? new Date(this.response._timestampAuthored * 1000) .toLocaleString("en-us")
     : "Draft";
 
   if (this.response._authorId) {
@@ -75,11 +75,10 @@ MapResponseController.defineMethod("updateView", function updateView() {
       .then(function (author) {
         if (!this.view) return;
 
-        this.view.querySelector("[data-ica-response-author='name']").textContent = (author.name || "Anonymous")
-          + (author.authorId == ICA.accountId ? " (me)" : "");
+        this.view.querySelector("[data-ica-response-author='name']").textContent = author.name || "Anonymous";
       }.bind(this));
   } else {
-    this.view.querySelector("[data-ica-response-author]").textContent = "";
+    this.view.querySelector("[data-ica-response-author]").textContent = "Author";
   }
 });
 

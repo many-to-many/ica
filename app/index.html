@@ -192,7 +192,6 @@
         <div class="article card-group">
           <span style="position: absolute; top: 1.5em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
           <article class="jointsource discussion"></article>
-          <h4>Discussion Thread</h4>
           <div class="thread"></div>
         </div>
       </template>
@@ -211,15 +210,18 @@
       </template>
       <template id="template-map-response">
         <article class="response card">
+          <section class="response-nav">
+            <section class="response-meta">
+              <span class="response-author" data-ica-response-author="name"></span>
+              <span class="response-timestamp-authored" data-ica-response-timestamp="authored"></span>
+            </section>
+            <div class="response-control">
+              <a data-ica-action="publish-response">Publish</a>
+              <a data-ica-action="unpublish-response">Unpublish</a>
+            </div>
+          </section>
           <section class="response-message">
             <div class="editor" data-ica-response-message></div>
-          </section>
-          <section class="response-control">
-            <a data-ica-action="publish-response">Publish</a>
-            <a data-ica-action="unpublish-response">Unpublish</a>
-            <div class="flex-space"></div>
-            <span data-ica-response-author='name'>Author</span>
-            <span data-ica-response-timestamp="authored">Timestamp</span>
           </section>
         </article>
       </template>
