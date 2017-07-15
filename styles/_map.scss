@@ -232,8 +232,8 @@
         @include flex;
         color: lighten($color-text, 30%);
 
-        > :not(:last-child) {
-          margin-right: 1em;
+        > :not(:first-child) {
+          margin-left: 1em;
         }
       }
     }
