@@ -32,7 +32,7 @@
       padding: 0 1.5em;
       height: auto;
       overflow: hidden;
-      @include fade(30%);
+      @include fade(4em);
       z-index: 2;
 
       h3 {
@@ -50,12 +50,13 @@
       flex: none;
       @include flex;
       padding: 0.5em 1em 1em 1.5em;
-      line-height: 1.75;
+      line-height: 2;
       text-transform: lowercase;
       z-index: 2;
 
       > * {
         color: lighten($color-text, 30%);
+        font-size: 0.875em;
         opacity: 0;
         transition: opacity ease 0.3s, color ease 0.3s;
       }
@@ -66,7 +67,7 @@
 
       .audio-on-hover {
         @include flex;
-        opacity: 0.5 !important;
+        opacity: 0.6;
 
         .audio-on-hover-label {
           margin-right: 0.5em;
@@ -75,10 +76,10 @@
 
         .audio-on-hover-speaker {
           box-sizing: border-box;
-          width: 1.75em;
-          height: 1.75em;
+          width: 2em;
+          height: 2em;
           background: $color-text-light inline-image("icon-speaker.svg") no-repeat center;
-          background-size: 0.9em 0.9em;
+          background-size: 1em;
           border-radius: 50%;
           border: solid 1px #f0f0f0;
           @include shadow(3);
@@ -106,14 +107,14 @@
       > .jointsource-status {
 
         > * {
-          opacity: 1 !important;
+          opacity: 1;
         }
       }
     }
 
     &.dark {
-      background-color: #000;
       color: $color-text-light;
+      text-shadow: 0 1px 4px rgba(#000, 0.30);
 
       > .jointsource-meta {
 
@@ -125,7 +126,7 @@
       > .jointsource-status {
 
         > * {
-          color: rgba($color-text-light, 0.60);
+          color: rgba($color-text-light, 0.80);
         }
 
         .audio-on-hover {
@@ -150,7 +151,6 @@
       right: 0;
       bottom: 0;
       left: 0;
-      @include fade(8em, 180deg, rgba(#000, 0.50));
 
       > .conversation-backdrop-image {
         position: absolute;

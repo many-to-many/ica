@@ -56,14 +56,17 @@ ExploreConversationController.defineMethod("updateView", function updateView() {
       this.view.classList.add("dark");
 
       var backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
-      var backgroundImage = imageSource.content["0"]
-        ? "url(" + (
-          imageSource.fileHandler.blob instanceof Blob
-            ? imageSource.fileHandler.url
-            : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
-              + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
-          ) + ")"
-        : "";
+      var backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.06) 8em)," +
+        (
+          imageSource.content["0"]
+          ? "url(" + (
+            imageSource.fileHandler.blob instanceof Blob
+              ? imageSource.fileHandler.url
+              : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
+                + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
+            ) + ")"
+          : ""
+        );
       if (backdropImageElement.style.backgroundImage != backgroundImage)
         backdropImageElement.style.backgroundImage = backgroundImage;
     }
