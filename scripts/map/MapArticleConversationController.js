@@ -26,20 +26,27 @@ MapArticleConversationController.defineMethod("initView", function initView() {
 
   // Responses
 
+  let renderResponses = function (responses) {
+    if (!this.view) return;
+    for (let response of responses.reverse()) {
+      let element = this.view.querySelector("[data-ica-response-id='{0}']".format(response.responseId));
+      if (!element) {
+        let fragment = MapResponseController.createViewFragment();
+        element = fragment.querySelector(".response");
+        this.view.querySelector(".responses").appendChild(fragment);
+        new MapResponseController(response, element).componentOf = this;
+      }
+    }
+  }.bind(this);
+
   this.conversation.getResponses()
     .then(function (responses) {
-      if (!this.view) return;
+      this.requestNextResponses = responses.requestNext;
 
-      for (var response of responses.reverse()) {
-        var element = this.view.querySelector("[data-ica-response-id='{0}']".format(response.responseId));
-        if (!element) {
-          var fragment = MapResponseController.createViewFragment();
-          element = fragment.querySelector(".response");
-          this.view.querySelector(".responses").appendChild(fragment);
-          new MapResponseController(response, element).componentOf = this;
-        }
-      }
-    }.bind(this), console.warn);
+      renderResponses(responses);
+    }.bind(this), function (err) {
+      console.error(err.message);
+    });
 
   // Draft response
   {
@@ -50,6 +57,37 @@ MapArticleConversationController.defineMethod("initView", function initView() {
     this.view.querySelector(".responses").appendChild(fragment);
     new MapResponseController(this.draftResponse, element).componentOf = this;
   }
+
+  // Pagination
+
+  new Routine(function () {
+    let element = this.view.querySelector(".responses");
+
+    let rect = element.getBoundingClientRect();
+    if (rect.bottom < 2 * document.body.offsetHeight
+      && this.requestNextResponses) {
+      // Need to load more content
+      console.count("Need to load more");
+
+      let requestNext = this.requestNextResponses;
+      this.requestNextResponses = undefined;
+      requestNext()
+        .then(function (responses) {
+          this.requestNextResponses = responses.requestNext;
+
+          renderResponses(responses);
+        }.bind(this), function (err) {
+          if (err instanceof ICA.APIResponse.EndOfResponse) {
+            // End of response
+            console.log("Explore: End of response");
+          } else {
+            // Critical error
+            console.error(err.message);
+          }
+        });
+    }
+  }.bind(this), 500, true)
+    .componentOf = this;
 
 });
 
