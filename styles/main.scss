@@ -5,8 +5,9 @@ $color-primary: #fc4a1a;
 $color-accent: #4abdac;
 $color-text: #444;
 $color-text-light: #fefefe;
+$color-border: #ededed;
 
-$color-background: #fdfdfd;
+$color-background: #f9f9f9;
 
 /* Fonts */
 
@@ -30,6 +31,9 @@ $z-relative-topbar: 8;
 }
 
 /* Main */
+
+$column-width: 300px;
+$column-spacing: 8px;
 
 /* Normalize */
 @import "normalize";
@@ -61,7 +65,6 @@ $z-relative-topbar: 8;
 /* App */
 @import "publisher";
 @import "explore";
-@import "search";
 @import "map";
-@import "app";
 @import "about";
+@import "app";

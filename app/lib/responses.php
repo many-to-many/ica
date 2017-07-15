@@ -34,7 +34,7 @@
 
         // Readonly data
         $response->_authorId = $row["response_author_id"];
-        $response->_timestampAuthored = time($row["response_authored"]);
+        $response->_timestampAuthored = strtotime($row["response_authored"]);
 
         // NB: Useful here for less work from client requesting referee joint source id's additionally
         $response->refereeJointSourceIds = \ICA\JointSources\getRefereeJointSourceIds($responseId);
@@ -123,7 +123,7 @@
    */
   function insertResponseState($responseId, $state = STATE_PUBLISHED) {
 
-    \ICA\JointSources\insertJointSourceState($responseId, $state);
+    return \ICA\JointSources\insertJointSourceState($responseId, $state);
 
   }
 

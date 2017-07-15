@@ -1,14 +1,19 @@
 
-var MapConversationResponseController = ResponseController.createComponent("MapConversationResponseController");
+var MapResponseController = ResponseController.createComponent("MapResponseController");
 
-MapConversationResponseController.createViewFragment = function () {
-  return cloneTemplate("#template-map-conversation-response");
+MapResponseController.createViewFragment = function () {
+  return cloneTemplate("#template-map-response");
 };
 
 // View
 
-MapConversationResponseController.defineMethod("initView", function initView() {
+MapResponseController.defineMethod("initView", function initView() {
   if (!this.view) return;
+
+  this.view.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }.bind(this.view));
 
   var editor = this.view.querySelector("[data-ica-response-message]");
   this.quill = new Quill(editor, {
@@ -50,7 +55,7 @@ MapConversationResponseController.defineMethod("initView", function initView() {
 
 });
 
-MapConversationResponseController.defineMethod("updateView", function updateView() {
+MapResponseController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   this.view.querySelector("[data-ica-action='unpublish-response']").hidden =
@@ -62,7 +67,7 @@ MapConversationResponseController.defineMethod("updateView", function updateView
 
   this.view.querySelector("[data-ica-response-timestamp='authored']").textContent =
     this.response._timestampAuthored
-    ? new Date(this.response._timestampAuthored * 1000) .toLocaleDateString("en-us")
+    ? new Date(this.response._timestampAuthored * 1000) .toLocaleString("en-us")
     : "Draft";
 
   if (this.response._authorId) {
@@ -70,15 +75,14 @@ MapConversationResponseController.defineMethod("updateView", function updateView
       .then(function (author) {
         if (!this.view) return;
 
-        this.view.querySelector("[data-ica-response-author='name']").textContent = (author.name || "Anonymous")
-          + (author.authorId == ICA.accountId ? " (me)" : "");
+        this.view.querySelector("[data-ica-response-author='name']").textContent = author.name || "Anonymous";
       }.bind(this));
   } else {
-    this.view.querySelector("[data-ica-response-author]").textContent = "";
+    this.view.querySelector("[data-ica-response-author]").textContent = "Author";
   }
 });
 
-MapConversationResponseController.prototype.publish = function () {
+MapResponseController.prototype.publish = function () {
   return this.response.publish("Publishing response...")
     .then(function (response) {
 
@@ -98,7 +102,7 @@ MapConversationResponseController.prototype.publish = function () {
     });
 };
 
-MapConversationResponseController.prototype.unpublish = function () {
+MapResponseController.prototype.unpublish = function () {
   return new Promise(function (resolve, reject) {
     var prompt = new BasicPrompt(
       "Unpublishing the response...",
@@ -128,7 +132,7 @@ MapConversationResponseController.prototype.unpublish = function () {
       return this.response.unpublish("Unpublishing response...");
     }.bind(this))
     .then(function () {
-      this.response.destroy(true, true, true, true);
+      this.response.destroy(true, true, true);
 
       // Display notification
       notifications.addNotification(new BasicNotification("Response unpublished!"));

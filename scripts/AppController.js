@@ -4,6 +4,8 @@ var AppController = Controller.createComponent("AppController");
 AppController.defineMethod("initView", function () {
   if (!this.view) return;
 
+  // Conversations
+  
   this.explore = new Explore();
   new ExploreController(
     this.explore,
@@ -18,6 +20,25 @@ AppController.defineMethod("initView", function () {
     }.bind(this), function (err) {
       console.error(err.message);
     });
+  
+  // Discussions
+
+  this.discussionsExplore = new Explore();
+  new ExploreController(
+    this.discussionsExplore,
+    this.view.querySelector(".discussions .explore")
+  ).componentOf = this;
+
+  ICA.getDiscussions()
+    .then(function (discussions) {
+      this.discussionsExplore.requestNextConversations = discussions.requestNext;
+      this.discussionsExplore.addItems(discussions);
+      this.discussionsExplore.didUpdate();
+    }.bind(this), function (err) {
+      console.error(err.message);
+    });
+  
+  // Search
 
   this.searchExplore = new Explore();
   new ExploreController(
@@ -39,6 +60,8 @@ AppController.defineMethod("initView", function () {
          });
     }.bind(this));
   }.bind(this.view));
+
+  // Pagination
 
   new Routine(function () {
     this.view.querySelectorAll("[data-ica-app-view]").forEach(function (view) {
@@ -83,6 +106,4 @@ window.addEventListener("load", function () {
   notifications = new Notifications();
   new NotificationsController(notifications, document.body);
   appController = new AppController(document.body);
-
-  document.querySelector("[href='#main']").click();
 });

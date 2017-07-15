@@ -22,7 +22,7 @@
 
       // Validation
       if (!$REQUEST_DATA) throw new Exception("No request data");
-      if (empty($REQUEST_DATA["refereeJointSourceIds"])) throw new Exception("No referencing joint sources");
+      if (empty($REQUEST_DATA["refereeJointSourceIds"]) && empty($REQUEST_DATA["referrerJointSourceIds"])) throw new Exception("No referencing joint sources");
 
       $response = new \ICA\Responses\Response;
       $response->message = $REQUEST_DATA["message"];

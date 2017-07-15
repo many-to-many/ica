@@ -33,13 +33,13 @@
   "scripts/responses/Response.js",
   "scripts/responses/ResponseController.js",
 
+  "scripts/discussions/Discussion.js",
+  "scripts/discussions/DiscussionController.js",
+
   "scripts/explore/Explore.js",
   "scripts/explore/ExploreController.js",
   "scripts/explore/ExploreConversationController.js",
-  "scripts/explore/ExploreTextSourceController.js",
-  "scripts/explore/ExploreImageSourceController.js",
-  "scripts/explore/ExploreAudioSourceController.js",
-  "scripts/explore/ExploreVideoSourceController.js",
+  "scripts/explore/ExploreDiscussionController.js",
 
   "scripts/publisher/PublisherConversationController.js",
   "scripts/publisher/PublisherSourceController.js",
@@ -50,13 +50,17 @@
 
   "scripts/map/Map.js",
   "scripts/map/MapController.js",
+  "scripts/map/MapArticleController.js",
+  "scripts/map/MapArticleConversationController.js",
+  "scripts/map/MapArticleDiscussionController.js",
   "scripts/map/MapConversationController.js",
-  "scripts/map/MapConversationResponseController.js",
   "scripts/map/MapConversationSourceController.js",
   "scripts/map/MapConversationTextSourceController.js",
   "scripts/map/MapConversationImageSourceController.js",
   "scripts/map/MapConversationAudioSourceController.js",
   "scripts/map/MapConversationVideoSourceController.js",
+  "scripts/map/MapDiscussionController.js",
+  "scripts/map/MapResponseController.js",
 
   "scripts/notifications/Notifications.js",
   "scripts/notifications/NotificationsController.js",

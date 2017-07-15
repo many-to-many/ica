@@ -4,6 +4,7 @@
 
   define("JOINTSOURCE_CONVERSATION", 1);
   define("JOINTSOURCE_RESPONSE", 2);
+  define("JOINTSOURCE_DISCUSSION", 3);
 
   /**
    * Request new storage space for joint source.

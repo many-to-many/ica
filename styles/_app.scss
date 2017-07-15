@@ -3,3 +3,44 @@
   box-sizing: border-box;
   margin: 0 auto;
 }
+
+.main {
+  padding-top: 3em;
+
+  .topbar {
+    position: fixed;
+    top: 3em;
+    left: 0;
+    right: 0;
+    margin-top: 1px;
+  }
+
+  .search {
+
+    > .search-control {
+      box-sizing: border-box;
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 60em;
+      margin: 0 (- $column-spacing) 0 0;
+      padding: 0 ($column-spacing / 2);
+
+      > * {
+        flex: 1 0 auto;
+        width: 15em;
+        margin-right: $column-spacing;
+      }
+    }
+  }
+
+  h2 {
+    margin: 1em ($column-spacing / 2) 0.5em;
+    padding-bottom: calc(0.5em - 3px);
+    color: lighten($color-text, 20%);
+    border-bottom: solid 3px $color-border;
+
+    + .explore {
+      margin-top: - $column-spacing;
+    }
+  }
+}

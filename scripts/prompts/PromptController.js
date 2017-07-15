@@ -34,7 +34,7 @@ PromptController.defineMethod("updateView", function () {
         // Trigger prompt action
         if (action.func() !== false) {
           // Only destroy prompt if the function returns something other than false
-          this.prompt.destroy(true, true, true, true);
+          this.prompt.destroy(true, true);
         }
       }.bind(this));
 

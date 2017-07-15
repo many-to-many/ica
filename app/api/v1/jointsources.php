@@ -4,7 +4,8 @@
 
   if (list($jointSourceId) = handle("jointsources/{}/responses")
     ?: handle("conversations/{}/responses")
-    ?: handle("responses/{}/responses")) switch ($REQUEST_METHOD) {
+    ?: handle("responses/{}/responses")
+    ?: handle("discussions/{}/responses")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -28,7 +29,8 @@
 
   } else if (list($jointSourceId) = handle("jointsources/{}/refereeJointSourceIds")
     ?: handle("conversations/{}/refereeJointSourceIds")
-    ?: handle("responses/{}/refereeJointSourceIds")) switch ($REQUEST_METHOD) {
+    ?: handle("responses/{}/refereeJointSourceIds")
+    ?: handle("discussions/{}/refereeJointSourceIds")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -40,7 +42,8 @@
 
   } else if (list($jointSourceId, $refereeJointSourceId) = handle("jointsources/{}/refereeJointSourceIds/{}")
     ?: handle("conversations/{}/refereeJointSourceIds/{}")
-    ?: handle("responses/{}/refereeJointSourceIds/{}")) switch ($REQUEST_METHOD) {
+    ?: handle("responses/{}/refereeJointSourceIds/{}")
+    ?: handle("discussions/{}/refereeJointSourceIds/{}")) switch ($REQUEST_METHOD) {
 
     case "POST":
 
@@ -52,7 +55,8 @@
 
   } else if (list($jointSourceId) = handle("jointsources/{}/referrerJointSourceIds")
     ?: handle("conversations/{}/referrerJointSourceIds")
-    ?: handle("responses/{}/referrerJointSourceIds")) switch ($REQUEST_METHOD) {
+    ?: handle("responses/{}/referrerJointSourceIds")
+    ?: handle("discussions/{}/referrerJointSourceIds")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -64,7 +68,8 @@
 
   } else if (list($jointSourceId, $referrerJointSourceId) = handle("jointsources/{}/referrerJointSourceIds/{}")
     ?: handle("conversations/{}/referrerJointSourceIds/{}")
-    ?: handle("responses/{}/referrerJointSourceIds/{}")) switch ($REQUEST_METHOD) {
+    ?: handle("responses/{}/referrerJointSourceIds/{}")
+    ?: handle("discussions/{}/referrerJointSourceIds/{}")) switch ($REQUEST_METHOD) {
 
     case "POST":
 

@@ -17,39 +17,36 @@ ExploreController.defineMethod("updateView", function updateView() {
   this.viewItems = this.viewItems.filter(function (item) {
     if (this.explore.items.indexOf(item) > -1) return true;
 
-    switch (item.constructor) {
-    case Conversation:
-      var conversation = item;
-
-      var element = this.view.querySelector("[data-ica-conversation-id='{0}']".format(conversation.conversationId));
-      if (element) {
-        element.controller.destroy(true);
-      }
-      break;
+    var element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(item.jointSourceId));
+    if (element) {
+      element.controller.destroy(true);
     }
 
     return false;
   }.bind(this));
 
-  this.explore.items.reverse().map(function (item) {
+  this.explore.items.reverse().forEach(function (item) {
+
+    var Controller;
     switch (item.constructor) {
-    case Conversation:
-      var conversation = item;
-      // Check existing element
-      if (this.view.querySelector("[data-ica-conversation-id='{0}']".format(conversation.conversationId))) return;
-
-      // Create new view
-      var fragment = ExploreConversationController.createViewFragment();
-      var element = fragment.querySelector(".conversation");
-      this.view.insertBefore(fragment, this.firstChild);
-      new ExploreConversationController(conversation, element).componentOf = this.controller;
-
-      this.viewItems.push(item);
-
-      break;
+    case Conversation: Controller = ExploreConversationController; break;
+    case Discussion: Controller = ExploreDiscussionController; break;
     default:
       console.warn("Unhandled item:", item.constructor);
+      return;
     }
+
+    // Check existing element
+    if (this.view.querySelector("[data-ica-jointsource-id='{0}']".format(item.jointSourceId))) return;
+
+    // Create new view
+    var fragment = Controller.createViewFragment();
+    var element = fragment.querySelector(".jointsource");
+    this.view.insertBefore(fragment, this.firstChild);
+    new Controller(item, element).componentOf = this.controller;
+
+    this.viewItems.push(item);
+
   }.bind(this));
 });
 

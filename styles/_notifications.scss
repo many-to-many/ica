@@ -9,7 +9,7 @@
   width: 20%;
   max-width: calc(100% - 2em);
   background-color: #fff;
-  border: solid 1px #ededed;
+  border: solid 1px $color-border;
   border-radius: 3px;
   overflow-x: hidden;
   transition: opacity ease 0.3s, transform ease 0.3s, bottom ease 0.6s;
@@ -28,7 +28,7 @@
   .meter {
     margin: 0 -1em;
     height: 3px;
-    background-color: #ededed;
+    background-color: $color-border;
     overflow: hidden;
 
     > .meter-bar {

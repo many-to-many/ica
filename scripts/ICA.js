@@ -70,7 +70,7 @@
             ICA.login()
               .then(function () {
                 if (prompt) {
-                  prompt.destroy(true, true, true, true);
+                  prompt.destroy(true, true, true);
                   prompt = undefined;
                 }
                 resolve();
@@ -312,7 +312,7 @@
       });
   };
 
-  ICA.getConversations = function (params, notify) {
+  ICA.getConversations = function (params) {
     var data = [];
     for (var key in params) {
       data.push(key + "=" + params[key]);
@@ -321,11 +321,7 @@
       "/conversations/"
         + (data.length > 0
         ? "?" + data.join("&")
-        : ""),
-      undefined,
-      undefined,
-      notify
-    )
+        : ""))
       .then(touchConversationsWithAPIResponse);
   };
 
@@ -411,7 +407,7 @@
             : {}
         })
           .then(function () {
-            console.log("ICA: Joint source revision posted");
+            console.log("ICA: Conversation revision posted");
           })
           // Post new sources
           .then(function () {
@@ -558,7 +554,8 @@
           return ICA.post("/responses/", {
             _id: response.responseId,
             message: response.message || {},
-            refereeJointSourceIds: Object.keys(response.referees)
+            refereeJointSourceIds: Object.keys(response.referees),
+            referrerJointSourceIds: Object.keys(response.referrers)
           }, notify)
             .then(touchResponsesWithAPIResponse)
             .then(function () {
@@ -587,6 +584,79 @@
       .then(function () {
         console.log("ICA: Response deleted");
       });
+  };
+
+  ICA.getDiscussions = function (params) {
+    var data = [];
+    for (var key in params) {
+      data.push(key + "=" + params[key]);
+    }
+    return ICA.get(
+      "/discussions/"
+      + (data.length > 0
+        ? "?" + data.join("&")
+        : ""))
+      .then(touchDiscussionsWithAPIResponse);
+  };
+
+  ICA.publishDiscussion = function (discussion, notify) {
+    return discussion.prePublish()
+      .then(function () {
+        if (discussion.discussionId < 0) {
+          // Post new discussion
+          return ICA.post("/discussions/", {
+            _id: discussion.discussionId,
+            title: discussion.title ? discussion.title : {}
+          }, notify)
+            .then(touchDiscussionsWithAPIResponse)
+            .then(function () {
+              console.log("ICA: Discussion posted");
+              return discussion;
+            });
+        }
+
+        // Update discussion
+
+        var notification = new ProgressNotification(notify);
+        if (notify) {
+          notifications.addNotification(notification);
+          notifications.didUpdate();
+        }
+
+        return ICA.put("/discussions/{0}/".format(discussion.discussionId), {
+          title: discussion.title ? discussion.title : {}
+        })
+          .then(function () {
+            console.log("ICA: Discussion revision posted");
+          })
+          // Post new sources
+          .then(function () {
+            notification.progressPct = 1;
+            notification.didUpdate();
+          }, function (err) {
+            notification.progressPct = 1;
+            notification.didUpdate();
+
+            return Promise.reject(err);
+          });
+      });
+  };
+
+  ICA.unpublishDiscussion = function (discussion, notify) {
+    if (discussion.discussionId < 0) return Promise.reject(new Error("Discussion not yet published"));
+    return ICA.delete("/discussions/{0}/".format(discussion.discussionId),
+      undefined,
+      notify
+    )
+      .then(function () {
+        console.log("ICA: Discussion deleted");
+      });
+  };
+
+  ICA.getResponsesInDiscussion = function (discussionId) {
+    if (discussionId < 0) return Promise.reject(new Error("Discussion not yet published"));
+    return ICA.get("/discussions/{0}/thread/".format(discussionId))
+      .then(touchResponsesWithAPIResponse);
   };
 
   ICA.getAuthor = function (authorId) {
@@ -726,6 +796,30 @@
         .then(touchResponsesWithAPIResponse);
     };
     return responses;
+  }
+
+  function touchDiscussions(data) {
+    var discussions = [];
+    for (var discussionId in data) {
+      var dataDiscussion = data[discussionId], discussion;
+      if (dataDiscussion._id) {
+        discussion = JointSource.jointSources[dataDiscussion._id];
+        discussion.discussionId = discussionId;
+      } else {
+        discussion = new Discussion(dataDiscussion.title ? dataDiscussion.title : {}, discussionId);
+        discussions.push(discussion);
+      }
+    }
+    return discussions;
+  }
+
+  function touchDiscussionsWithAPIResponse(apiResponse) {
+    var discussions = touchDiscussions(apiResponse.data);
+    discussions.requestNext = function () {
+      return apiResponse.requestNext()
+        .then(touchDiscussionsWithAPIResponse);
+    };
+    return discussions;
   }
 
   window.ICA = ICA;

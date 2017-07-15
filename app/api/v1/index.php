@@ -5,6 +5,7 @@
   if (handle(["jointsources"], true)) require_once(__DIR__ . "/jointsources.php");
   elseif (handle(["conversations"], true)) require_once(__DIR__ . "/conversations.php");
   elseif (handle(["responses"], true)) require_once(__DIR__ . "/responses.php");
+  elseif (handle(["discussions"], true)) require_once(__DIR__ . "/discussions.php");
   elseif (handle(["files"], true)) require_once(__DIR__ . "/files.php");
   elseif (handle(["themes"], true)) require_once(__DIR__ . "/themes.php");
   elseif (handle(["authors"], true)) require_once(__DIR__ . "/authors.php");

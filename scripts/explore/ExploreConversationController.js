@@ -13,15 +13,6 @@ ExploreConversationController.defineMethod("initView", function initView() {
   setElementProperty(this.view, "conversation-id", this.conversation.conversationId);
   this.view.style.order = - this.conversation.conversationId;
 
-  this.view.querySelector("[data-ica-action='edit-conversation']").addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var fragment = PublisherConversationController.createViewFragment();
-    var element = fragment.querySelector(".publisher");
-    document.body.appendChild(fragment);
-    new PublisherConversationController(this.controller.conversation, element);
-  }.bind(this.view));
-
   this.view.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -65,14 +56,17 @@ ExploreConversationController.defineMethod("updateView", function updateView() {
       this.view.classList.add("dark");
 
       var backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
-      var backgroundImage = imageSource.content["0"]
-        ? "url(" + (
-          imageSource.fileHandler.blob instanceof Blob
-            ? imageSource.fileHandler.url
-            : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
-              + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
-          ) + ")"
-        : "";
+      var backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.06) 8em)," +
+        (
+          imageSource.content["0"]
+          ? "url(" + (
+            imageSource.fileHandler.blob instanceof Blob
+              ? imageSource.fileHandler.url
+              : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
+                + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
+            ) + ")"
+          : ""
+        );
       if (backdropImageElement.style.backgroundImage != backgroundImage)
         backdropImageElement.style.backgroundImage = backgroundImage;
     }

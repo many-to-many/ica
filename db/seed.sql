@@ -799,6 +799,23 @@ CREATE TABLE IF NOT EXISTS `ica`.`responses` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `ica`.`discussions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ica`.`discussions` ;
+
+CREATE TABLE IF NOT EXISTS `ica`.`discussions` (
+  `id` INT UNSIGNED NOT NULL,
+  `title_id` INT UNSIGNED NOT NULL,
+  `author_id` INT UNSIGNED NOT NULL,
+  `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX `fk_discussions_jointsources1_idx` (`id` ASC),
+  PRIMARY KEY (`id`),
+  INDEX `fk_discussions_contents1_idx` (`title_id` ASC),
+  INDEX `fk_discussions_accounts1_idx` (`author_id` ASC))
+ENGINE = MyISAM;
+
 USE `ica` ;
 
 -- -----------------------------------------------------
@@ -894,7 +911,17 @@ CREATE TABLE IF NOT EXISTS `ica`.`references_summary` (`reference_id` INT, `refe
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`jointsources_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_summary` (`jointsource_id` INT, `state_id` INT, `state` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_summary` (`jointsource_id` INT, `jointsource_type` INT, `state_id` INT, `state` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`discussions_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`discussions_summary` (`discussion_id` INT, `state_id` INT, `state` INT, `title_id` INT, `author_id` INT, `authored` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `ica`.`responses_discussions_summary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ica`.`responses_discussions_summary` (`response_id` INT, `response_state_id` INT, `response_state` INT, `response_message_id` INT, `response_author_id` INT, `response_authored` INT, `discussion_id` INT, `discussion_state_id` INT, `discussion_state` INT, `reference_state_id` INT, `reference_state` INT);
 
 -- -----------------------------------------------------
 -- View `ica`.`jointsources_state_latest`
@@ -922,7 +949,7 @@ SELECT
 	tbl_state.state AS state,
 	tbl_conversation.title_id AS title_id,
 	tbl_conversation.intro_id AS intro_id,
-  tbl_conversation.others_id AS others_id
+	tbl_conversation.others_id AS others_id
 	-- themes, participants, regions are excluded
 FROM `conversations` AS tbl_conversation
 LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
@@ -952,12 +979,12 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `sources_summary` AS
 SELECT
 	tbl_source.id AS source_id,
-    tbl_source.jointsource_id AS jointsource_id,
-    tbl_source.type AS source_type,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
+	tbl_source.jointsource_id AS jointsource_id,
+	tbl_source.type AS source_type,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
 	tbl_source.content_id AS content_id,
-    tbl_source.title_id AS title_id
+	tbl_source.title_id AS title_id
 FROM `sources` AS tbl_source
 LEFT JOIN `sources_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.source_id = tbl_source.id
@@ -973,12 +1000,12 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `contents_langs_summary` AS
 SELECT
 	tbl_lang.content_id AS content_id,
-    tbl_lang.id AS lang_id,
-    tbl_lang.lang AS lang,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
-    tbl_rev.id AS rev_id,
-    tbl_rev.content AS content
+	tbl_lang.id AS lang_id,
+	tbl_lang.lang AS lang,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
+	tbl_rev.id AS rev_id,
+	tbl_rev.content AS content
 FROM `contents_langs` AS tbl_lang
 LEFT JOIN `contents_langs_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.lang_id = tbl_lang.id
@@ -1038,11 +1065,11 @@ CREATE  OR REPLACE VIEW `conversations_themes_summary` AS
 SELECT
 	tbl_deleg.conversation_id AS conversation_id,
 	tbl_deleg.id AS deleg_id,
-    tbl_theme.id AS theme_id,
-    tbl_theme.theme AS theme,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
-    tbl_deleg.lang AS lang
+	tbl_theme.id AS theme_id,
+	tbl_theme.theme AS theme,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
+	tbl_deleg.lang AS lang
 FROM `conversations_themes` AS tbl_deleg
 LEFT JOIN `conversations_themes_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.deleg_id = tbl_deleg.id
@@ -1062,11 +1089,11 @@ CREATE  OR REPLACE VIEW `conversations_participants_summary` AS
 SELECT
 	tbl_deleg.conversation_id AS conversation_id,
 	tbl_deleg.id AS deleg_id,
-    tbl_participant.id AS participant_id,
-    tbl_participant.participant AS participant,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
-    tbl_deleg.lang AS lang
+	tbl_participant.id AS participant_id,
+	tbl_participant.participant AS participant,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
+	tbl_deleg.lang AS lang
 FROM `conversations_participants` AS tbl_deleg
 LEFT JOIN `conversations_participants_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.deleg_id = tbl_deleg.id
@@ -1124,13 +1151,13 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `conversations_regions_langs_summary` AS
 SELECT
 	tbl_lang.conversation_id AS conversation_id,
-    tbl_lang.id AS lang_id,
-    tbl_lang.lang AS lang,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state,
-    tbl_rev.id AS rev_id,
-    tbl_region.id AS region_id,
-    tbl_region.region AS region
+	tbl_lang.id AS lang_id,
+	tbl_lang.lang AS lang,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
+	tbl_rev.id AS rev_id,
+	tbl_region.id AS region_id,
+	tbl_region.region AS region
 FROM `conversations_regions_langs` AS tbl_lang
 LEFT JOIN `conversations_regions_langs_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.lang_id = tbl_lang.id
@@ -1155,8 +1182,8 @@ SELECT
 	tbl_state.id AS state_id,
 	tbl_state.state AS state,
 	tbl_response.message_id AS message_id,
-    tbl_response.author_id AS author_id,
-    tbl_response.authored AS authored
+	tbl_response.author_id AS author_id,
+	tbl_response.authored AS authored
 FROM `responses` AS tbl_response
 LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.jointsource_id = tbl_response.id
@@ -1172,14 +1199,14 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `jointsources_responses_summary` AS
 SELECT
 	tbl_reference.referee_jointsource_id AS jointsource_id,
-    tbl_reference.state_id AS reference_state_id,
-    tbl_reference.state AS reference_state,
+	tbl_reference.state_id AS reference_state_id,
+	tbl_reference.state AS reference_state,
 	tbl_response.response_id AS response_id,
-    tbl_response.message_id AS response_message_id,
-    tbl_response.author_id AS response_author_id,
-    tbl_response.authored AS response_authored,
-    tbl_response.state_id AS response_state_id,
-    tbl_response.state AS response_state
+	tbl_response.message_id AS response_message_id,
+	tbl_response.author_id AS response_author_id,
+	tbl_response.authored AS response_authored,
+	tbl_response.state_id AS response_state_id,
+	tbl_response.state AS response_state
 FROM `references_summary` AS tbl_reference
 INNER JOIN `responses_summary` AS tbl_response
 	ON tbl_response.response_id = tbl_reference.referrer_jointsource_id;
@@ -1206,10 +1233,10 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `references_summary` AS
 SELECT
 	tbl_reference.id AS reference_id,
-    tbl_reference.referee_jointsource_id AS referee_jointsource_id,
-    tbl_reference.referrer_jointsource_id AS referrer_jointsource_id,
-    tbl_state.id AS state_id,
-    tbl_state.state AS state
+	tbl_reference.referee_jointsource_id AS referee_jointsource_id,
+	tbl_reference.referrer_jointsource_id AS referrer_jointsource_id,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state
 FROM `references` AS tbl_reference
 LEFT JOIN `references_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.reference_id = tbl_reference.id
@@ -1225,6 +1252,7 @@ USE `ica`;
 CREATE  OR REPLACE VIEW `jointsources_summary` AS
 SELECT
 	tbl_jointsource.id AS jointsource_id,
+	tbl_jointsource.type AS jointsource_type,
 	tbl_state.id AS state_id,
 	tbl_state.state AS state
 FROM `jointsources` AS tbl_jointsource
@@ -1232,6 +1260,52 @@ LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
 	ON tbl_state_latest.jointsource_id = tbl_jointsource.id
 LEFT JOIN `jointsources_states` AS tbl_state
 	ON tbl_state.id = tbl_state_latest.state_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`discussions_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`discussions_summary` ;
+DROP TABLE IF EXISTS `ica`.`discussions_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `discussions_summary` AS
+SELECT
+	tbl_discussion.id AS discussion_id,
+	tbl_state.id AS state_id,
+	tbl_state.state AS state,
+	tbl_discussion.title_id AS title_id,
+	tbl_discussion.author_id AS author_id,
+	tbl_discussion.authored AS authored
+FROM `discussions` AS tbl_discussion
+LEFT JOIN `jointsources_state_latest` AS tbl_state_latest
+	ON tbl_state_latest.jointsource_id = tbl_discussion.id
+LEFT JOIN `jointsources_states` AS tbl_state
+	ON tbl_state.id = tbl_state_latest.state_id;
+
+-- -----------------------------------------------------
+-- View `ica`.`responses_discussions_summary`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `ica`.`responses_discussions_summary` ;
+DROP TABLE IF EXISTS `ica`.`responses_discussions_summary`;
+USE `ica`;
+CREATE  OR REPLACE VIEW `responses_discussions_summary` AS
+SELECT
+	tbl_response.response_id AS response_id,
+	tbl_response.state_id AS response_state_id,
+	tbl_response.state AS response_state,
+	tbl_response.message_id AS response_message_id,
+	tbl_response.author_id AS response_author_id,
+	tbl_response.authored AS response_authored,
+	tbl_jointsource.jointsource_id AS discussion_id,
+	tbl_jointsource.state_id AS discussion_state_id,
+	tbl_jointsource.state AS discussion_state,
+	tbl_reference.state_id AS reference_state_id,
+	tbl_reference.state AS reference_state
+FROM `references_summary` AS tbl_reference
+INNER JOIN `jointsources_summary` AS tbl_jointsource
+	ON tbl_jointsource.jointsource_id = tbl_reference.referrer_jointsource_id
+	AND tbl_jointsource.jointsource_type = 3
+INNER JOIN `responses_summary` AS tbl_response
+	ON tbl_response.response_id = tbl_reference.referee_jointsource_id;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -1245,6 +1319,7 @@ USE `ica`;
 INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (0, 'undefined');
 INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (1, 'conversation');
 INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (2, 'response');
+INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (3, 'discussion');
 
 COMMIT;
 

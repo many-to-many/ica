@@ -78,16 +78,10 @@ Controller.defineMethod("initView", function initView(updateView = []) {
       while (anchorHistory.length > 50) anchorHistory.shift();
 
       switch (this.getAttribute("href")) {
-      case "#main":
-
-        switchAppView("main");
-
-        break;
-      case "#search":
-
-        switchAppView("search");
-
-        break;
+      case "#main": switchAppView("main"); break;
+      case "#main/conversations": switchAppView("main/conversations"); break;
+      case "#main/discussions": switchAppView("main/discussions"); break;
+      case "#main/search": switchAppView("main/search"); break;
       case "#publisher":
 
         anchorHistory.pop(); // Escape current anchor
@@ -131,6 +125,10 @@ Controller.defineMethod("initView", function initView(updateView = []) {
       this.classList.add("active");
     }.bind(element));
 
+    if (element.classList.contains("default")) {
+      element.click();
+    }
+
     element._anchorGroupInit = true;
   });
 
@@ -143,11 +141,10 @@ Controller.defineMethod("initView", function initView(updateView = []) {
 /*****/
 
 function switchAppView(view) {
-  document.querySelectorAll("[data-ica-app-view]:not([data-ica-app-view='{0}'])".format(view)).forEach(function (element) {
-    element.style.display = "none";
-  });
-  document.querySelectorAll("[data-ica-app-view='{0}']".format(view)).forEach(function (element) {
-    element.style.display = "";
+  viewElement = document.querySelector("[data-ica-app-view='{0}']".format(view));
+  document.querySelectorAll("[data-ica-app-view]").forEach(function (element) {
+    if (element.parentNode !== viewElement.parentNode) return;
+    element.hidden = !view.startsWith(getElementProperty(element, "app-view"));
   });
 }
 

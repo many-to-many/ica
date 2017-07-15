@@ -140,7 +140,7 @@
    */
   function insertConversationState($conversationId, $state = STATE_PUBLISHED) {
 
-    \ICA\JointSources\insertJointSourceState($conversationId, $state);
+    return \ICA\JointSources\insertJointSourceState($conversationId, $state);
 
   }
 
@@ -199,7 +199,7 @@
   }
 
   /**
-   * conversation meta title
+   * Conversation meta title
    */
 
   /**
@@ -224,7 +224,7 @@
   }
 
   /**
-   * conversation meta introduction
+   * Conversation meta introduction
    */
 
   /**
@@ -249,7 +249,7 @@
   }
 
   /**
-   * conversation meta theme delegations
+   * Conversation meta theme delegations
    */
 
   /**
@@ -388,7 +388,7 @@
   }
 
   /**
-   * conversation meta participant delegations
+   * Conversation meta participant delegations
    */
 
   /**
@@ -527,7 +527,7 @@
   }
 
   /**
-   * conversation meta region
+   * Conversation meta region
    */
 
   /**
@@ -669,7 +669,7 @@
   }
 
   /**
-   * conversation meta other reflections
+   * Conversation meta other reflections
    */
 
   /**
