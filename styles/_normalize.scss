@@ -11,9 +11,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+h2 {
+  display: block;
+  font-size: 1.5em;
+  line-height: 1;
+  font-weight: 500;
+  margin: 1em 0;
+}
+
 h3 {
   display: block;
   font-size: 1.5em;
+  line-height: 1.2;
   font-weight: 500;
   margin: 1em 0;
 }
@@ -21,6 +30,7 @@ h3 {
 h4 {
   display: block;
   font-size: 1em;
+  line-height: 1.2;
   margin: 1.5em 0;
   font-weight: 500;
 }
@@ -40,7 +50,7 @@ a {
   &:hover {
 
     &:not(.solid) {
-      color: $color-primary !important;
+      color: $color-primary;
     }
   }
 

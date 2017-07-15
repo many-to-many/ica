@@ -33,4 +33,14 @@
     }
   }
 
+  h2 {
+    margin: 1em ($column-spacing / 2) 0.5em;
+    padding-bottom: calc(0.5em - 3px);
+    color: lighten($color-text, 20%);
+    border-bottom: solid 3px $color-border;
+
+    + .explore {
+      margin-top: - $column-spacing;
+    }
+  }
 }
