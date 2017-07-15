@@ -201,7 +201,7 @@
       }
 
       > :not(:last-child) {
-        margin-right: 0.5em;
+        margin-right: 1em;
       }
 
       > .response-meta {
@@ -233,7 +233,7 @@
         color: lighten($color-text, 30%);
 
         > :not(:last-child) {
-          margin-right: 0.5em;
+          margin-right: 1em;
         }
       }
     }
