@@ -6,6 +6,39 @@ RewriteEngine On
 RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
 
+# Local: <http-host>
+
+# API calls
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^api/([^/]+)/(.*)$ api/$1/index.php?p=$2 [QSA,NC,L]
+
+# No cache
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^nocache/(.*)$ $1 [QSA,NC,L]
+
+# Static file hosting
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^static/(.*)$ static/index.php?p=$1 [QSA,NC,L]
+
+# Add .php to access file, but don't redirect
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# Single page application
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule (api|assets|scripts|static|styles)(.*)$ $0 [NC,L]
+
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.html [NC,L]
+
+
 # Remote: many-to-many.net
 
 # API calls
@@ -29,26 +62,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.*)$ /$1.php [L]
 
-
-# Local: <http-host>
-
-# API calls
-RewriteCond %{HTTP_HOST} =<http-host> [NC]
+# Single page application
+RewriteCond %{HTTP_HOST} many-to-many.net$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^api/([^/]+)/(.*)$ api/$1/index.php?p=$2 [QSA,NC,L]
+RewriteRule (api|assets|scripts|static|styles)(.*)$ /$0 [NC,L]
 
-# No cache
-RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{HTTP_HOST} many-to-many.net$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^nocache/(.*)$ $1 [QSA,NC,L]
-
-# Static file hosting
-RewriteCond %{HTTP_HOST} =<http-host> [NC]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^static/(.*)$ static/index.php?p=$1 [QSA,NC,L]
-
-# Add .php to access file, but don't redirect
-RewriteCond %{HTTP_HOST} =<http-host> [NC]
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php [L]
+RewriteRule ^(.*)$ /index.html [NC,L]

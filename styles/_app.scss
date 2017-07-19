@@ -44,3 +44,59 @@
     }
   }
 }
+
+.about {
+  margin: 0 auto;
+  max-width: 900px;
+  overflow-x: hidden;
+
+  h3 {
+    text-align: center;
+    -webkit-user-select: text;
+  }
+
+  h4 {
+    text-align: center;
+    -webkit-user-select: text;
+  }
+
+  p {
+    font-family: $font-sans-serif-alt;
+    -webkit-user-select: text;
+  }
+
+  // Team members
+
+  .team {
+    text-align: center;
+    margin: 1.25em -1.25em -1.25em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow: hidden;
+
+    .team-member {
+      box-sizing: border-box;
+      flex: none;
+      width: 300px;
+      padding: 0 1.25em;
+
+      .img-circle {
+        display: block;
+        margin: 0 auto;
+        border-radius: 50%;
+      }
+
+      h4 {
+        color: $color-primary !important;
+        text-align: center;
+        margin-bottom: 0.5em;
+      }
+
+      .role {
+        margin-top: 0;
+        color: rgba($color-text, 0.80);
+      }
+    }
+  }
+}

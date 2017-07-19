@@ -10,8 +10,12 @@ MapController.defineAlias("model", "map");
 MapController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  this.view.addEventListener("click", function (e) {
-    this.controller.destroy(true);
+  this.routerIndex = Router.index;
+
+  Router.prepush(this);
+
+  this.view.addEventListener("click", function () {
+    Router.jump(this.controller.routerIndex);
   }.bind(this.view));
 
   document.body.style.overflow = "hidden"; // Disable background scrolling
@@ -21,8 +25,8 @@ MapController.defineMethod("initView", function initView() {
 MapController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  if (this.map.articles.length == 0) {
-    this.destroy(true);
+  if (this.map.articles.length === 0) {
+    Router.jump(this.routerIndex);
     return;
   }
 
@@ -49,4 +53,12 @@ MapController.defineMethod("uninitView", function uninitView() {
   document.body.style.overflow = ""; // Enable background scrolling
 
   if (!this.view) return;
+});
+
+MapController.defineMethod("hideView", function hideView() {
+  document.body.style.overflow = ""; // Enable background scrolling
+});
+
+MapController.defineMethod("unhideView", function unhideView() {
+  document.body.style.overflow = "hidden"; // Disable background scrolling
 });

@@ -8,7 +8,7 @@
 
   ICA.login = function () {
     return new Promise(function (resolve, reject) {
-      var oauthWindow = window.open("oauth2login", "Log in via MintKit", "location=0,status=0,width=600,height=700");
+      var oauthWindow = window.open("/oauth2login", "Log in via MintKit", "location=0,status=0,width=600,height=700");
 
       var loginCallbackData;
       window.loginCallback = function (data) {
