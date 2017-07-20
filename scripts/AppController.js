@@ -337,9 +337,14 @@ window.addEventListener("load", function () {
 // Router
 
 const Router = (function () {
+  let page = new Date().getTime();
+
   window.addEventListener("popstate", function (event) {
     if (event.state) {
-      if (event.state.index + 1 > back.length) {
+      if (event.state.page !== page) {
+        // From a different page
+        window.location.reload();
+      } else if (event.state.index + 1 > back.length) {
         // Go forward
         while (back.length < event.state.index + 1 && forward.length > 0) goForward();
       } else {
@@ -398,11 +403,13 @@ const Router = (function () {
 
     if (back.length > 1) {
       window.history.pushState({
-        index: Router.index
+        index: Router.index,
+        page: page
       }, title, url);
     } else {
       window.history.replaceState({
-        index: Router.index
+        index: Router.index,
+        page: page
       }, title, url);
     }
 
