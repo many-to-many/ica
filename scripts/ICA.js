@@ -325,6 +325,11 @@
       .then(touchConversationsWithAPIResponse);
   };
 
+  ICA.getConversation = function (conversationId) {
+    return ICA.get("/conversations/{0}/".format(conversationId))
+      .then(touchConversationWithAPIResponse.bind(null, conversationId));
+  };
+
   ICA.publishConversation = function (conversation, notify) {
     return conversation.prePublish()
       .then(function () {
@@ -599,6 +604,11 @@
       .then(touchDiscussionsWithAPIResponse);
   };
 
+  ICA.getDiscussion = function (discussionId) {
+    return ICA.get("/discussions/{0}/".format(discussionId))
+      .then(touchDiscussionWithAPIResponse.bind(null, discussionId));
+  };
+
   ICA.publishDiscussion = function (discussion, notify) {
     return discussion.prePublish()
       .then(function () {
@@ -718,12 +728,19 @@
   }
 
   function touchConversationsWithAPIResponse(apiResponse) {
-    var conversations = touchConversations(apiResponse.data);
+    let conversations = touchConversations(apiResponse.data);
     conversations.requestNext = function () {
       return apiResponse.requestNext()
         .then(touchConversationsWithAPIResponse);
     };
     return conversations;
+  }
+
+  function touchConversationWithAPIResponse(conversationId, apiResponse) {
+    let data = {};
+    data[conversationId] = apiResponse.data;
+    let conversations = touchConversations(data);
+    return conversations[0];
   }
 
   function touchSources(dataSources, conversation) {
@@ -811,6 +828,13 @@
       }
     }
     return discussions;
+  }
+
+  function touchDiscussionWithAPIResponse(discussionId, apiResponse) {
+    let data = {};
+    data[discussionId] = apiResponse.data;
+    let discussions = touchDiscussions(data);
+    return discussions[0];
   }
 
   function touchDiscussionsWithAPIResponse(apiResponse) {

@@ -254,9 +254,43 @@ window.addEventListener("load", function () {
       }
     },
     {
+      pattern: /\/conversations\/(\d+)\/?/,
+      func: function (matches) {
+        let conversationId = matches[1];
+
+        ICA.getConversation(conversationId)
+          .then(function (conversation) {
+            var map = new Map([conversation]);
+            var fragment = MapController.createViewFragment();
+            var element = fragment.querySelector(".map");
+            document.body.appendChild(fragment);
+            new MapController(map, element);
+          }, function () {
+            appMainConversationsController.focusView();
+          });
+      }
+    },
+    {
       pattern: /\/discussions\/?$/,
       func: function (matches) {
         appMainDiscussionsController.focusView();
+      }
+    },
+    {
+      pattern: /\/discussions\/(\d+)\/?/,
+      func: function (matches) {
+        let discussionId = matches[1];
+
+        ICA.getDiscussion(discussionId)
+          .then(function (discussion) {
+            var map = new Map([discussion]);
+            var fragment = MapController.createViewFragment();
+            var element = fragment.querySelector(".map");
+            document.body.appendChild(fragment);
+            new MapController(map, element);
+          }, function () {
+            appMainDiscussionsController.focusView();
+          });
       }
     },
     {
@@ -377,6 +411,8 @@ const Router = (function () {
   }
 
   function jump(index) {
+    if (index < 0) return; // Index out of bound
+
     let cmp = index + 1 - back.length;
     if (cmp == 0) return;
     else if (cmp < 0) {

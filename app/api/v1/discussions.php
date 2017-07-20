@@ -58,6 +58,14 @@
 
   } elseif (list($discussionId) = handle("discussions/{}")) switch ($REQUEST_METHOD) {
 
+    case "GET":
+
+      $data = \ICA\Discussions\getDiscussion($discussionId);
+
+      respondJSON($data);
+
+      break;
+
     case "PUT":
 
       // Validation

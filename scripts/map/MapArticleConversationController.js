@@ -14,6 +14,8 @@ MapArticleConversationController.defineMethod("init", function (jointSource, vie
 MapArticleConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
+  Router.push(this, "/conversations/" + this.conversation.conversationId, "Conversation | Many-to-Many");
+
   // Conversation controller
   {
     let node = this.view.querySelector(".jointsource");
