@@ -133,16 +133,16 @@
 
     function verify($accountSession) {
 
-      return isset($_SESSION["_ica_account_id"])
-        && isset($_SESSION["_ica_session_id"])
+      return !empty($_SESSION["_ica_account_id"])
+        && !empty($_SESSION["_ica_session_id"])
         && $_SESSION["_ica_session_id"] == $accountSession;
 
     }
 
     function requireVerification() {
 
-      if ($_SERVER["HTTP_AUTHORIZATION"]) {
-        return verify(substr($_SERVER["HTTP_AUTHORIZATION"], 7));
+      if ($_SERVER["HTTP_AUTHORIZATION"] && verify(substr($_SERVER["HTTP_AUTHORIZATION"], 7))) {
+        return;
       }
 
       respondHeaderResponseCode(401, "Unauthorized");
