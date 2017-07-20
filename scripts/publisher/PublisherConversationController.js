@@ -10,7 +10,7 @@ PublisherConversationController.createViewFragment = function () {
 PublisherConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  document.body.style.overflow = "hidden"; // Disable background scrolling
+  this.lockBodyScrolling();
 
   this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
     // Event listeners
@@ -116,12 +116,6 @@ PublisherConversationController.defineMethod("updateView", function updateView()
 
   // Display danger zone
   this.view.querySelector("[data-ica-conversation-filter='published']").hidden = this.conversation.conversationId < 0;
-});
-
-PublisherConversationController.defineMethod("uninitView", function uninitView() {
-  document.body.style.overflow = ""; // Enable background scrolling
-
-  if (!this.view) return;
 });
 
 PublisherConversationController.prototype.publish = function () {

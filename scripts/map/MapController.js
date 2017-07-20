@@ -18,8 +18,7 @@ MapController.defineMethod("initView", function initView() {
     Router.jump(this.controller.routerIndex);
   }.bind(this.view));
 
-  document.body.style.overflow = "hidden"; // Disable background scrolling
-  // TODO: Document body controller to auto lock scrolling for ease of sub view navigation; this probably may not work well with publisher controller
+  this.lockBodyScrolling();
 });
 
 MapController.defineMethod("updateView", function updateView() {
@@ -49,16 +48,10 @@ MapController.defineMethod("updateView", function updateView() {
   }.bind(this));
 });
 
-MapController.defineMethod("uninitView", function uninitView() {
-  document.body.style.overflow = ""; // Enable background scrolling
-
-  if (!this.view) return;
-});
-
 MapController.defineMethod("hideView", function hideView() {
-  document.body.style.overflow = ""; // Enable background scrolling
+  this.unlockBodyScrolling();
 });
 
 MapController.defineMethod("unhideView", function unhideView() {
-  document.body.style.overflow = "hidden"; // Disable background scrolling
+  this.lockBodyScrolling();
 });

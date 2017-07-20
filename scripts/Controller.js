@@ -82,6 +82,33 @@ Controller.defineMethod("unhideView", function hideView() {
   this.view.hidden = false;
 });
 
+Controller.defineMethod("uninitView", function () {
+  this.unlockBodyScrolling();
+});
+
+(function (Controller) {
+
+  let numBodyScrollLocks = 0;
+
+  Controller.defineMethod("lockBodyScrolling", function lockBodyScrolling() {
+    if (!this.lockingBodyScroll) {
+      this.lockingBodyScroll = true;
+      ++numBodyScrollLocks;
+
+      document.body.style.overflow = "hidden";
+    }
+  });
+
+  Controller.defineMethod("unlockBodyScrolling", function unlockBodyScrolling() {
+    if (this.lockingBodyScroll) {
+      this.lockingBodyScroll = false;
+
+      if (--numBodyScrollLocks === 0) document.body.style.overflow = "";
+    }
+  });
+
+})(Controller);
+
 function resize() {
   document.body.querySelectorAll("[data-ica-width-multiple]")
     .forEach(function (element) {
