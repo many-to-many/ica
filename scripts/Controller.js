@@ -66,7 +66,7 @@ Controller.defineMethod("initView", function initView(updateView = []) {
     controls: ["play", "progress", "current-time", "fullscreen"]
   });
 
-  resize();
+  resize(this.view);
 
   setElementProperty(this.view, "controller-id", this.controllerId);
   if (updateView) this.updateView.apply(this, updateView);
@@ -109,10 +109,10 @@ Controller.defineMethod("uninitView", function () {
 
 })(Controller);
 
-function resize() {
-  document.body.querySelectorAll("[data-ica-width-multiple]")
+function resize(container = document.body) {
+  container.querySelectorAll("[data-ica-width-multiple]")
     .forEach(function (element) {
-      var multiple = parseInt(getElementProperty(element, "width-multiple"));
+      let multiple = parseInt(getElementProperty(element, "width-multiple"));
       element.style.width = Math.floor(document.body.offsetWidth / multiple) * multiple + "px";
     });
 }

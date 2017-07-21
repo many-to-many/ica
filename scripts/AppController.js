@@ -234,7 +234,9 @@ AppMainSearchController.defineMethod("focusView", function () {
 // Load
 
 window.addEventListener("load", function () {
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", function () {
+    resize();
+  });
 
   notifications = new Notifications();
   new NotificationsController(notifications, document.body);
