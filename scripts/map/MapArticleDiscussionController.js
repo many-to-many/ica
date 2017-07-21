@@ -28,6 +28,8 @@ MapArticleDiscussionController.defineMethod("initView", function initView() {
 
   // Responses in discussion
 
+  let threadElement = this.view.querySelector(".thread");
+
   let renderResponses = function (responses) {
 
     for (let response of responses.reverse()) {
@@ -42,18 +44,24 @@ MapArticleDiscussionController.defineMethod("initView", function initView() {
     }
 
     if (responses.requestNext) {
-      responses.requestNext().then(renderResponses, console.warn);
+      responses.requestNext().then(renderResponses, function (err) {
+        console.warn(err.message);
+
+        threadElement.classList.toggle("loading", false);
+      }.bind(this));
+    } else {
+      threadElement.classList.toggle("loading", false);
     }
   }.bind(this);
 
   this.discussion.getResponsesInDiscussion()
     .then(renderResponses, console.warn);
 
+  threadElement.classList.toggle("loading", true);
+
 });
 
 MapArticleDiscussionController.defineMethod("updateView", function updateView() {
-
-  // Responses in discussion
 
   // Draft response
   this.touchNewResponseInDiscussion();

@@ -168,12 +168,11 @@
 
   }
 
-  & + .spinner {
+   + .spinner {
     display: block;
     width: 1.25em;
     height: 1.25em;
     margin: 0.5em auto 1em;
-    transition: opacity ease 0.3s;
     opacity: 0;
   }
 
