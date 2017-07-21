@@ -1,8 +1,12 @@
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0 8px;
+  min-height: 100%;
   font-size: $font-size;
-  overflow: scroll;
   background-color: $color-background;
   font-family: $font-sans-serif;
   font-weight: 400;
