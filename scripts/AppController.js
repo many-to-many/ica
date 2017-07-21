@@ -247,7 +247,7 @@ window.addEventListener("load", function () {
   for (_ of [
     {
       pattern: /\/conversations\/?$/,
-      func: function (matches) {
+      func: function () {
         appMainConversationsController.focusView();
       }
     },
@@ -270,7 +270,7 @@ window.addEventListener("load", function () {
     },
     {
       pattern: /\/discussions\/?$/,
-      func: function (matches) {
+      func: function () {
         appMainDiscussionsController.focusView();
       }
     },
@@ -293,13 +293,13 @@ window.addEventListener("load", function () {
     },
     {
       pattern: /\/search\/?$/,
-      func: function (matches) {
+      func: function () {
         appMainSearchController.focusView();
       }
     },
     {
       pattern: /\/account\/?$/,
-      func: function (matches) {
+      func: function () {
 
         // Redirect to login if account id not available
         if (!ICA.accountId) {
@@ -313,13 +313,13 @@ window.addEventListener("load", function () {
     },
     {
       pattern: /\/about\/?$/,
-      func: function (matches) {
+      func: function () {
         appAboutController.focusView();
       }
     },
     {
       pattern: /.*/,
-      func: function (matches) {
+      func: function () {
         appMainConversationsController.focusView();
       }
     }
