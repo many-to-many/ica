@@ -5,7 +5,7 @@
 }
 
 .main {
-  padding-top: 3em;
+  padding-top: calc(3em + 1px);
 
   .topbar {
     position: fixed;
