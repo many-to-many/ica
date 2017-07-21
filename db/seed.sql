@@ -13,7 +13,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 -- -----------------------------------------------------
 -- Schema ica
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `ica` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+CREATE SCHEMA IF NOT EXISTS `ica` DEFAULT CHARACTER SET utf8mb4 ;
 USE `ica` ;
 
 -- -----------------------------------------------------

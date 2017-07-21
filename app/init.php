@@ -26,6 +26,13 @@
 
     }
 
+    if (!$DATABASE->set_charset("utf8mb4")) {
+
+      printf("Error loading character set utf8mb4: %s\n", $DATABASE->error);
+      exit();
+
+    }
+
     function query($q) {
 
       global $DATABASE;
