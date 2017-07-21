@@ -4,99 +4,6 @@ var AppController = Controller.createComponent("AppController");
 AppController.defineMethod("initView", function () {
   if (!this.view) return;
 
-  // Conversations
-  
-  this.explore = new Explore();
-  new ExploreController(
-    this.explore,
-    this.view.querySelector(".explore")
-  ).componentOf = this;
-
-  ICA.getConversations()
-    .then(function (conversations) {
-      this.explore.requestNextConversations = conversations.requestNext;
-      this.explore.addItems(conversations);
-      this.explore.didUpdate();
-    }.bind(this), function (err) {
-      console.error(err.message);
-    });
-  
-  // Discussions
-
-  this.discussionsExplore = new Explore();
-  new ExploreController(
-    this.discussionsExplore,
-    this.view.querySelector(".discussions .explore")
-  ).componentOf = this;
-
-  ICA.getDiscussions()
-    .then(function (discussions) {
-      this.discussionsExplore.requestNextConversations = discussions.requestNext;
-      this.discussionsExplore.addItems(discussions);
-      this.discussionsExplore.didUpdate();
-    }.bind(this), function (err) {
-      console.error(err.message);
-    });
-  
-  // Search
-
-  this.searchExplore = new Explore();
-  new ExploreController(
-    this.searchExplore,
-    this.view.querySelector(".search .explore")
-  ).componentOf = this;
-
-  this.view.querySelectorAll(".search .search-control [data-ica-conversation-query-meta]").forEach(function (element) {
-    element.addEventListener("input", function (evt) {
-      ICA.getConversations({
-        q: this.querySelector(".search .search-control [data-ica-conversation-query-meta='title']").value
-      })
-         .then(function (conversations) {
-           this.controller.searchExplore.requestNextConversations = conversations.requestNext;
-           this.controller.searchExplore.putItems(conversations);
-           this.controller.searchExplore.didUpdate();
-         }.bind(this), function (err) {
-           console.error(err.toString());
-         });
-    }.bind(this));
-  }.bind(this.view));
-
-  // Pagination
-
-  new Routine(function () {
-    this.view.querySelectorAll("[data-ica-app-view]").forEach(function (view) {
-      if (view.style.display != "none") {
-        var element = view.querySelector(".explore");
-        if (!element) return;
-        var rect = element.getBoundingClientRect();
-        var explore = element.controller.model;
-        if (rect.bottom < 2 * document.body.offsetHeight
-          && explore.requestNextConversations) {
-          // Need to load more content
-          console.count("Need to load more");
-          let requestNext = explore.requestNextConversations;
-          explore.requestNextConversations = undefined;
-          requestNext()
-            .then(function (conversations) {
-              var explore = this.controller.model;
-              explore.requestNextConversations = conversations.requestNext;
-              explore.addItems(conversations);
-              explore.didUpdate();
-            }.bind(element), function (err) {
-              if (err instanceof ICA.APIResponse.EndOfResponse) {
-                // End of response
-                console.log("Explore: End of response");
-              } else {
-                // Critical error
-                console.error(err.message);
-              }
-            });
-        }
-      }
-    });
-  }.bind(this), 500, true)
-    .componentOf = this;
-
   // Views
 
   this.view.querySelectorAll("a[href^='#']").forEach(function (element) {
@@ -188,6 +95,56 @@ AppAboutController.defineMethod("focusView", function () {
 
 let AppMainViewController = Controller.createComponent("AppMainViewController");
 
+AppMainViewController.defineMethod("initView", function () {
+  if (!this.view) return;
+
+  // Explore
+
+  this.explore = new Explore();
+  new ExploreController(
+    this.explore,
+    this.view.querySelector(".explore")
+  ).componentOf = this;
+
+  // Pagination
+
+  new Routine(function () {
+    if (!this.view.hidden) {
+      let element = this.view.querySelector(".explore");
+      if (!element) return;
+
+      let rect = element.getBoundingClientRect();
+      let explore = element.controller.explore;
+
+      if (rect.bottom < 2 * document.body.offsetHeight
+        && explore.requestNext) {
+        // Need to load more content
+
+        console.count("Need to load more");
+        let requestNext = explore.requestNext;
+        explore.requestNext = undefined;
+
+        requestNext()
+          .then(function (conversations) {
+            explore.requestNext = conversations.requestNext;
+            explore.addItems(conversations);
+            explore.didUpdate();
+          }.bind(element), function (err) {
+            if (err instanceof ICA.APIResponse.EndOfResponse) {
+              // End of response
+              console.log("Explore: End of response");
+            } else {
+              // Critical error
+              console.error(err.message);
+            }
+          });
+      }
+    }
+  }.bind(this), 500, true)
+    .componentOf = this;
+
+});
+
 AppMainViewController.defineMethod("focusView", function () {
   this.unhideView();
 });
@@ -215,15 +172,56 @@ let AppMainConversationsController = AppMainViewController.createComponent("AppM
 
 AppMainConversationsController.defineMethod("focusView", function () {
   Router.push(this, "/conversations", "Conversations | Many-to-Many");
+
+  if (this.explore.items.length === 0) {
+    ICA.getConversations()
+      .then(function (conversations) {
+        this.explore.requestNext = conversations.requestNext;
+        this.explore.addItems(conversations);
+        this.explore.didUpdate();
+      }.bind(this), function (err) {
+        console.error(err.message);
+      });
+  }
 });
 
 let AppMainDiscussionsController = AppMainViewController.createComponent("AppMainDiscussionsController");
 
 AppMainDiscussionsController.defineMethod("focusView", function () {
   Router.push(this, "/discussions", "Discussions | Many-to-Many");
+
+  if (this.explore.items.length === 0) {
+    ICA.getDiscussions()
+      .then(function (discussions) {
+        this.explore.requestNext = discussions.requestNext;
+        this.explore.addItems(discussions);
+        this.explore.didUpdate();
+      }.bind(this), function (err) {
+        console.error(err.message);
+      });
+  }
 });
 
 let AppMainSearchController = AppMainViewController.createComponent("AppMainSearchController");
+
+AppMainSearchController.defineMethod("initView", function () {
+  if (!this.view) return;
+
+  this.view.querySelectorAll(".search-control [data-ica-conversation-query-meta]").forEach(function (element) {
+    element.addEventListener("input", function () {
+      ICA.getConversations({
+        q: this.querySelector(".search-control [data-ica-conversation-query-meta='title']").value
+      })
+        .then(function (conversations) {
+          this.controller.explore.requestNext = conversations.requestNext;
+          this.controller.explore.putItems(conversations);
+          this.controller.explore.didUpdate();
+        }.bind(this), function (err) {
+          console.error(err.message);
+        });
+    }.bind(this));
+  }.bind(this.view));
+});
 
 AppMainSearchController.defineMethod("focusView", function () {
   Router.push(this, "/search", "Search | Many-to-Many");
