@@ -1,5 +1,5 @@
 
-var AppController = Controller.createComponent("AppController");
+let AppController = Controller.createComponent("AppController");
 
 AppController.defineMethod("initView", function () {
   if (!this.view) return;
@@ -258,9 +258,9 @@ window.addEventListener("load", function () {
 
         ICA.getConversation(conversationId)
           .then(function (conversation) {
-            var map = new Map([conversation]);
-            var fragment = MapController.createViewFragment();
-            var element = fragment.querySelector(".map");
+            let map = new Map([conversation]);
+            let fragment = MapController.createViewFragment();
+            let element = fragment.querySelector(".map");
             document.body.appendChild(fragment);
             new MapController(map, element);
           }, function () {
@@ -281,9 +281,9 @@ window.addEventListener("load", function () {
 
         ICA.getDiscussion(discussionId)
           .then(function (discussion) {
-            var map = new Map([discussion]);
-            var fragment = MapController.createViewFragment();
-            var element = fragment.querySelector(".map");
+            let map = new Map([discussion]);
+            let fragment = MapController.createViewFragment();
+            let element = fragment.querySelector(".map");
             document.body.appendChild(fragment);
             new MapController(map, element);
           }, function () {
