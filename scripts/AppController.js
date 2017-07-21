@@ -138,6 +138,10 @@ AppMainViewController.defineMethod("initView", function () {
               console.error(err.message);
             }
           });
+
+        element.classList.toggle("loading", true);
+      } else {
+        element.classList.toggle("loading", false);
       }
     }
   }.bind(this), 500, true)
