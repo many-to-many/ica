@@ -425,11 +425,10 @@ const Router = (function () {
     if (index < 0) return; // Index out of bound
 
     let cmp = index + 1 - back.length;
-    if (cmp == 0) return;
-    else if (cmp < 0) {
+    if (cmp < 0) {
       window.history.go(cmp);
       while (back.length > index + 1) goBack();
-    } else {
+    } else if (cmp > 0) {
       throw new Error("Jumping forward not supported yet");
     }
   }
