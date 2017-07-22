@@ -133,7 +133,7 @@
 
   ICA.APIResponse.EndOfResponse.prototype = Object.create(Error.prototype);
 
-  ICA.api = "api/v1";
+  ICA.api = "/api/v1";
 
   ICA.request = function (method, url, headers, data, notify) {
     return new Promise(function (resolve, reject) {
