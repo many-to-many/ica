@@ -13,6 +13,7 @@ $color-background: #f9f9f9;
 
 @import url("https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,500,700|Lato");
 
+$font-size: 16px;
 $font-sans-serif: Roboto, sans-serif;
 $font-sans-serif-alt: Lato, $font-sans-serif;
 $font-mono: "Roboto Mono", monospace;
@@ -49,6 +50,7 @@ $column-spacing: 8px;
 /* Primitive components */
 @import "tokens";
 @import "card";
+@import "spinner";
 
 /* Larger components */
 @import "form";
@@ -66,5 +68,4 @@ $column-spacing: 8px;
 @import "publisher";
 @import "explore";
 @import "map";
-@import "about";
 @import "app";

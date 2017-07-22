@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Many-to-Many</title>
-    <link rel="stylesheet" type="text/css" href="styles/main.css">
-    <script type="text/javascript" src="scripts/quill.min.js"></script>
-    <script type="text/javascript" src="scripts/plyr.js"></script>
-    <script type="text/javascript" src="scripts/main.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <script type="text/javascript" src="/scripts/quill.min.js"></script>
+    <script type="text/javascript" src="/scripts/plyr.js"></script>
+    <script type="text/javascript" src="/scripts/main.min.js"></script>
   </head>
   <body>
     <!-- Begin templates -->
@@ -141,10 +141,10 @@
       </template>
       <template id="template-map-article-conversation">
         <div class="article card-group">
-          <span style="position: absolute; top: 1.5em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
           <article class="jointsource conversation"></article>
           <h4>Responses</h4>
           <div class="responses"></div>
+          <div class="spinner"></div>
         </div>
       </template>
       <template id="template-map-conversation">
@@ -187,9 +187,9 @@
       </template>
       <template id="template-map-article-discussion">
         <div class="article card-group">
-          <span style="position: absolute; top: 1.5em; right: 0; left: 0; text-align: center; font-weight: 500; opacity: 0.3;">click blank space to close</span><!-- NB: Temporary solution -->
           <article class="jointsource discussion"></article>
           <div class="thread"></div>
+          <div class="spinner"></div>
         </div>
       </template>
       <template id="template-map-discussion">
@@ -335,31 +335,33 @@
     <header class="topbar">
       <div class="topbar-colspan" data-ica-width-multiple="300">
         <h1 class="title-complex"><span>Many-to-Many</span><span class="subtitle">Rethinking the Ethnographic Archive</span></h1>
-        <a href="#main" class="topbar-item default" data-ica-anchor-group="topbar" data-ica-anchor-default>Explore</a>
-        <a href="#publisher" class="topbar-item" data-ica-anchor-group="topbar">Share (a) Conversation</a>
-        <a href="#account" class="topbar-item" data-ica-anchor-group="topbar">Log in</a>
-        <a href="#about" class="topbar-item" data-ica-anchor-group="topbar">About</a>
+        <a href="#main" class="topbar-item" data-ica-for-view="main">Explore</a>
+        <a href="#publisher" class="topbar-item">Share (a) Conversation</a>
+        <a href="#account" class="topbar-item" data-ica-for-view="account">Log in</a>
+        <a href="#about" class="topbar-item" data-ica-for-view="about">About</a>
       </div>
     </header>
     <section class="app-view" data-ica-width-multiple="300">
-      <div data-ica-app-view="main" class="main">
+      <div class="main" data-ica-view="main">
         <header class="topbar">
           <div class="topbar-colspan" data-ica-width-multiple="300">
-            <a href="#main/conversations" class="topbar-item default" data-ica-anchor-group="main-topbar">Conversations</a>
-            <a href="#main/discussions" class="topbar-item" data-ica-anchor-group="main-topbar">Discussions</a>
+            <a href="#conversations" class="topbar-item" data-ica-for-main-view="conversations">Conversations</a>
+            <a href="#discussions" class="topbar-item" data-ica-for-main-view="discussions">Discussions</a>
             <div class="flex-space"></div>
-            <a href="#main/search" class="topbar-item" data-ica-anchor-group="main-topbar">Search</a>
+            <a href="#search" class="topbar-item" data-ica-for-main-view="search">Search</a>
           </div>
         </header>
-        <div data-ica-app-view="main/conversations" class="conversations">
+        <div class="conversations" data-ica-main-view="conversations">
           <h2>Recently Added</h2>
           <div class="explore"></div>
+          <div class="spinner"></div>
         </div>
-        <div data-ica-app-view="main/discussions" class="discussions">
+        <div class="discussions" data-ica-main-view="discussions" hidden>
           <h2>Recently Added</h2>
           <div class="explore"></div>
+          <div class="spinner"></div>
         </div>
-        <div data-ica-app-view="main/search" class="search">
+        <div class="search" data-ica-main-view="search" hidden>
           <div class="search-control form">
             <section>
               <label>Search by Keyword</label>
@@ -375,13 +377,14 @@
             </section>
           </div>
           <div class="explore"></div>
+          <div class="spinner"></div>
         </div>
       </div>
-      <div data-ica-app-view="account">
+      <div class="account" data-ica-view="account" hidden>
         <h3>You're logged in</h3>
         <p>This section is still under implementation... To update your info, please navigate to <a href="https://accounts.mintkit.net" target="_blank"><em>accounts.mintkit.net</em></a></p>
       </div>
-      <div data-ica-app-view="about">
+      <div class="about" data-ica-view="about" hidden>
         <h3>About Many-to-Many</h3>
         <p>Many-to-Many is an interactive archive of conversations recorded around the world. We invite ethnographers, their interlocutors, and the general public to share conversations in any form and medium, from disputes to conversations where the landscape overtakes voices of human participants, from monologues to email exchange carried out over several years. In doing so we ask, what is a conversation in the first place?</p>
         <p>Many-to-Many explores global connections between the communicative forms that shape and mediate experience.</p>

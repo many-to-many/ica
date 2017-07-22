@@ -57,6 +57,17 @@
 
   }
 
+  function getDiscussion($discussionId) {
+
+    $result = query("SELECT *
+      FROM discussions_summary
+      WHERE discussion_id = $discussionId;");
+
+    if ($result->num_rows == 0) return NULL;
+    return createDiscussionsFromQueryResult($result)[$discussionId];
+
+  }
+
   /**
    * Inserts a new discussion record into the database.
    */

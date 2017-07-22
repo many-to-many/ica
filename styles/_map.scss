@@ -258,6 +258,17 @@
     .response + .response {
       margin-top: 1em;
     }
+
+    + .spinner {
+      display: block;
+      margin: 1em auto;
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    &:not(.loading) + .spinner {
+      display: none;
+    }
   }
 
   .thread {

@@ -86,6 +86,14 @@
 
   } elseif (list($conversationId) = handle("conversations/{}")) switch ($REQUEST_METHOD) {
 
+    case "GET":
+
+      $data = \ICA\Conversations\getConversation($conversationId);
+
+      respondJSON($data);
+
+      break;
+
     case "PUT": \Session\requireVerification();
 
       // Validation

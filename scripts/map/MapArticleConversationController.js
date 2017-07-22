@@ -14,6 +14,8 @@ MapArticleConversationController.defineMethod("init", function (jointSource, vie
 MapArticleConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
+  Router.push(this, "/conversations/" + this.conversation.conversationId, "Conversation | Many-to-Many");
+
   // Conversation controller
   {
     let node = this.view.querySelector(".jointsource");
@@ -41,7 +43,7 @@ MapArticleConversationController.defineMethod("initView", function initView() {
 
   this.conversation.getResponses()
     .then(function (responses) {
-      this.requestNextResponses = responses.requestNext;
+      this.requestNext = responses.requestNext;
 
       renderResponses(responses);
     }.bind(this), function (err) {
@@ -60,20 +62,22 @@ MapArticleConversationController.defineMethod("initView", function initView() {
 
   // Pagination
 
-  new Routine(function () {
-    let element = this.view.querySelector(".responses");
+  let responsesElement = this.view.querySelector(".responses");
 
+  new Routine(function () {
+    let element = responsesElement;
     let rect = element.getBoundingClientRect();
+
     if (rect.bottom < 2 * document.body.offsetHeight
-      && this.requestNextResponses) {
+      && this.requestNext) {
       // Need to load more content
       console.count("Need to load more");
 
-      let requestNext = this.requestNextResponses;
-      this.requestNextResponses = undefined;
+      let requestNext = this.requestNext;
+      this.requestNext = undefined;
       requestNext()
         .then(function (responses) {
-          this.requestNextResponses = responses.requestNext;
+          this.requestNext = responses.requestNext;
 
           renderResponses(responses);
         }.bind(this), function (err) {
@@ -84,10 +88,14 @@ MapArticleConversationController.defineMethod("initView", function initView() {
             // Critical error
             console.error(err.message);
           }
+
+          element.classList.toggle("loading", false);
         });
     }
   }.bind(this), 500, true)
     .componentOf = this;
+
+  responsesElement.classList.toggle("loading", true);
 
 });
 

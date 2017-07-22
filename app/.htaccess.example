@@ -29,6 +29,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.*)$ /$1.php [L]
 
+# Single page application
+RewriteCond %{HTTP_HOST} many-to-many.net$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(conversations|discussions|search|account|about) /index.html [NC,L]
+
 
 # Local: <http-host>
 
@@ -52,3 +57,8 @@ RewriteCond %{HTTP_HOST} =<http-host> [NC]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.*)$ $1.php [L]
+
+# Single page application
+RewriteCond %{HTTP_HOST} =<http-host> [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(conversations|discussions|search|account|about) index.html [NC,L]

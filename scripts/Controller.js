@@ -49,13 +49,13 @@ Controller.defineMethod("initView", function initView(updateView = []) {
     if (element.controller) tokenInputController.componentOf = element.controller;
 
     switch (getElementProperty(element, "suggestions")) {
-    case "themes":
-      var tokenSuggestionsFragment = TokenInputSuggestionsController.createViewFragment();
-      var tokenSuggestionsElement = tokenSuggestionsFragment.querySelector(".tokens");
-      element.parentNode.insertBefore(tokenSuggestionsFragment, element.nextSibling);
-      var tokenSuggestionsController = new TokenInputThemeSuggestionsController(tokenInputHandler, tokenSuggestionsElement);
-      if (element.controller) tokenSuggestionsController.componentOf = element.controller;
-      break;
+      case "themes":
+        var tokenSuggestionsFragment = TokenInputSuggestionsController.createViewFragment();
+        var tokenSuggestionsElement = tokenSuggestionsFragment.querySelector(".tokens");
+        element.parentNode.insertBefore(tokenSuggestionsFragment, element.nextSibling);
+        var tokenSuggestionsController = new TokenInputThemeSuggestionsController(tokenInputHandler, tokenSuggestionsElement);
+        if (element.controller) tokenSuggestionsController.componentOf = element.controller;
+        break;
     }
 
     element._formatInit = true;
@@ -66,92 +66,53 @@ Controller.defineMethod("initView", function initView(updateView = []) {
     controls: ["play", "progress", "current-time", "fullscreen"]
   });
 
-  var anchorHistory = [];
-
-  element.querySelectorAll("[data-ica-anchor-group]").forEach(function (element) {
-    if (element._anchorGroupInit) return;
-
-    element.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      anchorHistory.push(this);
-      while (anchorHistory.length > 50) anchorHistory.shift();
-
-      switch (this.getAttribute("href")) {
-      case "#main": switchAppView("main"); break;
-      case "#main/conversations": switchAppView("main/conversations"); break;
-      case "#main/discussions": switchAppView("main/discussions"); break;
-      case "#main/search": switchAppView("main/search"); break;
-      case "#publisher":
-
-        anchorHistory.pop(); // Escape current anchor
-
-        var publisherFragment = PublisherConversationController.createViewFragment();
-        var publisherElement = publisherFragment.querySelector(".publisher");
-        document.body.appendChild(publisherFragment);
-        new PublisherConversationController(new Conversation(), publisherElement);
-
-        return; // Does not focus on publisher
-      case "#account":
-
-        // Redirect to login if account id not available
-        if (!ICA.accountId) {
-          var continueAnchor = anchorHistory.pop(); // Escape current anchor
-
-          ICA.login()
-            .then(function () {
-              continueAnchor.click();
-            })
-            .catch(function (e) {
-              console.warn(e);
-            });
-
-          return; // Await to continue
-        }
-        switchAppView("account");
-
-        break;
-      case "#about":
-
-        switchAppView("about");
-
-        break;
-      }
-
-      document.body.querySelectorAll("[data-ica-anchor-group='" + getElementProperty(this, "anchor-group") + "']")
-        .forEach(function (element) {
-          element.classList.remove("active");
-        });
-      this.classList.add("active");
-    }.bind(element));
-
-    if (element.classList.contains("default")) {
-      element.click();
-    }
-
-    element._anchorGroupInit = true;
-  });
-
-  resize();
+  resize(this.view);
 
   setElementProperty(this.view, "controller-id", this.controllerId);
   if (updateView) this.updateView.apply(this, updateView);
 });
 
-/*****/
+Controller.defineMethod("hideView", function hideView() {
+  if (!this.view) return;
+  this.view.hidden = true;
+});
 
-function switchAppView(view) {
-  viewElement = document.querySelector("[data-ica-app-view='{0}']".format(view));
-  document.querySelectorAll("[data-ica-app-view]").forEach(function (element) {
-    if (element.parentNode !== viewElement.parentNode) return;
-    element.hidden = !view.startsWith(getElementProperty(element, "app-view"));
+Controller.defineMethod("unhideView", function hideView() {
+  if (!this.view) return;
+  this.view.hidden = false;
+});
+
+Controller.defineMethod("uninitView", function () {
+  this.unlockBodyScrolling();
+});
+
+(function (Controller) {
+
+  let numBodyScrollLocks = 0;
+
+  Controller.defineMethod("lockBodyScrolling", function lockBodyScrolling() {
+    if (!this.lockingBodyScroll) {
+      this.lockingBodyScroll = true;
+      ++numBodyScrollLocks;
+
+      document.body.style.overflow = "hidden";
+    }
   });
-}
 
-function resize() {
-  document.body.querySelectorAll("[data-ica-width-multiple]")
+  Controller.defineMethod("unlockBodyScrolling", function unlockBodyScrolling() {
+    if (this.lockingBodyScroll) {
+      this.lockingBodyScroll = false;
+
+      if (--numBodyScrollLocks === 0) document.body.style.overflow = "";
+    }
+  });
+
+})(Controller);
+
+function resize(container = document.body) {
+  container.querySelectorAll("[data-ica-width-multiple]")
     .forEach(function (element) {
-      var multiple = parseInt(getElementProperty(element, "width-multiple"));
+      let multiple = parseInt(getElementProperty(element, "width-multiple"));
       element.style.width = Math.floor(document.body.offsetWidth / multiple) * multiple + "px";
     });
 }
