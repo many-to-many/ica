@@ -335,50 +335,40 @@
     <header class="topbar">
       <div class="topbar-colspan" data-ica-width-multiple="300">
         <h1 class="title-complex"><span>Many-to-Many</span><span class="subtitle">Rethinking the Ethnographic Archive</span></h1>
-        <a href="#main" class="topbar-item" data-ica-for-view="main">Explore</a>
+        <a href="#conversations" class="topbar-item" data-ica-for-view="conversations">Explore Conversations</a>
+        <a href="#discussions" class="topbar-item" data-ica-for-view="discussions">Discussions</a>
+        <a href="#search" class="topbar-item" data-ica-for-view="search">Search</a>
         <a href="#publisher" class="topbar-item">Share (a) Conversation</a>
         <a href="#account" class="topbar-item" data-ica-for-view="account">Log in</a>
         <a href="#about" class="topbar-item" data-ica-for-view="about">About</a>
       </div>
     </header>
     <section class="app-view" data-ica-width-multiple="300">
-      <div class="main" data-ica-view="main">
-        <header class="topbar">
-          <div class="topbar-colspan" data-ica-width-multiple="300">
-            <a href="#conversations" class="topbar-item" data-ica-for-main-view="conversations">Conversations</a>
-            <a href="#discussions" class="topbar-item" data-ica-for-main-view="discussions">Discussions</a>
-            <div class="flex-space"></div>
-            <a href="#search" class="topbar-item" data-ica-for-main-view="search">Search</a>
-          </div>
-        </header>
-        <div class="conversations" data-ica-main-view="conversations">
-          <h2>Recently Added</h2>
-          <div class="explore"></div>
-          <div class="spinner"></div>
+      <div class="conversations" data-ica-view="conversations">
+        <div class="explore"></div>
+        <div class="spinner"></div>
+      </div>
+      <div class="discussions" data-ica-view="discussions" hidden>
+        <div class="explore"></div>
+        <div class="spinner"></div>
+      </div>
+      <div class="search" data-ica-view="search" hidden>
+        <div class="search-control form">
+          <section>
+            <label>Search by Keyword</label>
+            <input data-ica-conversation-query-meta="title" type="text" placeholder="Keywords">
+          </section>
+          <section>
+            <label>Search by Themes (under&nbsp;construction)</label>
+            <input data-ica-conversation-query-meta="themes" type="text" placeholder="Themes" data-ica-format="tokens">
+          </section>
+          <section>
+            <label>Search by Locations (under&nbsp;construction)</label>
+            <input data-ica-conversation-query-meta="locations" type="text" placeholder="Locations">
+          </section>
         </div>
-        <div class="discussions" data-ica-main-view="discussions" hidden>
-          <h2>Recently Added</h2>
-          <div class="explore"></div>
-          <div class="spinner"></div>
-        </div>
-        <div class="search" data-ica-main-view="search" hidden>
-          <div class="search-control form">
-            <section>
-              <label>Search by Keyword</label>
-              <input data-ica-conversation-query-meta="title" type="text" placeholder="Keywords">
-            </section>
-            <section>
-              <label>Search by Themes (under&nbsp;construction)</label>
-              <input data-ica-conversation-query-meta="themes" type="text" placeholder="Themes" data-ica-format="tokens">
-            </section>
-            <section>
-              <label>Search by Locations (under&nbsp;construction)</label>
-              <input data-ica-conversation-query-meta="locations" type="text" placeholder="Locations">
-            </section>
-          </div>
-          <div class="explore"></div>
-          <div class="spinner"></div>
-        </div>
+        <div class="explore"></div>
+        <div class="spinner"></div>
       </div>
       <div class="account" data-ica-view="account" hidden>
         <h3>You're logged in</h3>

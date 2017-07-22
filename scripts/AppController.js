@@ -11,7 +11,9 @@ AppController.defineMethod("initView", function () {
       event.preventDefault();
 
       switch (this.getAttribute("href")) {
-        case "#main": appMainController.focusView(); break;
+        case "#conversations": appConversationsController.focusView(); break;
+        case "#discussions": appDiscussionsController.focusView(); break;
+        case "#search": appSearchController.focusView(); break;
         case "#publisher":
 
           {
@@ -37,9 +39,6 @@ AppController.defineMethod("initView", function () {
 
           break;
         case "#about": appAboutController.focusView(); break;
-        case "#conversations": appMainConversationsController.focusView(); break;
-        case "#discussions": appMainDiscussionsController.focusView(); break;
-        case "#search": appMainSearchController.focusView(); break;
         default:
           console.warn("Unknown anchor", this.getAttribute("href"));
       }
@@ -70,32 +69,9 @@ AppViewController.defineMethod("unhideView", function unhideView() {
 
 AppViewController.prototype.destroy = function () {}; // Block destory method
 
-let AppMainController = AppViewController.createComponent("AppMainController");
+let AppJointSourcesController = AppViewController.createComponent("AppJointSourcesController");
 
-AppMainController.defineMethod("focusView", function focusView() {
-  if (!this.view) return;
-
-  for (let element of this.view.querySelectorAll("[data-ica-main-view]")) {
-    if (!element.hidden) element.controller.focusView();
-  }
-
-});
-
-let AppAccountController = AppViewController.createComponent("AppAccountController");
-
-AppAccountController.defineMethod("focusView", function () {
-  Router.push(this, "/account", "Many-to-Many");
-});
-
-let AppAboutController = AppViewController.createComponent("AppAboutController");
-
-AppAboutController.defineMethod("focusView", function () {
-  Router.push(this, "/about", "About | Many-to-Many");
-});
-
-let AppMainViewController = Controller.createComponent("AppMainViewController");
-
-AppMainViewController.defineMethod("initView", function () {
+AppJointSourcesController.defineMethod("initView", function () {
   if (!this.view) return;
 
   // Explore
@@ -149,32 +125,9 @@ AppMainViewController.defineMethod("initView", function () {
 
 });
 
-AppMainViewController.defineMethod("focusView", function () {
-  this.unhideView();
-});
+let AppConversationsController = AppJointSourcesController.createComponent("AppConversationsController");
 
-AppMainViewController.defineMethod("unhideView", function unhideView() {
-  if (!this.view) return;
-
-  appMainController.unhideView();
-
-  let view = getElementProperty(this.view, "main-view");
-
-  for (let element of this.view.parentNode.querySelectorAll("[data-ica-main-view]")) {
-    element.hidden = element !== this.view;
-  }
-
-  for (let element of document.body.querySelectorAll("[data-ica-for-main-view]")) {
-    let forView = getElementProperty(element, "for-main-view");
-    element.classList.toggle("active", view === forView);
-  }
-});
-
-AppMainViewController.prototype.destroy = function () {}; // Block destory method
-
-let AppMainConversationsController = AppMainViewController.createComponent("AppMainConversationsController");
-
-AppMainConversationsController.defineMethod("focusView", function () {
+AppConversationsController.defineMethod("focusView", function () {
   Router.push(this, "/conversations", "Conversations | Many-to-Many");
 
   if (this.explore.items.length === 0) {
@@ -189,9 +142,9 @@ AppMainConversationsController.defineMethod("focusView", function () {
   }
 });
 
-let AppMainDiscussionsController = AppMainViewController.createComponent("AppMainDiscussionsController");
+let AppDiscussionsController = AppJointSourcesController.createComponent("AppDiscussionsController");
 
-AppMainDiscussionsController.defineMethod("focusView", function () {
+AppDiscussionsController.defineMethod("focusView", function () {
   Router.push(this, "/discussions", "Discussions | Many-to-Many");
 
   if (this.explore.items.length === 0) {
@@ -206,7 +159,7 @@ AppMainDiscussionsController.defineMethod("focusView", function () {
   }
 });
 
-let AppMainSearchController = AppMainViewController.createComponent("AppMainSearchController");
+let AppMainSearchController = AppJointSourcesController.createComponent("AppMainSearchController");
 
 AppMainSearchController.defineMethod("initView", function () {
   if (!this.view) return;
@@ -231,6 +184,18 @@ AppMainSearchController.defineMethod("focusView", function () {
   Router.push(this, "/search", "Search | Many-to-Many");
 });
 
+let AppAccountController = AppViewController.createComponent("AppAccountController");
+
+AppAccountController.defineMethod("focusView", function () {
+  Router.push(this, "/account", "Many-to-Many");
+});
+
+let AppAboutController = AppViewController.createComponent("AppAboutController");
+
+AppAboutController.defineMethod("focusView", function () {
+  Router.push(this, "/about", "About | Many-to-Many");
+});
+
 // Load
 
 window.addEventListener("load", function () {
@@ -242,19 +207,17 @@ window.addEventListener("load", function () {
   new NotificationsController(notifications, document.body);
   appController = new AppController(document.body);
 
-  appMainController = new AppMainController(document.querySelector(".main"));
+  appConversationsController = new AppConversationsController(document.querySelector(".conversations"));
+  appDiscussionsController = new AppDiscussionsController(document.querySelector(".discussions"));
+  appSearchController = new AppMainSearchController(document.querySelector(".search"));
   appAccountController = new AppAccountController(document.querySelector(".account"));
   appAboutController = new AppAboutController(document.querySelector(".about"));
-
-  appMainConversationsController = new AppMainConversationsController(document.querySelector(".conversations"));
-  appMainDiscussionsController = new AppMainDiscussionsController(document.querySelector(".discussions"));
-  appMainSearchController = new AppMainSearchController(document.querySelector(".search"));
 
   for (_ of [
     {
       pattern: /\/conversations\/?$/,
       func: function () {
-        appMainConversationsController.focusView();
+        appConversationsController.focusView();
       }
     },
     {
@@ -270,14 +233,14 @@ window.addEventListener("load", function () {
             document.body.appendChild(fragment);
             new MapController(map, element);
           }, function () {
-            appMainConversationsController.focusView();
+            appConversationsController.focusView();
           });
       }
     },
     {
       pattern: /\/discussions\/?$/,
       func: function () {
-        appMainDiscussionsController.focusView();
+        appDiscussionsController.focusView();
       }
     },
     {
@@ -293,14 +256,14 @@ window.addEventListener("load", function () {
             document.body.appendChild(fragment);
             new MapController(map, element);
           }, function () {
-            appMainDiscussionsController.focusView();
+            appDiscussionsController.focusView();
           });
       }
     },
     {
       pattern: /\/search\/?$/,
       func: function () {
-        appMainSearchController.focusView();
+        appSearchController.focusView();
       }
     },
     {
@@ -310,7 +273,7 @@ window.addEventListener("load", function () {
         // Redirect to login if account id not available
         if (!ICA.accountId) {
           // Do not popup for user login
-          appMainConversationsController.focusView();
+          appConversationsController.focusView();
         } else {
           appAccountController.focusView();
         }
@@ -326,7 +289,7 @@ window.addEventListener("load", function () {
     {
       pattern: /.*/,
       func: function () {
-        appMainConversationsController.focusView();
+        appConversationsController.focusView();
       }
     }
   ]) {
