@@ -156,8 +156,8 @@ PublisherConversationController.prototype.publish = function () {
   return this.conversation.publish("Publishing conversation...")
     .then(function (conversation) {
       if (conversation) {
-        appController.explore.addItems([conversation]);
-        appController.explore.didUpdate();
+        appConversationsController.explore.addItems([conversation]);
+        appConversationsController.explore.didUpdate();
       }
 
       this.destroy(true);
