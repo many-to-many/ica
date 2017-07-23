@@ -88,9 +88,11 @@
 
   function getConversation($conversationId) {
 
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT *
       FROM conversations_summary
-      WHERE conversation_id = $conversationId;");
+      WHERE conversation_id = $conversationId
+        AND state = $stateEncoded;");
 
     if ($result->num_rows == 0) return NULL;
     return createConversationsFromQueryResult($result)[$conversationId];

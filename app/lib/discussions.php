@@ -59,9 +59,11 @@
 
   function getDiscussion($discussionId) {
 
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
     $result = query("SELECT *
       FROM discussions_summary
-      WHERE discussion_id = $discussionId;");
+      WHERE discussion_id = $discussionId
+        AND state = $stateEncoded;");
 
     if ($result->num_rows == 0) return NULL;
     return createDiscussionsFromQueryResult($result)[$discussionId];
