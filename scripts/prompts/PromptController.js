@@ -3,11 +3,15 @@ var PromptController = SingleModelController.createComponent("PromptController")
 
 PromptController.defineAlias("model", "prompt");
 
+// View
+
 PromptController.defineMethod("initView", function () {
   if (!this.view) return;
 
   // List to keep track of (shared) actions on display
   this.viewActions = [];
+
+  this.lockBodyScrolling();
 });
 
 PromptController.defineMethod("updateView", function () {
