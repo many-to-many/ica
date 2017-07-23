@@ -18,7 +18,9 @@ NotificationController.defineMethod("updateView", function updateView() {
     element.textContent = this.notification[getElementProperty(element, "notification")];
   }.bind(this));
 
-  this.view.classList.remove("hidden");
+  setTimeout(function () {
+    this.view.classList.remove("hidden");
+  }.bind(this), 1);
 });
 
 NotificationController.defineMethod("uninitView", function uninitView() {
