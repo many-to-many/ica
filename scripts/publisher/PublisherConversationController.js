@@ -160,7 +160,8 @@ PublisherConversationController.prototype.publish = function () {
         appConversationsController.explore.didUpdate();
       }
 
-      this.destroy(true);
+      Router.replace("/conversations/{0}/edit".format(this.conversation.conversationId), "Share (a) Conversation | Many-to-Many");
+      appConversationsController.focusView();
 
       // Display notification
       notifications.addNotification(new BasicNotification("Conversation published!"));
