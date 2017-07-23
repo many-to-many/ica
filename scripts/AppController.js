@@ -221,7 +221,7 @@ window.addEventListener("load", function () {
       }
     },
     {
-      pattern: /\/conversations\/(\d+)\/?/,
+      pattern: /\/conversations\/(\d+)\/?$/,
       func: function (matches) {
         let conversationId = matches[1];
 
@@ -244,7 +244,7 @@ window.addEventListener("load", function () {
       }
     },
     {
-      pattern: /\/discussions\/(\d+)\/?/,
+      pattern: /\/discussions\/(\d+)\/?$/,
       func: function (matches) {
         let discussionId = matches[1];
 
