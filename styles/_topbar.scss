@@ -17,9 +17,16 @@
     @include flex;
     box-sizing: border-box;
     margin: 0 auto;
-    padding: 0 ($column-spacing / 2);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      flex: 0 0 auto;
+      width: $column-spacing / 2;
+    }
   }
 
   h1,

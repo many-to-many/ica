@@ -38,20 +38,22 @@
       </template>
       <!-- Template: Publisher -->
       <template id="template-publisher">
-        <div class="publisher">
-          <section class="card-group">
-            <article class="card">
-              <header class="topbar">
-                <h2>Share (a) Conversation</h2>
+        <div class="publisher-container" data-ica-view>
+          <section class="publisher" data-ica-width-multiple="300">
+            <header class="topbar">
+              <div class="topbar-colspan" data-ica-width-multiple="300">
+                <h2 class="title">Share (a) Conversation</h2>
                 <a class="topbar-item" data-ica-action="publish">Publish</a>
-                <a class="topbar-item" data-ica-action="abort">Close</a>
-              </header>
-              <section class="publisher-intro-container">
-                <p>Many-to-Many invites conversation(s) of all shapes, sizes, scales and media.</p>
-                <p><q>Conversations</q> shared on Many-to-Many need not be face-to-face interactions. They can extend across space and time. They can involve multiple media (audio, video, text, image...). They can even be conversations about what conversation CAN'T be archived...</p>
-                <p>We also invite you to share reflections - as brief or as detailed as you like - about how the conversation(s) came about, and why its participants want it circulated digitally. Answer some or all of the questions below. Or you can also upload reflections as a text, audio, video, or image file.</p>
-              </section>
-              <section class="publisher-meta-container">
+                <a class="topbar-item" data-ica-action="abort">Discard Changes</a>
+              </div>
+            </header>
+            <section class="publisher-intro">
+              <p><strong>Many-to-Many</strong> invites conversation(s) of all shapes, sizes, scales and media.</p>
+              <p><q>Conversations</q> shared on Many-to-Many need not be face-to-face interactions. They can extend across space and time. They can involve multiple media (audio, video, text, image...). They can even be conversations about what conversation CAN'T be archived...</p>
+              <p>We also invite you to share reflections - as brief or as detailed as you like - about how the conversation(s) came about, and why its participants want it circulated digitally. Answer some or all of the questions below. Or you can also upload reflections as a text, audio, video, or image file.</p>
+            </section>
+            <article class="card publisher-meta">
+              <section>
                 <label>What would you like to call the conversation?</label>
                 <input data-ica-conversation-meta="title" placeholder="Enter title here...">
                 <label>Where did the conversation take place?</label>
@@ -65,26 +67,26 @@
                 <label>Other reflections</label>
                 <textarea data-ica-conversation-meta="others" placeholder="More thoughts about this conversation..." rows="1"></textarea>
               </section>
-              <section class="publisher-sources-container">
-                <h4>Upload media here</h4>
-                <section class="publisher-sources"></section>
-                <section class="publisher-sources-control">
-                  <input type="button" value="Plain Text" data-ica-action="add-source/text">
-                  <input type="button" value="Photo" data-ica-action="add-source/image">
-                  <input type="button" value="Audio Recording &amp; Transcript" data-ica-action="add-source/audio">
-                  <input type="button" value="Video Clip" data-ica-action="add-source/video">
-                </section>
-              </section>
-              <section class="publisher-published-container" data-ica-conversation-filter="published">
-                <h4 class="color-primary">Danger Zone</h4>
-                <input type="button" class="color-primary" value="Unpublish the Conversation" data-ica-action="unpublish">
-              </section>
             </article>
+            <section class="publisher-sources-container">
+              <h4>Upload media here</h4>
+              <section class="publisher-sources"></section>
+              <section class="publisher-sources-control">
+                <input type="button" value="+ Plain Text" data-ica-action="add-source/text">
+                <input type="button" value="+ Photo" data-ica-action="add-source/image">
+                <input type="button" value="+ Audio Recording &amp; Transcript" data-ica-action="add-source/audio">
+                <input type="button" value="+ Video Clip" data-ica-action="add-source/video">
+              </section>
+            </section>
+            <section class="publisher-published-container" data-ica-conversation-filter="published">
+              <h4 class="color-primary">Danger Zone</h4>
+              <input type="button" class="color-primary" value="Delete this Conversation" data-ica-action="unpublish">
+            </section>
           </section>
         </div>
       </template>
       <template id="template-publisher-textsource">
-        <article class="publisher-source publisher-textsource">
+        <article class="card publisher-source publisher-textsource">
           <header class="topbar">
             <h5>Plain Text</h5>
             <a class="topbar-item" data-ica-action="remove-source">Remove</a>
@@ -95,7 +97,7 @@
         </article>
       </template>
       <template id="template-publisher-imagesource">
-        <article class="publisher-source publisher-imagesource">
+        <article class="card publisher-source publisher-imagesource">
           <header class="topbar">
             <h5>Image</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -108,7 +110,7 @@
         </article>
       </template>
       <template id="template-publisher-audiosource">
-        <article class="publisher-source publisher-audiosource">
+        <article class="card publisher-source publisher-audiosource">
           <header class="topbar">
             <h5>Audio</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -123,7 +125,7 @@
         </article>
       </template>
       <template id="template-publisher-videosource">
-        <article class="publisher-source publisher-videosource">
+        <article class="card publisher-source publisher-videosource">
           <header class="topbar">
             <h5>Video</h5>
             <a class="topbar-item" data-ica-action="select-file">Select</a>
@@ -136,19 +138,18 @@
         </article>
       </template>
       <!-- Template: Articles -->
-      <template id="template-map">
-        <article class="map"></article>
-      </template>
       <template id="template-map-article-conversation">
-        <div class="article card-group">
-          <article class="jointsource conversation"></article>
-          <h4>Responses</h4>
-          <div class="responses"></div>
-          <div class="spinner"></div>
+        <div class="article-container" data-ica-view>
+          <div class="article" data-ica-width-multiple="300">
+            <article class="jointsource conversation"></article>
+            <h4>Responses</h4>
+            <div class="responses"></div>
+            <div class="spinner"></div>
+          </div>
         </div>
       </template>
       <template id="template-map-conversation">
-        <article class="jointsource conversation card">
+        <article class="card jointsource conversation">
           <header class="conversation-nav">
             <a class="conversation-nav-btn left" data-ica-action="previous-source"></a>
             <div><span data-ica-conversation-source-index></span>/<span data-ica-conversation-number-of-sources></span></div>
@@ -186,14 +187,16 @@
         </article>
       </template>
       <template id="template-map-article-discussion">
-        <div class="article card-group">
-          <article class="jointsource discussion"></article>
-          <div class="thread"></div>
-          <div class="spinner"></div>
+        <div class="article-container" data-ica-view>
+          <div class="article" data-ica-width-multiple="300">
+            <article class="jointsource discussion"></article>
+            <div class="thread"></div>
+            <div class="spinner"></div>
+          </div>
         </div>
       </template>
       <template id="template-map-discussion">
-        <article class="jointsource discussion card">
+        <article class="card jointsource discussion">
           <section class="sources-container">
             <div class="sources">
               <article class="source meta">
@@ -206,7 +209,7 @@
         </article>
       </template>
       <template id="template-map-response">
-        <article class="response card">
+        <article class="card response">
           <section class="response-nav">
             <section class="response-meta">
               <span class="response-author" data-ica-response-author="name"></span>
@@ -343,16 +346,16 @@
         <a href="#about" class="topbar-item" data-ica-for-view="about">About</a>
       </div>
     </header>
-    <section class="app-view" data-ica-width-multiple="300">
-      <div class="conversations" data-ica-view="conversations">
+    <section class="app-view">
+      <div class="conversations" data-ica-view="conversations" data-ica-width-multiple="300" hidden>
         <div class="explore"></div>
         <div class="spinner"></div>
       </div>
-      <div class="discussions" data-ica-view="discussions" hidden>
+      <div class="discussions" data-ica-view="discussions" data-ica-width-multiple="300" hidden>
         <div class="explore"></div>
         <div class="spinner"></div>
       </div>
-      <div class="search" data-ica-view="search" hidden>
+      <div class="search" data-ica-view="search" data-ica-width-multiple="300" hidden>
         <div class="search-control form">
           <section>
             <label>Search by Keyword</label>
@@ -370,11 +373,11 @@
         <div class="explore"></div>
         <div class="spinner"></div>
       </div>
-      <div class="account" data-ica-view="account" hidden>
+      <div class="account" data-ica-view="account" data-ica-width-multiple="300" hidden>
         <h3>You're logged in</h3>
         <p>This section is still under implementation... To update your info, please navigate to <a href="https://accounts.mintkit.net" target="_blank"><em>accounts.mintkit.net</em></a></p>
       </div>
-      <div class="about" data-ica-view="about" hidden>
+      <div class="about" data-ica-view="about" data-ica-width-multiple="300" hidden>
         <h3>About Many-to-Many</h3>
         <p>Many-to-Many is an interactive archive of conversations recorded around the world. We invite ethnographers, their interlocutors, and the general public to share conversations in any form and medium, from disputes to conversations where the landscape overtakes voices of human participants, from monologues to email exchange carried out over several years. In doing so we ask, what is a conversation in the first place?</p>
         <p>Many-to-Many explores global connections between the communicative forms that shape and mediate experience.</p>

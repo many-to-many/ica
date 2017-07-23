@@ -5,17 +5,14 @@ $card-width: 40em;
   position: relative;
   box-sizing: border-box;
   display: block;
+  padding: 0 1.5em;
   width: $card-width;
-  max-width: 90%;
+  max-width: 100%;
   height: auto;
   min-height: 1em;
-  max-height: 80%;
-  margin: auto;
-  padding: 0 1.5em;
   background-color: #ffffff;
   border: solid 1px $color-border;
   border-radius: 3px;
-  overflow-y: auto;
   z-index: 3;
   @include shadow(3);
 
@@ -32,65 +29,6 @@ $card-width: 40em;
   > * {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
-  }
-}
-
-@mixin series {
-  display: flex;
-  height: 100%;
-  justify-content: flex-start;
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  &::before, &::after {
-    display: block;
-    content: "";
-    flex: 1 0 auto;
-    width: calc(50% - #{$card-width} / 2 - 1em);
-  }
-
-  > .card {
-    flex: none;
-    width: $card-width;
-    margin: auto 1em;
-  }
-
-  > .card-group {
-    position: relative !important;
-    display: flex;
-    box-sizing: border-box;
-    flex: none;
-    flex-direction: column;
-    width: ($card-width + 2em);
-    max-width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0 1em;
-    overflow-x: visible;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-
-    &::before,
-    &::after {
-      display: block;
-      content: "";
-      flex: 1 0 auto;
-      min-height: 4em;
-    }
-
-    .card {
-      width: $card-width;
-      max-width: 100% !important;
-      height: auto !important;
-      max-height: none !important;
-      margin: 0;
-      flex: none;
-      overflow-y: visible;
-
-      + .card {
-        margin-top: 2em;
-      }
-    }
   }
 }
 

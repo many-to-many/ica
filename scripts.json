@@ -48,8 +48,6 @@
   "scripts/publisher/PublisherAudioSourceController.js",
   "scripts/publisher/PublisherVideoSourceController.js",
 
-  "scripts/map/Map.js",
-  "scripts/map/MapController.js",
   "scripts/map/MapArticleController.js",
   "scripts/map/MapArticleConversationController.js",
   "scripts/map/MapArticleDiscussionController.js",

@@ -16,11 +16,10 @@ ExploreConversationController.defineMethod("initView", function initView() {
   this.view.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
-    var map = new Map([this.controller.conversation]);
-    var fragment = MapController.createViewFragment();
-    var element = fragment.querySelector(".map");
-    document.body.appendChild(fragment);
-    new MapController(map, element);
+    var fragment = MapArticleConversationController.createViewFragment();
+    var element = fragment.querySelector(".article-container");
+    document.body.querySelector(".app-view").appendChild(fragment);
+    new MapArticleConversationController(this.controller.conversation, element);
   }.bind(this.view));
 
   this.audioPreviewHandler = new AudioHandler();

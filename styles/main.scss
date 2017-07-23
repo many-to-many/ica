@@ -55,7 +55,6 @@ $column-spacing: 8px;
 /* Larger components */
 @import "form";
 @import "topbar";
-@import "popup";
 @import "waveform";
 @import "notifications";
 @import "prompts";
@@ -67,5 +66,5 @@ $column-spacing: 8px;
 /* App */
 @import "publisher";
 @import "explore";
-@import "map";
+@import "article";
 @import "app";

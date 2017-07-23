@@ -5,12 +5,24 @@ PublisherConversationController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
 };
 
+PublisherConversationController.defineMethod("uninitModel", function uninitModel() {
+  if (!this.model) return;
+
+  if (this.conversation.conversationId < 0) {
+    let conversation = this.conversation;
+
+    this.releaseModel(conversation); // Temporary release model to avoid recursive calls on this method
+    conversation.destroy(true, true, true);
+    this.retainModel(conversation);
+  }
+});
+
 // View
 
 PublisherConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  this.lockBodyScrolling();
+  let routerIndex = Router.index;
 
   this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
     // Event listeners
@@ -56,10 +68,10 @@ PublisherConversationController.defineMethod("initView", function initView() {
   this.view.querySelector("[data-ica-action='abort']").addEventListener("click", function (e) {
     e.preventDefault();
 
-    if (this.controller.conversation.conversationId < 0) {
-      this.controller.conversation.destroy(true, true, true);
+    if (routerIndex > 0) {
+      Router.jump(routerIndex);
     } else {
-      this.controller.destroy(true);
+      appConversationsController.focusView();
     }
   }.bind(this.view));
 
@@ -74,6 +86,12 @@ PublisherConversationController.defineMethod("initView", function initView() {
 
     this.controller.publish();
   }.bind(this.view));
+
+  if (this.conversation.conversationId < 0) {
+    Router.push(this, "/conversations/new", "Share (a) Conversation | Many-to-Many");
+  } else {
+    Router.push(this, "/conversations/{0}/edit".format(this.conversation.conversationId), "Share (a) Conversation | Many-to-Many");
+  }
 });
 
 PublisherConversationController.defineMethod("updateView", function updateView() {
@@ -117,6 +135,22 @@ PublisherConversationController.defineMethod("updateView", function updateView()
   // Display danger zone
   this.view.querySelector("[data-ica-conversation-filter='published']").hidden = this.conversation.conversationId < 0;
 });
+
+PublisherConversationController.defineMethod("unhideView", function unhideView() {
+  if (!this.view) return;
+
+  let view = getElementProperty(this.view, "view");
+
+  for (let element of this.view.parentNode.querySelectorAll("[data-ica-view]")) {
+    element.hidden = element !== this.view;
+  }
+
+  for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
+    let forView = getElementProperty(element, "for-view");
+    element.classList.toggle("active", view === forView);
+  }
+});
+
 
 PublisherConversationController.prototype.publish = function () {
   return this.conversation.publish("Publishing conversation...")

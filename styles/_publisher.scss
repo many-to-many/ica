@@ -1,96 +1,125 @@
 
+.publisher-container {
+  padding: 1em 0;
+}
+
 .publisher {
-  @include popup-series;
+  box-sizing: border-box;
+  margin: 2em auto;
+  padding: 0 ($column-spacing / 2);
+  max-width: $card-width;
 
-  .publisher-intro-container {
-    font-size: 0.875em;
+  > .topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    box-shadow: none; // The default top bar already has shadow applied
   }
 
-  .publisher-meta-container {
-    margin: 1.5em -1.5em;
-    padding: 0 1.5em;
-    border-top: solid 1px #f4f4f4;
+  h4 {
+    margin: 2em 1.5em 1em;
+    font-size: 1em;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: lighten($color-text, 20%);
   }
 
-  .publisher-sources-container {
-    margin: 1.5em -1.5em;
-    padding: 0 1.5em;
-    border-top: solid 3px #f4f4f4;
-  }
+  .publisher-intro {
+    margin: 2em 0;
+    padding: 1em 1.5em;
+    background-color: lighten($color-accent, 40%);
+    border: solid 1px $color-accent;
+    color: darken($color-accent, 10%);
+    border-radius: 3px;
+    @include shadow(3);
 
-  .publisher-published-container {
-    margin: 1.5em -1.5em;
-    padding: 0 1.5em;
-    border-top: solid 3px #f4f4f4;
-  }
-
-  .publisher-sources {
-
-    .publisher-source {
-      @include card;
-      width: auto;
-      max-width: none;
-      max-height: none;
-      overflow-y: visible;
-      margin: 1.5em 0;
-
-      > .topbar {
-        position: -webkit-sticky;
-        top: 3em;
-      }
-
-      > .source-container {
-        margin: 0 -1.5em;
-      }
-
-      .editor {
-        @include quill-editor;
-        padding: 0 1.5em;
-        font-family: $font-sans-serif-alt;
-
-        .ql-editor {
-          min-height: 10em;
-        }
-      }
-
-      &.publisher-textsource{
-
-      }
-
-      &.publisher-imagesource {
-
-        .image {
-          display: block;
-          min-height: 10em;
-
-          .image-view {
-            display: block;
-            width: 100%;
-          }
-        }
-      }
-
-      &.publisher-audiosource {
-
-        .plyr {
-          position: static;
-          position: -webkit-sticky;
-          top: 6em;
-          border-top: solid 1px #f4f4f4;
-          border-bottom: solid 1px #f4f4f4;
-          z-index: 2;
-        }
-      }
-
-      &.publisher-videosource {
-
-      }
+    > p {
+      font-size: 0.875em;
+      margin: 0.5em 0;
     }
   }
 
-  .publisher-sources-control {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -0.5em -0.5em 0;
+  .publisher-meta {
+    margin: 1em 0;
+  }
+
+  .publisher-sources-container {
+
+    > .publisher-sources {
+
+      .publisher-source {
+        width: auto;
+        max-width: none;
+        max-height: none;
+        margin: 1em 0;
+
+        > .topbar {
+          position: -webkit-sticky;
+          top: 3em;
+        }
+
+        > .source-container {
+          margin: 0 -1.5em;
+        }
+
+        .editor {
+          @include quill-editor;
+          padding: 0 1.5em;
+          font-family: $font-sans-serif-alt;
+
+          .ql-editor {
+            min-height: 10em;
+          }
+        }
+
+        &.publisher-textsource {
+
+        }
+
+        &.publisher-imagesource {
+
+          .image {
+            display: block;
+            min-height: 10em;
+
+            .image-view {
+              display: block;
+              width: 100%;
+            }
+          }
+        }
+
+        &.publisher-audiosource {
+
+          .plyr {
+            position: static;
+            position: -webkit-sticky;
+            top: 6em;
+            border-top: solid 1px #f4f4f4;
+            border-bottom: solid 1px #f4f4f4;
+            z-index: 2;
+          }
+        }
+
+        &.publisher-videosource {
+
+        }
+      }
+    }
+
+    > .publisher-sources-control {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 1em -0.5em 1.5em;
+    }
+  }
+
+  .publisher-published-container {
+    margin: 2em 1.5em;
+
+    h4 {
+      margin: 2em 0 1em;
+    }
   }
 }

@@ -16,11 +16,10 @@ ExploreDiscussionController.defineMethod("initView", function initView() {
   this.view.addEventListener("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
-    var map = new Map([this.controller.discussion]);
-    var fragment = MapController.createViewFragment();
-    var element = fragment.querySelector(".map");
-    document.body.appendChild(fragment);
-    new MapController(map, element);
+    var fragment = MapArticleDiscussionController.createViewFragment();
+    var element = fragment.querySelector(".article-container");
+    document.body.querySelector(".app-view").appendChild(fragment);
+    new MapArticleDiscussionController(this.controller.discussion, element);
   }.bind(this.view));
 });
 

@@ -143,7 +143,7 @@ MapConversationController.defineMethod("updateView", function updateView() {
 
 MapConversationController.prototype.displayPublisherConversationView = function () {
   var fragment = PublisherConversationController.createViewFragment();
-  var element = fragment.querySelector(".publisher");
-  document.body.appendChild(fragment);
+  var element = fragment.querySelector(".publisher-container");
+  document.body.querySelector(".app-view").appendChild(fragment);
   new PublisherConversationController(this.conversation, element);
 };

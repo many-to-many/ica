@@ -1,6 +1,13 @@
 
-.map {
-  @include popup-series;
+.article-container {
+  padding: 1em 0;
+}
+
+.article {
+  box-sizing: border-box;
+  margin: 2em auto;
+  padding: 0 ($column-spacing / 2);
+  max-width: $card-width;
 
   h4 {
     margin: 2em 0 1em 1.5em;
@@ -13,8 +20,9 @@
   .conversation {
 
     .conversation-nav {
+      overflow: visible;
       position: -webkit-sticky;
-      top: 0;
+      top: 3em;
       margin: 0 -1.5em;
       min-height: 2em;
       display: flex;
@@ -197,7 +205,7 @@
 
       > * {
         padding: 0.5em 0;
-        line-height:1;
+        line-height: 1;
       }
 
       > :not(:last-child) {
@@ -249,7 +257,6 @@
         margin: 0.5em 0;
       }
     }
-
   }
 
   .responses,

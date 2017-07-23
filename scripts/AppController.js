@@ -18,8 +18,8 @@ AppController.defineMethod("initView", function () {
 
           {
             let publisherFragment = PublisherConversationController.createViewFragment();
-            let publisherElement = publisherFragment.querySelector(".publisher");
-            document.body.appendChild(publisherFragment);
+            let publisherElement = publisherFragment.querySelector(".publisher-container");
+            document.body.querySelector(".app-view").appendChild(publisherFragment);
             new PublisherConversationController(new Conversation(), publisherElement);
           }
 
@@ -47,10 +47,6 @@ AppController.defineMethod("initView", function () {
 });
 
 let AppViewController = Controller.createComponent("AppViewController");
-
-AppViewController.defineMethod("focusView", function focusView() {
-  this.unhideView();
-});
 
 AppViewController.defineMethod("unhideView", function unhideView() {
   if (!this.view) return;
@@ -227,11 +223,35 @@ window.addEventListener("load", function () {
 
         ICA.getConversation(conversationId)
           .then(function (conversation) {
-            let map = new Map([conversation]);
-            let fragment = MapController.createViewFragment();
-            let element = fragment.querySelector(".map");
-            document.body.appendChild(fragment);
-            new MapController(map, element);
+            let fragment = MapArticleConversationController.createViewFragment();
+            let element = fragment.querySelector(".article-container");
+            document.body.querySelector(".app-view").appendChild(fragment);
+            new MapArticleConversationController(conversation, element);
+          }, function () {
+            appConversationsController.focusView();
+          });
+      }
+    },
+    {
+      pattern: /\/conversations\/new\/?$/,
+      func: function () {
+        let publisherFragment = PublisherConversationController.createViewFragment();
+        let publisherElement = publisherFragment.querySelector(".publisher-container");
+        document.body.querySelector(".app-view").appendChild(publisherFragment);
+        new PublisherConversationController(new Conversation(), publisherElement);
+      }
+    },
+    {
+      pattern: /\/conversations\/(\d+)\/edit\/?$/,
+      func: function (matches) {
+        let conversationId = matches[1];
+
+        ICA.getConversation(conversationId)
+          .then(function (conversation) {
+            let publisherFragment = PublisherConversationController.createViewFragment();
+            let publisherElement = publisherFragment.querySelector(".publisher-container");
+            document.body.querySelector(".app-view").appendChild(publisherFragment);
+            new PublisherConversationController(conversation, publisherElement);
           }, function () {
             appConversationsController.focusView();
           });
@@ -250,11 +270,10 @@ window.addEventListener("load", function () {
 
         ICA.getDiscussion(discussionId)
           .then(function (discussion) {
-            let map = new Map([discussion]);
-            let fragment = MapController.createViewFragment();
-            let element = fragment.querySelector(".map");
-            document.body.appendChild(fragment);
-            new MapController(map, element);
+            let fragment = MapArticleDiscussionController.createViewFragment();
+            let element = fragment.querySelector(".article-container");
+            document.body.querySelector(".app-view").appendChild(fragment);
+            new MapArticleDiscussionController(discussion, element);
           }, function () {
             appDiscussionsController.focusView();
           });
@@ -373,6 +392,8 @@ const Router = (function () {
         index: Router.index,
         page: page
       }, title, url);
+
+      back[back.length - 2].controller.hideView();
     } else {
       window.history.replaceState({
         index: Router.index,
@@ -380,8 +401,11 @@ const Router = (function () {
       }, title, url);
     }
 
+    back[back.length - 1].controller.unhideView();
+
     tempController = undefined;
     tempUrl = undefined;
+    tempTitle = undefined;
   }
 
   function jump(index) {
