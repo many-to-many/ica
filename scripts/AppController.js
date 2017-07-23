@@ -365,14 +365,6 @@ const Router = (function () {
     }
   }
 
-  let tempController, tempUrl, tempTitle;
-
-  function prepush(controller, url, title) {
-    tempController = controller;
-    tempUrl = url;
-    tempTitle = title;
-  }
-
   function push(controller, url, title) {
     // Clear forward entries
     while (forward.length > 0) {
@@ -382,9 +374,9 @@ const Router = (function () {
 
     // Insert into history
     back.push({
-      controller: tempController || controller,
-      url: tempUrl || url,
-      title: tempTitle || title
+      controller: controller,
+      url: url,
+      title: title
     });
 
     if (back.length > 1) {
@@ -402,10 +394,18 @@ const Router = (function () {
     }
 
     back[back.length - 1].controller.unhideView();
+  }
 
-    tempController = undefined;
-    tempUrl = undefined;
-    tempTitle = undefined;
+  function replace(url, title) {
+    let _ = back[back.length - 1];
+
+    if (url) _.url = url;
+    if (title) _.title = title;
+
+    window.history.replaceState({
+      index: Router.index,
+      page: page
+    }, _.title, _.url);
   }
 
   function jump(index) {
@@ -421,8 +421,8 @@ const Router = (function () {
   }
 
   let Router = {
-    prepush: prepush,
     push: push,
+    replace: replace,
     jump: jump
   };
 
