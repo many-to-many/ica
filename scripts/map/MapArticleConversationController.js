@@ -83,7 +83,7 @@ MapArticleConversationController.defineMethod("initView", function initView() {
         }.bind(this), function (err) {
           if (err instanceof ICA.APIResponse.EndOfResponse) {
             // End of response
-            console.log("Explore: End of response");
+            console.log("MapArticleConversationController: End of response");
           } else {
             // Critical error
             console.error(err.message);

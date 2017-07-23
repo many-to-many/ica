@@ -45,7 +45,13 @@ MapArticleDiscussionController.defineMethod("initView", function initView() {
 
     if (responses.requestNext) {
       responses.requestNext().then(renderResponses, function (err) {
-        console.warn(err.message);
+        if (err instanceof ICA.APIResponse.EndOfResponse) {
+          // End of response
+          console.log("MapArticleDiscussionController: End of response");
+        } else {
+          // Critical error
+          console.error(err.message);
+        }
 
         threadElement.classList.toggle("loading", false);
       }.bind(this));

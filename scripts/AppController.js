@@ -108,7 +108,7 @@ AppJointSourcesController.defineMethod("initView", function () {
           }.bind(element), function (err) {
             if (err instanceof ICA.APIResponse.EndOfResponse) {
               // End of response
-              console.log("Explore: End of response");
+              console.log("AppJointSourcesController: End of response");
             } else {
               // Critical error
               console.error(err.message);
