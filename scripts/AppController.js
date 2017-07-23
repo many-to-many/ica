@@ -207,7 +207,7 @@ window.addEventListener("load", function () {
   appDiscussionsController = new AppDiscussionsController(document.querySelector(".discussions"));
   appSearchController = new AppMainSearchController(document.querySelector(".search"));
   appAccountController = new AppAccountController(document.querySelector(".account"));
-  appAboutController = new AppAboutController(document.querySelector(".about"));
+  appAboutController = new AppAboutController(document.querySelector(".about-container"));
 
   for (_ of [
     {
