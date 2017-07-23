@@ -1,5 +1,38 @@
 
+.app-header {
+  position: fixed;
+  top: 0;
+  right : 0;
+  left: 0;
+
+  li a {
+
+    &:after {
+      display: block;
+      position: absolute;
+      content: "";
+      right: -0.25em;
+      bottom: 0;
+      left: -0.25em;
+      height: 0;
+      background-color: transparent;
+
+      transition: height ease 0.2s, background-color ease 0.2s;
+    }
+
+    &:hover,
+    &.active {
+
+      &:after {
+        height: 1px;
+        background-color: $color-primary !important;
+      }
+    }
+  }
+}
+
 .app-view {
+  padding-top: calc(3em + 1px);
 
   .conversations,
   .discussions,
@@ -38,12 +71,13 @@
     max-width: 900px;
     overflow-x: hidden;
 
-    h3 {
+    h2 {
+      margin: 2em 0 1em;
       text-align: center;
       -webkit-user-select: text;
     }
 
-    h4 {
+    h3 {
       text-align: center;
       -webkit-user-select: text;
     }
@@ -75,7 +109,7 @@
           border-radius: 50%;
         }
 
-        h4 {
+        h3 {
           color: $color-primary !important;
           text-align: center;
           margin-bottom: 0.5em;

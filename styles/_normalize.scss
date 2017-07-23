@@ -18,24 +18,16 @@ body {
 h2 {
   display: block;
   font-size: 1.5em;
-  line-height: 1;
-  font-weight: 500;
   margin: 1em 0;
+  line-height: 1.2;
+  font-weight: 500;
 }
 
 h3 {
   display: block;
-  font-size: 1.5em;
-  line-height: 1.2;
-  font-weight: 500;
-  margin: 1em 0;
-}
-
-h4 {
-  display: block;
   font-size: 1em;
-  line-height: 1.2;
   margin: 1.5em 0;
+  line-height: 1.2;
   font-weight: 500;
 }
 
@@ -60,11 +52,6 @@ a {
 
   &:visited {
     color: inherit;
-  }
-
-  &:not([href]),
-  &[href^="#"] {
-    cursor: default;
   }
 }
 

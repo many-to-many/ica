@@ -1,6 +1,5 @@
 
-.topbar {
-  @include flex;
+.topbar-container {
   box-sizing: content-box;
   height: 3em;
   background-color: #fff;
@@ -12,21 +11,26 @@
   -webkit-overflow-scrolling: touch;
   z-index: $z-relative-topbar;
   @include shadow(2);
+}
 
-  > .topbar-colspan {
-    @include flex;
-    box-sizing: border-box;
-    margin: 0 auto;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+.topbar {
+  @include flex;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 
-    &::before,
-    &::after {
-      content: "";
-      display: block;
-      flex: 0 0 auto;
-      width: $column-spacing / 2;
-    }
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    flex: 0 0 auto;
+    width: $column-spacing / 2;
+  }
+
+  > * {
+    list-style: none;
   }
 
   h1,
@@ -48,19 +52,16 @@
     }
   }
 
-  .title-complex {
+  .topbar-title-complex {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 0;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     color: $color-primary;
 
-    > * {
-      flex: none;
-    }
-
-    > .subtitle {
+    .subtitle {
       display: block;
       font-size: 0.75em;
       font-weight: 500;
@@ -70,51 +71,26 @@
     }
   }
 
-  .topbar-item {
-    position: relative;
-    flex: 0 0 auto;
-    padding: 1em 0;
-    line-height: 1;
-    font-weight: 500;
-    color: lighten($color-text, 10%);
+  nav ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
 
-    &:not(:last-child) {
-      margin-right: 1.25em;
-    }
-  }
+    li {
+      flex: 0 0 auto;
+      list-style: none;
 
-  body > & {
-    position: fixed;
-    top: 0;
-    right : 0;
-    left: 0;
-
-    & ~ .app-view {
-      padding-top: 3em;
-    }
-
-    .topbar-item {
-
-      &:after {
-        display: block;
-        position: absolute;
-        content: "";
-        right: -0.25em;
-        bottom: 0;
-        left: -0.25em;
-        height: 0;
-        background-color: transparent;
-
-        transition: height ease 0.2s, background-color ease 0.2s;
+      &:not(:last-child) {
+        margin-right: 1.25em;
       }
 
-      &:hover,
-      &.active {
-
-        &:after {
-          height: 1px;
-          background-color: $color-primary !important;
-        }
+      a {
+        position: relative;
+        display: block;
+        padding: 1em 0;
+        line-height: 1;
+        font-weight: 500;
+        color: lighten($color-text, 10%);
       }
     }
   }

@@ -9,7 +9,7 @@
   padding: 0 ($column-spacing / 2);
   max-width: $card-width;
 
-  > .topbar {
+  > .topbar-container {
     position: fixed;
     top: 0;
     right: 0;
@@ -17,7 +17,7 @@
     box-shadow: none; // The default top bar already has shadow applied
   }
 
-  h4 {
+  h3 {
     margin: 2em 1.5em 1em;
     font-size: 1em;
     font-weight: 400;
@@ -54,9 +54,18 @@
         max-height: none;
         margin: 1em 0;
 
-        > .topbar {
+        > .topbar-container {
           position: -webkit-sticky;
           top: 3em;
+          margin: 0 -1.5em;
+
+          > .topbar {
+
+            &::before,
+            &::after {
+              width: 1.5em;
+            }
+          }
         }
 
         > .source-container {
@@ -118,7 +127,7 @@
   .publisher-published-container {
     margin: 2em 1.5em;
 
-    h4 {
+    h3 {
       margin: 2em 0 1em;
     }
   }

@@ -6,15 +6,15 @@ AppController.defineMethod("initView", function () {
 
   // Views
 
-  this.view.querySelectorAll("a[href^='#']").forEach(function (element) {
+  this.view.querySelectorAll("[data-ica-for-view]").forEach(function (element) {
     element.addEventListener("click", function (event) {
       event.preventDefault();
 
-      switch (this.getAttribute("href")) {
-        case "#conversations": appConversationsController.focusView(); break;
-        case "#discussions": appDiscussionsController.focusView(); break;
-        case "#search": appSearchController.focusView(); break;
-        case "#publisher":
+      switch (getElementProperty(this, "for-view")) {
+        case "conversations": appConversationsController.focusView(); break;
+        case "discussions": appDiscussionsController.focusView(); break;
+        case "search": appSearchController.focusView(); break;
+        case "publisher":
 
           {
             let publisherFragment = PublisherConversationController.createViewFragment();
@@ -24,7 +24,7 @@ AppController.defineMethod("initView", function () {
           }
 
           break;
-        case "#account":
+        case "account":
 
           // Redirect to login if account id not available
           if (!ICA.accountId) {
@@ -38,7 +38,7 @@ AppController.defineMethod("initView", function () {
           }
 
           break;
-        case "#about": appAboutController.focusView(); break;
+        case "about": appAboutController.focusView(); break;
         default:
           console.warn("Unknown anchor", this.getAttribute("href"));
       }
