@@ -1,5 +1,5 @@
 
-var MapArticleController = Controller.createComponent("MapArticleController");
+var MapArticleController = SingleModelController.createComponent("MapArticleController");
 
 MapArticleController.defineMethod("construct", function construct() {
   this.jointSourceController = undefined;
@@ -8,10 +8,6 @@ MapArticleController.defineMethod("construct", function construct() {
       return this.jointSourceController.jointSource;
     }
   });
-});
-
-MapArticleController.defineMethod("init", function init(jointSource, view) {
-  return [view];
 });
 
 // View
