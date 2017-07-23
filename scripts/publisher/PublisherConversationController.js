@@ -212,6 +212,7 @@ PublisherConversationController.prototype.unpublish = function () {
       notifications.didUpdate();
 
       this.conversation.destroy(true, true, true);
+      appConversationsController.focusView();
     }.bind(this))
     .catch(function (err) {
       console.warn(err);
