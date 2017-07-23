@@ -15,8 +15,11 @@ MapConversationController.defineMethod("initView", function initView() {
     e.stopPropagation();
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='edit-conversation']").addEventListener("click", function (e) {
-    e.preventDefault();
+  let editConversationAnchor = this.view.querySelector("[data-ica-action='edit-conversation']");
+  editConversationAnchor.href = "/conversations/{0}/edit".format(this.conversation.conversationId);
+  editConversationAnchor.addEventListener("click", function (event) {
+    event.preventDefault();
+
     this.controller.displayPublisherConversationView();
   }.bind(this.view));
 
