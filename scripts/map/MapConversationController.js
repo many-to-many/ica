@@ -11,7 +11,6 @@ MapConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.view.addEventListener("click", function (e) {
-    e.preventDefault();
     e.stopPropagation();
   }.bind(this.view));
 
