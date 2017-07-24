@@ -69,7 +69,14 @@ MapResponseController.defineMethod("updateView", function updateView() {
     ? new Date(this.response._timestampAuthored * 1000) .toLocaleString("en-us")
     : "Draft";
 
+  // Show/hide author's identicon
+  let identiconElement = this.view.querySelector(".response-author-identicon");
+  identiconElement.hidden = !this.response._authorId;
+
   if (this.response._authorId) {
+    // Update author's identicon
+    jdenticon.update(identiconElement, "author-{0}".format(this.response._authorId), 0.05);
+
     this.response.getAuthor()
       .then(function (author) {
         if (!this.view) return;

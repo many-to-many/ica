@@ -201,8 +201,8 @@
 
     .response-nav {
       @include flex;
-      margin: 0 -0.75em;
-      padding: 1em 0.75em;
+      margin: 0 -0.5em;
+      padding: 1em 0.5em;
       border-bottom: solid 1px $color-border;
 
       > * {
@@ -218,6 +218,16 @@
         flex: 1 0 auto;
         padding: 0;
 
+        .response-author-identicon {
+          box-sizing: border-box;
+          float: left;
+          width: 2em;
+          height: 2em;
+          margin-right: 0.5em;
+          border: solid 1px $color-border;
+          border-radius: 3px;
+        }
+
         .response-author {
           display: block;
           font-size: 1em;
@@ -231,7 +241,7 @@
           display: block;
           font-size: 0.75em;
           margin: 0;
-          padding-top: 0.1em;
+          padding-top: 0.05em;
           line-height: 1;
           color: lighten($color-text, 30%);
           font-weight: 500;
