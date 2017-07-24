@@ -535,7 +535,7 @@
     if (source.sourceId < 0) throw new Error("Source not yet published");
     return ICA.delete(
       "/conversations/{0}/sources/{1}/".format(
-        source.conversation.conversationId,
+        source.jointSource.jointSourceId,
         source.sourceId
       ),
       undefined,
