@@ -33,39 +33,36 @@
     list-style: none;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0;
+  .topbar-title {
+    display: block;
+    flex: 1 0 auto;
     font-size: 1em;
+    margin: 0 auto 0 0;
+    padding: 1em 1.25em 1em 0;
     line-height: 1;
     font-weight: 700;
-    padding: 1em 0;
-    flex: 1 0 auto;
     color: lighten($color-text, 10%);
-
-    &:not(:last-child) {
-      margin-right: 1.25em;
-    }
   }
 
   .topbar-title-complex {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    color: $color-primary;
+    margin: 0 auto 0 0;
+    padding: 0.5em 1.25em 0.5em 0;
+
+    .title {
+      display: block;
+      font-size: 1em;
+      margin: 0;
+      height: 1.25em;
+      line-height: 1.25;
+      font-weight: 700;
+      color: $color-primary;
+    }
 
     .subtitle {
       display: block;
       font-size: 0.75em;
+      height: 1em;
       font-weight: 500;
-      padding-top: 0.1em;
       line-height: 1;
       color: lighten($color-text, 10%);
     }
