@@ -152,6 +152,8 @@ MapConversationTextSourceController.defineMethod("updateView", function updateVi
     console.log(sourceLength, content.length);
     throw "error testing text source length";
   }
+
+  linkifyElement(this.view);
 });
 
 MapConversationTextSourceController.renderText = function (content, view) {
@@ -193,4 +195,6 @@ MapConversationTextSourceController.renderText = function (content, view) {
     console.log(sourceLength, content.length);
     throw "error testing text source length";
   }
+
+  linkifyElement(view);
 };
