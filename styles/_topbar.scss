@@ -35,7 +35,7 @@
 
   .topbar-title {
     display: block;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     font-size: 1em;
     margin: 0 auto 0 0;
     padding: 1em 1.25em 1em 0;
@@ -45,6 +45,7 @@
   }
 
   .topbar-title-complex {
+    flex: 0 0 auto;
     margin: 0 auto 0 0;
     padding: 0.5em 1.25em 0.5em 0;
 
