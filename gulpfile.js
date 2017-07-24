@@ -74,9 +74,17 @@ gulp.task("plyr", function () {
     .pipe(gulp.dest("./app/scripts"));
 });
 
+gulp.task("linkify", function () {
+  return gulp.src([
+    "./node_modules/linkifyjs/dist/linkify.js",
+    "./node_modules/linkifyjs/dist/linkify-element.js"
+  ])
+    .pipe(gulp.dest("./app/scripts"));
+});
+
 // Tasks
 
-gulp.task("build", ["quill", "plyr", "compass", "styles", "scripts"]);
+gulp.task("build", ["linkify", "quill", "plyr", "compass", "styles", "scripts"]);
 
 gulp.task("proxy", ["build"], function () {
   var config = require("./config.json");

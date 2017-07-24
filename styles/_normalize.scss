@@ -34,6 +34,20 @@ h3 {
 p {
   margin: 1.25em 0;
   line-height: 1.5;
+
+  a {
+    border-bottom: dotted 1px lighten($color-text, 40%);
+    transition: color ease 0.2s, border-bottom-color ease 0.2s;
+
+    &:active, &.active,
+    &:focus,
+    &:hover {
+
+      &:not(.solid) {
+        border-bottom-color: lighten($color-primary, 20%);
+      }
+    }
+  }
 }
 
 a {

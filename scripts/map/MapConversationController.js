@@ -80,7 +80,16 @@ MapConversationController.defineMethod("updateView", function updateView() {
   }.bind(this));
 
   this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
-    element.textContent = this.conversation.meta[getElementProperty(element, "conversation-meta")];
+    let content = this.conversation.meta[getElementProperty(element, "conversation-meta")];
+
+    switch (getElementProperty(element, "conversation-meta")) {
+      case "intro":
+      case "others":
+        MapConversationTextSourceController.renderText(content, element);
+        break;
+      default:
+        element.textContent = content;
+    }
   }.bind(this));
 
   this.view.querySelector(".conversation-backdrop").hidden = true;
