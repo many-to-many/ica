@@ -88,7 +88,7 @@
       insertReferenceState($referenceId, $state);
     } else {
       $row = $result->fetch_assoc();
-      $referenceId = $row["id"];
+      $referenceId = $row["reference_id"];
 
       if (decodeState($row["state"]) != $state) {
         // Update existing state
