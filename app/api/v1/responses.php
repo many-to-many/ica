@@ -54,6 +54,14 @@
 
   } elseif (list($responseId) = handle("responses/{}")) switch ($REQUEST_METHOD) {
 
+    case "GET":
+
+      $data = \ICA\Responses\getResponse($responseId);
+
+      respondJSON($data);
+
+      break;
+
     case "PUT": \Session\requireVerification();
 
       // Validation

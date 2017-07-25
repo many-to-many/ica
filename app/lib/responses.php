@@ -30,11 +30,11 @@
         $response = new Response;
 
         // Populating metadata from the database
-        $response->message = getResponseMessageOfLatestRevision($row["response_message_id"]);
+        $response->message = _getResponseMessageOfLatestRevision(!empty($row["message_id"]) ? $row["message_id"] : $row["response_message_id"]);
 
         // Readonly data
-        $response->_authorId = $row["response_author_id"];
-        $response->_timestampAuthored = strtotime($row["response_authored"]);
+        $response->_authorId = !empty($row["author_id"]) ? $row["author_id"] : $row["response_author_id"];
+        $response->_timestampAuthored = strtotime(!empty($row["response_authored"]) ? $row["response_authored"] : $row["response_authored"]);
 
         // NB: Useful here for less work from client requesting referee joint source id's additionally
         $response->refereeJointSourceIds = \ICA\JointSources\getRefereeJointSourceIds($responseId);
@@ -64,6 +64,19 @@
       LIMIT $limit;");
 
     return createResponsesFromQueryResult($result);
+
+  }
+
+  function getResponse($responseId) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT *
+        FROM responses_summary
+        WHERE response_id = $responseId
+          AND state = $stateEncoded;");
+
+    if ($result->num_rows == 0) return NULL;
+    return createResponsesFromQueryResult($result)[$responseId];
 
   }
 
