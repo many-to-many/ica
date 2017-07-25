@@ -365,7 +365,7 @@ const Router = (function () {
     }
   }
 
-  function push(controller, url, title) {
+  function push(controller, url, title, ignoreHistoricalScrollY) {
     // Clear forward entries
     while (forward.length > 0) {
       let _ = forward.pop();
@@ -385,6 +385,9 @@ const Router = (function () {
         page: page
       }, title, url);
 
+      // Record the y-coord
+      back[back.length - 2].scrollY = window.scrollY;
+
       back[back.length - 2].controller.hideView();
     } else {
       window.history.replaceState({
@@ -394,6 +397,28 @@ const Router = (function () {
     }
 
     back[back.length - 1].controller.unhideView();
+
+    if (ignoreHistoricalScrollY) {
+      // Scroll to the top of the page
+      window.scroll(0, 0);
+    } else {
+      // Scroll to the y-coord if previously page previously visited
+
+      let index = back.length - 2, flag = false;
+
+      while (index >= 0) {
+        if (back[index].controller === controller) {
+          window.scroll(0, back[index].scrollY);
+          flag = true;
+          break;
+        }
+        --index;
+      }
+
+      if (!flag) {
+        window.scroll(0, 0);
+      }
+    }
   }
 
   function replace(url, title) {
