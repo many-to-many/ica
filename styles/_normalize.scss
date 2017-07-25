@@ -55,6 +55,10 @@ a {
   text-decoration: none;
   transition: color ease 0.2s;
 
+  &:not([href]) {
+    cursor: default;
+  }
+
   &:active, &.active,
   &:focus,
   &:hover {
