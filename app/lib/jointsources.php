@@ -15,6 +15,22 @@
   }
 
   /**
+   * Requests the type of joint source with id.
+   */
+  function retrieveJointSourceType($jointSourceId) {
+
+    $result = query("SELECT `type`
+      FROM jointsources
+      WHERE id = $jointSourceId
+      LIMIT 1;");
+
+    $data = $result->fetch_assoc();
+
+    return $data["type"];
+
+  }
+
+  /**
    * Request new storage space for joint source.
    */
   function requestJointSourceId($jointSourceType = 0) {

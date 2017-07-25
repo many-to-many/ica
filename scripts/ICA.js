@@ -546,6 +546,23 @@
       });
   };
 
+  ICA.getJointSource = function (jointSourceId) {
+    return ICA.get("/jointsources/{0}/".format(jointSourceId))
+      .then(ICA.APIResponse.getData)
+      .then(function (data) {
+        switch (data.type) {
+          case "conversation":
+            return touchConversation(jointSourceId, data);
+          case "discussion":
+            return touchDiscussion(jointSourceId, data);
+          case "response":
+            return touchResponse(jointSourceId, data);
+          default:
+            throw new Error("Unknown joint source type");
+        }
+      });
+  };
+
   ICA.getJointSourceResponses = function (jointSourceId) {
     return ICA.get("/jointsources/{0}/responses/".format(jointSourceId))
       .then(touchResponsesWithAPIResponse);
@@ -729,6 +746,13 @@
     return conversations;
   }
 
+  function touchConversation(conversationId, dataConversation) {
+    let data = {};
+    data[conversationId] = dataConversation;
+    let conversations = touchConversations(data);
+    return conversations[0];
+  }
+
   function touchConversationsWithAPIResponse(apiResponse) {
     let conversations = touchConversations(apiResponse.data);
     conversations.requestNext = function () {
@@ -739,10 +763,7 @@
   }
 
   function touchConversationWithAPIResponse(conversationId, apiResponse) {
-    let data = {};
-    data[conversationId] = apiResponse.data;
-    let conversations = touchConversations(data);
-    return conversations[0];
+    return touchConversation(conversationId, apiResponse.data);
   }
 
   function touchSources(dataSources, conversation) {
@@ -815,6 +836,13 @@
     return responses;
   }
 
+  function touchResponse(responseId, dataResponse) {
+    let data = {};
+    data[responseId] = dataResponse;
+    let responses = touchResponses(data);
+    return responses[0];
+  }
+
   function touchResponsesWithAPIResponse(apiResponse) {
     var responses = touchResponses(apiResponse.data);
     responses.requestNext = function () {
@@ -837,6 +865,13 @@
       }
     }
     return discussions;
+  }
+
+  function touchDiscussion(discussionId, dataDiscussion) {
+    let data = {};
+    data[discussionId] = dataDiscussion;
+    let discussions = touchDiscussions(data);
+    return discussions[0];
   }
 
   function touchDiscussionWithAPIResponse(discussionId, apiResponse) {

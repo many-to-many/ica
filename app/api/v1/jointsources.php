@@ -1,8 +1,37 @@
 <?php
 
+  require_once(DIR_ROOT . "/lib/conversations.php");
+  require_once(DIR_ROOT . "/lib/discussions.php");
   require_once(DIR_ROOT . "/lib/responses.php");
 
-  if (list($jointSourceId) = handle("jointsources/{}/responses")
+  if (list($jointSourceId) = handle("jointsources/{}")) switch ($REQUEST_METHOD) {
+
+    case "GET":
+
+      $data = NULL;
+
+      $jointSourceType = \ICA\JointSources\retrieveJointSourceType($jointSourceId);
+
+      switch ($jointSourceType) {
+        case JOINTSOURCE_CONVERSATION:
+          $data = \ICA\Conversations\getConversation($jointSourceId);
+          $data->type = "conversation";
+          break;
+        case JOINTSOURCE_DISCUSSION:
+          $data = \ICA\Discussions\getDiscussion($jointSourceId);
+          $data->type = "discussion";
+          break;
+        case JOINTSOURCE_RESPONSE:
+          $data = \ICA\Responses\getResponse($jointSourceId);
+          $data->type = "response";
+          break;
+      }
+
+      respondJSON($data);
+
+      break;
+
+  } else if (list($jointSourceId) = handle("jointsources/{}/responses")
     ?: handle("conversations/{}/responses")
     ?: handle("responses/{}/responses")
     ?: handle("discussions/{}/responses")) switch ($REQUEST_METHOD) {
