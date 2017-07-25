@@ -40,19 +40,6 @@
 
       break;
 
-  } else if (list($jointSourceId, $refereeJointSourceId) = handle("jointsources/{}/refereeJointSourceIds/{}")
-    ?: handle("conversations/{}/refereeJointSourceIds/{}")
-    ?: handle("responses/{}/refereeJointSourceIds/{}")
-    ?: handle("discussions/{}/refereeJointSourceIds/{}")) switch ($REQUEST_METHOD) {
-
-    case "POST":
-
-      $data = \ICA\JointSources\touchReference($refereeJointSourceId, $jointSourceId);
-
-      respondJSON($data);
-
-      break;
-
   } else if (list($jointSourceId) = handle("jointsources/{}/referrerJointSourceIds")
     ?: handle("conversations/{}/referrerJointSourceIds")
     ?: handle("responses/{}/referrerJointSourceIds")
@@ -61,19 +48,6 @@
     case "GET":
 
       $data = \ICA\JointSources\getReferrerJointSourceIds($jointSourceId);
-
-      respondJSON($data);
-
-      break;
-
-  } else if (list($jointSourceId, $referrerJointSourceId) = handle("jointsources/{}/referrerJointSourceIds/{}")
-    ?: handle("conversations/{}/referrerJointSourceIds/{}")
-    ?: handle("responses/{}/referrerJointSourceIds/{}")
-    ?: handle("discussions/{}/referrerJointSourceIds/{}")) switch ($REQUEST_METHOD) {
-
-    case "POST":
-
-      $data = \ICA\JointSources\touchReference($jointSourceId, $referrerJointSourceId);
 
       respondJSON($data);
 

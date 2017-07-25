@@ -146,7 +146,15 @@ JointSource.removeJointSourceReference = function (refereeJointSourceId, referre
 
 JointSource.removeAllJointSourceReferees = function (referrerJointSourceId) {
   if (JointSource.referees[referrerJointSourceId]) {
-    for (var refereeJointSourceId in JointSource.referees[referrerJointSourceId]) {
+    for (let refereeJointSourceId in JointSource.referees[referrerJointSourceId]) {
+      JointSource.removeJointSourceReference(refereeJointSourceId, referrerJointSourceId);
+    }
+  }
+};
+
+JointSource.removeAllJointSourceReferrers = function (refereeJointSourceId) {
+  if (JointSource.referees[refereeJointSourceId]) {
+    for (let referrerJointSourceId in JointSource.referrers[refereeJointSourceId]) {
       JointSource.removeJointSourceReference(refereeJointSourceId, referrerJointSourceId);
     }
   }
