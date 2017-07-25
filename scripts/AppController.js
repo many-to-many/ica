@@ -227,7 +227,9 @@ window.addEventListener("load", function () {
             let element = fragment.querySelector(".article-container");
             document.body.querySelector(".app-view").appendChild(fragment);
             new MapArticleConversationController(conversation, element);
-          }, function () {
+          }, function (error) {
+            console.warn(error.message);
+
             appConversationsController.focusView();
           });
       }
@@ -252,7 +254,9 @@ window.addEventListener("load", function () {
             let publisherElement = publisherFragment.querySelector(".publisher-container");
             document.body.querySelector(".app-view").appendChild(publisherFragment);
             new PublisherConversationController(conversation, publisherElement);
-          }, function () {
+          }, function (error) {
+            console.warn(error.message);
+
             appConversationsController.focusView();
           });
       }
@@ -274,7 +278,9 @@ window.addEventListener("load", function () {
             let element = fragment.querySelector(".article-container");
             document.body.querySelector(".app-view").appendChild(fragment);
             new MapArticleDiscussionController(discussion, element);
-          }, function () {
+          }, function (error) {
+            console.warn(error.message);
+
             appDiscussionsController.focusView();
           });
       }
