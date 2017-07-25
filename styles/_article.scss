@@ -18,6 +18,7 @@
   }
 
   .conversation {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
     .conversation-nav {
       overflow: visible;
@@ -192,10 +193,11 @@
   }
 
   .discussion {
-
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
   .response {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
     .response-nav {
       @include flex;
