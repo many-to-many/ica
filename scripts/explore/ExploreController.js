@@ -25,7 +25,7 @@ ExploreController.defineMethod("updateView", function updateView() {
     return false;
   }.bind(this));
 
-  this.explore.items.reverse().forEach(function (item) {
+  this.explore.items.forEach(function (item) {
 
     var Controller;
     switch (item.constructor) {
@@ -42,7 +42,7 @@ ExploreController.defineMethod("updateView", function updateView() {
     // Create new view
     var fragment = Controller.createViewFragment();
     var element = fragment.querySelector(".jointsource");
-    this.view.insertBefore(fragment, this.firstChild);
+    this.view.appendChild(fragment);
     new Controller(item, element).componentOf = this.controller;
 
     this.viewItems.push(item);
