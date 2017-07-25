@@ -95,7 +95,7 @@
 
     .team {
       text-align: center;
-      margin: 1.25em -1.25em -1.25em;
+      margin: 1.25em 0 -1.25em;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-around;
@@ -104,24 +104,29 @@
       .team-member {
         box-sizing: border-box;
         flex: none;
-        width: 300px;
-        padding: 0 1.25em;
+        width: 300px - $column-spacing;
+        margin: 0 0 0.75em;
+        padding: 0 1em;
 
-        .img-circle {
+        .member-img {
           display: block;
           margin: 0 auto;
+          width: 100px;
           border-radius: 50%;
         }
 
         h3 {
-          color: $color-primary !important;
+          color: $color-primary;
           text-align: center;
-          margin-bottom: 0.5em;
+          margin: 1.25em 0 0.5em;
         }
 
-        .role {
-          margin-top: 0;
-          color: rgba($color-text, 0.80);
+        p {
+          margin: 0.5em 0;
+        }
+
+        .member-role {
+          color: lighten($color-text, 20%);
         }
       }
     }
