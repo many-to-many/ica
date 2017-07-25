@@ -6,6 +6,14 @@
   define("JOINTSOURCE_RESPONSE", 2);
   define("JOINTSOURCE_DISCUSSION", 3);
 
+  class JointSource {
+
+    public $refereeJointSourceIds = [];
+
+    public $referrerJointSourceIds = [];
+
+  }
+
   /**
    * Request new storage space for joint source.
    */

@@ -10,7 +10,7 @@
   /**
    * Abstract for discussion.
    */
-  class Discussion {
+  class Discussion extends \ICA\JointSources\JointSource {
 
     public $title;
 

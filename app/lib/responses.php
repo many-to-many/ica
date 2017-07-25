@@ -9,7 +9,7 @@
   /**
    * Abstract for response.
    */
-  class Response {
+  class Response extends \ICA\JointSources\JointSource {
 
     public $message;
 

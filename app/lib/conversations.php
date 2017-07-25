@@ -10,7 +10,7 @@
   /**
    * Abstract for conversation.
    */
-  class Conversation {
+  class Conversation extends \ICA\JointSources\JointSource {
 
     public $meta = [];
 
