@@ -180,7 +180,7 @@
             @include flex;
             margin: 0 -1.5em;
             padding: 1.5em;
-            color: lighten($color-text, 30%);
+            color: lighten($color-text, 20%);
             border-top: solid 3px $color-border;
 
             > :not(:last-child) {

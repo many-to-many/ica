@@ -36,6 +36,7 @@ p {
   line-height: 1.5;
 
   a {
+    padding: 1px 0;
     border-bottom: dotted 1px lighten($color-text, 40%);
     transition: color ease 0.2s, border-bottom-color ease 0.2s;
 
@@ -44,7 +45,7 @@ p {
     &:hover {
 
       &:not(.solid) {
-        border-bottom-color: lighten($color-primary, 20%);
+        border-bottom-color: lighten($color-secondary, 10%);
       }
     }
   }
@@ -64,7 +65,7 @@ a {
   &:hover {
 
     &:not(.solid) {
-      color: $color-primary;
+      color: $color-secondary;
     }
   }
 

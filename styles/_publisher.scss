@@ -29,9 +29,9 @@
   .publisher-intro {
     margin: 2em 0;
     padding: 1em 1.5em;
-    background-color: lighten($color-accent, 40%);
-    border: solid 1px $color-accent;
-    color: darken($color-accent, 10%);
+    background-color: #fff;
+    border: solid 1px $color-secondary;
+    color: $color-secondary;
     border-radius: 3px;
     @include shadow(3);
 

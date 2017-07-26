@@ -90,6 +90,15 @@
         line-height: 1;
         font-weight: 500;
         color: lighten($color-text, 10%);
+
+        &:active, &.active,
+        &:focus,
+        &:hover {
+
+          &:not(.solid) {
+            color: $color-primary;
+          }
+        }
       }
     }
   }
