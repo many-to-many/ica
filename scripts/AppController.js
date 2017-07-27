@@ -228,7 +228,7 @@ window.addEventListener("load", function () {
             document.body.querySelector(".app-view").appendChild(fragment);
             new MapArticleConversationController(conversation, element);
           }, function (error) {
-            console.warn(error.message);
+            console.warn(error);
 
             appConversationsController.focusView();
           });
@@ -255,7 +255,7 @@ window.addEventListener("load", function () {
             document.body.querySelector(".app-view").appendChild(publisherFragment);
             new PublisherConversationController(conversation, publisherElement);
           }, function (error) {
-            console.warn(error.message);
+            console.warn(error);
 
             appConversationsController.focusView();
           });
@@ -279,7 +279,7 @@ window.addEventListener("load", function () {
             document.body.querySelector(".app-view").appendChild(fragment);
             new MapArticleDiscussionController(discussion, element);
           }, function (error) {
-            console.warn(error.message);
+            console.warn(error);
 
             appDiscussionsController.focusView();
           });
