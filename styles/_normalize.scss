@@ -35,17 +35,26 @@ p {
   margin: 1.25em 0;
   line-height: 1.5;
 
-  a {
-    padding: 1px 0;
-    border-bottom: dotted 1px lighten($color-text, 40%);
-    transition: color ease 0.2s, border-bottom-color ease 0.2s;
+  a[href] {
 
-    &:active, &.active,
-    &:focus,
-    &:hover {
+    &:not([href=""]) {
+      padding: 1px 0;
+      border-bottom: dotted 1px lighten($color-text, 40%);
 
-      &:not(.solid) {
+      &:active, &.active,
+      &:focus,
+      &:hover {
+        color: $color-secondary;
         border-bottom-color: lighten($color-secondary, 10%);
+      }
+    }
+
+    &[href=""] {
+
+      &:active, &.active,
+      &:focus,
+      &:hover {
+        color: inherit;
       }
     }
   }
@@ -63,10 +72,7 @@ a {
   &:active, &.active,
   &:focus,
   &:hover {
-
-    &:not(.solid) {
-      color: $color-secondary;
-    }
+    color: $color-secondary;
   }
 
   &:visited {
@@ -99,13 +105,11 @@ textarea {
 .dark {
 
   a {
+
     &:active, &.active,
     &:focus,
     &:hover {
-
-      &:not(.solid) {
-        color: $color-text-light !important;
-      }
+      color: $color-text-light;
     }
   }
 }
