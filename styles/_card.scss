@@ -1,6 +1,4 @@
 
-$card-width: 40em;
-
 @mixin card($card-width: $card-width) {
   position: relative;
   box-sizing: border-box;
