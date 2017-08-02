@@ -69,14 +69,14 @@ a {
     cursor: default;
   }
 
+  &:visited {
+    color: inherit;
+  }
+
   &:active, &.active,
   &:focus,
   &:hover {
     color: $color-secondary;
-  }
-
-  &:visited {
-    color: inherit;
   }
 }
 
