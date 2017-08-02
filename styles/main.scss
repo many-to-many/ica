@@ -22,7 +22,7 @@ $font-mono: "Roboto Mono", monospace;
 /* Z-Index & Effects */
 
 @mixin shadow($index) {
-  box-shadow: 0 #{($index / 3) + "px"} #{($index * $index / 3) + "px"} rgba(#000, 0.02 * $index);
+  box-shadow: 0 #{($index / 3) + "px"} #{($index * $index / 4) + "px"} rgba(#000, 0.01 * $index);
 }
 
 $z-popup: 10;
