@@ -56,6 +56,31 @@
 
       break;
 
+  } else if (list($jointSourceId) = handle("jointsources/{}/discussions")
+    ?: handle("conversations/{}/discussions")
+      ?: handle("responses/{}/discussions")
+        ?: handle("discussions/{}/discussions")) switch ($REQUEST_METHOD) {
+
+    case "GET":
+
+      $limit = 40;
+
+      if (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
+        $data = \ICA\Discussions\getJointSourceDiscussions($jointSourceId, $limit, $_SERVER["HTTP_X_ICA_STATE"]);
+      } else {
+        $data = \ICA\Discussions\getJointSourceDiscussions($jointSourceId, $limit);
+      }
+
+      // There is probably more data available
+      if (count($data) == $limit) {
+        end($data); // Move the internal pointer to the end of the array
+        header("X-ICA-State-Next: " . key($data));
+      }
+
+      respondJSON($data);
+
+      break;
+
   } else if (list($jointSourceId) = handle("jointsources/{}/refereeJointSourceIds")
     ?: handle("conversations/{}/refereeJointSourceIds")
     ?: handle("responses/{}/refereeJointSourceIds")
