@@ -37,7 +37,6 @@
         $response->_timestampAuthored = strtotime(!empty($row["response_authored"]) ? $row["response_authored"] : $row["response_authored"]);
 
         $response->refereeJointSourceIds = getResponseRefereeJointSourceIds($responseId);
-        $response->referrerJointSourceIds = getResponseReferrerJointSourceIds($responseId);
 
         $data[$responseId] = $response;
       }
@@ -131,7 +130,6 @@
 
     _putResponseMessage($row["message_id"], $response->message);
     _putResponseRefereeJointSourceIds($response->refereeJointSourceIds, $responseId);
-    _putResponseReferrerJointSourceIds($response->referrerJointSourceIds, $responseId);
 
   }
 

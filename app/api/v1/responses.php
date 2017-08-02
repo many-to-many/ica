@@ -63,7 +63,6 @@
       $response = new \ICA\Responses\Response;
       $response->message = $REQUEST_DATA["message"];
       $response->refereeJointSourceIds = $REQUEST_DATA["refereeJointSourceIds"];
-      $response->referrerJointSourceIds = $REQUEST_DATA["referrerJointSourceIds"];
 
       \ICA\Responses\putResponse($responseId, $response);
 

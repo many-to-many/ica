@@ -588,8 +588,7 @@
         // Update existing response
         return ICA.put("/responses/{0}/".format(response.responseId), {
           message: response.message || {},
-          refereeJointSourceIds: Object.keys(response.referees),
-          referrerJointSourceIds: Object.keys(response.referrers)
+          refereeJointSourceIds: Object.keys(response.referees)
         }, notify)
           .then(touchResponsesWithAPIResponse)
           .then(function () {
@@ -843,7 +842,6 @@
 
         // Reset existing references
         JointSource.removeAllJointSourceReferees(responseId);
-        JointSource.removeAllJointSourceReferrers(responseId);
 
       } else {
         // New response
@@ -856,9 +854,6 @@
       // Add references
       for (let jointSourceId of dataResponse.refereeJointSourceIds) {
         JointSource.addJointSourceReference(jointSourceId, responseId);
-      }
-      for (let jointSourceId of dataResponse.referrerJointSourceIds) {
-        JointSource.addJointSourceReference(responseId, jointSourceId);
       }
 
     }
