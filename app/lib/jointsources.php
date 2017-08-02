@@ -24,6 +24,8 @@
       WHERE id = $jointSourceId
       LIMIT 1;");
 
+    if ($result->num_rows == 0) throw new \Exception("Joint source not found");
+
     $data = $result->fetch_assoc();
 
     return $data["type"];
