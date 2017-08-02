@@ -312,6 +312,39 @@
       });
   };
 
+  let jointSourcePromises = {};
+
+  ICA.getJointSource = function (jointSourceId, forceReload = false) {
+    if (JointSource.jointSources[jointSourceId] && !forceReload) {
+      return Promise.resolve(JointSource.jointSources[jointSourceId]);
+    }
+
+    if (!jointSourcePromises[jointSourceId]) {
+      jointSourcePromises[jointSourceId] =
+        ICA.get("/jointsources/{0}/".format(jointSourceId))
+          .then(ICA.APIResponse.getData)
+          .then(function (data) {
+            switch (data.type) {
+              case "conversation":
+                return touchConversation(jointSourceId, data);
+              case "discussion":
+                return touchDiscussion(jointSourceId, data);
+              case "response":
+                return touchResponse(jointSourceId, data);
+              default:
+                throw new Error("Unknown joint source type");
+            }
+          });
+    }
+
+    return jointSourcePromises[jointSourceId];
+  };
+
+  ICA.getJointSourceResponses = function (jointSourceId) {
+    return ICA.get("/jointsources/{0}/responses/".format(jointSourceId))
+      .then(touchResponsesWithAPIResponse);
+  };
+
   ICA.getConversations = function (params) {
     var data = [];
     for (var key in params) {
@@ -325,9 +358,29 @@
       .then(touchConversationsWithAPIResponse);
   };
 
-  ICA.getConversation = function (conversationId) {
-    return ICA.get("/conversations/{0}/".format(conversationId))
-      .then(touchConversationWithAPIResponse.bind(null, conversationId));
+  let conversationPromises = {};
+
+  ICA.getConversation = function (conversationId, forceReload = false) {
+    if (JointSource.jointSources[conversationId] && !forceReload) {
+      if (JointSource.jointSources[conversationId] instanceof Conversation) {
+        return Promise.resolve(JointSource.jointSources[conversationId]);
+      }
+      return Promise.reject(new Error("Conversation not found"));
+    }
+
+    if (!conversationPromises[conversationId]) {
+      conversationPromises[conversationId] =
+        ICA.get("/conversations/{0}/".format(conversationId))
+          .then(touchConversationWithAPIResponse.bind(null, conversationId))
+          .then(function (conversation) {
+              if (conversation instanceof Conversation) {
+                return conversation;
+              }
+              throw new Error("Conversation not found");
+            });
+    }
+
+    return conversationPromises[conversationId];
   };
 
   ICA.publishConversation = function (conversation, notify) {
@@ -546,28 +599,6 @@
       });
   };
 
-  ICA.getJointSource = function (jointSourceId) {
-    return ICA.get("/jointsources/{0}/".format(jointSourceId))
-      .then(ICA.APIResponse.getData)
-      .then(function (data) {
-        switch (data.type) {
-          case "conversation":
-            return touchConversation(jointSourceId, data);
-          case "discussion":
-            return touchDiscussion(jointSourceId, data);
-          case "response":
-            return touchResponse(jointSourceId, data);
-          default:
-            throw new Error("Unknown joint source type");
-        }
-      });
-  };
-
-  ICA.getJointSourceResponses = function (jointSourceId) {
-    return ICA.get("/jointsources/{0}/responses/".format(jointSourceId))
-      .then(touchResponsesWithAPIResponse);
-  };
-
   ICA.publishResponse = function (response, notify) {
     return response.prePublish()
       .then(function () {
@@ -622,9 +653,29 @@
       .then(touchDiscussionsWithAPIResponse);
   };
 
-  ICA.getDiscussion = function (discussionId) {
-    return ICA.get("/discussions/{0}/".format(discussionId))
-      .then(touchDiscussionWithAPIResponse.bind(null, discussionId));
+  let discussionPromises = {};
+
+  ICA.getDiscussion = function (discussionId, forceReload = false) {
+    if (JointSource.jointSources[discussionId] && !forceReload) {
+      if (JointSource.jointSources[discussionId] instanceof Discussion) {
+        return Promise.resolve(JointSource.jointSources[discussionId]);
+      }
+      return Promise.reject(new Error("Discussion not found"));
+    }
+
+    if (!discussionPromises[discussionId]) {
+      discussionPromises[discussionId] =
+        ICA.get("/discussions/{0}/".format(discussionId))
+          .then(touchDiscussionWithAPIResponse.bind(null, discussionId))
+          .then(function (discussion) {
+            if (discussion instanceof Discussion) {
+              return discussion;
+            }
+            throw new Error("Discussion not found");
+          });
+    }
+
+    return discussionPromises[discussionId];
   };
 
   ICA.publishDiscussion = function (discussion, notify) {
