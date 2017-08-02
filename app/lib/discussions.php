@@ -65,7 +65,8 @@
       WHERE discussion_id = $discussionId
         AND state = $stateEncoded;");
 
-    if ($result->num_rows == 0) return NULL;
+    if ($result->num_rows == 0) throw new \Exception("Discussion not found");
+
     return createDiscussionsFromQueryResult($result)[$discussionId];
 
   }

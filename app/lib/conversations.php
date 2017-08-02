@@ -94,7 +94,8 @@
       WHERE conversation_id = $conversationId
         AND state = $stateEncoded;");
 
-    if ($result->num_rows == 0) return NULL;
+    if ($result->num_rows == 0) throw new \Exception("Conversation not found");
+
     return createConversationsFromQueryResult($result)[$conversationId];
 
   }

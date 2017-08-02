@@ -74,7 +74,8 @@
         WHERE response_id = $responseId
           AND state = $stateEncoded;");
 
-    if ($result->num_rows == 0) return NULL;
+    if ($result->num_rows == 0) throw new \Exception("Response not found");
+
     return createResponsesFromQueryResult($result)[$responseId];
 
   }
