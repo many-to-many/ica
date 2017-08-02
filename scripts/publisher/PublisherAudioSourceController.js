@@ -32,12 +32,7 @@ PublisherAudioSourceController.defineMethod("initView", function () {
     controls: ["play", "progress", "current-time", "fullscreen"]
   })[0];
 
-  var editor = this.view.querySelector("[data-ica-source-content='1']");
-  this.quill = new Quill(editor, {
-    modules: {
-      toolbar: false
-    },
-    theme: "",
+  this.quill = new Quill(this.view.querySelector("[data-ica-source-content='1']"), {
     placeholder: "Enter transcription/translation here..."
   });
   this.quill.on("text-change", function () {

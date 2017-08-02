@@ -153,8 +153,15 @@
               z-index: $z-relative-topbar;
             }
 
-            .text:empty {
-              margin-top: -1px;
+            .text {
+
+              .ql-blank::before {
+                content: "No transcript is available.";
+                position: absolute;
+                display: block;
+                line-height: 1.5;
+                color: lighten($color-text, 40%);
+              }
             }
           }
 
@@ -197,6 +204,7 @@
   }
 
   .response {
+    overflow: hidden;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
     .response-nav {
@@ -216,11 +224,13 @@
 
       > .response-meta {
         flex: 1 0 auto;
+        @include flex;
         padding: 0;
+        max-width: 100%;
+        overflow: hidden;
 
         .response-author-identicon {
           box-sizing: border-box;
-          float: left;
           width: 2em;
           height: 2em;
           margin-right: 0.5em;
@@ -228,12 +238,17 @@
           border-radius: 3px;
         }
 
+        .response-status-container {
+          line-height: 1;
+          margin: 0.125em 0;
+        }
+
         .response-author {
-          display: block;
-          font-size: 1em;
-          height: 1.25em;
-          line-height: 1.25;
           font-weight: 500;
+        }
+
+        .response-status {
+          color: lighten($color-text, 40%);
         }
 
         .response-timestamp-authored {
@@ -241,14 +256,14 @@
           font-size: 0.75em;
           height: 1em;
           line-height: 1;
-          color: lighten($color-text, 40%);
+          color: lighten($color-text, 20%);
           font-weight: 500;
         }
       }
 
       > .response-control {
         @include flex;
-        color: lighten($color-text, 30%);
+        color: lighten($color-text, 20%);
 
         > :not(:first-child) {
           margin-left: 1em;
@@ -257,14 +272,121 @@
     }
 
     .response-message {
-
-      .editor {
-        @include quill-editor;
-        font-family: $font-sans-serif-alt;
-      }
+      position: relative;
+      font-family: $font-sans-serif-alt;
 
       p {
         margin: 0.5em 0;
+      }
+    }
+
+    $column-width-mini: floor(($card-width - 2px - 3 * $font-size) / 4);
+
+    .response-extra {
+      display: flex;
+      margin: 0 -1.5em;
+      overflow-x: auto;
+      border-top: solid 1px $color-border;
+      background-color: $color-background-light;
+      -webkit-overflow-scrolling: touch;
+
+      > * {
+        flex: 0 0 auto;
+        margin: 0 0.5em 0 0;
+        padding: 0.5em 0 1em 0;
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        display: block;
+        flex: 0 0 auto;
+        width: 1.5em;
+      }
+
+      &::after {
+        width: 1em;
+      }
+
+      .response-extra-hint-container {
+        padding: 1em 0;
+        max-width: calc(100% - 3em);
+
+        .response-extra-hint {
+          margin: 0;
+          font-size: 0.875em;
+          font-weight: 400;
+          color: lighten($color-text, 20%);
+        }
+      }
+
+      .response-extra-header {
+        display: inline-block;
+        position: sticky;
+        left: 1.5em;
+        margin: 0.5em 0;
+
+        h4 {
+          margin: 0;
+          font-size: 0.875em;
+          font-weight: 400;
+          text-transform: uppercase;
+          color: lighten($color-text, 20%);
+        }
+      }
+
+      .explore {
+        font-size: 0.75em;
+        flex: 0 0 auto;
+        flex-wrap: nowrap;
+        margin: (- $column-spacing) (- $column-spacing / 2);
+
+        .jointsource {
+          width: $column-width-mini - $column-spacing;
+          height: $column-width-mini - $column-spacing;
+
+          > .jointsource-meta {
+            margin-bottom: 1.5em;
+
+            h2 {
+              // Default size h2
+              font-size: $font-size;
+            }
+
+            p {
+              display: none;
+            }
+          }
+
+          > .jointsource-status {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            // Default size icons
+            font-size: $font-size;
+
+            span {
+              display: none;
+            }
+          }
+        }
+
+        &.pinnable .jointsource.pinned::after {
+          content: "";
+          box-sizing: border-box;
+          display: block;
+          position: absolute;
+          bottom: $font-size;
+          left: $font-size;
+          width: 1.75 * $font-size;
+          height: 1.75 * $font-size;
+          background: $color-accent inline-image("icon-lock.svg") no-repeat center;
+          background-size: $font-size;
+          border: solid 1px rgba(#000, 0.10);
+          border-radius: 50%;
+          @include shadow(3);
+        }
       }
     }
   }
@@ -293,34 +415,11 @@
   }
 
   .text {
-    overflow: auto;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
 
-    & > p {
-      margin: 1.25em 0;
-      line-height: 1.5;
+    p {
       font-family: $font-sans-serif-alt;
-
-      & > span {
-        display: inline;
-        padding: 0.1em 0;
-        transition: border-color ease 0.3s;
-        -webkit-user-select: text;
-
-        &[data-ica-text-extract]:not([data-ica-text-extract=""]) {
-          background-color: rgba($color-primary, 0.40);
-          border-bottom: solid 3px transparent;
-
-          // Debugging purpose
-          // &::before {
-          //   content: attr(data-ica-textsource-extract);
-          //   position: absolute;
-          //   font-size: 0.5em;
-          //   margin-top: -1em;
-          //   font-style: italic;
-          //   color: #444;
-          // }
-        }
-      }
     }
   }
 }

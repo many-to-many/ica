@@ -100,9 +100,7 @@
               </nav>
             </div>
           </header>
-          <section class="source-container">
-            <div class="editor" data-ica-source-content></div>
-          </section>
+          <section class="text source-container" data-ica-source-content></section>
         </article>
       </template>
       <template id="template-publisher-imagesource">
@@ -141,7 +139,7 @@
             <input type="file" data-ica-source-content="0" accept="audio/*" hidden>
             <div class="waveform"></div>
             <audio class="player" controls></audio>
-            <div class="editor" data-ica-source-content="1"></div>
+            <div class="text" data-ica-source-content="1"></div>
           </section>
         </article>
       </template>
@@ -240,16 +238,38 @@
           <section class="response-nav">
             <section class="response-meta">
               <canvas class="response-author-identicon" width="64" height="64"></canvas>
-              <span class="response-author" data-ica-response-author="name"></span>
-              <span class="response-timestamp-authored" data-ica-response-timestamp="authored"></span>
+              <div>
+                <div class="response-status-container">
+                  <span class="response-author" data-ica-response-author="name"></span>
+                  <span class="response-status"></span>
+                </div>
+                <span class="response-timestamp-authored" data-ica-response-timestamp="authored"></span>
+              </div>
             </section>
             <div class="response-control">
+              <a data-ica-action="edit-response">Edit</a>
               <a data-ica-action="publish-response">Publish</a>
               <a data-ica-action="unpublish-response">Unpublish</a>
+              <a data-ica-action="discard-edit-response">Discard Changes</a>
             </div>
           </section>
-          <section class="response-message">
-            <div class="editor" data-ica-response-message></div>
+          <section class="text response-message"></section>
+          <section class="response-extra">
+            <div class="response-extra-hint-container">
+              <h4 class="response-extra-hint">Type # or paste a link to mention an article... Try #22 for <q>Launching Many-to-Many</q></h4>
+            </div>
+            <div class="response-referees-container">
+              <div class="response-extra-header">
+                <h4>Found in this post</h4>
+              </div>
+              <div class="explore mini response-referees"></div>
+            </div>
+            <div class="response-referees-suggestions-container">
+              <div class="response-extra-header">
+                <h4>Hidden</h4>
+              </div>
+              <div class="explore mini response-referees-suggestions"></div>
+            </div>
           </section>
         </article>
       </template>

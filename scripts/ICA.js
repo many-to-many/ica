@@ -345,6 +345,11 @@
       .then(touchResponsesWithAPIResponse);
   };
 
+  ICA.getJointSourceDiscussions = function (jointSourceId) {
+    return ICA.get("/jointsources/{0}/discussions/".format(jointSourceId))
+      .then(touchDiscussionsWithAPIResponse);
+  };
+
   ICA.getConversations = function (params) {
     var data = [];
     for (var key in params) {

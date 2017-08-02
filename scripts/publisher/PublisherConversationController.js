@@ -5,6 +5,12 @@ PublisherConversationController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
 };
 
+PublisherConversationController.defineMethod("initModel", function initModel() {
+  if (!this.model) return;
+
+  this.jointSource.backup();
+});
+
 PublisherConversationController.defineMethod("uninitModel", function uninitModel() {
   if (!this.model) return;
 
@@ -14,6 +20,9 @@ PublisherConversationController.defineMethod("uninitModel", function uninitModel
     this.releaseModel(conversation); // Temporary release model to avoid recursive calls on this method
     conversation.destroy(true, true, true);
     this.retainModel(conversation);
+  } else {
+    this.jointSource.recover();
+    this.jointSource.didUpdate();
   }
 });
 

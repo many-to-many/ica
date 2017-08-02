@@ -1,72 +1,217 @@
 
-var MapResponseController = ResponseController.createComponent("MapResponseController");
+let MapResponseController = ResponseController.createComponent("MapResponseController");
 
 MapResponseController.createViewFragment = function () {
   return cloneTemplate("#template-map-response");
 };
+
+// Model
+
+MapResponseController.defineMethod("initModel", function initModel() {
+  if (!this.model) return;
+
+  this.response.backup();
+});
+
+MapResponseController.defineMethod("uninitModel", function uninitModel() {
+  if (!this.model) return;
+
+  this.response.recover();
+  this.response.didUpdate();
+});
 
 // View
 
 MapResponseController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
+  this.editing = this.response.responseId < 0;
+
+  // Do not pass through onclick events
   this.view.addEventListener("click", function (e) {
     e.stopPropagation();
-  }.bind(this.view));
-
-  var editor = this.view.querySelector("[data-ica-response-message]");
-  this.quill = new Quill(editor, {
-    modules: {
-      toolbar: false
-    },
-    theme: "",
-    placeholder: this.response.responseId < 0 ? "Post a new response here..." : ""
   });
 
-  this.quill.on("text-change", function (delta, oldDelta, source) {
-    if (source == "user") {
-      this.response.message["0"] = this.quill.getText().replace(/\s*$/, "");
+  // Message editor
+
+  this.mentionedJointSources = {};
+  this.pinnedRefereeJointSources = {};
+  this.pinnedHiddenRefereeJointSources = {};
+
+  this.quill = new Quill(this.view.querySelector(".response-message"), {
+    modules: {
+      linkify: {
+        onchange: function (links, source) {
+
+          let mentionedJointSourcePromises = [];
+
+          for (let link of links) {
+            let {category, jointSourceId} = LinkBlot.describeLink(link);
+
+            if (jointSourceId) {
+              let promise;
+
+              switch (category) {
+                case "jointsources":
+                  promise = ICA.getJointSource(jointSourceId);
+                  break;
+                case "conversations":
+                  promise = ICA.getConversation(jointSourceId);
+                  break;
+                case "discussions":
+                  promise = ICA.getDiscussion(jointSourceId);
+                  break;
+                default: continue;
+              }
+
+              promise = promise
+                .then(function (jointSource) {
+                  switch (jointSource.constructor) {
+                    case Conversation:
+                    case Discussion:
+                      // Only allow conversations and discussions for now
+                      return jointSource;
+                  }
+                })
+                .catch(function () {
+                  // Do not emit error when joint source not found
+                });
+
+              mentionedJointSourcePromises.push(promise);
+            }
+          }
+
+          Promise.all(mentionedJointSourcePromises)
+            .then(function (mentionedJointSources) {
+
+              this.mentionedJointSources = {};
+
+              if (source === "api") {
+
+                this.pinnedRefereeJointSources = {};
+                this.pinnedHiddenRefereeJointSources = {};
+
+                Object.keys(this.response._backup_referees).forEach(function (jointSourceId) {
+                  this.pinnedRefereeJointSources[jointSourceId] = true;
+                }.bind(this));
+
+                mentionedJointSources.forEach(function (jointSource) {
+                  if (!jointSource) return;
+
+                  if (!this.response._backup_referees[jointSource.jointSourceId]) {
+                    this.pinnedHiddenRefereeJointSources[jointSource.jointSourceId] = jointSource;
+                  }
+
+                  this.mentionedJointSources[jointSource.jointSourceId] = jointSource;
+                }.bind(this));
+
+              } else {
+
+                mentionedJointSources.forEach(function (jointSource) {
+                  if (!jointSource) return;
+
+                  this.mentionedJointSources[jointSource.jointSourceId] = jointSource;
+                }.bind(this));
+
+              }
+
+              this.updateResponseReferees();
+              this.response.didUpdate();
+            }.bind(this))
+            .catch(function (err) {
+              console.warn(err);
+            });
+
+        }.bind(this)
+      }
+    },
+    placeholder: this.response.responseId < 0 ? "Post a new response here..." : "Edit the response here..."
+  });
+
+  this.quill.on("text-change", limitPulses(function (delta, oldDelta, source) {
+
+    if (source === "user") {
+      this.response.message["0"] = this.quill.getText().replace(/\s*$/, ""); // Ignore spaces
     }
 
+    // Display publish button
     this.view.querySelector("[data-ica-action='publish-response']").hidden =
       !this.response.message["0"]
-      || this.response.message["0"] == this.response._backup_message["0"];
-  }.bind(this));
+      || this.response.message["0"] === this.response._backup_message["0"];
 
-  if (this.response._authorId
-    && this.response._authorId != ICA.accountId) {
-    this.quill.enable(false);
-  }
+  }.bind(this), 30));
 
-  this.view.querySelector("[data-ica-action='publish-response']").hidden = true;
+  // Edit/Publish
 
-  this.view.querySelector("[data-ica-action='publish-response']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='edit-response']").addEventListener("click", function (event) {
+    event.preventDefault();
 
-    this.controller.publish();
+    this.controller.editing = true;
+    this.controller.updateView();
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='unpublish-response']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='publish-response']").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    this.controller.publish()
+      .then(function () {
+
+        this.controller.editing = false;
+        this.controller.updateView();
+
+      }.bind(this));
+  }.bind(this.view));
+
+  this.view.querySelector("[data-ica-action='unpublish-response']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     this.controller.unpublish();
   }.bind(this.view));
+
+  this.view.querySelector("[data-ica-action='discard-edit-response']").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    this.controller.editing = false;
+    this.controller.response.recover();
+    this.controller.response.didUpdate(); // Auto-trigger update view
+
+  }.bind(this.view));
+
+  // Extra
+
+  // Do not allow navigation when editing
+  this.view.querySelector(".response-extra").addEventListener("click", function () {
+    if (this.controller.editing) {
+      event.stopPropagation();
+    }
+  }.bind(this.view), true);
+
+  new ExploreRefereesController(this.response, this.view.querySelector(".response-referees")).componentOf = this;
+
+  new ExploreHiddenRefereesController(this.response, this.view.querySelector(".response-referees-suggestions")).componentOf = this;
 
 });
 
 MapResponseController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  this.view.querySelector("[data-ica-action='unpublish-response']").hidden =
-    this.response.responseId < 0
-    || !this.response._authorId
-    || this.response._authorId !== ICA.accountId;
+  if (!this.editing) {
+    if (this.quill.getText().replace(/\s*$/, "") !== this.response.message["0"] ? this.response.message["0"] : "") {
+      this.quill.setText(this.response.message["0"] ? this.response.message["0"] : "");
+    }
+  }
 
-  this.quill.setText(this.response.message["0"] ? this.response.message["0"] : "");
+  this.quill.enable(this.editing);
 
+  this.view.querySelector("[data-ica-action='edit-response']").hidden = !(!this.editing && this.response._authorId && this.response._authorId === ICA.accountId);
+  this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.editing && this.response.message["0"] !== this.response._backup_message["0"]);
+  this.view.querySelector("[data-ica-action='unpublish-response']").hidden = !(!this.editing && this.response.responseId > 0 && this.response._authorId && this.response._authorId === ICA.accountId);
+  this.view.querySelector("[data-ica-action='discard-edit-response']").hidden = !(this.editing && this.response.responseId > 0);
+
+  // Update time author
   this.view.querySelector("[data-ica-response-timestamp='authored']").textContent =
     this.response._timestampAuthored
-    ? new Date(this.response._timestampAuthored * 1000) .toLocaleString("en-us")
+    ? new Date(this.response._timestampAuthored * 1000).toLocaleString("en-us")
     : "Draft";
 
   // Show/hide author's identicon
@@ -86,7 +231,116 @@ MapResponseController.defineMethod("updateView", function updateView() {
   } else {
     this.view.querySelector("[data-ica-response-author]").textContent = "Author";
   }
+
+  // Status
+
+  let statusElement = this.view.querySelector(".response-status");
+
+  if (this.response.responseId > 0) {
+
+    // Check if the response is contained in a discussion
+    this.response.getDiscussions()
+      .then(function (discussions) {
+
+        let numReferees = Object.keys(this.response.referees).length;
+        let status = "";
+
+        if (this.componentOf.jointSource !== this.response && this.response.responseId > 0)
+          switch (this.componentOf.jointSource.constructor) {
+            case Conversation:
+
+              if (numReferees > 1 || discussions.length > 0) {
+                status = "mentioned this";
+
+                if (discussions.length === 1) {
+                  if (discussions[0].constructor === Discussion) {
+                    status += " in a discussion thread";
+                  } else {
+                    status += " at another place";
+                  }
+                } else if (discussions.length > 1) {
+                  status += " at other places";
+                } else {
+                  status += " in a response";
+                }
+
+              } else {
+                status = "responded to this";
+              }
+
+              break;
+          }
+
+        statusElement.textContent = status;
+
+      }.bind(this));
+
+  } else {
+
+    statusElement.textContent = "";
+
+  }
+
+  // Referee dependent view components
+
+  this.updateViewExtraVisibility();
+
 });
+
+MapResponseController.prototype.updateViewExtraVisibility = function updateViewExtra() {
+  if (!this.view) return;
+
+  // Extra
+
+  let showExtra = [
+
+    function () {
+      let element = this.view.querySelector(".response-referees");
+      element.classList.toggle("pinnable", this.editing);
+
+      let visibility = element.childElementCount > 0;
+      this.view.querySelector(".response-referees-container").hidden = !visibility;
+
+      return visibility;
+    }.bind(this)(),
+
+    function () {
+      let element = this.view.querySelector(".response-referees-suggestions");
+      element.classList.toggle("pinnable", this.editing);
+
+      let visibility = element.childElementCount > 0 && this.editing;
+      this.view.querySelector(".response-referees-suggestions-container").hidden = !visibility;
+
+      return visibility;
+    }.bind(this)()
+
+  ].some(identity);
+
+  // Without any mentions and not yet published
+  this.view.querySelector(".response-extra-hint-container").hidden = !(!showExtra && this.response.responseId < 0);
+
+  // Without any mentions and published
+  this.view.querySelector(".response-extra").hidden = !showExtra && this.response.responseId > 0;
+
+};
+
+MapResponseController.prototype.updateResponseReferees = function () {
+
+  this.response.removeAllReferees();
+
+  // Add pinned items
+  Object.keys(this.pinnedRefereeJointSources).forEach(function (jointSourceId) {
+    this.response.addReferee(jointSourceId);
+  }.bind(this));
+
+  Object.keys(this.mentionedJointSources).forEach(function (jointSourceId) {
+    // Avoid hidden items
+    if (!this.pinnedHiddenRefereeJointSources[jointSourceId]) {
+      this.response.addReferee(jointSourceId);
+    }
+  }.bind(this));
+
+};
 
 MapResponseController.prototype.publish = function () {
   return this.response.publish("Publishing response...")

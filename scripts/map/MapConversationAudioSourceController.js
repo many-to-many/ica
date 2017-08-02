@@ -1,9 +1,17 @@
 
-var MapConversationAudioSourceController = MapConversationSourceController.createComponent("MapConversationAudioSourceController");
+let MapConversationAudioSourceController = MapConversationSourceController.createComponent("MapConversationAudioSourceController");
 
 MapConversationAudioSourceController.createViewFragment = function (source) {
   return cloneTemplate("#template-map-conversation-audiosource");
 };
+
+MapConversationAudioSourceController.defineMethod("initView", function initView() {
+  if (!this.view) return;
+
+  this.quillTranscript = new Quill(this.view.querySelector(".text"), {
+    readOnly: true
+  });
+});
 
 MapConversationAudioSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
@@ -27,5 +35,5 @@ MapConversationAudioSourceController.defineMethod("updateView", function updateV
     this.view.querySelector("a[data-ica-content='0']").textContent = this.source.fileHandler.url;
   }
 
-  MapConversationTextSourceController.renderText(this.source.content["1"], this.view.querySelector(".text"));
+  this.quillTranscript.setText(this.source.content["1"] || "");
 });

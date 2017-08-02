@@ -63,7 +63,7 @@ gulp.task("scripts-watch", ["scripts"], function () {
 
 gulp.task("vendor", function () {
   return gulp.src([
-    "./node_modules/quill/dist/quill.min.js",
+    "./node_modules/quill/dist/quill.core.js",
     "./node_modules/plyr/dist/plyr.js",
     "./node_modules/linkifyjs/dist/linkify.js",
     "./node_modules/linkifyjs/dist/linkify-element.js",
