@@ -26,14 +26,14 @@ ExploreConversationController.defineMethod("initView", function initView() {
 
   this.view.querySelector(".audio-on-hover").addEventListener("click", function () {
     event.stopPropagation();
-    this.audioPreviewHandler.play();
-    this.view.querySelector(".audio-on-hover").classList.add("active");
-  }.bind(this));
+    this.controller.audioPreviewHandler.play();
+    this.querySelector(".audio-on-hover").classList.add("active");
+  }.bind(this.view));
 
   this.blurEventListener = function () {
-    this.audioPreviewHandler.stop(300);
-    this.view.querySelector(".audio-on-hover").classList.remove("active");
-  }.bind(this);
+    this.controller.audioPreviewHandler.stop(300);
+    this.querySelector(".audio-on-hover").classList.remove("active");
+  }.bind(this.view);
 
   this.view.addEventListener("mouseleave", this.blurEventListener);
   window.addEventListener("blur", this.blurEventListener);
