@@ -44,7 +44,7 @@
       retainDatabaseTransaction();
 
       $discussion = new \ICA\Discussions\Discussion();
-      $discussion->meta = $REQUEST_DATA["title"];
+      $discussion->title = $REQUEST_DATA["title"];
 
       $discussionId = \ICA\Discussions\insertDiscussion($discussion);
 
