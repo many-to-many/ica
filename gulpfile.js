@@ -61,30 +61,21 @@ gulp.task("scripts-watch", ["scripts"], function () {
 
 // Vendor
 
-gulp.task("quill", function () {
+gulp.task("vendor", function () {
   return gulp.src([
-    "./node_modules/quill/dist/quill.min.js",
-    "./node_modules/quill/dist/quill.min.js.map"
-  ])
-    .pipe(gulp.dest("./app/scripts"));
-});
-
-gulp.task("plyr", function () {
-  return gulp.src("./node_modules/plyr/dist/plyr.js")
-    .pipe(gulp.dest("./app/scripts"));
-});
-
-gulp.task("linkify", function () {
-  return gulp.src([
+    "./node_modules/quill/dist/quill.core.js",
+    "./node_modules/plyr/dist/plyr.js",
     "./node_modules/linkifyjs/dist/linkify.js",
-    "./node_modules/linkifyjs/dist/linkify-element.js"
+    "./node_modules/linkifyjs/dist/linkify-element.js",
+    "./node_modules/jdenticon/dist/jdenticon.min.js"
   ])
+    .pipe(concat("vendor.js"))
     .pipe(gulp.dest("./app/scripts"));
 });
 
 // Tasks
 
-gulp.task("build", ["linkify", "quill", "plyr", "compass", "styles", "scripts"]);
+gulp.task("build", ["vendor", "compass", "styles", "scripts"]);
 
 gulp.task("proxy", ["build"], function () {
   var config = require("./config.json");

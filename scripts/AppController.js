@@ -211,6 +211,37 @@ window.addEventListener("load", function () {
 
   for (_ of [
     {
+      pattern: /\/jointsources\/(\d+)\/?$/,
+      func: function (matches) {
+        let jointSourceId = matches[1];
+
+        ICA.getJointSource(jointSourceId)
+          .then(function (jointSource) {
+            let Controller;
+            switch (jointSource.constructor) {
+              case Conversation:
+                Controller = MapArticleConversationController;
+                break;
+              case Discussion:
+                Controller = MapArticleDiscussionController;
+                break;
+              default:
+                throw new Error("Joint source type not supported");
+            }
+
+            let fragment = Controller.createViewFragment();
+            let element = fragment.querySelector(".article-container");
+            document.body.querySelector(".app-view").appendChild(fragment);
+            new Controller(discussion, element);
+          })
+          .catch(function (error) {
+            console.warn(error);
+
+            appConversationsController.focusView();
+          });
+      }
+    },
+    {
       pattern: /\/conversations\/?$/,
       func: function () {
         appConversationsController.focusView();
@@ -227,7 +258,9 @@ window.addEventListener("load", function () {
             let element = fragment.querySelector(".article-container");
             document.body.querySelector(".app-view").appendChild(fragment);
             new MapArticleConversationController(conversation, element);
-          }, function () {
+          }, function (error) {
+            console.warn(error);
+
             appConversationsController.focusView();
           });
       }
@@ -252,7 +285,9 @@ window.addEventListener("load", function () {
             let publisherElement = publisherFragment.querySelector(".publisher-container");
             document.body.querySelector(".app-view").appendChild(publisherFragment);
             new PublisherConversationController(conversation, publisherElement);
-          }, function () {
+          }, function (error) {
+            console.warn(error);
+
             appConversationsController.focusView();
           });
       }
@@ -274,7 +309,9 @@ window.addEventListener("load", function () {
             let element = fragment.querySelector(".article-container");
             document.body.querySelector(".app-view").appendChild(fragment);
             new MapArticleDiscussionController(discussion, element);
-          }, function () {
+          }, function (error) {
+            console.warn(error);
+
             appDiscussionsController.focusView();
           });
       }

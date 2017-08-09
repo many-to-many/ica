@@ -53,7 +53,7 @@ Response.defineMethod("backup", function backup(force = false) {
 });
 
 Response.defineMethod("recover", function recover() {
-  if (!this._backup_message) {
+  if (this._backup_message) {
     this.message = this._backup_message;
     delete this._backup_message;
   }

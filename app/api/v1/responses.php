@@ -26,21 +26,13 @@
 
       $response = new \ICA\Responses\Response;
       $response->message = $REQUEST_DATA["message"];
+      $response->refereeJointSourceIds = $REQUEST_DATA["refereeJointSourceIds"];
+      $response->referrerJointSourceIds = $REQUEST_DATA["referrerJointSourceIds"];
 
       retainDatabaseTransaction();
 
       // Publish response
       $responseId = \ICA\Responses\insertResponse($response);
-
-      // Update references
-      if (!empty($REQUEST_DATA["refereeJointSourceIds"]))
-        foreach ($REQUEST_DATA["refereeJointSourceIds"] as $jointSourceId) {
-          \ICA\JointSources\touchReference($jointSourceId, $responseId);
-        }
-      if (!empty($REQUEST_DATA["referrerJointSourceIds"]))
-        foreach ($REQUEST_DATA["referrerJointSourceIds"] as $jointSourceId) {
-          \ICA\JointSources\touchReference($responseId, $jointSourceId);
-        }
 
       releaseDatabaseTransaction();
 
@@ -54,6 +46,14 @@
 
   } elseif (list($responseId) = handle("responses/{}")) switch ($REQUEST_METHOD) {
 
+    case "GET":
+
+      $data = \ICA\Responses\getResponse($responseId);
+
+      respondJSON($data);
+
+      break;
+
     case "PUT": \Session\requireVerification();
 
       // Validation
@@ -62,6 +62,7 @@
 
       $response = new \ICA\Responses\Response;
       $response->message = $REQUEST_DATA["message"];
+      $response->refereeJointSourceIds = $REQUEST_DATA["refereeJointSourceIds"];
 
       \ICA\Responses\putResponse($responseId, $response);
 

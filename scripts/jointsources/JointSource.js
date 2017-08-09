@@ -64,10 +64,10 @@ JointSource.defineMethod("destroy", function destroy(destroySources = true, dest
 
 JointSource.defineMethod("didUpdate", function didUpdate() {
   for (var referrerJointSourceId in this.referrers) {
-    if (this.referrers[referrerJointSourceId]) this.referrers[referrerJointSourceId].refereeDidUpdate(this);
+    if (this.referrers[referrerJointSourceId] instanceof JointSource) this.referrers[referrerJointSourceId].refereeDidUpdate(this);
   }
   for (var refereeJointSourceId in this.referees) {
-    if (this.referees[refereeJointSourceId]) this.referees[refereeJointSourceId].referrerDidUpdate(this);
+    if (this.referees[refereeJointSourceId] instanceof JointSource) this.referees[refereeJointSourceId].referrerDidUpdate(this);
   }
 });
 
@@ -117,7 +117,7 @@ JointSource.addJointSourceReference = function (refereeJointSourceId, referrerJo
   }
   Object.defineProperty(JointSource.referrers[refereeJointSourceId], referrerJointSourceId, {
     get: function () {
-      return JointSource.jointSources[referrerJointSourceId];
+      return ICA.getJointSource(referrerJointSourceId);
     },
     enumerable: true,
     configurable: true
@@ -128,7 +128,7 @@ JointSource.addJointSourceReference = function (refereeJointSourceId, referrerJo
   }
   Object.defineProperty(JointSource.referees[referrerJointSourceId], refereeJointSourceId, {
     get: function () {
-      return JointSource.jointSources[refereeJointSourceId];
+      return ICA.getJointSource(refereeJointSourceId);
     },
     enumerable: true,
     configurable: true
@@ -146,7 +146,15 @@ JointSource.removeJointSourceReference = function (refereeJointSourceId, referre
 
 JointSource.removeAllJointSourceReferees = function (referrerJointSourceId) {
   if (JointSource.referees[referrerJointSourceId]) {
-    for (var refereeJointSourceId in JointSource.referees[referrerJointSourceId]) {
+    for (let refereeJointSourceId in JointSource.referees[referrerJointSourceId]) {
+      JointSource.removeJointSourceReference(refereeJointSourceId, referrerJointSourceId);
+    }
+  }
+};
+
+JointSource.removeAllJointSourceReferrers = function (refereeJointSourceId) {
+  if (JointSource.referees[refereeJointSourceId]) {
+    for (let referrerJointSourceId in JointSource.referrers[refereeJointSourceId]) {
       JointSource.removeJointSourceReference(refereeJointSourceId, referrerJointSourceId);
     }
   }
@@ -159,6 +167,46 @@ JointSource.defineMethod("referrerDidUpdate", function referrerDidUpdate(referre
 JointSource.defineMethod("refereeDidUpdate", function refereeDidUpdate(referee) {
 
 });
+
+JointSource.prototype.addReferee = function (refereeJointSourceId) {
+  JointSource.addJointSourceReference(refereeJointSourceId, this.jointSourceId);
+};
+
+JointSource.prototype.addReferrer = function (referrerJointSourceId) {
+  JointSource.addJointSourceReference(this.jointSourceId, referrerJointSourceId);
+};
+
+JointSource.prototype.removeAllReferees = function () {
+  JointSource.removeAllJointSourceReferees(this.jointSourceId);
+};
+
+JointSource.prototype.removeReferee = function (refereeJointSourceId) {
+  JointSource.removeJointSourceReference(refereeJointSourceId, this.jointSourceId);
+};
+
+JointSource.prototype.removeAllReferrers = function () {
+  JointSource.removeAllJointSourceReferrers(this.jointSourceId);
+};
+
+JointSource.prototype.removeReferrer = function (referrerJointSourceId) {
+  JointSource.removeJointSourceReference(this.jointSourceId, referrerJointSourceId);
+};
+
+JointSource.prototype.cloneReferees = function () {
+  let referees = {};
+  for (let refereeJointSourceId in this.referees) {
+    referees[refereeJointSourceId] = this.referees[refereeJointSourceId];
+  }
+  return referees;
+};
+
+JointSource.prototype.cloneReferrers = function () {
+  let referrers = {};
+  for (let referrerJointSourceId in this.referrers) {
+    referrers[referrerJointSourceId] = this.referrers[referrerJointSourceId];
+  }
+  return referrers;
+};
 
 // Sources
 
@@ -247,8 +295,14 @@ JointSource.prototype._backup = false;
 JointSource.defineMethod("backup", function backup(force = false) {
   if (!this._backup_sources || force) {
     this._backup_sources = this.cloneSources();
-    this._backup = true;
   }
+  if (!this._backup_referees || force) {
+    this._backup_referees = this.cloneReferees();
+  }
+  if (!this._backup_referrers || force) {
+    this._backup_referrers = this.cloneReferrers();
+  }
+  this._backup = true;
 });
 
 JointSource.defineMethod("recover", function recover() {
@@ -269,11 +323,28 @@ JointSource.defineMethod("recover", function recover() {
       }
     }
   }
+  if (this._backup_referees) {
+    this.removeAllReferees();
+    Object.keys(this._backup_referees).forEach(this.addReferee.bind(this));
+    delete this._backup_referees;
+  }
+  if (this._backup_referrers) {
+    this.removeAllReferrers();
+    Object.keys(this._backup_referrers).forEach(this.addReferrer.bind(this));
+    delete this._backup_referrers;
+  }
   this._backup = false;
+  this.backup();
 });
 
 // Responses
 
 JointSource.prototype.getResponses = function () {
   return ICA.getJointSourceResponses(this.jointSourceId);
+};
+
+// Dicussions
+
+JointSource.prototype.getDiscussions = function () {
+  return ICA.getJointSourceDiscussions(this.jointSourceId);
 };

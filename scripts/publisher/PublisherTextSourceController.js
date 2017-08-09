@@ -8,12 +8,7 @@ PublisherTextSourceController.createViewFragment = function () {
 PublisherTextSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  var editor = this.view.querySelector("[data-ica-source-content]");
-  this.quill = new Quill(editor, {
-    modules: {
-      toolbar: false
-    },
-    theme: "",
+  this.quill = new Quill(this.view.querySelector("[data-ica-source-content]"), {
     placeholder: "Enter text here..."
   });
   this.quill.on("text-change", function (delta, oldDelta, source) {

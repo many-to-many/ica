@@ -312,6 +312,44 @@
       });
   };
 
+  let jointSourcePromises = {};
+
+  ICA.getJointSource = function (jointSourceId, forceReload = false) {
+    if (JointSource.jointSources[jointSourceId] && !forceReload) {
+      return Promise.resolve(JointSource.jointSources[jointSourceId]);
+    }
+
+    if (!jointSourcePromises[jointSourceId]) {
+      jointSourcePromises[jointSourceId] =
+        ICA.get("/jointsources/{0}/".format(jointSourceId))
+          .then(ICA.APIResponse.getData)
+          .then(function (data) {
+            switch (data.type) {
+              case "conversation":
+                return touchConversation(jointSourceId, data);
+              case "discussion":
+                return touchDiscussion(jointSourceId, data);
+              case "response":
+                return touchResponse(jointSourceId, data);
+              default:
+                throw new Error("Unknown joint source type");
+            }
+          });
+    }
+
+    return jointSourcePromises[jointSourceId];
+  };
+
+  ICA.getJointSourceResponses = function (jointSourceId) {
+    return ICA.get("/jointsources/{0}/responses/".format(jointSourceId))
+      .then(touchResponsesWithAPIResponse);
+  };
+
+  ICA.getJointSourceDiscussions = function (jointSourceId) {
+    return ICA.get("/jointsources/{0}/discussions/".format(jointSourceId))
+      .then(touchDiscussionsWithAPIResponse);
+  };
+
   ICA.getConversations = function (params) {
     var data = [];
     for (var key in params) {
@@ -325,9 +363,29 @@
       .then(touchConversationsWithAPIResponse);
   };
 
-  ICA.getConversation = function (conversationId) {
-    return ICA.get("/conversations/{0}/".format(conversationId))
-      .then(touchConversationWithAPIResponse.bind(null, conversationId));
+  let conversationPromises = {};
+
+  ICA.getConversation = function (conversationId, forceReload = false) {
+    if (JointSource.jointSources[conversationId] && !forceReload) {
+      if (JointSource.jointSources[conversationId] instanceof Conversation) {
+        return Promise.resolve(JointSource.jointSources[conversationId]);
+      }
+      return Promise.reject(new Error("Conversation not found"));
+    }
+
+    if (!conversationPromises[conversationId]) {
+      conversationPromises[conversationId] =
+        ICA.get("/conversations/{0}/".format(conversationId))
+          .then(touchConversationWithAPIResponse.bind(null, conversationId))
+          .then(function (conversation) {
+              if (conversation instanceof Conversation) {
+                return conversation;
+              }
+              throw new Error("Conversation not found");
+            });
+    }
+
+    return conversationPromises[conversationId];
   };
 
   ICA.publishConversation = function (conversation, notify) {
@@ -546,11 +604,6 @@
       });
   };
 
-  ICA.getJointSourceResponses = function (jointSourceId) {
-    return ICA.get("/jointsources/{0}/responses/".format(jointSourceId))
-      .then(touchResponsesWithAPIResponse);
-  };
-
   ICA.publishResponse = function (response, notify) {
     return response.prePublish()
       .then(function () {
@@ -570,7 +623,8 @@
         }
         // Update existing response
         return ICA.put("/responses/{0}/".format(response.responseId), {
-          message: response.message || {}
+          message: response.message || {},
+          refereeJointSourceIds: Object.keys(response.referees)
         }, notify)
           .then(touchResponsesWithAPIResponse)
           .then(function () {
@@ -604,9 +658,29 @@
       .then(touchDiscussionsWithAPIResponse);
   };
 
-  ICA.getDiscussion = function (discussionId) {
-    return ICA.get("/discussions/{0}/".format(discussionId))
-      .then(touchDiscussionWithAPIResponse.bind(null, discussionId));
+  let discussionPromises = {};
+
+  ICA.getDiscussion = function (discussionId, forceReload = false) {
+    if (JointSource.jointSources[discussionId] && !forceReload) {
+      if (JointSource.jointSources[discussionId] instanceof Discussion) {
+        return Promise.resolve(JointSource.jointSources[discussionId]);
+      }
+      return Promise.reject(new Error("Discussion not found"));
+    }
+
+    if (!discussionPromises[discussionId]) {
+      discussionPromises[discussionId] =
+        ICA.get("/discussions/{0}/".format(discussionId))
+          .then(touchDiscussionWithAPIResponse.bind(null, discussionId))
+          .then(function (discussion) {
+            if (discussion instanceof Discussion) {
+              return discussion;
+            }
+            throw new Error("Discussion not found");
+          });
+    }
+
+    return discussionPromises[discussionId];
   };
 
   ICA.publishDiscussion = function (discussion, notify) {
@@ -703,28 +777,56 @@
   };
 
   function touchConversations(data) {
-    var conversations = [];
-    for (var conversationId in data) {
-      var dataConversation = data[conversationId], conversation;
-      if (dataConversation._id) {
-        conversation = JointSource.jointSources[dataConversation._id];
-        conversation.conversationId = conversationId;
-      } else {
-        conversation = new Conversation(dataConversation.meta
-          ? {
-            title: dataConversation.meta.title ? dataConversation.meta.title["0"] : null,
-            intro: dataConversation.meta.intro ? dataConversation.meta.intro["0"] : null,
-            themes: dataConversation.meta.themes ? dataConversation.meta.themes["0"] : null,
-            participants: dataConversation.meta.participants ? dataConversation.meta.participants["0"] : null,
-            region: dataConversation.meta.region ? dataConversation.meta.region["0"] : null,
-            others: dataConversation.meta.others ? dataConversation.meta.others["0"] : null
-          }
-          : {}, conversationId);
-        conversations.push(conversation);
-      }
-      touchSources(dataConversation.sources, conversation);
+    let conversations = [];
+    for (let conversationId in data) {
+      conversations.push(touchConversation(conversationId, data[conversationId]));
     }
     return conversations;
+  }
+
+  function touchConversation(conversationId, dataConversation) {
+    let conversation;
+
+    if (dataConversation._id) {
+      // Newly published conversation
+
+      conversation = JointSource.jointSources[dataConversation._id];
+      conversation.conversationId = conversationId;
+
+    } else {
+
+      let meta = {
+        title: dataConversation.meta.title ? dataConversation.meta.title["0"] : null,
+        intro: dataConversation.meta.intro ? dataConversation.meta.intro["0"] : null,
+        themes: dataConversation.meta.themes ? dataConversation.meta.themes["0"] : null,
+        participants: dataConversation.meta.participants ? dataConversation.meta.participants["0"] : null,
+        region: dataConversation.meta.region ? dataConversation.meta.region["0"] : null,
+        others: dataConversation.meta.others ? dataConversation.meta.others["0"] : null
+      };
+
+      if (JointSource.jointSources[conversationId]) {
+        // Updating existing conversation
+
+        conversation = JointSource.jointSources[conversationId];
+
+        if (conversation.locked) return conversation; // Cannot edit locked conversation
+
+        conversation.meta = meta;
+        touchSources(dataConversation.sources, conversation);
+
+      } else {
+        // New conversation
+
+        conversation = new Conversation(meta, conversationId);
+        touchSources(dataConversation.sources, conversation);
+
+      }
+
+    }
+
+    conversation.didUpdate();
+
+    return conversation;
   }
 
   function touchConversationsWithAPIResponse(apiResponse) {
@@ -737,10 +839,7 @@
   }
 
   function touchConversationWithAPIResponse(conversationId, apiResponse) {
-    let data = {};
-    data[conversationId] = apiResponse.data;
-    let conversations = touchConversations(data);
-    return conversations[0];
+    return touchConversation(conversationId, apiResponse.data);
   }
 
   function touchSources(dataSources, conversation) {
@@ -772,42 +871,64 @@
   }
 
   function touchResponses(data) {
-    var responses = [];
-    for (var responseId in data) {
-      var dataResponse = data[responseId], response;
-      if (dataResponse._id) {
-        response = JointSource.jointSources[dataResponse._id];
-        response.jointSourceId = responseId;
-        response.authorId = dataResponse._authorId;
-      } else if (JointSource.jointSources[responseId]) {
-        response = JointSource.jointSources[responseId];
-        // Update content
-        response.message = dataResponse.message || {};
-        response.authorId = dataResponse._authorId;
-        // Reset references
-        JointSource.removeAllJointSourceReferees(responseId);
-        // Add references
-        for (let jointSourceId of dataResponse.refereeJointSourceIds) {
-          JointSource.addJointSourceReference(jointSourceId, responseId);
-        }
-      } else {
-        response = new Response(dataResponse.message || {}, responseId);
-        response.authorId = dataResponse._authorId;
-        // Add references
-        for (let jointSourceId of dataResponse.refereeJointSourceIds) {
-          JointSource.addJointSourceReference(jointSourceId, responseId);
-        }
-      }
-      [response._timestampAuthored, response._authorId] =
-        [dataResponse._timestampAuthored, dataResponse._authorId];
-      response.didUpdate();
-      responses.push(response);
+    let responses = [];
+    for (let responseId in data) {
+      responses.push(touchResponse(responseId, data[responseId]));
     }
     return responses;
   }
 
+  function touchResponse(responseId, dataResponse) {
+    let response;
+
+    if (dataResponse._id) {
+      // Newly published response
+
+      response = JointSource.jointSources[dataResponse._id];
+      response.jointSourceId = responseId;
+      response.authorId = dataResponse._authorId;
+
+    } else {
+
+      if (JointSource.jointSources[responseId]) {
+        // Update existing response
+
+        response = JointSource.jointSources[responseId];
+
+        if (response.locked) return response; // Cannot edit locked response
+
+        response.message = dataResponse.message || {};
+        response.authorId = dataResponse._authorId;
+
+        // Reset existing references
+        JointSource.removeAllJointSourceReferees(responseId);
+
+      } else {
+        // New response
+
+        response = new Response(dataResponse.message || {}, responseId);
+        response.authorId = dataResponse._authorId;
+
+      }
+
+      // Add references
+      for (let jointSourceId of dataResponse.refereeJointSourceIds) {
+        JointSource.addJointSourceReference(jointSourceId, responseId);
+      }
+
+    }
+
+    // Update info
+    [response._timestampAuthored, response._authorId] =
+      [dataResponse._timestampAuthored, dataResponse._authorId];
+
+    response.didUpdate();
+
+    return response;
+  }
+
   function touchResponsesWithAPIResponse(apiResponse) {
-    var responses = touchResponses(apiResponse.data);
+    let responses = touchResponses(apiResponse.data);
     responses.requestNext = function () {
       return apiResponse.requestNext()
         .then(touchResponsesWithAPIResponse);
@@ -815,35 +936,59 @@
     return responses;
   }
 
+  function touchResponseWithAPIResponse(responseId, apiResponse) {
+    return touchResponse(responseId, apiResponse.data);
+  }
+
   function touchDiscussions(data) {
-    var discussions = [];
-    for (var discussionId in data) {
-      var dataDiscussion = data[discussionId], discussion;
-      if (dataDiscussion._id) {
-        discussion = JointSource.jointSources[dataDiscussion._id];
-        discussion.discussionId = discussionId;
-      } else {
-        discussion = new Discussion(dataDiscussion.title ? dataDiscussion.title : {}, discussionId);
-        discussions.push(discussion);
-      }
+    let discussions = [];
+    for (let discussionId in data) {
+      discussions.push(touchDiscussion(discussionId, data[discussionId]));
     }
     return discussions;
   }
 
-  function touchDiscussionWithAPIResponse(discussionId, apiResponse) {
-    let data = {};
-    data[discussionId] = apiResponse.data;
-    let discussions = touchDiscussions(data);
-    return discussions[0];
+  function touchDiscussion(discussionId, dataDiscussion) {
+    let discussion;
+
+    if (dataDiscussion._id) {
+      // Newly published discussion
+
+      discussion = JointSource.jointSources[dataDiscussion._id];
+      discussion.discussionId = discussionId;
+
+    } else if (JointSource.jointSources[discussionId]) {
+      // Update existing discussion
+
+      discussion = JointSource.jointSources[discussionId];
+
+      if (discussion.locked) return discussion; // Cannot edit locked discussion
+
+      discussion.title = dataDiscussion.title ? dataDiscussion.title : {};
+
+    } else {
+      // New discussion
+
+      discussion = new Discussion(dataDiscussion.title ? dataDiscussion.title : {}, discussionId);
+
+    }
+
+    discussion.didUpdate();
+
+    return discussion;
   }
 
   function touchDiscussionsWithAPIResponse(apiResponse) {
-    var discussions = touchDiscussions(apiResponse.data);
+    let discussions = touchDiscussions(apiResponse.data);
     discussions.requestNext = function () {
       return apiResponse.requestNext()
         .then(touchDiscussionsWithAPIResponse);
     };
     return discussions;
+  }
+
+  function touchDiscussionWithAPIResponse(discussionId, apiResponse) {
+    return touchDiscussion(discussionId, apiResponse.data);
   }
 
   window.ICA = ICA;

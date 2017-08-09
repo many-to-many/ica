@@ -28,7 +28,7 @@ Explore.defineMethod("destruct", function destruct() {
 });
 
 Explore.prototype.addItems = function (items) {
-  Array.prototype.unshift.apply(this.items, items.reverse());
+  Array.prototype.push.apply(this.items, items);
 };
 
 Explore.prototype.putItems = function (items) {

@@ -10,7 +10,7 @@
   /**
    * Abstract for discussion.
    */
-  class Discussion {
+  class Discussion extends \ICA\JointSources\JointSource {
 
     public $title;
 
@@ -31,7 +31,7 @@
         $discussion = new Discussion();
 
         // Populating data from the database
-        $discussion->title = getDiscussionTitleOfLatestRevision($row["title_id"]);
+        $discussion->title = getDiscussionTitleOfLatestRevision(!empty($row["title_id"]) ? $row["title_id"] : $row["discussion_title_id"]);
 
         $data[$discussionId] = $discussion;
       }
@@ -65,7 +65,8 @@
       WHERE discussion_id = $discussionId
         AND state = $stateEncoded;");
 
-    if ($result->num_rows == 0) return NULL;
+    if ($result->num_rows == 0) throw new \Exception("Discussion not found");
+
     return createDiscussionsFromQueryResult($result)[$discussionId];
 
   }
@@ -128,6 +129,24 @@
       LIMIT $limit;");
 
     return \ICA\Responses\createResponsesFromQueryResult($result);
+
+  }
+
+  function getJointSourceDiscussions($jointSourceId, $limit = 200, $underDiscussionId) {
+
+    $referenceStateEncoded = STATE_PUBLISHED_ENCODED;
+    $discussionStateEncoded = STATE_PUBLISHED_ENCODED;
+
+    $result = query("SELECT *
+      FROM jointsources_discussions_summary
+      WHERE jointsource_id = $jointSourceId
+        AND reference_state = $referenceStateEncoded
+        AND discussion_state = $discussionStateEncoded 
+        " . ($underDiscussionId ? "AND discussion_id < $underDiscussionId" : "") . "
+      ORDER BY discussion_id DESC
+      LIMIT $limit;");
+
+    return createDiscussionsFromQueryResult($result);
 
   }
 

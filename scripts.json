@@ -1,6 +1,9 @@
 [
   "node_modules/nodelist-foreach-polyfill/index.js",
 
+  "scripts/common.js",
+  "scripts/quill.js",
+
   "scripts/component/Component.js",
   "scripts/component/Model.js",
   "scripts/component/JointModel.js",
@@ -12,7 +15,6 @@
   "scripts/component/Routine.js",
   "scripts/component/Waterfall.js",
 
-  "scripts/common.js",
   "scripts/Controller.js",
 
   "scripts/authors/Author.js",
@@ -59,6 +61,9 @@
   "scripts/map/MapConversationVideoSourceController.js",
   "scripts/map/MapDiscussionController.js",
   "scripts/map/MapResponseController.js",
+
+  "scripts/map/explore/ExploreRefereesController.js",
+  "scripts/map/explore/ExploreHiddenRefereesController.js",
 
   "scripts/notifications/Notifications.js",
   "scripts/notifications/NotificationsController.js",

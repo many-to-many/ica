@@ -70,26 +70,36 @@
     }
   }
 
-  nav ul {
-    display: flex;
-    margin: 0;
-    padding: 0;
+  nav {
+    flex: 0 0 auto;
 
-    li {
-      flex: 0 0 auto;
-      list-style: none;
+    ul {
+      display: flex;
+      margin: 0;
+      padding: 0;
 
-      &:not(:last-child) {
-        margin-right: 1.25em;
-      }
+      li {
+        flex: 0 0 auto;
+        list-style: none;
 
-      a {
-        position: relative;
-        display: block;
-        padding: 1em 0;
-        line-height: 1;
-        font-weight: 500;
-        color: lighten($color-text, 10%);
+        &:not(:last-child) {
+          margin-right: 1.25em;
+        }
+
+        a {
+          position: relative;
+          display: block;
+          padding: 1em 0;
+          line-height: 1;
+          font-weight: 500;
+          color: lighten($color-text, 10%);
+
+          &:active, &.active,
+          &:focus,
+          &:hover {
+            color: $color-primary;
+          }
+        }
       }
     }
   }

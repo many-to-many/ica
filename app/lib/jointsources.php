@@ -6,6 +6,32 @@
   define("JOINTSOURCE_RESPONSE", 2);
   define("JOINTSOURCE_DISCUSSION", 3);
 
+  class JointSource {
+
+    public $refereeJointSourceIds = [];
+
+    public $referrerJointSourceIds = [];
+
+  }
+
+  /**
+   * Requests the type of joint source with id.
+   */
+  function retrieveJointSourceType($jointSourceId) {
+
+    $result = query("SELECT `type`
+      FROM jointsources
+      WHERE id = $jointSourceId
+      LIMIT 1;");
+
+    if ($result->num_rows == 0) throw new \Exception("Joint source not found");
+
+    $data = $result->fetch_assoc();
+
+    return $data["type"];
+
+  }
+
   /**
    * Request new storage space for joint source.
    */
@@ -60,7 +86,7 @@
 
   }
 
-  function touchReference($refereeJointSourceId, $referrerJointSourceId, $state = STATE_PUBLISHED) {
+  function partialPutReference($refereeJointSourceId, $referrerJointSourceId, $state = STATE_PUBLISHED) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
@@ -80,7 +106,7 @@
       insertReferenceState($referenceId, $state);
     } else {
       $row = $result->fetch_assoc();
-      $referenceId = $row["id"];
+      $referenceId = $row["reference_id"];
 
       if (decodeState($row["state"]) != $state) {
         // Update existing state
@@ -110,6 +136,38 @@
 
   }
 
+  function partialPutRefereeJointSourceIds($refereeJointSourceIds, $referrerJointSourceId, $state = STATE_PUBLISHED) {
+
+    retainDatabaseTransaction();
+
+    foreach ($refereeJointSourceIds as $refereeJointSourceId) {
+      partialPutReference($refereeJointSourceId, $referrerJointSourceId, $state);
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  function putRefereeJointSourceIds($refereeJointSourceIds, $referrerJointSourceId, $state = STATE_PUBLISHED) {
+
+    retainDatabaseTransaction();
+
+    partialPutRefereeJointSourceIds($refereeJointSourceIds, $referrerJointSourceId, $state);
+
+    $result = query("SELECT *
+      FROM references_summary
+      WHERE referrer_jointsource_id = $referrerJointSourceId;");
+
+    while ($row = $result->fetch_assoc()) {
+      if (!in_array($row["referee_jointsource_id"], $refereeJointSourceIds)) {
+        partialPutReference($row["referee_jointsource_id"], $referrerJointSourceId, STATE_UNPUBLISHED);
+      }
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
   function getReferrerJointSourceIds($refereeJointSourceId, $state = STATE_PUBLISHED) {
 
     $stateEncoded = encodeState($state);
@@ -125,6 +183,38 @@
     }
 
     return $data;
+
+  }
+
+  function partialPutReferrerJointSourceIds($referrerJointSourceIds, $refereeJointSourceId, $state = STATE_PUBLISHED) {
+
+    retainDatabaseTransaction();
+
+    foreach ($referrerJointSourceIds as $referrerJointSourceId) {
+      partialPutReference($refereeJointSourceId, $referrerJointSourceId, $state);
+    }
+
+    releaseDatabaseTransaction();
+
+  }
+
+  function putReferrerJointSourceIds($referrerJointSourceIds, $refereeJointSourceId, $state = STATE_PUBLISHED) {
+
+    retainDatabaseTransaction();
+
+    partialPutReferrerJointSourceIds($referrerJointSourceIds, $refereeJointSourceId, $state);
+
+    $result = query("SELECT *
+        FROM references_summary
+        WHERE referee_jointsource_id = $refereeJointSourceId;");
+
+    while ($row = $result->fetch_assoc()) {
+      if (!in_array($row["referrer_jointsource_id"], $referrerJointSourceIds)) {
+        partialPutReference($refereeJointSourceId, $row["referrer_jointsource_id"], STATE_UNPUBLISHED);
+      }
+    }
+
+    releaseDatabaseTransaction();
 
   }
 

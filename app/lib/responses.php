@@ -9,7 +9,7 @@
   /**
    * Abstract for response.
    */
-  class Response {
+  class Response extends \ICA\JointSources\JointSource {
 
     public $message;
 
@@ -30,14 +30,13 @@
         $response = new Response;
 
         // Populating metadata from the database
-        $response->message = getResponseMessageOfLatestRevision($row["response_message_id"]);
+        $response->message = _getResponseMessageOfLatestRevision(!empty($row["message_id"]) ? $row["message_id"] : $row["response_message_id"]);
 
         // Readonly data
-        $response->_authorId = $row["response_author_id"];
-        $response->_timestampAuthored = strtotime($row["response_authored"]);
+        $response->_authorId = !empty($row["author_id"]) ? $row["author_id"] : $row["response_author_id"];
+        $response->_timestampAuthored = strtotime(!empty($row["response_authored"]) ? $row["response_authored"] : $row["response_authored"]);
 
-        // NB: Useful here for less work from client requesting referee joint source id's additionally
-        $response->refereeJointSourceIds = \ICA\JointSources\getRefereeJointSourceIds($responseId);
+        $response->refereeJointSourceIds = getResponseRefereeJointSourceIds($responseId);
 
         $data[$responseId] = $response;
       }
@@ -67,6 +66,20 @@
 
   }
 
+  function getResponse($responseId) {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT *
+        FROM responses_summary
+        WHERE response_id = $responseId
+          AND state = $stateEncoded;");
+
+    if ($result->num_rows == 0) throw new \Exception("Response not found");
+
+    return createResponsesFromQueryResult($result)[$responseId];
+
+  }
+
   /**
    * Inserts a new response record into the database.
    */
@@ -89,7 +102,9 @@
 
     $stateId = insertResponseState($responseId, $state);
 
-    if (!empty($response->message)) partialPutResponseMessage($messageId, $response->message);
+    if (!empty($response->message)) _partialPutResponseMessage($messageId, $response->message);
+    if (!empty($response->refereeJointSourceIds)) _partialPutResponseRefereeJointSourceIds($response->refereeJointSourceIds, $responseId);
+    if (!empty($response->referrerJointSourceIds)) _partialPutResponseReferrerJointSourceIds($response->referrerJointSourceIds, $responseId);
 
     releaseDatabaseTransaction();
 
@@ -114,7 +129,8 @@
       throw new \Exception("Account unable to update this response");
     }
 
-    putResponseMessage($row["message_id"], $response->message);
+    _putResponseMessage($row["message_id"], $response->message);
+    _putResponseRefereeJointSourceIds($response->refereeJointSourceIds, $responseId);
 
   }
 
@@ -127,16 +143,40 @@
 
   }
 
-  function getResponseMessageOfLatestRevision($messageId) {
+  function _getResponseMessageOfLatestRevision($messageId) {
     return \ICA\Contents\getContentLanguagesOfLatestRevision($messageId);
   }
 
-  function partialPutResponseMessage($messageId, $message) {
+  function _partialPutResponseMessage($messageId, $message) {
     \ICA\Contents\partialPutContentLanguages($messageId, $message);
   }
 
-  function putResponseMessage($messageId, $message) {
+  function _putResponseMessage($messageId, $message) {
     \ICA\Contents\partialPutContentLanguages($messageId, $message);
+  }
+
+  function getResponseRefereeJointSourceIds($responseId, $state = STATE_PUBLISHED) {
+    return \ICA\JointSources\getRefereeJointSourceIds($responseId, $state);
+  }
+
+  function _partialPutResponseRefereeJointSourceIds($refereeJointSourceIds, $responseId, $state = STATE_PUBLISHED) {
+    \ICA\JointSources\partialPutRefereeJointSourceIds($refereeJointSourceIds, $responseId, $state);
+  }
+
+  function _putResponseRefereeJointSourceIds($refereeJointSourceIds, $responseId, $state = STATE_PUBLISHED) {
+    \ICA\JointSources\putRefereeJointSourceIds($refereeJointSourceIds, $responseId, $state);
+  }
+
+  function getResponseReferrerJointSourceIds($responseId, $state = STATE_PUBLISHED) {
+    return \ICA\JointSources\getReferrerJointSourceIds($responseId, $state);
+  }
+
+  function _partialPutResponseReferrerJointSourceIds($referrerJointSourceIds, $responseId, $state = STATE_PUBLISHED) {
+    \ICA\JointSources\partialPutReferrerJointSourceIds($referrerJointSourceIds, $responseId, $state);
+  }
+
+  function _putResponseReferrerJointSourceIds($referrerJointSourceIds, $responseId, $state = STATE_PUBLISHED) {
+    \ICA\JointSources\putReferrerJointSourceIds($referrerJointSourceIds, $responseId, $state);
   }
 
 ?>

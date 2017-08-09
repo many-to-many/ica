@@ -1,13 +1,14 @@
 
 /* Colors */
 
-$color-primary: #fc4a1a;
-$color-accent: #4abdac;
+$color-primary: #f96a68;
+$color-secondary: #1954a0;
+$color-accent: #fed36d;
 $color-text: #444;
 $color-text-light: #fefefe;
-$color-border: #ededed;
-
+$color-border: #ebebeb;
 $color-background: #f9f9f9;
+$color-background-light: #fcfcfc;
 
 /* Fonts */
 
@@ -21,7 +22,7 @@ $font-mono: "Roboto Mono", monospace;
 /* Z-Index & Effects */
 
 @mixin shadow($index) {
-  box-shadow: 0 #{($index / 3) + "px"} #{($index * $index / 3) + "px"} rgba(#000, 0.02 * $index);
+  box-shadow: 0 #{($index / 3) + "px"} #{($index * $index / 4) + "px"} rgba(#000, 0.01 * $index);
 }
 
 $z-popup: 10;
@@ -32,6 +33,8 @@ $z-relative-topbar: 8;
 }
 
 /* Main */
+
+$card-width: 42 * $font-size;
 
 $column-width: 300px;
 $column-spacing: 8px;

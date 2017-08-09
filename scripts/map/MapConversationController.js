@@ -64,6 +64,16 @@ MapConversationController.defineMethod("initView", function initView() {
   new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
   new TokensController(this.conversation.metaThemesHandler, this.view.querySelector("[data-ica-conversation-meta='themes']")).componentOf = this;
 
+  // Quill
+
+  this.quillIntro = new Quill(this.view.querySelector("[data-ica-conversation-meta='intro']"), {
+    readOnly: true
+  });
+
+  this.quillOthers = new Quill(this.view.querySelector("[data-ica-conversation-meta='others']"), {
+    readOnly: true
+  });
+
 });
 
 MapConversationController.defineMethod("updateView", function updateView() {
@@ -83,8 +93,10 @@ MapConversationController.defineMethod("updateView", function updateView() {
 
     switch (getElementProperty(element, "conversation-meta")) {
       case "intro":
+        this.quillIntro.setText(content || "");
+        break;
       case "others":
-        MapConversationTextSourceController.renderText(content, element);
+        this.quillOthers.setText(content || "");
         break;
       default:
         element.textContent = content;
