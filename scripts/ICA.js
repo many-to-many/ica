@@ -809,6 +809,8 @@
 
         conversation = JointSource.jointSources[conversationId];
 
+        if (conversation.locked) return conversation; // Cannot edit locked conversation
+
         conversation.meta = meta;
         touchSources(dataConversation.sources, conversation);
 
@@ -893,6 +895,8 @@
 
         response = JointSource.jointSources[responseId];
 
+        if (response.locked) return response; // Cannot edit locked response
+
         response.message = dataResponse.message || {};
         response.authorId = dataResponse._authorId;
 
@@ -957,6 +961,8 @@
       // Update existing discussion
 
       discussion = JointSource.jointSources[discussionId];
+
+      if (discussion.locked) return discussion; // Cannot edit locked discussion
 
       discussion.title = dataDiscussion.title ? dataDiscussion.title : {};
 

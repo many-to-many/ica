@@ -16,8 +16,11 @@ MapResponseController.defineMethod("initModel", function initModel() {
 MapResponseController.defineMethod("uninitModel", function uninitModel() {
   if (!this.model) return;
 
-  this.response.recover();
-  this.response.didUpdate();
+  if (this.lockingJointSource) {
+    this.response.recover();
+    this.unlockJointSource();
+    this.response.didUpdate();
+  }
 });
 
 // View
@@ -25,7 +28,9 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 MapResponseController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  this.editing = this.response.responseId < 0;
+  if (this.response.responseId < 0) {
+    this.lockJointSource();
+  }
 
   // Do not pass through onclick events
   this.view.addEventListener("click", function (e) {
@@ -113,10 +118,10 @@ MapResponseController.defineMethod("initView", function initView() {
                   this.mentionedJointSources[jointSource.jointSourceId] = jointSource;
                 }.bind(this));
 
-              }
+                this.updateResponseReferees();
+                this.response.didUpdate();
 
-              this.updateResponseReferees();
-              this.response.didUpdate();
+              }
             }.bind(this))
             .catch(function (err) {
               console.warn(err);
@@ -135,9 +140,7 @@ MapResponseController.defineMethod("initView", function initView() {
     }
 
     // Display publish button
-    this.view.querySelector("[data-ica-action='publish-response']").hidden =
-      !this.response.message["0"]
-      || this.response.message["0"] === this.response._backup_message["0"];
+    this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] !== this.response._backup_message["0"]);
 
   }.bind(this), 30));
 
@@ -146,8 +149,9 @@ MapResponseController.defineMethod("initView", function initView() {
   this.view.querySelector("[data-ica-action='edit-response']").addEventListener("click", function (event) {
     event.preventDefault();
 
-    this.controller.editing = true;
-    this.controller.updateView();
+    this.controller.lockJointSource();
+    this.controller.response.didUpdate(); // Expensive way to propagate lock event
+
   }.bind(this.view));
 
   this.view.querySelector("[data-ica-action='publish-response']").addEventListener("click", function (event) {
@@ -156,8 +160,8 @@ MapResponseController.defineMethod("initView", function initView() {
     this.controller.publish()
       .then(function () {
 
-        this.controller.editing = false;
-        this.controller.updateView();
+        this.controller.unlockJointSource();
+        this.controller.response.didUpdate(); // Expensive way to propagate lock event
 
       }.bind(this));
   }.bind(this.view));
@@ -171,20 +175,13 @@ MapResponseController.defineMethod("initView", function initView() {
   this.view.querySelector("[data-ica-action='discard-edit-response']").addEventListener("click", function (event) {
     event.preventDefault();
 
-    this.controller.editing = false;
     this.controller.response.recover();
+    this.controller.unlockJointSource();
     this.controller.response.didUpdate(); // Auto-trigger update view
 
   }.bind(this.view));
 
   // Extra
-
-  // Do not allow navigation when editing
-  this.view.querySelector(".response-extra").addEventListener("click", function () {
-    if (this.controller.editing) {
-      event.stopPropagation();
-    }
-  }.bind(this.view), true);
 
   new ExploreRefereesController(this.response, this.view.querySelector(".response-referees")).componentOf = this;
 
@@ -195,18 +192,18 @@ MapResponseController.defineMethod("initView", function initView() {
 MapResponseController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  if (!this.editing) {
+  if (!this.lockingJointSource) {
     if (this.quill.getText().replace(/\s*$/, "") !== this.response.message["0"] ? this.response.message["0"] : "") {
       this.quill.setText(this.response.message["0"] ? this.response.message["0"] : "");
     }
   }
 
-  this.quill.enable(this.editing);
+  this.quill.enable(this.lockingJointSource);
 
-  this.view.querySelector("[data-ica-action='edit-response']").hidden = !(!this.editing && this.response._authorId && this.response._authorId === ICA.accountId);
-  this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.editing && this.response.message["0"] !== this.response._backup_message["0"]);
-  this.view.querySelector("[data-ica-action='unpublish-response']").hidden = !(!this.editing && this.response.responseId > 0 && this.response._authorId && this.response._authorId === ICA.accountId);
-  this.view.querySelector("[data-ica-action='discard-edit-response']").hidden = !(this.editing && this.response.responseId > 0);
+  this.view.querySelector("[data-ica-action='edit-response']").hidden = !(!this.jointSource.locked && this.response._authorId && this.response._authorId === ICA.accountId);
+  this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] !== this.response._backup_message["0"]);
+  this.view.querySelector("[data-ica-action='unpublish-response']").hidden = !(!this.lockingJointSource && this.response.responseId > 0 && this.response._authorId && this.response._authorId === ICA.accountId);
+  this.view.querySelector("[data-ica-action='discard-edit-response']").hidden = !(this.lockingJointSource && this.response.responseId > 0);
 
   // Update time author
   this.view.querySelector("[data-ica-response-timestamp='authored']").textContent =
@@ -296,7 +293,7 @@ MapResponseController.prototype.updateViewExtraVisibility = function updateViewE
 
     function () {
       let element = this.view.querySelector(".response-referees");
-      element.classList.toggle("pinnable", this.editing);
+      element.classList.toggle("pinnable", this.lockingJointSource);
 
       let visibility = element.childElementCount > 0;
       this.view.querySelector(".response-referees-container").hidden = !visibility;
@@ -306,9 +303,9 @@ MapResponseController.prototype.updateViewExtraVisibility = function updateViewE
 
     function () {
       let element = this.view.querySelector(".response-referees-suggestions");
-      element.classList.toggle("pinnable", this.editing);
+      element.classList.toggle("pinnable", this.lockingJointSource);
 
-      let visibility = element.childElementCount > 0 && this.editing;
+      let visibility = element.childElementCount > 0 && this.lockingJointSource;
       this.view.querySelector(".response-referees-suggestions-container").hidden = !visibility;
 
       return visibility;
