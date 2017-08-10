@@ -32,7 +32,7 @@ AppController.defineMethod("initView", function () {
             ICA.login()
               .then(function () {
                 appAccountController.focusView();
-            }, console.warn);
+              }, console.warn);
           } else {
             appAccountController.focusView();
           }
