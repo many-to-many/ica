@@ -764,9 +764,18 @@
       .then(ICA.APIResponse.getData);
   };
 
-  ICA.getFileStats = function (fileId) {
-    return ICA.get("/files/" + fileId)
-      .then(ICA.APIResponse.getData);
+  let fileStatsPromises = {};
+
+  ICA.getFileStats = function (fileId, forceReload = false) {
+    if (fileStatsPromises[fileId] && !forceReload) {
+      return fileStatsPromises[fileId];
+    }
+
+    fileStatsPromises[fileId] =
+      ICA.get("/files/" + fileId)
+        .then(ICA.APIResponse.getData);
+
+    return fileStatsPromises[fileId];
   };
 
   // Utility Functions
