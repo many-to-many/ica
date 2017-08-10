@@ -132,7 +132,7 @@
 
   }
 
-  function getJointSourceDiscussions($jointSourceId, $limit = 200, $underDiscussionId) {
+  function getJointSourceDiscussions($jointSourceId, $limit = 200, $underDiscussionId = NULL) {
 
     $referenceStateEncoded = STATE_PUBLISHED_ENCODED;
     $discussionStateEncoded = STATE_PUBLISHED_ENCODED;
