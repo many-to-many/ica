@@ -196,7 +196,7 @@
       });
   };
 
-  ICA.requestAPI = function (method, path, data, state, notify) {
+  ICA.requestAPI = function (method, path, params, state, notify) {
     return ICA._requestAPI(
       method,
       path,
@@ -204,16 +204,16 @@
         "Content-Type": "application/json",
         "X-ICA-State": state
       },
-      JSON.stringify(data),
+      JSON.stringify(params),
       notify
     )
       .then(function (x) {
-        return new ICA.APIResponse(x.response, [method, path, data, x.getResponseHeader("X-ICA-State-Next")]);
+        return new ICA.APIResponse(x.response, [method, path, params, x.getResponseHeader("X-ICA-State-Next")]);
       });
   };
 
-  ICA.get = function (path, params, state, notify) {
-    return this.requestAPI("GET", path, params, state, notify);
+  ICA.get = function (path, state, notify) {
+    return this.requestAPI("GET", path, undefined, state, notify);
   };
 
   ICA.post = function (path, params, notify) {
