@@ -147,8 +147,10 @@
 
             > .plyr {
               position: -webkit-sticky;
-              top: calc(5em + 1px);
+              top: 5em;
+              margin-top: -1px;
               padding: 0 0.875em;
+              border-top: solid 1px $color-border;
               border-bottom: solid 1px $color-border;
               z-index: $z-relative-topbar;
             }
