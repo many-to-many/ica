@@ -743,14 +743,20 @@
       .then(touchResponsesWithAPIResponse);
   };
 
-  ICA.getAuthor = function (authorId) {
-    return ICA.get("/authors/{0}/".format(authorId))
-      .then(function (apiResponse) {
-        var dataAuthor = apiResponse.data;
-        var author = new Author(authorId);
-        author.name = dataAuthor.name;
-        return author;
-      });
+  let authorPromises = {};
+
+  ICA.getAuthor = function (authorId, forceReload = false) {
+    if (Author.authors[authorId] && !forceReload) {
+      return Promise.resolve(Author.authors[authorId]);
+    }
+
+    if (!authorPromises[authorId]) {
+      authorPromises[authorId] =
+        ICA.get("/authors/{0}/".format(authorId))
+          .then(touchAuthorWithAPIResponse.bind(null, authorId));
+    }
+
+    return authorPromises[authorId];
   };
 
   ICA.getThemes = function () {
@@ -989,6 +995,32 @@
 
   function touchDiscussionWithAPIResponse(discussionId, apiResponse) {
     return touchDiscussion(discussionId, apiResponse.data);
+  }
+
+  function touchAuthor(authorId, dataAuthor) {
+    let author;
+
+    if (Author.authors[authorId]) {
+      // Update existing author
+
+      author = Author.authors[authorId];
+
+    } else {
+      // New author
+
+      author = new Author(authorId);
+
+    }
+
+    author.name = dataAuthor.name;
+
+    author.didUpdate();
+
+    return author;
+  }
+
+  function touchAuthorWithAPIResponse(authorId, apiResponse) {
+    return touchAuthor(authorId, apiResponse.data);
   }
 
   window.ICA = ICA;
