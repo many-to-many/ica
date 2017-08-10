@@ -140,7 +140,7 @@ MapResponseController.defineMethod("initView", function initView() {
     }
 
     // Display publish button
-    this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] !== this.response._backup_message["0"]);
+    this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] && this.response.message["0"] !== this.response._backup_message["0"]);
 
   }.bind(this), 30));
 
@@ -201,7 +201,7 @@ MapResponseController.defineMethod("updateView", function updateView() {
   this.quill.enable(this.lockingJointSource);
 
   this.view.querySelector("[data-ica-action='edit-response']").hidden = !(!this.jointSource.locked && this.response._authorId && this.response._authorId === ICA.accountId);
-  this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] !== this.response._backup_message["0"]);
+  this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] && this.response.message["0"] !== this.response._backup_message["0"]);
   this.view.querySelector("[data-ica-action='unpublish-response']").hidden = !(!this.lockingJointSource && this.response.responseId > 0 && this.response._authorId && this.response._authorId === ICA.accountId);
   this.view.querySelector("[data-ica-action='discard-edit-response']").hidden = !(this.lockingJointSource && this.response.responseId > 0);
 
