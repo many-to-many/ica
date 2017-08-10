@@ -118,8 +118,13 @@ MapResponseController.defineMethod("initView", function initView() {
                   this.mentionedJointSources[jointSource.jointSourceId] = jointSource;
                 }.bind(this));
 
+                let refereeJointSourceIds = Object.keys(this.response.referees).sort();
                 this.updateResponseReferees();
-                this.response.didUpdate();
+                let updatedRefereeJointSourceIds = Object.keys(this.response.referees).sort();
+
+                if (!updatedRefereeJointSourceIds.equals(refereeJointSourceIds)) {
+                  this.response.didUpdate();
+                }
 
               }
             }.bind(this))
