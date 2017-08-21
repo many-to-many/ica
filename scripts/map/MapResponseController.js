@@ -142,10 +142,8 @@ MapResponseController.defineMethod("initView", function initView() {
 
     if (source === "user") {
       this.response.message["0"] = this.quill.getText().replace(/\s*$/, ""); // Ignore spaces
+      this.response.didUpdate();
     }
-
-    // Display publish button
-    this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] && this.response.message["0"] !== this.response._backup_message["0"]);
 
   }.bind(this), 30));
 
@@ -196,6 +194,8 @@ MapResponseController.defineMethod("initView", function initView() {
 
 MapResponseController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
+
+  // TODO: Optimization needed for avoiding frequent author and status updates
 
   if (!this.lockingJointSource) {
     if (this.quill.getText().replace(/\s*$/, "") !== this.response.message["0"] ? this.response.message["0"] : "") {
