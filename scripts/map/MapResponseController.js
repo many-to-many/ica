@@ -138,6 +138,10 @@ MapResponseController.defineMethod("initView", function initView() {
     placeholder: this.response.responseId < 0 ? "Post a new response here..." : "Edit the response here..."
   });
 
+  // Simulate text change from API to prepare pinnedRefereeJointSources
+  // Otherwise empty responses may be prevented from publishing due to missing referees/referrers
+  this.quill.options.modules.linkify.onchange([], "api");
+
   this.quill.on("text-change", limitPulses(function (delta, oldDelta, source) {
 
     if (source === "user") {
