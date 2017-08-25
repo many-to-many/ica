@@ -247,6 +247,7 @@
             </section>
             <div class="response-control">
               <a data-ica-action="edit-response">Edit</a>
+              <a data-ica-action="insert">Insert</a>
               <a data-ica-action="publish-response">Publish</a>
               <a data-ica-action="unpublish-response">Unpublish</a>
               <a data-ica-action="discard-edit-response">Discard Changes</a>
@@ -368,13 +369,44 @@
             <section class="prompt-container">
               <h2 data-ica-prompt="title"></h2>
               <p data-ica-prompt="message"></p>
-              <section class="actions">
-              </section>
+              <section class="actions"></section>
             </section>
           </div>
         </div>
       </template>
     </div>
+    <template id="template-prompt-jointsource">
+      <div class="prompt">
+        <article class="prompt-card">
+          <header class="prompt-header">
+            <h2>Link to articles</h2>
+            <section class="topbar-container">
+              <div class="topbar">
+                <nav>
+                  <ul>
+                    <li><a data-ica-for-subview="conversations">Conversations</a></li>
+                    <li><a data-ica-for-subview="discussions">Discussions</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </section>
+          </header>
+          <section class="prompt-explore-container">
+            <div data-ica-subview="conversations" hidden>
+              <div class="explore"></div>
+              <div class="spinner"></div>
+            </div>
+            <div data-ica-subview="discussions" hidden>
+              <div class="explore"></div>
+              <div class="spinner"></div>
+            </div>
+          </section>
+          <section class="prompt-actions-container">
+            <section class="actions"></section>
+          </section>
+        </article>
+      </div>
+    </template>
     <!-- Begin main -->
     <header class="topbar-container app-header">
       <div class="topbar" data-ica-width-multiple="300">

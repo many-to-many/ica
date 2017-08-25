@@ -159,6 +159,42 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
     // Edit/Publish
 
+    this.view.querySelector("[data-ica-action='insert']").addEventListener("click", function (event) {
+      event.preventDefault();
+
+      promptJointSourceSelection()
+        .then(function (jointSources) {
+          let quill = this.controller.quill;
+          let range = quill.getSelection(true);
+
+          if (!range) return; // Unable to find range
+
+          // Concatenate #jointSourceIds
+          let text = jointSources.map(function (jointSource) {
+            return "#" + jointSource.jointSourceId;
+          }).join(", ");
+
+          let ops = [];
+
+          // Remove selected text
+          if (range.index) ops.push({retain: range.index});
+          if (range.length) ops.push({delete: range.length});
+
+          // Add selected jointSource(s)
+          quill.insertText(range.index + range.length, text, "user");
+
+          // Update text
+          quill.updateContents(ops, "user");
+
+          // Refocus the selection to the end of insertion
+          quill.setSelection(range.index + range.length + text.length);
+
+        }.bind(this), function (err) {
+          console.warn(err);
+        });
+
+    }.bind(this.view));
+
     let editResponseElement = this.view.querySelector("[data-ica-action='edit-response']");
     editResponseElement.addEventListener("click", editResponseOnClick);
     editResponseElement.controller = this;
@@ -197,6 +233,7 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
     this.quill.enable(this.lockingJointSource);
 
     this.view.querySelector("[data-ica-action='edit-response']").hidden = !(!this.jointSource.locked && this.response._authorId && this.response._authorId === ICA.accountId);
+    this.view.querySelector("[data-ica-action='insert']").hidden = !this.lockingJointSource;
     this.view.querySelector("[data-ica-action='publish-response']").hidden = !(this.lockingJointSource && this.response.message["0"] && this.response.message["0"] !== this.response._backup_message["0"]);
     this.view.querySelector("[data-ica-action='unpublish-response']").hidden = !(!this.lockingJointSource && this.response.responseId > 0 && this.response._authorId && this.response._authorId === ICA.accountId);
     this.view.querySelector("[data-ica-action='discard-edit-response']").hidden = !(this.lockingJointSource && this.response.responseId > 0);
