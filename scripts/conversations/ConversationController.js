@@ -1,15 +1,20 @@
 
-var ConversationController = JointSourceController.createComponent("ConversationController");
+/**
+ * ConversationController
+ * View controller for a Conversation.
+ * @constructor
+ */
+let ConversationController = JointSourceController.createComponent("ConversationController");
 
 ConversationController.defineAlias("model", "conversation");
 
-ConversationController.defineMethod("initView", function updateView() {
+ConversationController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   setElementProperty(this.view, "conversation-id", this.conversation.conversationId);
 });
 
-ConversationController.defineMethod("uninitView", function initView() {
+ConversationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
   removeElementProperty(this.view, "conversation-id");
