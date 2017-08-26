@@ -1,22 +1,30 @@
 
-var Discussion = JointSource.createComponent("Discussion");
+/**
+ * Discussion
+ * @constructor
+ */
+let Discussion = JointSource.createComponent("Discussion");
 
 Discussion.defineAlias("jointSourceId", "discussionId");
 
 Discussion.defineMethod("init", function init(title, discussionId) {
+
   // Init title
   this.title = title || {};
+
   return [discussionId];
 });
 
-Discussion.defineMethod("uninit", function () {
+Discussion.defineMethod("uninit", function uninit() {
+
   // Uninit title
   delete this.title;
+
 });
 
 // Publish
 
-Discussion.prototype.publish = function (notify) {
+Discussion.prototype.publish = function notify(notify) {
   return ICA.publishDiscussion(this, notify)
     .then(function (discussion) {
       if (this._backup) { // Force backup when existing backup is found
@@ -27,13 +35,13 @@ Discussion.prototype.publish = function (notify) {
     }.bind(this));
 };
 
-Discussion.prototype.unpublish = function (notify) {
+Discussion.prototype.unpublish = function unpublish(notify) {
   return ICA.unpublishDiscussion(this, notify);
 };
 
-Discussion.prototype.cloneTitle = function () {
-  var title = {};
-  for (var index in this.title) {
+Discussion.prototype.cloneTitle = function cloneTitle() {
+  let title = {};
+  for (let index in this.title) if (this.title.hasOwnProperty(index)) {
     title[index] = this.title[index];
   }
   return title;
@@ -54,6 +62,6 @@ Discussion.defineMethod("recover", function recover() {
 
 // Responses in discussion
 
-Discussion.prototype.getResponsesInDiscussion = function () {
+Discussion.prototype.getResponsesInDiscussion = function getResponsesInDiscussion() {
   return ICA.getResponsesInDiscussion(this.discussionId);
 };
