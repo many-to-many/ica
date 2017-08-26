@@ -1,7 +1,7 @@
 
 /**
  * ConversationController
- * View controller for a Conversation.
+ * Abstract view controller for a Conversation.
  * @constructor
  */
 let ConversationController = JointSourceController.createComponent("ConversationController");
