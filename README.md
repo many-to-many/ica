@@ -1,5 +1,5 @@
 
-# Interactive Conversation Archive [![Build Status][travis_img]][travis_url]
+# Interactive Conversation Archive [![Build Status][travis_img]][travis_url] [![Codacy Badge][codacy_img]][codacy_url]
 
 ## Dependencies
 
@@ -45,3 +45,5 @@ Development dependencies please check in [`package.json`](package.json).
 
 [travis_img]: https://travis-ci.org/many-to-many/ica.svg?branch=master
 [travis_url]: https://travis-ci.org/many-to-many/ica
+[codacy_img]: https://api.codacy.com/project/badge/Grade/be3257310544477d87a24c2f17cdfc09 
+[codacy_url]: https://www.codacy.com/app/sethlu/ica
