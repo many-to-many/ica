@@ -12,7 +12,7 @@ BlobFileSource.defineMethod("construct", function construct() {
 
 });
 
-BlobFileSource.defineMethod("init", function init(content, jointSource, sourceId) {
+BlobFileSource.defineMethod("init", function init(content) {
 
   // Sync file handler
   if (content && content["0"]) {
