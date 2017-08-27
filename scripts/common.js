@@ -21,3 +21,12 @@ function clearObject(object) {
     delete object[key];
   });
 }
+
+function cloneObject(object, depth = 1) {
+  if (depth <= 0 || typeof object !== "object" || object === null) return object;
+  let clone = object.prototype.constructor();
+  Object.keys(object).forEach(function (key) {
+    clone[key] = cloneObject(object[key], depth - 1);
+  });
+  return clone;
+}

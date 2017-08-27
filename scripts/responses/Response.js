@@ -39,11 +39,7 @@ Response.prototype.unpublish = function (notify) {
 };
 
 Response.prototype.cloneMessage = function () {
-  var message = {};
-  for (var index in this.message) {
-    message[index] = this.message[index];
-  }
-  return message;
+  return cloneObject(this.message);
 };
 
 Response.defineMethod("backup", function backup(force = false) {

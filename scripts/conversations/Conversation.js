@@ -79,11 +79,7 @@ Conversation.prototype.unpublish = function unpublish(notify) {
 };
 
 Conversation.prototype.cloneMeta = function cloneMeta() {
-  let meta = {};
-  for (let name in this.meta) if (this.meta.hasOwnProperty(name)) {
-    meta[name] = this.meta[name];
-  }
-  return meta;
+  return cloneObject(this.meta);
 };
 
 Conversation.defineMethod("backup", function backup(force = false) {

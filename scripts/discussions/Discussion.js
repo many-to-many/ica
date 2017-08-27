@@ -40,11 +40,7 @@ Discussion.prototype.unpublish = function unpublish(notify) {
 };
 
 Discussion.prototype.cloneTitle = function cloneTitle() {
-  let title = {};
-  for (let index in this.title) if (this.title.hasOwnProperty(index)) {
-    title[index] = this.title[index];
-  }
-  return title;
+  return cloneObject(this.title);
 };
 
 Discussion.defineMethod("backup", function backup(force = false) {
