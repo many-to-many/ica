@@ -14,3 +14,10 @@ Object.defineProperty(Array.prototype, "equals", {
   enumerable: false,
   configurable: true
 });
+
+function clearObject(object) {
+  if (typeof object !== "object" || object === null) return object;
+  Object.values(object).forEach(function (key) {
+    delete object[key];
+  });
+}
