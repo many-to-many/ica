@@ -1,5 +1,9 @@
 
-var JointSourceController = SingleModelController.createComponent("JointSourceController");
+/**
+ * JointSourceController
+ * Abstract view controller to display a jointSource, which may be Conversation, Discussion or Response.
+ */
+let JointSourceController = SingleModelController.createComponent("JointSourceController");
 
 JointSourceController.defineAlias("model", "jointSource");
 
@@ -10,6 +14,20 @@ JointSourceController.defineMethod("uninitModel", function uninitModel() {
 
   // Try to release JointSource lock
   this.unlockJointSource();
+});
+
+// View
+
+JointSourceController.defineMethod("initView", function updateView() {
+  if (!this.view) return;
+
+  setElementProperty(this.view, "jointsource-id", this.jointSource.jointSourceId);
+});
+
+JointSourceController.defineMethod("uninitView", function initView() {
+  if (!this.view) return;
+
+  removeElementProperty(this.view, "jointsource-id");
 });
 
 // Locks for JointSource editing
@@ -25,13 +43,13 @@ JointSourceController.defineMethod("uninitModel", function uninitModel() {
     }
   });
 
-  JointSource.prototype.lock = function () {
+  JointSource.prototype.lock = function lock() {
     if (locks[this.jointSourceId]) return false;
     locks[this.jointSourceId] = true;
     return true;
   };
 
-  JointSource.prototype.unlock = function () {
+  JointSource.prototype.unlock = function unlock() {
     delete locks[this.jointSourceId];
     return true;
   };
@@ -42,7 +60,7 @@ JointSourceController.defineMethod("uninitModel", function uninitModel() {
     }
   });
 
-  JointSourceController.prototype.lockJointSource = function (force = false) {
+  JointSourceController.prototype.lockJointSource = function lockJointSource(force = false) {
     if (!this.model) return;
 
     if (locks[this.jointSource.jointSourceId] && !force) return false;
@@ -50,7 +68,7 @@ JointSourceController.defineMethod("uninitModel", function uninitModel() {
     return true;
   };
 
-  JointSourceController.prototype.unlockJointSource = function () {
+  JointSourceController.prototype.unlockJointSource = function unlockJointSource() {
     if (!this.model) return;
 
     if (locks[this.jointSource.jointSourceId] === this.controllerId) {
@@ -61,17 +79,3 @@ JointSourceController.defineMethod("uninitModel", function uninitModel() {
   };
 
 })(JointSource, JointSourceController);
-
-// View
-
-JointSourceController.defineMethod("initView", function updateView() {
-  if (!this.view) return;
-
-  setElementProperty(this.view, "jointsource-id", this.jointSource.jointSourceId);
-});
-
-JointSourceController.defineMethod("uninitView", function initView() {
-  if (!this.view) return;
-
-  removeElementProperty(this.view, "jointsource-id");
-});
