@@ -1,7 +1,13 @@
 
-var SourceController = SingleModelController.createComponent("SourceController");
+/**
+ * SourceController
+ * Abstract controller to display each individual source.
+ */
+let SourceController = SingleModelController.createComponent("SourceController");
 
 SourceController.defineAlias("model", "source");
+
+// View
 
 SourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
