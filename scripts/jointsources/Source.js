@@ -108,9 +108,7 @@ Source.defineMethod("uninitSourceId", function uninitSourceId() {
 // Extracts
 
 Source.prototype.forEachExtract = function forEachExtract(callback) {
-  for (let extractId in this.extracts) if (this.extracts.hasOwnProperty(extractId)) {
-    callback(this.extracts[extractId]);
-  }
+  Object.values(this.extracts).forEach(callback);
 };
 
 // Publish
