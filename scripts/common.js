@@ -24,7 +24,7 @@ function clearObject(object) {
 
 function cloneObject(object, depth = 1) {
   if (depth <= 0 || typeof object !== "object" || object === null) return object;
-  let clone = object.prototype.constructor();
+  let clone = object.constructor();
   Object.keys(object).forEach(function (key) {
     clone[key] = cloneObject(object[key], depth - 1);
   });
