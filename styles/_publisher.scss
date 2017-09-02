@@ -28,12 +28,8 @@
 
   .publisher-intro {
     margin: 2em 0;
-    padding: 1em 1.5em;
-    background-color: #fff;
-    border: solid 1px $color-secondary;
-    color: $color-secondary;
-    border-radius: 3px;
-    @include shadow(3);
+    padding: 0 1.5em;
+    color: lighten($color-text, 20%);
 
     > p {
       font-size: 0.875em;
