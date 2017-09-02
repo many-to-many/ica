@@ -172,7 +172,7 @@ JointSource.removeJointSourceReference = function removeJointSourceReference(ref
 JointSource.removeAllJointSourceReferees = function removeAllJointSourceReferees(referrerJointSourceId) {
 
   if (JointSource.referees[referrerJointSourceId]) {
-    Object.keys(JointSource.referees[referrerJointSourceId]).forEach(function (referrerJointSourceId) {
+    Object.keys(JointSource.referees[referrerJointSourceId]).forEach(function (refereeJointSourceId) {
       JointSource.removeJointSourceReference(refereeJointSourceId, referrerJointSourceId);
     });
   }
