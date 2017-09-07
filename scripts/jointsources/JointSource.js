@@ -1,7 +1,7 @@
 
 /**
  * JointSource
- * Abstract model representing a collection a sources.
+ * Abstract model representing a collection of sources.
  */
 let JointSource = Model.createComponent("JointSource");
 
