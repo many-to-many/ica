@@ -1,26 +1,55 @@
 
-var MapArticleController = SingleModelController.createComponent("MapArticleController");
+/**
+ * MapArticleController
+ * Abstract view controller to display a jointSource.
+ */
+let MapArticleController = SingleModelController.createComponent("MapArticleController");
 
 MapArticleController.defineMethod("construct", function construct() {
-  this.jointSourceController = undefined;
+
+  this.jointSourceController = null;
+
   Object.defineProperty(this, "jointSource", {
     get: function () {
       return this.jointSourceController.jointSource;
     }
   });
+
 });
 
 // View
 
-MapArticleController.defineMethod("initView", function initView() {
-  if (!this.view) return;
+(function (MapArticleController) {
 
-  let routerIndex = Router.index - 1; // A new state's already inserted in successor controllers
+  MapArticleController.defineMethod("initView", function initView() {
+    if (!this.view) return;
 
-  this.view.addEventListener("click", function () {
-    Router.jump(routerIndex);
+    // Record the router index of before the article is showed
+    this.routerIndex = Router.index - 1; // A new state's already inserted in a successor controllers' initView()
+
+    // Click event
+    this.view.addEventListener("click", viewOnClick);
+
   });
-});
+
+  MapArticleController.defineMethod("uninitView", function uninitView() {
+    if (!this.view) return;
+
+    // Click event
+    this.view.removeEventListener("click", viewOnClick);
+
+    // Remove the router index
+    delete this.routerIndex;
+
+  });
+
+  // Shared functions
+
+  function viewOnClick() {
+    Router.jump(this.controller.routerIndex);
+  }
+
+})(MapArticleController);
 
 MapArticleController.defineMethod("unhideView", function unhideView() {
   if (!this.view) return;
