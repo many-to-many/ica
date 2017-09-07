@@ -406,7 +406,7 @@
                 others: conversation.meta.others ? {"0": conversation.meta.others} : null
               }
               : {},
-            sources: conversation.mapSources(function (source) {
+            sources: conversation.mapSourcesList(function (source) {
               switch (source.constructor) {
               case ImageSource:
                 return {
@@ -474,7 +474,7 @@
           })
           // Post new sources
           .then(function () {
-            return Promise.all(conversation.mapSources(function (source) {
+            return Promise.all(conversation.mapSourcesList(function (source) {
               ++numTasksTodo;
 
               var promise;
@@ -551,8 +551,8 @@
           })
           // Unpublish sources removed
           .then(function () {
-            return Promise.all(conversation.mapRecoverSources(function (source, sourceId) {
-              if (!(sourceId in conversation.sources)) {
+            return Promise.all(conversation.mapBackupSourcesList(function (source) {
+              if (!(source.sourceId in conversation.sources)) {
                 ++numTasksTodo;
 
                 return ICA.unpublishSource(source)
