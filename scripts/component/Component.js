@@ -95,7 +95,8 @@ Component.createComponent = function (name) {
   var thisComponent = this;
   // Create new component
   var Component = function () {
-    return thisComponent.apply(this, arguments);
+    // Call parent constructor
+    return Component.parentComponent.apply(this, arguments);
   };
   // eval("Component = function {0}() { return thisComponent.apply(this, arguments); };".format(name)); // NB: Debug
   // Init new component
