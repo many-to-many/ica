@@ -51,9 +51,9 @@ ExploreDiscussionController.defineAlias("model", "discussion");
 
   // Shared functions
 
-  function viewOnClick() {
-    e.preventDefault();
-    e.stopPropagation();
+  function viewOnClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
 
     let fragment = MapArticleDiscussionController.createViewFragment();
     let element = fragment.querySelector(".article-container");
