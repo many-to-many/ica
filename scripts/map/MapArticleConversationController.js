@@ -46,17 +46,6 @@ MapArticleConversationController.defineMethod("init", function init(jointSource)
         console.error(err.message);
       });
 
-    // Draft response
-    {
-      this.draftResponse = new Response();
-      JointSource.addJointSourceReference(this.conversation.conversationId, this.draftResponse.responseId);
-
-      let fragment = MapResponseController.createViewFragment();
-      let element = fragment.querySelector(".response");
-      this.view.querySelector(".responses").appendChild(fragment);
-      new MapResponseController(this.draftResponse, element).componentOf = this;
-    }
-
     // Pagination
 
     let responsesElement = this.view.querySelector(".responses");
@@ -142,12 +131,17 @@ MapArticleConversationController.prototype.touchNewResponse = function touchNewR
 
   if (!this.draftResponse) {
     // Create draft response and link reference to conversation
-    this.draftResponse = new Response(undefined);
+    this.draftResponse = new Response();
     JointSource.addJointSourceReference(this.conversation.conversationId, this.draftResponse.responseId);
 
     let fragment = MapResponseController.createViewFragment();
     let element = fragment.querySelector(".response");
-    this.view.querySelector(".responses").insertBefore(fragment, this.view.querySelector(".responses").firstElementChild);
+    let responsesElement = this.view.querySelector(".responses");
+    if (responsesElement.firstElementChild) {
+      responsesElement.insertBefore(fragment, responsesElement.firstElementChild);
+    } else {
+      responsesElement.appendChild(fragment);
+    }
     new MapResponseController(this.draftResponse, element).componentOf = this;
   }
 
