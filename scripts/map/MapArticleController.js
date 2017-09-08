@@ -2,6 +2,7 @@
 /**
  * MapArticleController
  * Abstract view controller to display a jointSource.
+ * @constructor
  */
 let MapArticleController = SingleModelController.createComponent("MapArticleController");
 
