@@ -456,6 +456,8 @@ const Router = (function () {
         window.scroll(0, 0);
       }
     }
+
+    ga("send", "pageview", location.pathname);
   }
 
   function replace(url, title) {
@@ -468,6 +470,8 @@ const Router = (function () {
       index: Router.index,
       page: page
     }, _.title, _.url);
+
+    ga("send", "pageview", location.pathname);
   }
 
   function jump(index) {
@@ -477,6 +481,8 @@ const Router = (function () {
     if (cmp < 0) {
       window.history.go(cmp);
       while (back.length > index + 1) goBack();
+
+      ga("send", "pageview", location.pathname);
     } else if (cmp > 0) {
       throw new Error("Jumping forward not supported yet");
     }
@@ -496,3 +502,13 @@ const Router = (function () {
 
   return Router;
 })();
+
+// Google Analytics
+
+// eslint-disable-next-line
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga("create", "UA-84484405-2", "auto");
