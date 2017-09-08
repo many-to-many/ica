@@ -134,6 +134,7 @@ MapArticleConversationController.defineMethod("uninitView", function uninitView(
 });
 
 MapArticleConversationController.prototype.touchNewResponse = function touchNewResponse() {
+  if (!this.view) return;
 
   if (this.draftResponse && this.draftResponse.responseId >= 0) {
     this.draftResponse = undefined;

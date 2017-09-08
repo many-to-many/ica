@@ -81,6 +81,7 @@ MapArticleDiscussionController.defineMethod("updateView", function updateView() 
 });
 
 MapArticleDiscussionController.prototype.touchNewResponseInDiscussion = function touchNewResponseInDiscussion() {
+  if (!this.view) return;
 
   if (this.draftResponseInDiscussion && this.draftResponseInDiscussion.responseId >= 0) {
     this.draftResponseInDiscussion = undefined;
