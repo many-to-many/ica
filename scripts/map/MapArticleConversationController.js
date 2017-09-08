@@ -18,7 +18,7 @@ MapArticleConversationController.defineMethod("init", function init(jointSource)
 
 // View
 
-(function () {
+(function (MapArticleConversationController) {
 
   MapArticleConversationController.defineMethod("initView", function initView() {
     if (!this.view) return;
@@ -102,7 +102,7 @@ MapArticleConversationController.defineMethod("init", function init(jointSource)
 
   }
 
-})();
+})(MapArticleConversationController);
 
 MapArticleConversationController.defineMethod("updateView", function initView() {
   if (!this.view) return;
