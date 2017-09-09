@@ -25,10 +25,11 @@ ExploreConversationController.defineAlias("model", "conversation");
 
     this.audioPreviewHandler = new AudioHandler();
 
-    this.view.querySelector(".audio-on-hover").addEventListener("click", audioPreviewElementOnClick.bind(this.view));
+    let audioOnHoverElement = this.view.querySelector(".audio-on-hover");
+    audioOnHoverElement.addEventListener("click", audioPreviewElementOnClick);
+    audioOnHoverElement.controller = this;
 
     this.view.addEventListener("mouseleave", audioPreviewElementOnBlur);
-    window.addEventListener("blur", audioPreviewElementOnBlur.bind(this.view));
 
     setElementProperty(this.view, "conversation-id", this.conversation.conversationId);
   });
@@ -99,7 +100,6 @@ ExploreConversationController.defineAlias("model", "conversation");
     // Uninit audio preview
 
     this.view.removeEventListener("mouseleave", audioPreviewElementOnBlur);
-    window.removeEventListener("blur", audioPreviewElementOnBlur);
 
     this.view.querySelector(".audio-on-hover").removeEventListener("click", audioPreviewElementOnClick);
 
@@ -127,12 +127,12 @@ ExploreConversationController.defineAlias("model", "conversation");
     event.stopPropagation();
 
     this.controller.audioPreviewHandler.play();
-    this.querySelector(".audio-on-hover").classList.add("active");
+    this.controller.view.querySelector(".audio-on-hover").classList.add("active");
   }
 
   function audioPreviewElementOnBlur() {
     this.controller.audioPreviewHandler.stop(300);
-    this.querySelector(".audio-on-hover").classList.remove("active");
+    this.controller.view.querySelector(".audio-on-hover").classList.remove("active");
   }
 
 })(ExploreConversationController);
