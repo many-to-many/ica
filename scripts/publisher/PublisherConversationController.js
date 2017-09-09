@@ -177,11 +177,11 @@ PublisherConversationController.prototype.publish = function () {
       notifications.didUpdate();
 
     }.bind(this))
-    .catch(function (err) {
-      console.warn(err);
+    .catch(function (e) {
+      console.warn(e);
 
       // Display notification
-      notifications.addNotification(new BasicNotification("Failed to publish conversation", err ? err.message : undefined));
+      notifications.addNotification(new BasicNotification("Failed to publish conversation", e ? e.message : undefined));
       notifications.didUpdate();
     });
 };
@@ -223,11 +223,11 @@ PublisherConversationController.prototype.unpublish = function () {
       this.conversation.destroy(true, true, true);
       appConversationsController.focusView();
     }.bind(this))
-    .catch(function (err) {
-      console.warn(err);
+    .catch(function (e) {
+      console.warn(e);
 
       // Display notification
-      notifications.addNotification(new BasicNotification("Failed to unpublish conversation", err ? err.message : undefined));
+      notifications.addNotification(new BasicNotification("Failed to unpublish conversation", e ? e.message : undefined));
       notifications.didUpdate();
     });
 };

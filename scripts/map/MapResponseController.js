@@ -128,8 +128,8 @@ MapResponseController.defineMethod("initView", function initView() {
 
               }
             }.bind(this))
-            .catch(function (err) {
-              console.warn(err);
+            .catch(function (e) {
+              console.warn(e);
             });
 
         }.bind(this)
@@ -359,11 +359,11 @@ MapResponseController.prototype.publish = function () {
       notifications.addNotification(new BasicNotification("Response published!"));
       notifications.didUpdate();
     }.bind(this))
-    .catch(function (err) {
-      console.warn(err);
+    .catch(function (e) {
+      console.warn(e);
 
       // Display notification
-      notifications.addNotification(new BasicNotification("Failed to publish response", err ? err.message : undefined));
+      notifications.addNotification(new BasicNotification("Failed to publish response", e ? e.message : undefined));
       notifications.didUpdate();
     });
 };
@@ -404,11 +404,11 @@ MapResponseController.prototype.unpublish = function () {
       notifications.addNotification(new BasicNotification("Response unpublished!"));
       notifications.didUpdate();
     }.bind(this))
-    .catch(function (err) {
-      console.warn(err);
+    .catch(function (e) {
+      console.warn(e);
 
       // Display notification
-      notifications.addNotification(new BasicNotification("Failed to unpublish response", err ? err.message : undefined));
+      notifications.addNotification(new BasicNotification("Failed to unpublish response", e ? e.message : undefined));
       notifications.didUpdate();
     });
 };

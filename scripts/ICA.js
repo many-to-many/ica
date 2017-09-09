@@ -46,14 +46,14 @@
         reject(new Error("Failed to open popup window"));
       }
     })
-      .catch(function (err) {
-        console.warn(err);
+      .catch(function (e) {
+        console.warn(e);
 
         // Display notification
-        notifications.addNotification(new BasicNotification("Failed to log in", err ? err.message : undefined));
+        notifications.addNotification(new BasicNotification("Failed to log in", e ? e.message : undefined));
         notifications.didUpdate();
 
-        throw err;
+        throw e;
       });
   };
 
