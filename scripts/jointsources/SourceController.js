@@ -2,6 +2,7 @@
 /**
  * SourceController
  * Abstract controller to display each individual source.
+ * @constructor
  */
 let SourceController = SingleModelController.createComponent("SourceController");
 

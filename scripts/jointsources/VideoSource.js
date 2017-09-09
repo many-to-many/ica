@@ -2,6 +2,7 @@
 /**
  * VideoSource
  * Concrete model for a video clip.
+ * @constructor
  */
 let VideoSource = BlobFileSource.createComponent("VideoSource");
 

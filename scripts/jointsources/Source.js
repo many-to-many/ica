@@ -2,6 +2,7 @@
 /**
  * Source
  * Abstract model for a source in jointSource.
+ * @constructor
  */
 let Source = Model.createComponent("Source");
 

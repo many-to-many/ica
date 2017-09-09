@@ -2,6 +2,7 @@
 /**
  * JointSourceController
  * Abstract view controller to display a jointSource, which may be Conversation, Discussion or Response.
+ * @constructor
  */
 let JointSourceController = SingleModelController.createComponent("JointSourceController");
 

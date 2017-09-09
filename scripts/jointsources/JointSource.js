@@ -2,6 +2,7 @@
 /**
  * JointSource
  * Abstract model representing a collection of sources.
+ * @constructor
  */
 let JointSource = Model.createComponent("JointSource");
 

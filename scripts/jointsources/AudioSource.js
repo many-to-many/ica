@@ -2,6 +2,7 @@
 /**
  * AudioSource
  * Concrete model for a piece of audio recording.
+ * @constructor
  */
 let AudioSource = BlobFileSource.createComponent("AudioSource");
 

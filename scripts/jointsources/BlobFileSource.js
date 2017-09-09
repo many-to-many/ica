@@ -2,6 +2,7 @@
 /**
  * BlobFileSource
  * Abstract model for a media file that can be audio, video, image, doc, etc.
+ * @constructor
  */
 let BlobFileSource = Source.createComponent("BlobFileSource");
 
