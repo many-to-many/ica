@@ -6,7 +6,7 @@
  */
 let MapConversationTextSourceController = MapConversationSourceController.createComponent("MapConversationTextSourceController");
 
-MapConversationTextSourceController.createViewFragment = function () {
+MapConversationTextSourceController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-map-conversation-textsource");
 };
 

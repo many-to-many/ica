@@ -6,7 +6,7 @@
  */
 let MapConversationImageSourceController = MapConversationSourceController.createComponent("MapConversationImageSourceController");
 
-MapConversationImageSourceController.createViewFragment = function () {
+MapConversationImageSourceController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-map-conversation-imagesource");
 };
 

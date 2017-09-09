@@ -6,7 +6,7 @@
  */
 let MapConversationAudioSourceController = MapConversationSourceController.createComponent("MapConversationAudioSourceController");
 
-MapConversationAudioSourceController.createViewFragment = function () {
+MapConversationAudioSourceController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-map-conversation-audiosource");
 };
 

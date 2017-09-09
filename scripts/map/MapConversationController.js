@@ -6,7 +6,7 @@
  */
 let MapConversationController = ConversationController.createComponent("MapConversationController");
 
-MapConversationController.createViewFragment = function () {
+MapConversationController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-map-conversation");
 };
 
@@ -166,7 +166,7 @@ MapConversationController.createViewFragment = function () {
 
   });
 
-  MapConversationController.prototype.displayPublisherConversationView = function () {
+  MapConversationController.prototype.displayPublisherConversationView = function displayPublisherConversationView() {
     let fragment = PublisherConversationController.createViewFragment();
     let element = fragment.querySelector(".publisher-container");
     document.body.querySelector(".app-view").appendChild(fragment);

@@ -6,7 +6,7 @@
  */
 const MapDiscussionController = DiscussionController.createComponent("MapDiscussionController");
 
-MapDiscussionController.createViewFragment = function () {
+MapDiscussionController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-map-discussion");
 };
 

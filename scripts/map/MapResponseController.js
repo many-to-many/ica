@@ -6,7 +6,7 @@
  */
 let MapResponseController = ResponseController.createComponent("MapResponseController");
 
-MapResponseController.createViewFragment = function () {
+MapResponseController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-map-response");
 };
 
@@ -340,7 +340,7 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
 })(MapResponseController);
 
-MapResponseController.prototype.updateViewExtraVisibility = function updateViewExtra() {
+MapResponseController.prototype.updateViewExtraVisibility = function updateViewExtraVisibility() {
   if (!this.view) return;
 
   // Extra
@@ -377,7 +377,7 @@ MapResponseController.prototype.updateViewExtraVisibility = function updateViewE
 
 };
 
-MapResponseController.prototype.updateResponseReferees = function () {
+MapResponseController.prototype.updateResponseReferees = function updateResponseReferees() {
 
   this.response.removeAllReferees();
 
@@ -395,7 +395,7 @@ MapResponseController.prototype.updateResponseReferees = function () {
 
 };
 
-MapResponseController.prototype.publish = function () {
+MapResponseController.prototype.publish = function publish() {
   return this.response.publish("Publishing response...")
     .then(function () {
 
@@ -415,7 +415,7 @@ MapResponseController.prototype.publish = function () {
     });
 };
 
-MapResponseController.prototype.unpublish = function () {
+MapResponseController.prototype.unpublish = function unpublish() {
   return new Promise(function (resolve, reject) {
     let prompt = new BasicPrompt(
       "Unpublishing the response...",
