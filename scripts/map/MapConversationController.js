@@ -166,6 +166,13 @@ MapConversationController.createViewFragment = function createViewFragment() {
 
   });
 
+  MapConversationController.defineMethod("uninitView", function uninitView() {
+    if (!this.view) return;
+
+    this.view.removeEventListener("click", viewOnClick);
+
+  });
+
   MapConversationController.prototype.displayPublisherConversationView = function displayPublisherConversationView() {
     let fragment = PublisherConversationController.createViewFragment();
     let element = fragment.querySelector(".publisher-container");
