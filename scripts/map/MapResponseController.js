@@ -159,41 +159,9 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
     // Edit/Publish
 
-    this.view.querySelector("[data-ica-action='insert']").addEventListener("click", function (event) {
-      event.preventDefault();
-
-      promptJointSourceSelection()
-        .then(function (jointSources) {
-          let quill = this.controller.quill;
-          let range = quill.getSelection(true);
-
-          if (!range) return; // Unable to find range
-
-          // Concatenate #jointSourceIds
-          let text = jointSources.map(function (jointSource) {
-            return "#" + jointSource.jointSourceId;
-          }).join(", ");
-
-          let ops = [];
-
-          // Remove selected text
-          if (range.index) ops.push({retain: range.index});
-          if (range.length) ops.push({delete: range.length});
-
-          // Add selected jointSource(s)
-          quill.insertText(range.index + range.length, text, "user");
-
-          // Update text
-          quill.updateContents(ops, "user");
-
-          // Refocus the selection to the end of insertion
-          quill.setSelection(range.index + range.length + text.length);
-
-        }.bind(this), function (err) {
-          console.warn(err);
-        });
-
-    }.bind(this.view));
+    let insertElement = this.view.querySelector("[data-ica-action='insert']");
+    insertElement.addEventListener("click", insertOnClick);
+    insertElement.controller = this;
 
     let editResponseElement = this.view.querySelector("[data-ica-action='edit-response']");
     editResponseElement.addEventListener("click", editResponseOnClick);
@@ -324,6 +292,8 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
     this.view.querySelector("[data-ica-action='edit-response']").removeEventListener("click", editResponseOnClick);
 
+    this.view.querySelector("[data-ica-action='insert']").removeEventListener("click", insertOnClick);
+
     this.view.querySelector("[data-ica-action='publish-response']").removeEventListener("click", publishResponseOnClick);
 
     this.view.querySelector("[data-ica-action='unpublish-response']").removeEventListener("click", unpublishResponseOnClick);
@@ -343,6 +313,42 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
     this.controller.lockJointSource();
     this.controller.response.didUpdate(); // Expensive way to propagate lock event
+
+  }
+
+  function insertOnClick(event) {
+    event.preventDefault();
+
+    promptJointSourceSelection()
+      .then(function (jointSources) {
+        let quill = this.quill;
+        let range = quill.getSelection(true);
+
+        if (!range) return; // Unable to find range
+
+        // Concatenate #jointSourceIds
+        let text = jointSources.map(function (jointSource) {
+          return "#" + jointSource.jointSourceId;
+        }).join(", ");
+
+        let ops = [];
+
+        // Remove selected text
+        if (range.index) ops.push({retain: range.index});
+        if (range.length) ops.push({delete: range.length});
+
+        // Add selected jointSource(s)
+        quill.insertText(range.index + range.length, text, "user");
+
+        // Update text
+        quill.updateContents(ops, "user");
+
+        // Refocus the selection to the end of insertion
+        quill.setSelection(range.index + range.length + text.length);
+
+      }.bind(this.controller), function (err) {
+        console.warn(err);
+      });
 
   }
 
