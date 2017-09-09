@@ -1,4 +1,10 @@
 
+/**
+ * ExploreRefereesController
+ * Concrete view controller to display JointSources.
+ * Note this is designed to only work with MapResponseController.
+ * @constructor
+ */
 let ExploreRefereesController = SingleModelController.createComponent("ExploreRefereesController");
 
 ExploreRefereesController.defineAlias("model", "jointSource");
@@ -7,6 +13,7 @@ ExploreRefereesController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.viewItems = [];
+
 });
 
 ExploreRefereesController.defineMethod("updateView", function updateView() {
@@ -15,7 +22,7 @@ ExploreRefereesController.defineMethod("updateView", function updateView() {
   this.viewItems = this.viewItems.filter(function (item) {
     if (this.jointSource.referees[item.jointSourceId]) return true;
 
-    var element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(item.jointSourceId));
+    let element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(item.jointSourceId));
     if (element) {
       element.controller.destroy(true);
     }
@@ -75,15 +82,17 @@ ExploreRefereesController.defineMethod("updateView", function updateView() {
 
         element.classList.toggle("pinned", !!this.componentOf.pinnedRefereeJointSources[item.jointSourceId]);
 
-      }.bind(this));
+      }, this);
 
       this.componentOf.updateViewExtraVisibility();
 
     }.bind(this));
+
 });
 
 ExploreRefereesController.defineMethod("uninitView", function initView() {
   if (!this.view) return;
 
   delete this.viewItems;
+
 });

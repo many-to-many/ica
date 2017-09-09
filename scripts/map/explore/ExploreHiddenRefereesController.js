@@ -1,4 +1,10 @@
 
+/**
+ * ExploreHiddenRefereesController
+ * Concrete view controller to display JointSources.
+ * Note this is designed to only work with MapResponseController.
+ * @constructor
+ */
 let ExploreHiddenRefereesController = SingleModelController.createComponent("ExploreHiddenRefereesController");
 
 ExploreHiddenRefereesController.defineAlias("model", "jointSource");
@@ -7,6 +13,7 @@ ExploreHiddenRefereesController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   this.viewItems = [];
+
 });
 
 ExploreHiddenRefereesController.defineMethod("updateView", function updateView() {
@@ -15,13 +22,13 @@ ExploreHiddenRefereesController.defineMethod("updateView", function updateView()
   this.viewItems = this.viewItems.filter(function (item) {
     if (!this.jointSource.referees[item.jointSourceId]) return true;
 
-    var element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(item.jointSourceId));
+    let element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(item.jointSourceId));
     if (element) {
       element.controller.destroy(true);
     }
 
     return false;
-  }.bind(this));
+  }, this);
 
   if (this.componentOf) Promise.all(Object.values(this.componentOf.pinnedHiddenRefereeJointSources))
     .then(function (items) {
@@ -76,15 +83,17 @@ ExploreHiddenRefereesController.defineMethod("updateView", function updateView()
 
         element.classList.toggle("pinned", !!this.componentOf.pinnedHiddenRefereeJointSources[item.jointSourceId]);
 
-      }.bind(this));
+      }, this);
 
       this.componentOf.updateViewExtraVisibility();
 
     }.bind(this));
+
 });
 
 ExploreHiddenRefereesController.defineMethod("uninitView", function initView() {
   if (!this.view) return;
 
   delete this.viewItems;
+
 });
