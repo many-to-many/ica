@@ -185,4 +185,4 @@ MapConversationController.createViewFragment = function createViewFragment() {
     this.controller.displayPublisherConversationView();
   }
 
-})(MapConversationController);
+}(MapConversationController));

@@ -501,7 +501,7 @@ const Router = (function () {
   });
 
   return Router;
-})();
+}());
 
 // Google Analytics
 

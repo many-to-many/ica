@@ -79,4 +79,4 @@ JointSourceController.defineMethod("uninitView", function initView() {
     return false;
   };
 
-})(JointSource, JointSourceController);
+}(JointSource, JointSourceController));

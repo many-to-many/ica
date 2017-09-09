@@ -62,4 +62,4 @@ ExploreDiscussionController.defineAlias("model", "discussion");
     new MapArticleDiscussionController(this.controller.discussion, element);
   }
 
-})(ExploreDiscussionController);
+}(ExploreDiscussionController));

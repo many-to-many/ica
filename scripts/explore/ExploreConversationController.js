@@ -135,4 +135,4 @@ ExploreConversationController.defineAlias("model", "conversation");
     this.controller.view.querySelector(".audio-on-hover").classList.remove("active");
   }
 
-})(ExploreConversationController);
+}(ExploreConversationController));

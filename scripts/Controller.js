@@ -107,7 +107,7 @@ Controller.defineMethod("uninitView", function () {
     }
   });
 
-})(Controller);
+}(Controller));
 
 function resize(container = document.body) {
   container.querySelectorAll("[data-ica-width-multiple]")

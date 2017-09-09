@@ -41,4 +41,4 @@ let MapConversationSourceController = SourceController.createComponent("MapConve
     this.controller.componentOf.displayPublisherConversationView();
   }
 
-})(MapConversationSourceController);
+}(MapConversationSourceController));

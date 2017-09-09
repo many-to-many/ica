@@ -338,7 +338,7 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
   }
 
-})(MapResponseController);
+}(MapResponseController));
 
 MapResponseController.prototype.updateViewExtraVisibility = function updateViewExtraVisibility() {
   if (!this.view) return;

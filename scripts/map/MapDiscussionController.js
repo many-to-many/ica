@@ -48,4 +48,4 @@ MapDiscussionController.createViewFragment = function createViewFragment() {
     event.stopPropagation();
   }
 
-})(MapDiscussionController);
+}(MapDiscussionController));

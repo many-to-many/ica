@@ -50,7 +50,7 @@ MapArticleController.defineMethod("construct", function construct() {
     Router.jump(this.controller.routerIndex);
   }
 
-})(MapArticleController);
+}(MapArticleController));
 
 MapArticleController.defineMethod("unhideView", function unhideView() {
   if (!this.view) return;

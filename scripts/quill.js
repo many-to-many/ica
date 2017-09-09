@@ -229,7 +229,7 @@ Quill.DEFAULTS.modules["linkify"] = true;
   }();
 
   plugin(linkify);
-})(linkify);
+}(linkify));
 
 // Helper function to limit pulsing function calls
 
