@@ -1,5 +1,10 @@
 
-var MapConversationController = ConversationController.createComponent("MapConversationController");
+/**
+ * MapConversationController
+ * Concrete view controller to display a Conversation.
+ * @constructor
+ */
+let MapConversationController = ConversationController.createComponent("MapConversationController");
 
 MapConversationController.createViewFragment = function () {
   return cloneTemplate("#template-map-conversation");
@@ -7,166 +12,177 @@ MapConversationController.createViewFragment = function () {
 
 // View
 
-MapConversationController.defineMethod("initView", function initView() {
-  if (!this.view) return;
+(function (MapConversationController) {
 
-  this.view.addEventListener("click", function (e) {
-    e.stopPropagation();
-  }.bind(this.view));
+  MapConversationController.defineMethod("initView", function initView() {
+    if (!this.view) return;
 
-  let editConversationAnchor = this.view.querySelector("[data-ica-action='edit-conversation']");
-  editConversationAnchor.href = "/conversations/{0}/edit".format(this.conversation.conversationId);
-  editConversationAnchor.addEventListener("click", function (event) {
-    event.preventDefault();
+    this.view.addEventListener("click", viewOnClick);
 
-    this.controller.displayPublisherConversationView();
-  }.bind(this.view));
+    let editConversationAnchor = this.view.querySelector("[data-ica-action='edit-conversation']");
+    editConversationAnchor.href = "/conversations/{0}/edit".format(this.conversation.conversationId);
+    editConversationAnchor.addEventListener("click", editConversationAnchorOnClick);
+    editConversationAnchor.controller = this;
 
-  var sourcesElement = this.view.querySelector(".sources");
-  var sourceElement = sourcesElement.querySelector(".source");
+    // Slides
+    // TODO: Redesign the UI & interaction for this part
 
-  var sourceElementUpdated = function () {
-    for (var sourceIndex in this.children) {
-      if (sourceElement == this.children[sourceIndex]) {
-        this.parentNode.parentNode.querySelector("[data-ica-conversation-source-index]").textContent = parseInt(sourceIndex) + 1;
-        break;
+    let sourcesElement = this.view.querySelector(".sources");
+    let sourceElement = sourcesElement.querySelector(".source");
+
+    let sourceElementUpdated = function () {
+      let sourceIndex;
+      for (let [index, element] of Object.entries(this.children)) {
+        if (element === sourceElement) {
+          sourceIndex = parseInt(index);
+          break;
+        }
       }
-    }
-    this.parentNode.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceElement.previousElementSibling ? 1 : 0;
-    this.parentNode.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceElement.nextElementSibling ? 1 : 0;
-  }.bind(sourcesElement);
-  this.sourceElementUpdated = sourceElementUpdated;
 
-  this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (e) {
-    e.preventDefault();
+      this.parentNode.parentNode.querySelector("[data-ica-conversation-source-index]").textContent = (sourceIndex + 1).toString();
+      this.parentNode.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceElement.previousElementSibling ? 1 : 0;
+      this.parentNode.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceElement.nextElementSibling ? 1 : 0;
+    }.bind(sourcesElement);
+    this.sourceElementUpdated = sourceElementUpdated;
 
-    if (sourceElement.previousElementSibling) {
-      sourceElement.style.display = "none";
-      sourceElement = sourceElement.previousElementSibling;
-      sourceElement.style.display = "";
-      sourceElementUpdated();
-    }
-  }.bind(sourcesElement));
+    this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (event) {
+      event.preventDefault();
 
-  this.view.querySelector("[data-ica-action='next-source']").addEventListener("click", function (e) {
-    e.preventDefault();
+      if (sourceElement.previousElementSibling) {
+        sourceElement.style.display = "none";
+        sourceElement = sourceElement.previousElementSibling;
+        sourceElement.style.display = "";
+        sourceElementUpdated();
+      }
 
-    if (sourceElement.nextElementSibling) {
-      sourceElement.style.display = "none";
-      sourceElement = sourceElement.nextElementSibling;
-      sourceElement.style.display = "";
-      sourceElementUpdated();
-    }
-  }.bind(sourcesElement));
+    }.bind(sourcesElement));
 
-  // Tokens
+    this.view.querySelector("[data-ica-action='next-source']").addEventListener("click", function (event) {
+      event.preventDefault();
 
-  new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
-  new TokensController(this.conversation.metaThemesHandler, this.view.querySelector("[data-ica-conversation-meta='themes']")).componentOf = this;
+      if (sourceElement.nextElementSibling) {
+        sourceElement.style.display = "none";
+        sourceElement = sourceElement.nextElementSibling;
+        sourceElement.style.display = "";
+        sourceElementUpdated();
+      }
 
-  // Quill
+    }.bind(sourcesElement));
 
-  this.quillIntro = new Quill(this.view.querySelector("[data-ica-conversation-meta='intro']"), {
-    readOnly: true
+    // Tokens
+
+    new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
+    new TokensController(this.conversation.metaThemesHandler, this.view.querySelector("[data-ica-conversation-meta='themes']")).componentOf = this;
+
+    // Quill
+
+    this.quillIntro = new Quill(this.view.querySelector("[data-ica-conversation-meta='intro']"), {
+      readOnly: true
+    });
+
+    this.quillOthers = new Quill(this.view.querySelector("[data-ica-conversation-meta='others']"), {
+      readOnly: true
+    });
+
   });
 
-  this.quillOthers = new Quill(this.view.querySelector("[data-ica-conversation-meta='others']"), {
-    readOnly: true
-  });
+  MapConversationController.defineMethod("updateView", function updateView() {
+    if (!this.view) return;
 
-});
+    // Set display style for metadata
+    this.view.querySelectorAll("[data-ica-conversation-meta-predicate]").forEach(function (element) {
+      let metaPredicate = getElementProperty(element, "conversation-meta-predicate");
+      element.style.display = isEmpty(this.conversation.meta[metaPredicate]) ? "none" : "";
+    }.bind(this));
 
-MapConversationController.defineMethod("updateView", function updateView() {
-  if (!this.view) return;
+    this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
+      let content = this.conversation.meta[getElementProperty(element, "conversation-meta")];
 
-  this.view.querySelectorAll("[data-ica-conversation-meta-predicate]").forEach(function (element) {
-    var metaPredicate = getElementProperty(element, "conversation-meta-predicate");
-    if (ICA.empty(this.conversation.meta[metaPredicate])) {
-      element.style.display = "none";
-    } else {
-      element.style.display = "";
-    }
-  }.bind(this));
+      switch (getElementProperty(element, "conversation-meta")) {
+        case "intro": this.quillIntro.setText(content || ""); break;
+        case "others": this.quillOthers.setText(content || ""); break;
+        default: element.textContent = content;
+      }
+    }.bind(this));
 
-  this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
-    let content = this.conversation.meta[getElementProperty(element, "conversation-meta")];
+    this.view.querySelector(".conversation-backdrop").hidden = true;
+    let imageSources = this.conversation.imageSources;
+    if (imageSources.length > 0) {
+      let imageSource = imageSources[0];
 
-    switch (getElementProperty(element, "conversation-meta")) {
-      case "intro":
-        this.quillIntro.setText(content || "");
-        break;
-      case "others":
-        this.quillOthers.setText(content || "");
-        break;
-      default:
-        element.textContent = content;
-    }
-  }.bind(this));
+      if (imageSource.content) {
+        this.view.querySelector(".conversation-backdrop").hidden = false;
 
-  this.view.querySelector(".conversation-backdrop").hidden = true;
-  var imageSources = this.conversation.imageSources;
-  if (imageSources.length > 0) {
-    var imageSource = imageSources[0];
-
-    if (imageSource.content) {
-      this.view.querySelector(".conversation-backdrop").hidden = false;
-
-      var backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
-      var backgroundImage = imageSource.content
-        ? "url(" + (
+        let backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
+        let backgroundImage = imageSource.content
+          ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
             ? imageSource.fileHandler.url
             : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
-              + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
-          ) + ")"
-        : "";
-      if (backdropImageElement.style.backgroundImage != backgroundImage)
-        backdropImageElement.style.backgroundImage = backgroundImage;
+            + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
+        ) + ")"
+          : "";
+        if (backdropImageElement.style.backgroundImage !== backgroundImage)
+          backdropImageElement.style.backgroundImage = backgroundImage;
+      }
     }
+
+    this.conversation.forEachSource(function (source) {
+      if (this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
+
+      let fragment, element;
+      switch (source.constructor) {
+        case ImageSource:
+          fragment = MapConversationImageSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapConversationImageSourceController(source, element).componentOf = this.controller;
+          break;
+        case AudioSource:
+          fragment = MapConversationAudioSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapConversationAudioSourceController(source, element).componentOf = this.controller;
+          break;
+        case VideoSource:
+          fragment = MapConversationVideoSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapConversationVideoSourceController(source, element).componentOf = this.controller;
+          break;
+        case TextSource:
+        default:
+          fragment = MapConversationTextSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapConversationTextSourceController(source, element).componentOf = this.controller;
+      }
+
+      element.style.display = "none";
+    }.bind(this.view));
+
+    this.sourceElementUpdated();
+    this.view.querySelector("[data-ica-conversation-number-of-sources]").textContent = this.conversation.getNumberOfSources() + 1;
+
+  });
+
+  MapConversationController.prototype.displayPublisherConversationView = function () {
+    let fragment = PublisherConversationController.createViewFragment();
+    let element = fragment.querySelector(".publisher-container");
+    document.body.querySelector(".app-view").appendChild(fragment);
+    new PublisherConversationController(this.conversation, element);
+  };
+
+  // Shared functions
+
+  function viewOnClick(event) {
+    event.stopPropagation();
   }
 
-  this.conversation.forEachSource(function (source) {
-    if (this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
+  function editConversationAnchorOnClick(event) {
+    event.preventDefault();
 
-    var fragment, element;
-    switch (source.constructor) {
-    case ImageSource:
-      fragment = MapConversationImageSourceController.createViewFragment();
-      element = fragment.querySelector(".source");
-      this.querySelector(".sources").appendChild(fragment);
-      new MapConversationImageSourceController(source, element).componentOf = this.controller;
-      break;
-    case AudioSource:
-      fragment = MapConversationAudioSourceController.createViewFragment();
-      element = fragment.querySelector(".source");
-      this.querySelector(".sources").appendChild(fragment);
-      new MapConversationAudioSourceController(source, element).componentOf = this.controller;
-      break;
-    case VideoSource:
-      fragment = MapConversationVideoSourceController.createViewFragment();
-      element = fragment.querySelector(".source");
-      this.querySelector(".sources").appendChild(fragment);
-      new MapConversationVideoSourceController(source, element).componentOf = this.controller;
-      break;
-    case TextSource:
-    default:
-      fragment = MapConversationTextSourceController.createViewFragment();
-      element = fragment.querySelector(".source");
-      this.querySelector(".sources").appendChild(fragment);
-      new MapConversationTextSourceController(source, element).componentOf = this.controller;
-    }
+    this.controller.displayPublisherConversationView();
+  }
 
-    element.style.display = "none";
-  }.bind(this.view));
-
-  this.sourceElementUpdated();
-  this.view.querySelector("[data-ica-conversation-number-of-sources]").textContent = this.conversation.getNumberOfSources() + 1;
-
-});
-
-MapConversationController.prototype.displayPublisherConversationView = function () {
-  var fragment = PublisherConversationController.createViewFragment();
-  var element = fragment.querySelector(".publisher-container");
-  document.body.querySelector(".app-view").appendChild(fragment);
-  new PublisherConversationController(this.conversation, element);
-};
+})(MapConversationController);

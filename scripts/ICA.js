@@ -780,17 +780,6 @@
 
   // Utility Functions
 
-  ICA.empty = function (data) {
-    if (data == undefined || data == null) return true;
-    if (Array.isArray(data)) {
-      return data.length == 0;
-    }
-    if (typeof data == "object") {
-      return Object.keys(data).length == 0;
-    }
-    return false;
-  };
-
   function touchConversations(data) {
     let conversations = [];
     for (let conversationId in data) {

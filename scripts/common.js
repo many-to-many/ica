@@ -30,3 +30,9 @@ function cloneObject(object, depth = 1) {
   });
   return clone;
 }
+
+function isEmpty(object) {
+  if (typeof object !== "object" || object === null) return !object;
+  if (Array.isArray(object)) return object.length <= 0;
+  return Object.keys(data).length === 0;
+}

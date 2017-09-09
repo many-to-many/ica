@@ -21,7 +21,7 @@ MapDiscussionController.defineMethod("updateView", function updateView() {
 
   this.view.querySelectorAll("[data-ica-discussion-predicate]").forEach(function (element) {
     let predicate = getElementProperty(element, "discussion-predicate");
-    if (ICA.empty(this.discussion[predicate])) {
+    if (isEmpty(this.discussion[predicate])) {
       element.style.display = "none";
     } else {
       element.style.display = "";
