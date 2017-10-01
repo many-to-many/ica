@@ -1,5 +1,10 @@
 
-var NotificationController = SingleModelController.createComponent("NotificationController");
+/**
+ * NotificationController
+ * Abstract view controller to display a notification.
+ * @constructor
+ */
+let NotificationController = SingleModelController.createComponent("NotificationController");
 
 NotificationController.defineAlias("model", "notification");
 
@@ -21,20 +26,24 @@ NotificationController.defineMethod("updateView", function updateView() {
   setTimeout(function () {
     this.view.classList.remove("hidden");
   }.bind(this), 1);
+
 });
 
 NotificationController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
   removeElementProperty(this.view, "notification-id");
+
 });
 
 NotificationController.defineMethod("destroy", function destroy(destroyView = false) {
+
   // Destroy view
   if (destroyView && this.view) {
-    var view = this.view,
-      model = this.notification,
+
+    let view = this.view,
       jointModels = Object.values(this.notification.jointModels);
+
     new Waterfall(function () {
       view.classList.add("hidden");
     }, 300 + 1)
@@ -44,7 +53,9 @@ NotificationController.defineMethod("destroy", function destroy(destroyView = fa
           jointModel.didUpdate();
         });
         view.parentNode.removeChild(view);
-      }.bind(this));
+      });
+
   }
+
   return [];
 });
