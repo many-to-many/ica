@@ -1,5 +1,11 @@
 
-var BasicNotificationController = NotificationController.createComponent("BasicNotificationController");
+/**
+ * BasicNotificationController
+ * Concrete view controller to display a basic notification.
+ * At view init this controller will register a time to automatically destroy the notification.
+ * @constructor
+ */
+let BasicNotificationController = NotificationController.createComponent("BasicNotificationController");
 
 BasicNotificationController.createViewFragment = function () {
   return cloneTemplate("#template-notification-basic");
@@ -12,6 +18,7 @@ BasicNotificationController.defineMethod("initView", function initView() {
     delete this.notificationTimeout;
     this.notification.destroy(true, true);
   }.bind(this), this.notification.duration);
+
 });
 
 BasicNotificationController.defineMethod("uninitView", function uninitView() {
@@ -21,4 +28,5 @@ BasicNotificationController.defineMethod("uninitView", function uninitView() {
     clearTimeout(this.notificationTimeout);
     delete this.notificationTimeout;
   }
+
 });
