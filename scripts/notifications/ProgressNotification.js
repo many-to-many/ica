@@ -1,5 +1,10 @@
 
-var ProgressNotification = Notification.createComponent("ProgressNotification");
+/**
+ * ProgressNotification
+ * Concrete model to represent an activity progress.
+ * @constructor
+ */
+let ProgressNotification = Notification.createComponent("ProgressNotification");
 
 ProgressNotification.defineMethod("init", function init(title = "Content loading...") {
 
