@@ -1,14 +1,19 @@
 
-var NotificationsController = SingleModelController.createComponent("NotificationsController");
+/**
+ * NotificationsController
+ * Concrete view controller to display a list of notifications.
+ * @constructor
+ */
+let NotificationsController = SingleModelController.createComponent("NotificationsController");
 
 NotificationsController.defineAlias("model", "notifications");
 
 NotificationsController.defineMethod("updateView", function () {
   if (!this.view) return;
 
-  var bottom = 0;
+  let bottom = 0;
   for (let notification of this.notifications.notifications) {
-    var element = this.view.querySelector("[data-ica-notification-id='{0}']".format(notification.componentId));
+    let element = this.view.querySelector("[data-ica-notification-id='{0}']".format(notification.componentId));
 
     // Check existing element
     if (element) {
@@ -20,7 +25,7 @@ NotificationsController.defineMethod("updateView", function () {
       if (!Component.components[notification.componentId]) continue;
 
       // Match controller
-      var Controller;
+      let Controller;
       switch (notification.constructor) {
       case BasicNotification: Controller = BasicNotificationController; break;
       case ProgressNotification: Controller = ProgressNotificationController; break;
@@ -31,7 +36,7 @@ NotificationsController.defineMethod("updateView", function () {
       }
 
       // Create view
-      var fragment = Controller.createViewFragment();
+      let fragment = Controller.createViewFragment();
       element = fragment.querySelector(".notification");
       element.style.bottom = bottom + "px";
       this.view.appendChild(fragment);
