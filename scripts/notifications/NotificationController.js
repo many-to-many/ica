@@ -42,6 +42,7 @@ NotificationController.defineMethod("destroy", function destroy(destroyView = fa
   if (destroyView && this.view) {
 
     let view = this.view,
+      model = this.notification,
       jointModels = Object.values(this.notification.jointModels);
 
     new Waterfall(function () {
