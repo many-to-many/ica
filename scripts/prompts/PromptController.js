@@ -1,5 +1,10 @@
 
-var PromptController = SingleModelController.createComponent("PromptController");
+/**
+ * PromptController
+ * Abstract view controller to display a prompt.
+ * @constructor
+ */
+let PromptController = SingleModelController.createComponent("PromptController");
 
 PromptController.defineAlias("model", "prompt");
 
@@ -20,17 +25,17 @@ PromptController.defineMethod("updateView", function () {
   this.viewActions = this.viewActions.filter(function (action) {
     if (this.prompt.actions.indexOf(action) > -1) return true;
 
-    var element = this.view.querySelector("[data-ica-action-id='{0}']".format(action.componentId));
+    let element = this.view.querySelector("[data-ica-action-id='{0}']".format(action.componentId));
     if (element) {
       element.controller.destroy(true);
     }
   }.bind(this));
 
   for (let action of this.prompt.actions) {
-    var element = this.view.querySelector("[data-ica-action-id='{0}']".format(action.componentId));
+    let element = this.view.querySelector("[data-ica-action-id='{0}']".format(action.componentId));
     if (!element) {
       // Create new view
-      var fragment = cloneTemplate("#template-prompt-action");
+      let fragment = cloneTemplate("#template-prompt-action");
       element = fragment.querySelector(".action");
       this.view.querySelector(".actions").appendChild(fragment);
 

@@ -1,5 +1,9 @@
 
-var PromptAction = Model.createComponent("PromptAction");
+/**
+ * PromptAction
+ * @constructor
+ */
+let PromptAction = Model.createComponent("PromptAction");
 
 PromptAction.defineMethod("init", function init(name, func, highlight = false) {
 

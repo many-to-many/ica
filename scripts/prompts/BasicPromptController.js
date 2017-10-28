@@ -1,5 +1,10 @@
 
-var BasicPromptController = PromptController.createComponent("BasicPromptController");
+/**
+ * BasicPromptController
+ * Concrete view controller to display a basic prompt.
+ * @constructor
+ */
+let BasicPromptController = PromptController.createComponent("BasicPromptController");
 
 BasicPromptController.createViewFragment = function () {
   return cloneTemplate("#template-prompt-basic");

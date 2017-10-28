@@ -1,5 +1,10 @@
 
-var BasicPrompt = Prompt.createComponent("BasicPrompt");
+/**
+ * BasicPrompt
+ * Concrete model for a basic prompt.
+ * @constructor
+ */
+let BasicPrompt = Prompt.createComponent("BasicPrompt");
 
 BasicPrompt.defineMethod("init", function init(title, message, actions) {
 
@@ -10,11 +15,11 @@ BasicPrompt.defineMethod("init", function init(title, message, actions) {
 
 });
 
-/***/
+
 
 function promptBasicContinue(title, message) {
-  return new Promise(function (resolve, reject) {
-    var prompt = new BasicPrompt(title, message, [
+  return new Promise(function (resolve) {
+    let prompt = new BasicPrompt(title, message, [
       new PromptAction(
         "Continue",
         function () {
@@ -23,8 +28,8 @@ function promptBasicContinue(title, message) {
         true
       )
     ]);
-    var fragment = BasicPromptController.createViewFragment();
-    var element = fragment.querySelector(".prompt");
+    let fragment = BasicPromptController.createViewFragment();
+    let element = fragment.querySelector(".prompt");
     document.body.appendChild(fragment);
     new BasicPromptController(prompt, element);
   });
