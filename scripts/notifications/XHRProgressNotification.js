@@ -1,5 +1,10 @@
 
-var XHRProgressNotification = ProgressNotification.createComponent("XHRProgressNotification");
+/**
+ * XHRProgressNotification
+ * Concrete model to represent a noficiation about an XHR.
+ * @constructor
+ */
+let XHRProgressNotification = ProgressNotification.createComponent("XHRProgressNotification");
 
 XHRProgressNotification.defineMethod("init", function (x, title = "Content loading...") {
 
