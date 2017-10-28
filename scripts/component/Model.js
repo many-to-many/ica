@@ -1,5 +1,5 @@
 
-var Model = Component.createComponent("Model");
+let Model = Component.createComponent("Model");
 
 Model.models = {count: 0};
 
@@ -21,15 +21,15 @@ Model.defineMethod("construct", function construct() {
 
 Model.defineMethod("destruct", function destruct() {
   // Destruct jointModels
-  for (var modelId in this.jointModels) {
+  Object.values(this.jointModels).forEach(function (jointModel) {
     // Request jointModel to release model
-    this.jointModels[modelId].releaseModel(this);
-  }
+    jointModel.releaseModel(this);
+  }, this);
   // Destruct controllers
-  for (var controllerId in this.controllers) {
+  Object.values(this.controllers).forEach(function (controller) {
     // Request controller to release model
-    this.controllers[controllerId].releaseModel(this);
-  }
+    controller.releaseModel(this);
+  }, this);
   // Destruct modelId
   delete Model.models[this.modelId];
 });
@@ -37,20 +37,20 @@ Model.defineMethod("destruct", function destruct() {
 Model.defineMethod("destroy", function destroy(destroyControllers = false, destroyViews = false) {
   if (destroyControllers) {
     // The controller to be destroyed with its view removed
-    for (var controllerId in this.controllers) {
-      this.controllers[controllerId].destroy(destroyViews);
-    }
+    Object.values(this.controllers).forEach(function (controller) {
+      controller.destroy(destroyViews);
+    });
   }
 });
 
 // This function is used to propagate the content update event to controllers and jointModels
 Model.defineMethod("didUpdate", function didUpdate() {
   // Broadcast controllers that the model itself was just updated
-  for (var controllerId in this.controllers) {
-    this.controllers[controllerId].modelDidUpdate(this);
-  }
+  Object.values(this.controllers).forEach(function (controller) {
+    controller.modelDidUpdate(this);
+  }, this);
   // Broadcast jointModels that the model itself was just updated
-  for (var modelId in this.jointModels) {
-    this.jointModels[modelId].modelDidUpdate(this);
-  }
+  Object.values(this.jointModels).forEach(function (jointModel) {
+    jointModel.modelDidUpdate(this);
+  }, this);
 });

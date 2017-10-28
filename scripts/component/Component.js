@@ -3,9 +3,9 @@
 
 if (!String.prototype.format) {
   String.prototype.format = function() {
-    var args = arguments;
+    let args = arguments;
     return this.replace(/{(\d+)}/g, function(match, number) {
-      return typeof args[number] != "undefined"
+      return typeof args[number] !== "undefined"
         ? args[number]
         : match;
     });
@@ -14,7 +14,7 @@ if (!String.prototype.format) {
 
 // Component
 
-var Component = function () {
+let Component = function () {
   this.create.apply(this, arguments);
 };
 
@@ -35,7 +35,7 @@ Component.toString = function () {
 Component.logChildComponents = function () {
   console.log(this);
   // console.group(this.componentName);
-  // for (var name in this.prototype._methods) {
+  // for (let name in this.prototype._methods) {
   //   console.log(name);
   // }
   this.childComponents.forEach(function (childComponent) {
@@ -60,7 +60,7 @@ Component.isMethodDefined = function (name) {
 };
 
 Component.defineMethod = function (name, definition) {
-  var thisComponent = this;
+  let thisComponent = this;
 
   // Define method under _methods
   this.prototype._methods[name] = definition;
@@ -72,8 +72,9 @@ Component.defineMethod = function (name, definition) {
 
 Component.applyMethod = function (thisObject, name, args) {
   try {
+    let value;
     if (this.prototype._methods[name]) {
-      var value = this.prototype._methods[name].apply(thisObject, args);
+      value = this.prototype._methods[name].apply(thisObject, args);
     }
     if (this.parentComponent &&
       this.parentComponent.isMethodDefined(name)) {
@@ -92,9 +93,9 @@ Component.applyMethod = function (thisObject, name, args) {
 
 Component.createComponent = function (name) {
   // thisComponent to refer to on which the new component is based
-  var thisComponent = this;
+  let thisComponent = this;
   // Create new component
-  var Component = function () {
+  let Component = function () {
     // Call parent constructor
     return Component.parentComponent.apply(this, arguments);
   };
@@ -170,9 +171,9 @@ Component.defineMethod("destruct", function destruct() {
 // This function is called upon freeing the object and should not be extended
 Component.defineMethod("destroy", function destroy() {
   // Destruct components
-  for (var componentId in this.components) {
-    this.components[componentId].destroy.apply(this.components[componentId], arguments);
-  }
+  Object.values(this.components).forEach(function (component) {
+    component.destroy.apply(component, arguments);
+  });
   this.uninit();
   this.destruct();
 });
@@ -184,7 +185,7 @@ Object.defineProperty(Component.prototype, "componentOf", {
     return this._componentOf;
   },
   set: function (value) {
-    if (this._componentOf == value) return;
+    if (this._componentOf === value) return;
     this.uninitComponentOf();
     this._componentOf = value;
     this.initComponentOf();
@@ -204,7 +205,7 @@ Component.defineMethod("uninitComponentOf", function uninitComponentOf() {
 // Components
 
 Component.prototype.forEachComponent = function (callback) {
-  for (var componentId in this.components) {
-    callback(this.components[componentId]);
-  }
+  Object.values(this.components).forEach(function (component) {
+    callback(component);
+  });
 };

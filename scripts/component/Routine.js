@@ -1,5 +1,5 @@
 
-var Routine = Component.createComponent("Routine");
+let Routine = Component.createComponent("Routine");
 
 Routine.defineMethod("construct", function () {
   // Construct private container
@@ -12,7 +12,7 @@ Routine.defineMethod("construct", function () {
 
 Routine.defineMethod("init", function (func, interval, start = true) {
   // Init execute method
-  var container = this._container;
+  let container = this._container;
   this._execute = function _execute() {
     func();
 

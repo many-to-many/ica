@@ -1,5 +1,5 @@
 
-var Handler = Model.createComponent("Handler");
+let Handler = Model.createComponent("Handler");
 
 Handler.defineMethod("init", function init(content) {
   // Init content
@@ -20,7 +20,7 @@ Object.defineProperty(Handler.prototype, "content", {
     return this._content;
   },
   set: function (value) {
-    if (this._content == value) return;
+    if (this._content === value) return;
     this.uninitContent();
     this._content = value;
     this.initContent();

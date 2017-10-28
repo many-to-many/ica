@@ -1,5 +1,5 @@
 
-var Controller = Component.createComponent("Controller");
+let Controller = Component.createComponent("Controller");
 
 Controller.controllers = {count: 0};
 
@@ -65,11 +65,11 @@ Controller.defineMethod("releaseModel", function releaseModel(model) {
   delete this.models[model.modelId];
 });
 
-Controller.defineMethod("releaseAllModels", function releaseAllModels(model) {
+Controller.defineMethod("releaseAllModels", function releaseAllModels() {
   // Call to release hooks on all models
-  for (var modelId in this.models) {
-    this.releaseModel(this.models[modelId]);
-  }
+  Object.values(this.models).forEach(function (model) {
+    this.releaseModel(model);
+  }, this);
 });
 
 // View
@@ -79,7 +79,7 @@ Object.defineProperty(Controller.prototype, "view", {
     return this._view;
   },
   set: function (value) {
-    if (this._view == value) return;
+    if (this._view === value) return;
     this.uninitView();
     this._view = value;
     this.initView();
@@ -107,14 +107,14 @@ Controller.defineMethod("uninitView", function uninitView() {
 Controller.defineMethod("destroyView", function destroyView() {
   if (!this.view) return;
   this.uninitView();
-  var parentNode = this.view.parentNode;
+  let parentNode = this.view.parentNode;
   parentNode.removeChild(this.view);
   delete this._view;
 });
 
 Controller.prototype.devicePixelRatio = window.devicePixelRatio || 1;
 
-/*****/
+
 
 function getTimestamp() {
   return Math.floor(new Date().getTime() / 1000);
@@ -138,8 +138,7 @@ function removeElementProperty(element, property) {
   delete element[property];
 }
 
-function cloneTemplate (selector) {
-  var template = document.querySelector(selector);
-  var element = document.importNode(template.content, true);
-  return element;
+function cloneTemplate(selector) {
+  let template = document.querySelector(selector);
+  return document.importNode(template.content, true);
 }

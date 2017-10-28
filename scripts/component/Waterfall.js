@@ -1,5 +1,5 @@
 
-var Waterfall = Component.createComponent("Waterfall");
+let Waterfall = Component.createComponent("Waterfall");
 
 Waterfall.defineMethod("construct", function () {
   // Construct private container
@@ -10,9 +10,9 @@ Waterfall.defineMethod("construct", function () {
   });
 });
 
-Waterfall.defineMethod("init", function (func, duration = 10, start = true) {
+Waterfall.defineMethod("init", function (func, duration = 0, start = true) {
   // Init execute method
-  var container = this._container;
+  let container = this._container;
   this._execute = function () {
     if (func) func();
 
@@ -33,7 +33,7 @@ Waterfall.prototype.start = function () {
 };
 
 Waterfall.prototype.then = function (func, duration) {
-  var next = new Waterfall(func, duration, false);
+  let next = new Waterfall(func, duration, false);
   this._container.then.push(next);
   return next;
 };

@@ -1,5 +1,5 @@
 
-var InputHandler = ElementHandler.createComponent("InputHandler");
+let InputHandler = ElementHandler.createComponent("InputHandler");
 
 InputHandler.defineAlias("element", "input");
 
@@ -9,7 +9,7 @@ InputHandler.defineMethod("initContent", function initContent() {
   this.input.addEventListener("change", InputHandler.inputUpdated);
 });
 
-InputHandler.inputUpdated = function inputUpdated(e) {
+InputHandler.inputUpdated = function inputUpdated() {
   this.handler.contentDidUpdate();
 };
 

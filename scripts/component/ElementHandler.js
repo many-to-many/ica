@@ -1,5 +1,5 @@
 
-var ElementHandler = Handler.createComponent("ElementHandler");
+let ElementHandler = Handler.createComponent("ElementHandler");
 
 ElementHandler.defineAlias("content", "element");
 

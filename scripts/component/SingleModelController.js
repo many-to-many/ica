@@ -1,5 +1,5 @@
 
-var SingleModelController = Controller.createComponent("SingleModelController");
+let SingleModelController = Controller.createComponent("SingleModelController");
 
 SingleModelController.defineMethod("init", function init(model, view) {
   // Init model
@@ -21,7 +21,7 @@ Object.defineProperty(SingleModelController.prototype, "model", {
     return this._model;
   },
   set: function (value) {
-    if (this._model == value) return;
+    if (this._model === value) return;
     this.uninitModel();
     this._model = value;
     this.initModel();
@@ -39,7 +39,7 @@ SingleModelController.defineMethod("uninitModel", function uninitModel() {
 });
 
 SingleModelController.defineMethod("releaseModel", function releaseModel(model) {
-  if (model && model != this.model) {
+  if (model && model !== this.model) {
     return arguments;
   }
   delete this._model;

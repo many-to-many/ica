@@ -1,5 +1,5 @@
 
-var JointModel = Model.createComponent("JointModel");
+let JointModel = Model.createComponent("JointModel");
 
 JointModel.defineMethod("construct", function construct() {
   // Construct models
@@ -26,9 +26,9 @@ JointModel.defineMethod("releaseModel", function releaseModel(model) {
   delete this.models[model.modelId];
 });
 
-JointModel.defineMethod("releaseAllModels", function releaseAllModels(model) {
+JointModel.defineMethod("releaseAllModels", function releaseAllModels() {
   // Call to release hooks on all models
-  for (var modelId in this.models) {
-    this.releaseModel(this.models[modelId]);
-  }
+  Object.values(this.models).forEach(function (model) {
+    this.releaseModel(model);
+  }, this);
 });
