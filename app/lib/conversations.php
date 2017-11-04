@@ -105,7 +105,6 @@
    */
   function insertConversation($conversation, $state = STATE_PUBLISHED) {
 
-    global $DATABASE;
     $accountId = \Session\getAccountId();
 
     retainDatabaseTransaction();
@@ -119,11 +118,11 @@
     $othersId = \ICA\Contents\requestContentId();
 
     // Create a new conversation
-    $result = query("INSERT INTO conversations
+    query("INSERT INTO conversations
       (`id`, `title_id`, `intro_id`, `others_id`, `author_id`)
       VALUES ($conversationId, $titleId, $introId, $othersId, $accountId);");
 
-    $stateId = insertConversationState($conversationId, $state);
+    insertConversationState($conversationId, $state);
 
     if (!empty($conversation->meta["title"])) partialPutConversationMetaTitle($titleId, $conversation->meta["title"]);
     if (!empty($conversation->meta["intro"])) partialPutConversationMetaIntro($introId, $conversation->meta["intro"]);
@@ -288,7 +287,6 @@
 
     retainDatabaseTransaction();
 
-    $stateEncoded = encodeState($state);
     foreach ($metaThemes as $lang => $content) {
       $langEncoded = encodeLang($lang);
 
@@ -351,7 +349,7 @@
     $accountId = \Session\getAccountId();
 
     $stateEncoded = encodeState($state);
-    $result = query("INSERT INTO conversations_themes_states
+    query("INSERT INTO conversations_themes_states
       (`deleg_id`, `state`, `author_id`)
       VALUES ({$delegId}, {$stateEncoded}, {$accountId});");
 
@@ -427,7 +425,6 @@
 
     retainDatabaseTransaction();
 
-    $stateEncoded = encodeState($state);
     foreach ($metaParticipants as $lang => $content) {
       $langEncoded = encodeLang($lang);
 
@@ -490,7 +487,7 @@
     $accountId = \Session\getAccountId();
 
     $stateEncoded = encodeState($state);
-    $result = query("INSERT INTO conversations_participants_states
+    query("INSERT INTO conversations_participants_states
       (`deleg_id`, `state`, `author_id`)
       VALUES ({$delegId}, {$stateEncoded}, {$accountId});");
 
@@ -563,7 +560,6 @@
 
     retainDatabaseTransaction();
 
-    $stateEncoded = encodeState($state);
     foreach ($metaRegion as $lang => $region) {
       $langEncoded = encodeLang($lang);
       $regionEncoded = $DATABASE->real_escape_string($region);
@@ -634,7 +630,7 @@
     $accountId = \Session\getAccountId();
 
     $stateEncoded = encodeState($state);
-    $result = query("INSERT INTO conversations_regions_langs_states
+    query("INSERT INTO conversations_regions_langs_states
       (`lang_id`, `state`, `author_id`)
       VALUES ({$langId}, {$stateEncoded}, {$accountId});");
 

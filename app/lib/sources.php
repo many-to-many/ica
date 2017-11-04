@@ -55,12 +55,12 @@
 
     // Create a new joint source
     $typeEncoded = encodeType($source->type);
-    $result = query("INSERT INTO sources
+    query("INSERT INTO sources
       (`jointsource_id`, `author_id`, `title_id`, `content_id`, `type`)
       VALUES ({$jointSourceId}, {$accountId}, {$titleId}, {$contentId}, {$typeEncoded});");
     $sourceId = $DATABASE->insert_id;
 
-    $stateId = insertSourceState($sourceId, $state);
+    insertSourceState($sourceId, $state);
     \ICA\Contents\partialPutContentLanguages($contentId, $source->content);
 
     releaseDatabaseTransaction();
@@ -90,7 +90,7 @@
 
     $stateEncoded = encodeState($state);
 
-    $result = query("INSERT INTO sources_states
+    query("INSERT INTO sources_states
       (`source_id`, `author_id`, `state`)
       VALUES ({$sourceId}, {$accountId}, {$stateEncoded});");
     $stateId = $DATABASE->insert_id;

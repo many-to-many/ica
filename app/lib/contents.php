@@ -12,7 +12,7 @@
     $accountId = \Session\getAccountId();
 
     // Create & save a new joint source
-    $result = query("INSERT INTO contents
+    query("INSERT INTO contents
       (`author_id`)
       VALUES ({$accountId});");
 
@@ -48,7 +48,7 @@
     $accountId = \Session\getAccountId();
 
     $stateEncoded = encodeState($state);
-    $result = query("INSERT INTO contents_langs_states
+    query("INSERT INTO contents_langs_states
       (`lang_id`, `author_id`, `state`)
       VALUES ({$langId}, {$accountId}, {$stateEncoded});");
 
@@ -66,7 +66,7 @@
     $accountId = \Session\getAccountId();
 
     $contentEncoded = $DATABASE->real_escape_string($content);
-    $result = query("INSERT INTO contents_langs_revs
+    query("INSERT INTO contents_langs_revs
       (`lang_id`, `author_id`, `content`)
       VALUES ({$langId}, {$accountId}, '{$contentEncoded}')");
 
@@ -93,7 +93,7 @@
 
     if ($result->num_rows == 0) {
       // Content does not hold language of which the revision is given
-      $result = query("INSERT INTO `contents_langs`
+      query("INSERT INTO `contents_langs`
         (`content_id`, `author_id`, `lang`)
         VALUES ({$contentId}, {$accountId}, {$langEncoded});");
       $langId = $DATABASE->insert_id;

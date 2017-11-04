@@ -76,7 +76,6 @@
    */
   function insertDiscussion($discussion, $state = STATE_PUBLISHED) {
 
-    global $DATABASE;
     $accountId = \Session\getAccountId();
 
     retainDatabaseTransaction();
@@ -88,11 +87,11 @@
     $titleId = \ICA\Contents\requestContentId();
 
     // Create a new discussion
-    $result = query("INSERT INTO discussions
+    query("INSERT INTO discussions
       (`id`, `title_id`, `author_id`)
       VALUES ($discussionId, $titleId, $accountId);");
 
-    $stateId = insertDiscussionState($discussionId, $state);
+    insertDiscussionState($discussionId, $state);
 
     if (!empty($discussion->title)) partialPutDiscussionTitle($titleId, $discussion->title);
 

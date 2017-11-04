@@ -41,7 +41,7 @@
     $accountId = \Session\getAccountId();
 
     // Create & save a new joint source
-    $result = query("INSERT INTO jointsources
+    query("INSERT INTO jointsources
       (`author_id`, `type`)
       VALUES ($accountId, $jointSourceType);");
 
@@ -60,7 +60,7 @@
 
     $stateEncoded = encodeState($state);
 
-    $result = query("INSERT INTO jointsources_states
+    query("INSERT INTO jointsources_states
       (`jointsource_id`, `author_id`, `state`)
       VALUES ($jointSourceId, $accountId, $stateEncoded);");
     $stateId = $DATABASE->insert_id;
@@ -77,7 +77,7 @@
     $accountId = \Session\getAccountId();
 
     $stateEncoded = encodeState($state);
-    $result = query("INSERT INTO references_states
+    query("INSERT INTO references_states
       (`reference_id`, `author_id`, `state`)
       VALUES ($referenceId, $accountId, $stateEncoded);");
 
@@ -97,7 +97,7 @@
         AND referrer_jointsource_id = $referrerJointSourceId;");
 
     if ($result->num_rows == 0) {
-      $result = query("INSERT INTO `references`
+      query("INSERT INTO `references`
         (`referee_jointsource_id`, `referrer_jointsource_id`, `author_id`)
         VALUES ($refereeJointSourceId, $referrerJointSourceId, $accountId);");
       $referenceId = $DATABASE->insert_id;

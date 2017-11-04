@@ -96,11 +96,11 @@
     $messageId = \ICA\Contents\requestContentId();
 
     // Create a new response
-    $result = query("INSERT INTO responses
+    query("INSERT INTO responses
       (`id`, `message_id`, `author_id`)
       VALUES ($responseId, $messageId, $accountId);");
 
-    $stateId = insertResponseState($responseId, $state);
+    insertResponseState($responseId, $state);
 
     if (!empty($response->message)) _partialPutResponseMessage($messageId, $response->message);
     if (!empty($response->refereeJointSourceIds)) _partialPutResponseRefereeJointSourceIds($response->refereeJointSourceIds, $responseId);
