@@ -1,5 +1,9 @@
 
-var ResponseController = JointSourceController.createComponent("ResponseController");
+/**
+ * ResponseController
+ * Abstract view controller for a Response.
+ */
+let ResponseController = JointSourceController.createComponent("ResponseController");
 
 ResponseController.defineAlias("model", "response");
 
