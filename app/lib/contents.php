@@ -148,7 +148,7 @@
 
     // Add new languages to the database
 
-    partialPutContentLanguages($contentId, $langs);
+    partialPutContentLanguages($contentId, $langs, $state);
 
     // Unpublish languages no longer listed in the content put
 
