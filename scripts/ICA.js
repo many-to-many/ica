@@ -950,7 +950,7 @@
   function touchDiscussions(data) {
     let discussions = [];
     Object.entries(data).forEach(function (entry) {
-      discussions.push(touchResponse(entry[0], entry[1]));
+      discussions.push(touchDiscussion(entry[0], entry[1]));
     });
     return discussions;
   }
