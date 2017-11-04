@@ -1,5 +1,10 @@
 
-var PublisherTextSourceController = PublisherSourceController.createComponent("PublisherTextSourceController");
+/**
+ * PublisherTextSourceController
+ * Concrete view controller to present a plain text source.
+ * @constructor
+ */
+let PublisherTextSourceController = PublisherSourceController.createComponent("PublisherTextSourceController");
 
 PublisherTextSourceController.createViewFragment = function () {
   return cloneTemplate("#template-publisher-textsource");
@@ -12,7 +17,7 @@ PublisherTextSourceController.defineMethod("initView", function initView() {
     placeholder: "Enter text here..."
   });
   this.quill.on("text-change", function (delta, oldDelta, source) {
-    if (source == "user") {
+    if (source === "user") {
       this.source.content = this.quill.getText().replace(/\s*$/, "");
     }
   }.bind(this));
