@@ -1,17 +1,25 @@
 
-var Response = JointSource.createComponent("Response");
+/**
+ * Response
+ * @constructor
+ */
+let Response = JointSource.createComponent("Response");
 
 Response.defineAlias("jointSourceId", "responseId");
 
 Response.defineMethod("init", function init(message, responseId) {
+
   // Init message
   this.message = message || {};
+
   return [responseId];
 });
 
 Response.defineMethod("uninit", function uninit() {
+
   // Uninit message
   delete this.message;
+
 });
 
 // Author
