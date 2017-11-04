@@ -1,10 +1,14 @@
 
-var CanvasHandler = ElementHandler.createComponent("CanvasHandler");
+/**
+ * CanvasHandler
+ * @constructor
+ */
+let CanvasHandler = ElementHandler.createComponent("CanvasHandler");
 
 CanvasHandler.defineAlias("element", "canvas");
 
 CanvasHandler.defineMethod("init", function init(canvas) {
-  var style = window.getComputedStyle(canvas);
+  let style = window.getComputedStyle(canvas);
   this.canvasWidth = parseInt(style.width);
   this.canvasHeight = parseInt(style.height);
   canvas.style.width = this.canvasWidth + "px";
