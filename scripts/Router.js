@@ -4,6 +4,7 @@
  */
 let Router = (function () {
   let page = new Date().getTime();
+  let back = [], forward = [];
 
   window.addEventListener("popstate", function (event) {
     if (event.state) {
@@ -22,8 +23,6 @@ let Router = (function () {
       while (back.length > 1) goBack();
     }
   });
-
-  let back = [], forward = [];
 
   function goBack() {
     if (back.length > 1) {
