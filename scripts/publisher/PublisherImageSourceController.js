@@ -1,5 +1,10 @@
 
-var PublisherImageSourceController = PublisherSourceController.createComponent("PublisherImageSourceController");
+/**
+ * PublisherImageSourceController
+ * Concrete view controller to present an image source.
+ * @constructor
+ */
+let PublisherImageSourceController = PublisherSourceController.createComponent("PublisherImageSourceController");
 
 PublisherImageSourceController.createViewFragment = function () {
   return cloneTemplate("#template-publisher-imagesource");
@@ -16,24 +21,16 @@ PublisherImageSourceController.defineMethod("initView", function () {
     this.querySelector("[data-ica-source-content]").files = files;
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-source-content]").addEventListener("change", function (e) {
-    var file = e.target.files[0];
-    this.controller.source.content["0"] = file;
+  this.view.querySelector("[data-ica-source-content]").addEventListener("change", function (event) {
+    this.controller.source.content["0"] = event.target.files[0];
     this.controller.source.didUpdate();
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='select-file']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='select-file']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     this.view.querySelector("[data-ica-source-content]").click();
   }.bind(this));
-
-});
-
-PublisherImageSourceController.defineMethod("updateView", function () {
-  if (!this.view) return;
-
-  var input = this.view.querySelector("[data-ica-source-content]");
 
 });
 
