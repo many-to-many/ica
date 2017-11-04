@@ -13,10 +13,6 @@ PublisherAudioSourceController.createViewFragment = function () {
 PublisherAudioSourceController.defineMethod("initView", function () {
   if (!this.view) return;
 
-  this.waveformController = new WaveformController(
-    this.source.fileHandler,
-    this.view.querySelector(".waveform"));
-
   this.publisherSourceDropHandler = new DropHandler(this.view, function (files) {
     this.querySelector("[data-ica-source-content='0']").files = files;
   }.bind(this.view));
@@ -61,9 +57,6 @@ PublisherAudioSourceController.defineMethod("updateView", function () {
 
 PublisherAudioSourceController.defineMethod("uninitView", function () {
   if (!this.view) return;
-
-  this.waveformController.destroy();
-  delete this.waveformController;
 
   this.publisherSourceDropHandler.destroy();
   delete this.publisherSourceDropHandler;

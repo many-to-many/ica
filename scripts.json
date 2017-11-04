@@ -99,8 +99,6 @@
 
   "scripts/ImageController.js",
 
-  "scripts/WaveformController.js",
-
   "scripts/ICA.js",
   "scripts/Router.js",
   "scripts/AppController.js"
