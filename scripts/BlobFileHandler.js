@@ -1,5 +1,9 @@
 
-var BlobFileHandler = Handler.createComponent("BlobFileHandler");
+/**
+ * BlobFileHandler
+ * @constructor
+ */
+let BlobFileHandler = Handler.createComponent("BlobFileHandler");
 
 /**
  * The content is either going to be a blob id that represents a remote file on
@@ -30,7 +34,7 @@ BlobFileHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
 
   // Need blob for file reading
   if (!this.blob) return Promise.reject(new Error("No blob"));
-  var promise;
+  let promise;
   if (!(this.blob instanceof Blob)) {
     if (!loadRemote) {
       return Promise.reject(new Error("Disallowed to load remote content"));
@@ -47,19 +51,19 @@ BlobFileHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
   return promise
     .then(function () {
       return new Promise(function (resolve, reject) {
-        var reader = new FileReader();
-        reader.onerror = function (e) {
+        let reader = new FileReader();
+        reader.onerror = function () {
           reject(new Error("Error reading file"));
         };
-        reader.onprogress = function (e) {
-          var percentage = Math.round((e.loaded / e.total) * 100);
+        reader.onprogress = function (event) {
+          let percentage = Math.round((event.loaded / event.total) * 100);
           console.log("Reading file: {0}%".format(percentage));
         };
-        reader.onabort = function (e) {
+        reader.onabort = function () {
           reject(new Error("File read aborted"));
         };
-        reader.onload = function (e) {
-          var result = e.target.result; // ArrayBuffer
+        reader.onload = function (event) {
+          let result = event.target.result; // ArrayBuffer
 
           console.log("File loaded");
           this._cache_array_buffer = result;
@@ -70,11 +74,11 @@ BlobFileHandler.prototype.readAsArrayBuffer = function (loadRemote = false) {
     }.bind(this));
 };
 
-BlobFileHandler.prototype.makeSlices = function (size = 1 * 1024 * 1024) { // 1 MB each
+BlobFileHandler.prototype.makeSlices = function (size = 1024 * 1024) { // 1 MB each
   if (!this.blob || !(this.blob instanceof Blob)) return [];
 
-  var slices = [];
-  for (var offset = 0; offset < this.blob.size; offset = offset + size) {
+  let slices = [];
+  for (let offset = 0; offset < this.blob.size; offset = offset + size) {
     slices.push(this.blob.slice(offset, Math.min(offset + size, this.blob.size)));
   }
   return slices;
