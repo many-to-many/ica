@@ -1,5 +1,10 @@
 
-var PublisherSourceController = SourceController.createComponent("PublisherSourceController");
+/**
+ * PublisherSourceController
+ * Abstract view controller to display a source.
+ * @constructor
+ */
+let PublisherSourceController = SourceController.createComponent("PublisherSourceController");
 
 PublisherSourceController.defineMethod("initModel", function initModel() {
   if (!this.source) return;
@@ -15,8 +20,8 @@ PublisherSourceController.defineMethod("uninitModel", function uninitModel() {
 PublisherSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
-  this.view.querySelector("[data-ica-action='remove-source']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='remove-source']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     if (this.controller.source.sourceId < 0) {
       this.controller.source.destroy(true, true);
