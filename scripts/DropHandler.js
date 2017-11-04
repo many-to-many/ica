@@ -1,12 +1,15 @@
 
-var DropHandler = ElementHandler.createComponent("DropHandler");
+/**
+ * DropHandler
+ * @constructor
+ */
+let DropHandler = ElementHandler.createComponent("DropHandler");
 
 DropHandler.defineMethod("init", function init(element, callback) {
 
   this.callback = callback;
 
   return [element];
-
 });
 
 DropHandler.defineMethod("initContent", function initContent() {
