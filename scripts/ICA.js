@@ -1,22 +1,22 @@
 
 (function (window) {
-  var ICA = {};
+  let ICA = {};
 
   // User Authentication
 
-  var _ica = JSON.parse(window.sessionStorage.getItem("_ica")) || {};
+  let _ica = JSON.parse(window.sessionStorage.getItem("_ica")) || {};
 
   ICA.login = function () {
     return new Promise(function (resolve, reject) {
-      var oauthWindow = window.open("/oauth2login", "Log in via MintKit", "location=0,status=0,width=600,height=700");
+      let oauthWindow = window.open("/oauth2login", "Log in via MintKit", "location=0,status=0,width=600,height=700");
 
-      var loginCallbackData;
+      let loginCallbackData;
       window.loginCallback = function (data) {
         loginCallbackData = data;
       };
 
       if (oauthWindow) {
-        var timer = setInterval(function () {
+        let timer = setInterval(function () {
           if (oauthWindow.closed) {
             clearInterval(timer);
             delete window.loginCallback;
@@ -59,7 +59,7 @@
 
   ICA.promptLogin = function () {
     return new Promise(function (resolve, reject) {
-      var prompt = new BasicPrompt(
+      let prompt = new BasicPrompt(
         "Many-to-Many",
         "Log in to Many-to-Many to participate in conversation(s) of all shapes, sizes, scales and media.",
         [
@@ -79,8 +79,8 @@
           }, true)
         ]
       );
-      var fragment = BasicPromptController.createViewFragment();
-      var element = fragment.querySelector(".prompt");
+      let fragment = BasicPromptController.createViewFragment();
+      let element = fragment.querySelector(".prompt");
       document.body.appendChild(fragment);
       new BasicPromptController(prompt, element);
     });
@@ -105,7 +105,7 @@
     this.next = next;
 
     if (next[3]) {
-      if (next[0] != "GET") {
+      if (next[0] !== "GET") {
         throw new Error("Only GET response can be paginated");
       }
       this.paginated = true;
@@ -137,7 +137,7 @@
 
   ICA.request = function (method, url, headers, data, notify) {
     return new Promise(function (resolve, reject) {
-      var x = new XMLHttpRequest();
+      let x = new XMLHttpRequest();
 
       // Create progress notification
       if (notify) {
@@ -159,9 +159,9 @@
         reject(x);
       });
 
-      if (headers) for (var header in headers) {
-        if (headers[header]) x.setRequestHeader(header, headers[header]);
-      }
+      if (headers) Object.entries(headers).forEach(function (entry) {
+        if (entry[1]) x.setRequestHeader(entry[0], entry[1]);
+      });
 
       x.send(data);
     }.bind(this));
@@ -187,8 +187,8 @@
               return ICA._requestAPI(method, path, headers, data, notify);
             });
         }
-        var response = x.response;
-        if (response && typeof response == "object" && response.error) {
+        let response = x.response;
+        if (response && typeof response === "object" && response.error) {
           console.warn("Request caught error:", response);
           return Promise.reject(new Error(response.error));
         }
@@ -239,14 +239,14 @@
       notify
     )
       .then(function (x) {
-        var fileId = x.response;
+        let fileId = x.response;
         console.log("ICA: File uploaded");
         return fileId;
       });
   };
 
   ICA.uploadFileChunked = function (file, notify) {
-    var notification = new ProgressNotification(notify);
+    let notification = new ProgressNotification(notify);
     if (notify) {
       notifications.addNotification(notification);
       notifications.didUpdate();
@@ -261,13 +261,13 @@
       }
     )
       .then(function (x) {
-        var fileId = x.response;
-        if (typeof fileId != "number") {
+        let fileId = x.response;
+        if (typeof fileId !== "number") {
           return Promise.reject(new Error("Error starting file upload"));
         }
 
         function putFile(path, byteStart = 0, byteLength = 5 * 1024 * 1024) {
-          var byteEnd = Math.min(file.size, byteStart + byteLength);
+          let byteEnd = Math.min(file.size, byteStart + byteLength);
           return ICA._requestAPI(
             "PUT",
             path,
@@ -278,16 +278,16 @@
             file.slice(byteStart, byteEnd)
           )
             .then(function (x) {
-              if (x.status == 200) {
+              if (x.status === 200) {
                 // File upload completed
 
                 notification.progressPct = 1;
                 notification.didUpdate();
 
                 return fileId;
-              } else if (x.status == 308) {
+              } else if (x.status === 308) {
                 // File upload incomplete
-                var matches = x.getResponseHeader("Range").match(/(\d*)-(\d*)/),
+                let matches = x.getResponseHeader("Range").match(/(\d*)-(\d*)/),
                   byteLast = parseInt(matches[2]);
                 console.log("ICA: File upload incomplete: {0}%".format(100 * (byteLast + 1) / file.size));
 
@@ -351,10 +351,11 @@
   };
 
   ICA.getConversations = function (params) {
-    var data = [];
-    for (var key in params) {
-      data.push(key + "=" + params[key]);
-    }
+    let data = !params
+      ? []
+      : Object.entries(params).map(function (entry) {
+        return entry[0] + "=" + entry[1];
+      });
     return ICA.get(
       "/conversations/"
         + (data.length > 0
@@ -446,8 +447,8 @@
 
         // Update joint source and individual sources (only if necessary TODO)
 
-        var notification = new ProgressNotification(notify);
-        var numTasksTodo = 1, numTasksDone = 0;
+        let notification = new ProgressNotification(notify);
+        let numTasksTodo = 1, numTasksDone = 0;
         function updateNotification() {
           notification.progressPct = numTasksDone / numTasksTodo;
           notification.didUpdate();
@@ -477,7 +478,7 @@
             return Promise.all(conversation.mapSourcesList(function (source) {
               ++numTasksTodo;
 
-              var promise;
+              let promise;
               if (source.sourceId < 0) {
                 switch (source.constructor) {
                 case ImageSource:
@@ -646,10 +647,11 @@
   };
 
   ICA.getDiscussions = function (params) {
-    var data = [];
-    for (var key in params) {
-      data.push(key + "=" + params[key]);
-    }
+    let data = !params
+      ? []
+      : Object.entries(params).map(function (entry) {
+        return entry[0] + "=" + entry[1];
+      });
     return ICA.get(
       "/discussions/"
       + (data.length > 0
@@ -701,7 +703,7 @@
 
         // Update discussion
 
-        var notification = new ProgressNotification(notify);
+        let notification = new ProgressNotification(notify);
         if (notify) {
           notifications.addNotification(notification);
           notifications.didUpdate();
@@ -782,9 +784,9 @@
 
   function touchConversations(data) {
     let conversations = [];
-    for (let conversationId in data) {
-      conversations.push(touchConversation(conversationId, data[conversationId]));
-    }
+    Object.entries(data).forEach(function (entry) {
+      conversations.push(touchConversation(entry[0], entry[1]));
+    });
     return conversations;
   }
 
@@ -847,38 +849,39 @@
   }
 
   function touchSources(dataSources, conversation) {
-    var sources = [];
-    for (var sourceId in dataSources) {
-      var dataSource = dataSources[sourceId], source;
+    let sources = [];
+    Object.entries(dataSources).forEach(function (entry) {
+      let [sourceId, dataSource] = entry;
+      let source;
       if (dataSource._id) {
         source = Source.sources[dataSource._id];
         source.sourceId = sourceId;
       } else {
         switch (dataSource.type) {
-        case "image":
-          source = new ImageSource(dataSource.content, conversation, sourceId);
-          break;
-        case "audio":
-          source = new AudioSource(dataSource.content, conversation, sourceId);
-          break;
-        case "video":
-          source = new VideoSource(dataSource.content, conversation, sourceId);
-          break;
-        case "text":
-        default:
-          source = new TextSource(dataSource.content["0"], conversation, sourceId);
+          case "image":
+            source = new ImageSource(dataSource.content, conversation, sourceId);
+            break;
+          case "audio":
+            source = new AudioSource(dataSource.content, conversation, sourceId);
+            break;
+          case "video":
+            source = new VideoSource(dataSource.content, conversation, sourceId);
+            break;
+          case "text":
+          default:
+            source = new TextSource(dataSource.content["0"], conversation, sourceId);
         }
         sources.push(source);
       }
-    }
+    });
     return sources;
   }
 
   function touchResponses(data) {
     let responses = [];
-    for (let responseId in data) {
-      responses.push(touchResponse(responseId, data[responseId]));
-    }
+    Object.entries(data).forEach(function (entry) {
+      responses.push(touchResponse(entry[0], entry[1]));
+    });
     return responses;
   }
 
@@ -946,9 +949,9 @@
 
   function touchDiscussions(data) {
     let discussions = [];
-    for (let discussionId in data) {
-      discussions.push(touchDiscussion(discussionId, data[discussionId]));
-    }
+    Object.entries(data).forEach(function (entry) {
+      discussions.push(touchResponse(entry[0], entry[1]));
+    });
     return discussions;
   }
 
