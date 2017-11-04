@@ -1,5 +1,10 @@
 
-var PublisherAudioSourceController = PublisherSourceController.createComponent("PublisherAudioSourceController");
+/**
+ * PublisherAudioSourceController
+ * Concrete view controller to present an audio source.
+ * @constructor
+ */
+let PublisherAudioSourceController = PublisherSourceController.createComponent("PublisherAudioSourceController");
 
 PublisherAudioSourceController.createViewFragment = function () {
   return cloneTemplate("#template-publisher-audiosource");
@@ -16,14 +21,13 @@ PublisherAudioSourceController.defineMethod("initView", function () {
     this.querySelector("[data-ica-source-content='0']").files = files;
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-source-content='0']").addEventListener("change", function (e) {
-    var file = e.target.files[0];
-    this.controller.source.content["0"] = file;
+  this.view.querySelector("[data-ica-source-content='0']").addEventListener("change", function (event) {
+    this.controller.source.content["0"] = event.target.files[0];
     this.controller.source.didUpdate();
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='select-file']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='select-file']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     this.view.querySelector("[data-ica-source-content='0']").click();
   }.bind(this));
