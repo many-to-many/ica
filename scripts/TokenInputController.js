@@ -1,5 +1,10 @@
 
-var TokenInputController = SingleModelController.createComponent("TokenInputController");
+/**
+ * TokenInputController
+ * Concrete view controller to display the tokens from a TokenInputHandler, allowing removing tokens through the handler.
+ * @constructor
+ */
+let TokenInputController = SingleModelController.createComponent("TokenInputController");
 
 TokenInputController.createViewFragment = function () {
   return cloneTemplate("#template-tokens-editable");
@@ -26,9 +31,9 @@ TokenInputController.defineMethod("initModel", function initModel() {
 TokenInputController.defineMethod("updateView", function updateView(edit = false) {
   if (!this.view) return;
 
-  var parentNode = this.view.parentNode;
-  var tokenInputFragment = TokenInputController.createViewFragment();
-  var tokenInputElement = tokenInputFragment.querySelector(".tokens");
+  let parentNode = this.view.parentNode;
+  let tokenInputFragment = TokenInputController.createViewFragment();
+  let tokenInputElement = tokenInputFragment.querySelector(".tokens");
   parentNode.replaceChild(tokenInputFragment, this.view);
   this.uninitView();
   this._view = tokenInputElement;
@@ -36,8 +41,8 @@ TokenInputController.defineMethod("updateView", function updateView(edit = false
 
   if (this.inputHandler.tokens.length && !edit) {
     this.inputHandler.tokens.map(function (token) {
-      var tokenFragment = cloneTemplate("#template-token-editable");
-      var tokenElement = tokenFragment.querySelector(".token");
+      let tokenFragment = cloneTemplate("#template-token-editable");
+      let tokenElement = tokenFragment.querySelector(".token");
 
       tokenElement.querySelector("[data-ica-token]").textContent = token;
 

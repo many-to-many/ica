@@ -1,5 +1,10 @@
 
-var TokenInputSuggestionsController = SingleModelController.createComponent("TokenInputSuggestionsController");
+/**
+ * TokenInputSuggestionsController
+ * Empty concrete view controller to suggest tokens to add to an InputHandler.
+ * @constructor
+ */
+let TokenInputSuggestionsController = SingleModelController.createComponent("TokenInputSuggestionsController");
 
 TokenInputSuggestionsController.createViewFragment = function () {
   return cloneTemplate("#template-tokens");
@@ -16,22 +21,22 @@ TokenInputSuggestionsController.defineMethod("construct", function construct() {
 TokenInputSuggestionsController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
-  var parentNode = this.view.parentNode;
-  var fragment = TokenInputSuggestionsController.createViewFragment();
-  var element = fragment.querySelector(".tokens");
+  let parentNode = this.view.parentNode;
+  let fragment = TokenInputSuggestionsController.createViewFragment();
+  let element = fragment.querySelector(".tokens");
   parentNode.replaceChild(fragment, this.view);
   this.uninitView();
   this._view = element;
   this.initView(false);
 
-  var inputTokens = this.inputHandler.tokens;
+  let inputTokens = this.inputHandler.tokens;
 
   if (this.suggestions.length) {
     this.suggestions.map(function (token) {
       if (inputTokens.indexOf(token) > -1) return;
 
-      var fragment = cloneTemplate("#template-token-suggestion");
-      var element = fragment.querySelector(".token");
+      let fragment = cloneTemplate("#template-token-suggestion");
+      let element = fragment.querySelector(".token");
 
       element.querySelector("[data-ica-token]").textContent = token;
 

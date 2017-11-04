@@ -1,4 +1,8 @@
 
-var TokensHandler = Handler.createComponent("TokensHandler");
+/**
+ * TokensHandler
+ * @constructor
+ */
+let TokensHandler = Handler.createComponent("TokensHandler");
 
 TokensHandler.defineAlias("content", "tokens");

@@ -1,5 +1,10 @@
 
-var TokenInputThemeSuggestionsController = TokenInputSuggestionsController.createComponent("TokenInputThemeSuggestionsController");
+/**
+ * TokenInputThemeSuggestionsController
+ * Concrete view controller to suggest tokens to add to an InputHandler.
+ * @constructor
+ */
+let TokenInputThemeSuggestionsController = TokenInputSuggestionsController.createComponent("TokenInputThemeSuggestionsController");
 
 TokenInputThemeSuggestionsController.defineMethod("init", function init() {
 
