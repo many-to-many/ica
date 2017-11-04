@@ -1,5 +1,9 @@
 
-var AudioHandler = ElementHandler.createComponent("AudioHandler");
+/**
+ * AudioHandler
+ * @constructor
+ */
+let AudioHandler = ElementHandler.createComponent("AudioHandler");
 
 AudioHandler.defineAlias("element", "audio");
 
@@ -38,7 +42,7 @@ AudioHandler.prototype.stop = function (fadeOut = 0) {
   if (!this.paused) {
     if (this.audio && this.audio instanceof Audio) {
 
-      var dVolume = this.audio.volume, dVolumeStep = 0.05;
+      let dVolume = this.audio.volume, dVolumeStep = 0.05;
       this.fadeOutRoutine = new Routine(function () {
         if (this.audio && this.audio instanceof Audio && !this.audio.paused) {
           if (this.audio.volume > 0.0) {
