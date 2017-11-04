@@ -249,7 +249,7 @@ JointSource.prototype.mapBackupSourcesList = function mapBackupSourcesList(callb
 };
 
 JointSource.prototype.getNumberOfSources = function getNumberOfSources() {
-  return Object.values(this).length;
+  return Object.values(this.sources).length;
 };
 
 // Extracts
