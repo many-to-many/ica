@@ -1,5 +1,10 @@
 
-var PublisherConversationController = ConversationController.createComponent("PublisherConversationController");
+/**
+ * PublisherConversationController
+ * Concrete view controller to present a joint source conversation.
+ * @constructor
+ */
+let PublisherConversationController = ConversationController.createComponent("PublisherConversationController");
 
 PublisherConversationController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
@@ -35,12 +40,12 @@ PublisherConversationController.defineMethod("initView", function initView() {
 
   this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
     // Event listeners
-    element.addEventListener("change", function (e) {
+    element.addEventListener("change", function () {
       // User input change
       this.controller.conversation.meta[getElementProperty(element, "conversation-meta")] = getFormattedInputValue(element);
       this.controller.conversation.didUpdate();
     }.bind(this.view));
-    element.addEventListener("ica-change", function (e) {
+    element.addEventListener("ica-change", function () {
       // Simulated input change
       this.controller.conversation.meta[getElementProperty(element, "conversation-meta")] = getFormattedInputValue(element);
       this.controller.conversation.didUpdate();
@@ -51,8 +56,8 @@ PublisherConversationController.defineMethod("initView", function initView() {
   }.bind(this));
 
   this.view.querySelectorAll("[data-ica-action^='add-source']").forEach(function (element) {
-    element.addEventListener("click", function (e) {
-      e.preventDefault();
+    element.addEventListener("click", function (event) {
+      event.preventDefault();
 
       switch (getElementProperty(element, "action")) {
       case "add-source/text":
@@ -74,24 +79,26 @@ PublisherConversationController.defineMethod("initView", function initView() {
     }.bind(this));
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='abort']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='abort']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     if (routerIndex > 0) {
+      // Jump to the previous page
       Router.jump(routerIndex);
     } else {
+      // Default to conversation listing
       appConversationsController.focusView();
     }
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='unpublish']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='unpublish']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     this.controller.unpublish();
   }.bind(this.view));
 
-  this.view.querySelector("[data-ica-action='publish']").addEventListener("click", function (e) {
-    e.preventDefault();
+  this.view.querySelector("[data-ica-action='publish']").addEventListener("click", function (event) {
+    event.preventDefault();
 
     this.controller.publish();
   }.bind(this.view));
@@ -108,11 +115,11 @@ PublisherConversationController.defineMethod("updateView", function updateView()
 
   // Update views based on sources in joint source
   this.conversation.forEachSource(function (source) {
-    var element = this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId));
+    let element = this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId));
     if (element) return;
 
     // Create new view
-    var fragment;
+    let fragment;
     switch (source.constructor) {
     case ImageSource:
       fragment = PublisherImageSourceController.createViewFragment();
@@ -188,7 +195,7 @@ PublisherConversationController.prototype.publish = function () {
 
 PublisherConversationController.prototype.unpublish = function () {
   return new Promise(function (resolve, reject) {
-    var prompt = new BasicPrompt(
+    let prompt = new BasicPrompt(
       "Unpublishing \"{0}\"...".format(this.conversation.meta.title),
       "Are you sure you would like to continue?",
       [
@@ -207,8 +214,8 @@ PublisherConversationController.prototype.unpublish = function () {
         )
       ]
     );
-    var fragment = BasicPromptController.createViewFragment();
-    var element = fragment.querySelector(".prompt");
+    let fragment = BasicPromptController.createViewFragment();
+    let element = fragment.querySelector(".prompt");
     document.body.appendChild(fragment);
     new BasicPromptController(prompt, element);
   }.bind(this))
@@ -232,22 +239,22 @@ PublisherConversationController.prototype.unpublish = function () {
     });
 };
 
-/*****/
+
 
 function setInputValue(input, value) {
   switch (getElementProperty(input, "format")) {
-  case "tokens":
-    if (input.handler) {
-      input.handler.tokens = value;
-      input.handler.didUpdate();
-    } else {
-      input.value = value
+    case "tokens":
+      if (input.handler) {
+        input.handler.tokens = value;
+        input.handler.didUpdate();
+      } else {
+        input.value = value
           ? Array.isArray(value) ? value.join("; ") : value
           : "";
-    }
-    break;
-  default:
-    input.value = value || null;
+      }
+      break;
+    default:
+      input.value = value || null;
   }
   input.click();
 }
@@ -255,10 +262,10 @@ function setInputValue(input, value) {
 function getFormattedInputValue(input) {
   if (input) {
     switch (getElementProperty(input, "format")) {
-    case "tokens":
-      return input.handler.tokens;
-    default:
-      return input.value;
+      case "tokens":
+        return input.handler.tokens;
+      default:
+        return input.value;
     }
   }
   return undefined;
