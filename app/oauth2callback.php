@@ -37,6 +37,8 @@
       if (!$accountId) {
         // Account not yet registered
         $accountId = \Accounts\registerAccountByIdentifier($identifier);
+
+        if (!$accountId) throw new Exception("Failed to create new account");
       }
 
       // Account assume registered if no error emitted

@@ -98,7 +98,7 @@
       global $DATABASE;
 
       $DATABASE->query("INSERT INTO `accounts`
-        (`identifier`) VALUES ('$identifier');");
+        (`identifier`, `name`) VALUES ('$identifier', '');");
 
       return getAccountIdByIdentifier($identifier); // Double confirmation
 
