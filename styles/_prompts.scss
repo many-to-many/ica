@@ -10,10 +10,14 @@
   background-color: rgba($color-background, 0.90);
   z-index: $z-popup;
 
+  $column-width-mini: floor(($card-width - 2px - 3 * $font-size) / 4);
+
   .prompt-card {
-    @include card(30em);
+    @include card($column-width-mini * 3 - $column-spacing + 3 * $font-size + 2px);
     border-radius: 6px;
     margin: auto;
+    max-height: 100%;
+    overflow: hidden;
 
     h2 {
       margin-top: 1em;
@@ -26,6 +30,85 @@
       flex-wrap: wrap;
       margin: 0 -0.5em -0.5em 0;
       // font-size: 0.875em;
+    }
+  }
+
+  .topbar-container {
+    border-top: solid 1px $color-border;
+    border-bottom: none;
+    margin: 0 -0.5em -1.5em;
+
+    > .topbar {
+
+      &::before,
+      &::after {
+        width: 0.5em;
+      }
+    }
+  }
+
+  .prompt-explore-container {
+    position: relative;
+    margin: 1.5em -1.5em;
+    padding: 1.5em 1.5em 0;
+    height: 5 * $column-width-mini;
+    max-height: 50vh;
+    background-color: $color-background-light;
+    border-top: solid 1px $color-border;
+    border-bottom: solid 1px $color-border;
+    overflow-y: auto;
+  }
+
+  .explore {
+    font-size: 0.75em;
+    margin: (- $column-spacing) (- $column-spacing / 2);
+
+    .jointsource {
+      width: $column-width-mini - $column-spacing;
+      height: $column-width-mini - $column-spacing;
+
+      > .jointsource-meta {
+        margin-bottom: 1.5em;
+
+        h2 {
+          // Default size h2
+          font-size: $font-size;
+        }
+
+        p {
+          display: none;
+        }
+      }
+
+      > .jointsource-status {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        // Default size icons
+        font-size: $font-size;
+
+        span {
+          display: none;
+        }
+      }
+    }
+
+    .jointsource.selected::after {
+      content: "";
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      bottom: $font-size;
+      left: $font-size;
+      width: 1.75 * $font-size;
+      height: 1.75 * $font-size;
+      background: $color-accent inline-image("icon-tick.svg") no-repeat center;
+      background-size: $font-size;
+      border: solid 1px rgba(#000, 0.10);
+      border-radius: 50%;
+      @include shadow(3);
+      z-index: 2;
     }
   }
 }

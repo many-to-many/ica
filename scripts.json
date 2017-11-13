@@ -21,6 +21,7 @@
 
   "scripts/jointsources/JointSource.js",
   "scripts/jointsources/JointSourceController.js",
+  "scripts/jointsources/JointSourcesHandler.js",
   "scripts/jointsources/Source.js",
   "scripts/jointsources/SourceController.js",
   "scripts/jointsources/BlobFileSource.js",
@@ -61,7 +62,6 @@
   "scripts/map/MapConversationVideoSourceController.js",
   "scripts/map/MapDiscussionController.js",
   "scripts/map/MapResponseController.js",
-
   "scripts/map/explore/ExploreRefereesController.js",
   "scripts/map/explore/ExploreHiddenRefereesController.js",
 
@@ -81,6 +81,8 @@
   "scripts/prompts/PromptController.js",
   "scripts/prompts/BasicPrompt.js",
   "scripts/prompts/BasicPromptController.js",
+  "scripts/prompts/JointSourcePromptController.js",
+  "scripts/prompts/explore/ExploreJointSourceSelectionController.js",
 
   "scripts/AudioHandler.js",
 
