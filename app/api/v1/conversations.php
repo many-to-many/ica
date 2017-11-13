@@ -84,7 +84,7 @@
 
       break;
 
-  } elseif (list($conversationId) = handle("conversations/{}")) switch ($REQUEST_METHOD) {
+  } elseif (list($conversationId) = handle("conversations/{i}")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -114,7 +114,7 @@
 
       break;
 
-  } elseif (list($conversationId) = handle("conversations/{}/sources")) switch ($REQUEST_METHOD) {
+  } elseif (list($conversationId) = handle("conversations/{i}/sources")) switch ($REQUEST_METHOD) {
 
     case "POST": \Session\requireVerification();
 
@@ -134,7 +134,7 @@
 
       break;
 
-  } elseif (list($conversationId, $sourceId) = handle("conversations/{}/sources/{}")) switch ($REQUEST_METHOD) {
+  } elseif (list($conversationId, $sourceId) = handle("conversations/{i}/sources/{i}")) switch ($REQUEST_METHOD) {
 
     case "PUT": \Session\requireVerification();
 

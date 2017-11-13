@@ -4,7 +4,7 @@
   require_once(DIR_ROOT . "/lib/discussions.php");
   require_once(DIR_ROOT . "/lib/responses.php");
 
-  if (list($jointSourceId) = handle("jointsources/{}")) switch ($REQUEST_METHOD) {
+  if (list($jointSourceId) = handle("jointsources/{i}")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -31,10 +31,10 @@
 
       break;
 
-  } else if (list($jointSourceId) = handle("jointsources/{}/responses")
-    ?: handle("conversations/{}/responses")
-    ?: handle("responses/{}/responses")
-    ?: handle("discussions/{}/responses")) switch ($REQUEST_METHOD) {
+  } else if (list($jointSourceId) = handle("jointsources/{i}/responses")
+    ?: handle("conversations/{i}/responses")
+    ?: handle("responses/{i}/responses")
+    ?: handle("discussions/{i}/responses")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -56,10 +56,10 @@
 
       break;
 
-  } else if (list($jointSourceId) = handle("jointsources/{}/discussions")
-    ?: handle("conversations/{}/discussions")
-      ?: handle("responses/{}/discussions")
-        ?: handle("discussions/{}/discussions")) switch ($REQUEST_METHOD) {
+  } else if (list($jointSourceId) = handle("jointsources/{i}/discussions")
+    ?: handle("conversations/{i}/discussions")
+      ?: handle("responses/{i}/discussions")
+        ?: handle("discussions/{i}/discussions")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -81,10 +81,10 @@
 
       break;
 
-  } else if (list($jointSourceId) = handle("jointsources/{}/refereeJointSourceIds")
-    ?: handle("conversations/{}/refereeJointSourceIds")
-    ?: handle("responses/{}/refereeJointSourceIds")
-    ?: handle("discussions/{}/refereeJointSourceIds")) switch ($REQUEST_METHOD) {
+  } else if (list($jointSourceId) = handle("jointsources/{i}/refereeJointSourceIds")
+    ?: handle("conversations/{i}/refereeJointSourceIds")
+    ?: handle("responses/{i}/refereeJointSourceIds")
+    ?: handle("discussions/{i}/refereeJointSourceIds")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -94,10 +94,10 @@
 
       break;
 
-  } else if (list($jointSourceId) = handle("jointsources/{}/referrerJointSourceIds")
-    ?: handle("conversations/{}/referrerJointSourceIds")
-    ?: handle("responses/{}/referrerJointSourceIds")
-    ?: handle("discussions/{}/referrerJointSourceIds")) switch ($REQUEST_METHOD) {
+  } else if (list($jointSourceId) = handle("jointsources/{i}/referrerJointSourceIds")
+    ?: handle("conversations/{i}/referrerJointSourceIds")
+    ?: handle("responses/{i}/referrerJointSourceIds")
+    ?: handle("discussions/{i}/referrerJointSourceIds")) switch ($REQUEST_METHOD) {
 
     case "GET":
 

@@ -1,6 +1,7 @@
 <?php
 
   define("REQUEST_PARAMETER", "{}");
+  define("REQUEST_PARAMETER_INTEGER", "{i}");
 
   function handle($path, $wildcard = false) {
 
@@ -20,6 +21,7 @@
       $expect = $pair[1];
       if ($expect) {
         if ($expect == REQUEST_PARAMETER) $params[] = $request;
+        elseif ($expect == REQUEST_PARAMETER_INTEGER) $params[] = (int) $request;
         elseif ($request != $expect) return false;
       }
     }

@@ -2,7 +2,7 @@
 
   require_once(__DIR__ . "/init.php");
 
-  if (list($requestFileName) = handle([REQUEST_PARAMETER], true)) {
+  if (list($requestFileName) = handle("{}", true)) {
     list($requestFileId, $requestFileExt) = explode(".", $requestFileName . ".");
     $file = \ICA\Files\getFile($requestFileId);
     if (!$file) throw new Exception("File not found");

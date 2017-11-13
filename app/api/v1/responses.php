@@ -44,7 +44,7 @@
 
       break;
 
-  } elseif (list($responseId) = handle("responses/{}")) switch ($REQUEST_METHOD) {
+  } elseif (list($responseId) = handle("responses/{i}")) switch ($REQUEST_METHOD) {
 
     case "GET":
 

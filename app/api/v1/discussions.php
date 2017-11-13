@@ -56,7 +56,7 @@
 
       break;
 
-  } elseif (list($discussionId) = handle("discussions/{}")) switch ($REQUEST_METHOD) {
+  } elseif (list($discussionId) = handle("discussions/{i}")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
@@ -78,7 +78,7 @@
 
       break;
 
-  } elseif (list($discussionId) = handle("discussions/{}/thread")) switch ($REQUEST_METHOD) {
+  } elseif (list($discussionId) = handle("discussions/{i}/thread")) switch ($REQUEST_METHOD) {
 
     case "GET":
 

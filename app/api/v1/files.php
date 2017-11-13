@@ -66,7 +66,7 @@
 
       break;
 
-  } elseif (list($fileId) = handle("files/{}")) switch ($REQUEST_METHOD) {
+  } elseif (list($fileId) = handle("files/{i}")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
