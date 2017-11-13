@@ -1317,7 +1317,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `ica`;
 INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (0, 'undefined');
-INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (1, 'conversation');
+INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (1, 'conversati');
 INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (2, 'response');
 INSERT INTO `ica`.`jointsources_types` (`type`, `name`) VALUES (3, 'discussion');
 
@@ -1330,7 +1330,7 @@ COMMIT;
 START TRANSACTION;
 USE `ica`;
 INSERT INTO `ica`.`states` (`state`, `name`) VALUES (1, 'published');
-INSERT INTO `ica`.`states` (`state`, `name`) VALUES (0, 'unpublished');
+INSERT INTO `ica`.`states` (`state`, `name`) VALUES (0, 'unpublishe');
 
 COMMIT;
 
