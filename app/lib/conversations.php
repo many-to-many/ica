@@ -2,7 +2,7 @@
 
   namespace ICA\Conversations;
 
-  require_once(__DIR__ . "/shared.php");
+  require_once(__DIR__ . "/common.php");
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/sources.php");
   require_once(__DIR__ . "/jointsources.php");

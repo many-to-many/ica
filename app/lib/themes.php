@@ -2,7 +2,7 @@
 
   namespace ICA\Themes;
 
-  require_once(__DIR__ . "/shared.php");
+  require_once(__DIR__ . "/common.php");
 
   /**
    * Returns a list of most frequent (time insensitive) themes.

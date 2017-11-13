@@ -38,7 +38,7 @@
       global $DATABASE;
       $result = $DATABASE->query($q);
       if (empty($result)) {
-        throw new \Exception($DATABASE->error);
+        throw new Exception($DATABASE->error);
       }
       return $result;
 
@@ -64,7 +64,7 @@
         if ($DATABASE_NUM_TRANSACTIONS == 0) {
           $result = $DATABASE->commit();
           if (empty($result)) {
-            throw new \Exception($DATABASE->error);
+            throw new Exception($DATABASE->error);
           }
           return $result;
         }
@@ -89,7 +89,7 @@
         if ($result->num_rows == 0) return false;
         $row = $result->fetch_assoc();
         return $row["id"];
-      } else throw new Exception($DATABASE->error);
+      } else throw new \Exception($DATABASE->error);
 
     }
 

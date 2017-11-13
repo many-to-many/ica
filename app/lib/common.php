@@ -24,7 +24,7 @@
       case LANG_0: return LANG_0_ENCODED;
       case LANG_1: return LANG_1_ENCODED;
     }
-    throw new \Exception("Unable to encode lang");
+    throw new Exception("Unable to encode lang");
   }
 
   function decodeLang($code) {
@@ -32,7 +32,7 @@
       case LANG_0_ENCODED: return LANG_0;
       case LANG_1_ENCODED: return LANG_1;
     }
-    throw new \Exception("Unable to decode lang");
+    throw new Exception("Unable to decode lang");
   }
 
   function encodeType($type) {
@@ -42,7 +42,7 @@
       case TYPE_VIDEO: return TYPE_VIDEO_ENCODED;
       case TYPE_TEXT: return TYPE_TEXT_ENCODED;
     }
-    throw new \Exception("Unable to encode type");
+    throw new Exception("Unable to encode type");
   }
 
   function decodeType($type) {
@@ -52,7 +52,7 @@
       case TYPE_VIDEO_ENCODED: return TYPE_VIDEO;
       case TYPE_TEXT_ENCODED: return TYPE_TEXT;
     }
-    throw new \Exception("Unable to decode type");
+    throw new Exception("Unable to decode type");
   }
 
   function encodeState($state) {
@@ -60,7 +60,7 @@
       case STATE_PUBLISHED: return STATE_PUBLISHED_ENCODED;
       case STATE_UNPUBLISHED: return STATE_UNPUBLISHED_ENCODED;
     }
-    throw new \Exception("Unable to encode state");
+    throw new Exception("Unable to encode state");
   }
 
   function decodeState($code) {
@@ -68,7 +68,7 @@
       case STATE_PUBLISHED_ENCODED: return STATE_PUBLISHED;
       case STATE_UNPUBLISHED_ENCODED: return STATE_UNPUBLISHED;
     }
-    throw new \Exception("Unable to decode state");
+    throw new Exception("Unable to decode state");
   }
 
   function createArrayFromQueryResult($result, $col) {
