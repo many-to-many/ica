@@ -1,6 +1,6 @@
 {
   "name": "interactive-conversation-archive",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "",
   "scripts": {
     "eslint": "./node_modules/.bin/eslint -c .eslintrc.json scripts/",
