@@ -341,6 +341,33 @@ window.addEventListener("load", function () {
       }
     },
     {
+      pattern: /\/discussions\/new\/?$/,
+      func: function () {
+        let publisherFragment = PublisherDiscussionController.createViewFragment();
+        let publisherElement = publisherFragment.querySelector(".publisher-container");
+        document.body.querySelector(".app-view").appendChild(publisherFragment);
+        new PublisherDiscussionController(new Discussion(), publisherElement);
+      }
+    },
+    {
+      pattern: /\/discussions\/(\d+)\/edit\/?$/,
+      func: function (matches) {
+        let discussionId = matches[1];
+
+        ICA.getDiscussion(discussionId)
+          .then(function (discussion) {
+            let publisherFragment = PublisherDiscussionController.createViewFragment();
+            let publisherElement = publisherFragment.querySelector(".publisher-container");
+            document.body.querySelector(".app-view").appendChild(publisherFragment);
+            new PublisherDiscussionController(discussion, publisherElement);
+          }, function (e) {
+            console.warn(e);
+
+            appDiscussionsController.focusView();
+          });
+      }
+    },
+    {
       pattern: /\/search\/?$/,
       func: function () {
         appSearchController.focusView();

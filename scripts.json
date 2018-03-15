@@ -44,6 +44,7 @@
   "scripts/explore/ExploreDiscussionController.js",
 
   "scripts/publisher/PublisherConversationController.js",
+  "scripts/publisher/PublisherDiscussionController.js",
   "scripts/publisher/PublisherSourceController.js",
   "scripts/publisher/PublisherTextSourceController.js",
   "scripts/publisher/PublisherImageSourceController.js",

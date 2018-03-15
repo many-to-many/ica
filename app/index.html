@@ -88,6 +88,33 @@
           </section>
         </div>
       </template>
+      <template id="template-publisher-discussion">
+        <div class="publisher-container" data-ica-view>
+          <section class="publisher" data-ica-width-multiple="300">
+            <header class="topbar-container">
+              <div class="topbar" data-ica-width-multiple="300">
+                <h2 class="topbar-title">Meta-Conversation</h2>
+                <nav>
+                  <ul>
+                    <li><a data-ica-action="publish">Publish</a></li>
+                    <li><a data-ica-action="abort">Discard Changes</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </header>
+            <article class="card publisher-meta">
+              <section>
+                <label>What would you like to call the meta-conversation?</label>
+                <input data-ica-jointsource-meta="title" placeholder="Enter title here...">
+              </section>
+            </article>
+            <section class="publisher-published-container" data-ica-jointsource-filter="published">
+              <h3 class="color-primary">Danger Zone</h3>
+              <input type="button" class="color-primary" value="Delete this Meta-Conversation" data-ica-action="unpublish">
+            </section>
+          </section>
+        </div>
+      </template>
       <template id="template-publisher-textsource">
         <article class="card publisher-source publisher-textsource">
           <header class="topbar-container">
