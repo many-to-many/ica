@@ -171,19 +171,20 @@ PublisherConversationController.defineMethod("unhideView", function unhideView()
 PublisherConversationController.prototype.publish = function () {
   return this.conversation.publish("Publishing conversation...")
     .then(function (conversation) {
+      Router.replace("/conversations/{0}/edit".format(conversation.conversationId), "Share (a) Conversation | Many-to-Many");
+      appConversationsController.focusView();
+
+      // The conversation is intentionally added to the explore after focusing so the controller populates its content
       if (conversation) {
         appConversationsController.explore.addItems([conversation]);
         appConversationsController.explore.didUpdate();
       }
 
-      Router.replace("/conversations/{0}/edit".format(this.conversation.conversationId), "Share (a) Conversation | Many-to-Many");
-      appConversationsController.focusView();
-
       // Display notification
       notifications.addNotification(new BasicNotification("Conversation published!"));
       notifications.didUpdate();
 
-    }.bind(this))
+    })
     .catch(function (e) {
       console.warn(e);
 
