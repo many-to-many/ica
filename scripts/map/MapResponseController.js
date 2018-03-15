@@ -247,7 +247,8 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
 
                   if (discussions.length === 1) {
                     if (discussions[0].constructor === Discussion) {
-                      status += " in a discussion thread";
+                      status += " in meta-conversation <a href=\"/discussions/{0}\" title=\"{1}\">#{0}</a>"
+                        .format(discussions[0].discussionId, discussions[0].title["0"]);
                     } else {
                       status += " at another place";
                     }
@@ -264,7 +265,7 @@ MapResponseController.defineMethod("uninitModel", function uninitModel() {
                 break;
             }
 
-          statusElement.textContent = status;
+          statusElement.innerHTML = status;
 
         }.bind(this));
 
