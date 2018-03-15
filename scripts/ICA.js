@@ -470,9 +470,6 @@
             }
             : {}
         })
-          .then(function () {
-            console.log("ICA: Conversation revision posted");
-          })
           // Post new sources
           .then(function () {
             return Promise.all(conversation.mapSourcesList(function (source) {
@@ -575,6 +572,10 @@
             notification.didUpdate();
 
             return Promise.reject(err);
+          })
+          .then(function () {
+            console.log("ICA: Conversation revision posted");
+            return conversation;
           });
       });
   };
@@ -712,9 +713,6 @@
         return ICA.put("/discussions/{0}/".format(discussion.discussionId), {
           title: discussion.title ? discussion.title : {}
         })
-          .then(function () {
-            console.log("ICA: Discussion revision posted");
-          })
           // Post new sources
           .then(function () {
             notification.progressPct = 1;
@@ -724,6 +722,10 @@
             notification.didUpdate();
 
             return Promise.reject(err);
+          })
+          .then(function () {
+            console.log("ICA: Discussion revision posted");
+            return discussion;
           });
       });
   };
