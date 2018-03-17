@@ -38,7 +38,7 @@ MapDiscussionController.createViewFragment = function createViewFragment() {
     this.view.querySelectorAll("[data-ica-discussion]").forEach(function (element) {
       let content = this.discussion[getElementProperty(element, "discussion")]["0"];
 
-      switch (getElementProperty(element, "conversation-meta")) {
+      switch (getElementProperty(element, "discussion")) {
         case "intro": this.quillIntro.setText(content || ""); break;
         default: element.textContent = content;
       }
