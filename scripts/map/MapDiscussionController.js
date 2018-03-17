@@ -19,6 +19,12 @@ MapDiscussionController.createViewFragment = function createViewFragment() {
 
     this.view.addEventListener("click", viewOnClick);
 
+    // Quill
+
+    this.quillIntro = new Quill(this.view.querySelector("[data-ica-discussion='intro']"), {
+      readOnly: true
+    });
+
   });
 
   MapDiscussionController.defineMethod("updateView", function updateView() {
@@ -30,7 +36,12 @@ MapDiscussionController.createViewFragment = function createViewFragment() {
     }.bind(this));
 
     this.view.querySelectorAll("[data-ica-discussion]").forEach(function (element) {
-      element.textContent = this.discussion[getElementProperty(element, "discussion")]["0"];
+      let content = this.discussion[getElementProperty(element, "discussion")]["0"];
+
+      switch (getElementProperty(element, "conversation-meta")) {
+        case "intro": this.quillIntro.setText(content || ""); break;
+        default: element.textContent = content;
+      }
     }.bind(this));
 
   });

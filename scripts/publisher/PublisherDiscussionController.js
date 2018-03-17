@@ -38,21 +38,23 @@ PublisherDiscussionController.defineMethod("initView", function initView() {
 
   let routerIndex = Router.index;
 
-  this.view.querySelectorAll("[data-ica-jointsource-meta='title']").forEach(function (element) {
+  this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
+    let key = element.dataset.icaJointsourceMeta;
+
     // Event listeners
     element.addEventListener("change", function () {
       // User input change
-      this.controller.discussion.title["0"] = getFormattedInputValue(element);
+      this.controller.discussion[key]["0"] = getFormattedInputValue(element);
       this.controller.discussion.didUpdate();
     }.bind(this.view));
     element.addEventListener("ica-change", function () {
       // Simulated input change
-      this.controller.discussion.title["0"] = getFormattedInputValue(element);
+      this.controller.discussion[key]["0"] = getFormattedInputValue(element);
       this.controller.discussion.didUpdate();
     }.bind(this.view));
 
     // Init input values
-    setInputValue(element, this.discussion.title["0"]);
+    setInputValue(element, this.discussion[key]["0"]);
   }.bind(this));
 
   this.view.querySelector("[data-ica-action='abort']").addEventListener("click", function (event) {

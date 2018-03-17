@@ -693,7 +693,10 @@
           // Post new discussion
           return ICA.post("/discussions/", {
             _id: discussion.discussionId,
-            title: discussion.title ? discussion.title : {}
+            meta: {
+              title: discussion.title ? discussion.title : {},
+              intro: discussion.intro ? discussion.intro : {},
+            },
           }, notify)
             .then(touchDiscussionsWithAPIResponse)
             .then(function () {
@@ -711,7 +714,10 @@
         }
 
         return ICA.put("/discussions/{0}/".format(discussion.discussionId), {
-          title: discussion.title ? discussion.title : {}
+          meta: {
+            title: discussion.title ? discussion.title : {},
+            intro: discussion.intro ? discussion.intro : {},
+          },
         })
           // Post new sources
           .then(function () {
@@ -973,12 +979,16 @@
 
       if (discussion.locked) return discussion; // Cannot edit locked discussion
 
-      discussion.title = dataDiscussion.title ? dataDiscussion.title : {};
+      discussion.title = dataDiscussion.meta.title ? dataDiscussion.meta.title : {};
+      discussion.intro = dataDiscussion.meta.intro ? dataDiscussion.meta.intro : {};
 
     } else {
       // New discussion
 
-      discussion = new Discussion(dataDiscussion.title ? dataDiscussion.title : {}, discussionId);
+      discussion = new Discussion(
+        dataDiscussion.meta.title ? dataDiscussion.meta.title : {},
+        dataDiscussion.meta.title ? dataDiscussion.meta.intro : {},
+        discussionId);
 
     }
 

@@ -39,12 +39,12 @@
 
       // Validation
       if (empty($REQUEST_DATA)) throw new Exception("No request data");
-      if (empty($REQUEST_DATA["title"])) throw new Exception("Title must not be empty");
+      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
       retainDatabaseTransaction();
 
       $discussion = new \ICA\Discussions\Discussion();
-      $discussion->title = $REQUEST_DATA["title"];
+      $discussion->meta = $REQUEST_DATA["meta"];
 
       $discussionId = \ICA\Discussions\insertDiscussion($discussion);
 
@@ -70,9 +70,9 @@
 
       // Validation
       if (!$REQUEST_DATA) throw new Exception("No request data");
-      if (empty($REQUEST_DATA["title"])) throw new Exception("Title must not be empty");
+      if (empty($REQUEST_DATA["meta"])) throw new Exception("Metadata must not be empty");
 
-      \ICA\Discussions\putDiscussion($discussionId, $REQUEST_DATA["title"]);
+      \ICA\Discussions\putDiscussionMeta($discussionId, $REQUEST_DATA["meta"]);
 
       respondJSON([]);
 

@@ -7,10 +7,12 @@ let Discussion = JointSource.createComponent("Discussion");
 
 Discussion.defineAlias("jointSourceId", "discussionId");
 
-Discussion.defineMethod("init", function init(title, discussionId) {
+Discussion.defineMethod("init", function init(title, intro, discussionId) {
 
-  // Init title
+  // Init meta
+  // TODO: Refactor to have `this.meta` union
   this.title = title || {};
+  this.intro = intro || {};
 
   return [discussionId];
 });

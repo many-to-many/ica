@@ -32,6 +32,7 @@
         <article class="jointsource discussion">
           <section class="jointsource-meta">
             <h2 data-ica-discussion="title">Title</h2>
+            <p data-ica-discussion="intro"></p>
           </section>
         </article>
       </template>
@@ -106,6 +107,8 @@
               <section>
                 <label>What would you like to call the meta-conversation?</label>
                 <input data-ica-jointsource-meta="title" placeholder="Enter title here...">
+                <label>What would you like people to know about the meta-conversation?</label>
+                <textarea data-ica-jointsource-meta="intro" placeholder="Introduce your meta-conversation here..." rows="1"></textarea>
               </section>
             </article>
             <section class="publisher-published-container" data-ica-jointsource-filter="published">
@@ -253,6 +256,7 @@
               <article class="source meta">
                 <section class="conversation-meta">
                   <h2 data-ica-discussion-predicate="title" data-ica-discussion="title"></h2>
+                  <div data-ica-discussion-predicate="intro" data-ica-discussion="intro"></div>
                 </section>
               </article>
             </div>

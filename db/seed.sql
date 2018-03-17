@@ -806,12 +806,14 @@ DROP TABLE IF EXISTS `ica`.`discussions` ;
 CREATE TABLE IF NOT EXISTS `ica`.`discussions` (
   `id` INT UNSIGNED NOT NULL,
   `title_id` INT UNSIGNED NOT NULL,
+  `intro_id` INT UNSIGNED NOT NULL,
   `author_id` INT UNSIGNED NOT NULL,
   `authored` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `fk_discussions_jointsources1_idx` (`id` ASC),
   PRIMARY KEY (`id`),
   INDEX `fk_discussions_contents1_idx` (`title_id` ASC),
-  INDEX `fk_discussions_accounts1_idx` (`author_id` ASC))
+  INDEX `fk_discussions_accounts1_idx` (`author_id` ASC),
+  INDEX `fk_discussions_contents2_idx` (`intro_id` ASC))
 ENGINE = MyISAM;
 
 USE `ica` ;
@@ -914,7 +916,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`jointsources_summary` (`jointsource_id` INT, `
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`discussions_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`discussions_summary` (`discussion_id` INT, `state_id` INT, `state` INT, `title_id` INT, `author_id` INT, `authored` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`discussions_summary` (`discussion_id` INT, `state_id` INT, `state` INT, `title_id` INT, `intro_id` INT, `author_id` INT, `authored` INT);
 
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`responses_discussions_summary`
@@ -924,7 +926,7 @@ CREATE TABLE IF NOT EXISTS `ica`.`responses_discussions_summary` (`response_id` 
 -- -----------------------------------------------------
 -- Placeholder table for view `ica`.`jointsources_discussions_summary`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ica`.`jointsources_discussions_summary` (`jointsource_id` INT, `reference_state_id` INT, `reference_state` INT, `discussion_id` INT, `discussion_title_id` INT, `discussion_author_id` INT, `discussion_authored` INT, `discussion_state_id` INT, `discussion_state` INT);
+CREATE TABLE IF NOT EXISTS `ica`.`jointsources_discussions_summary` (`jointsource_id` INT, `reference_state_id` INT, `reference_state` INT, `discussion_id` INT, `discussion_title_id` INT, `discussion_intro_id` INT, `discussion_author_id` INT, `discussion_authored` INT, `discussion_state_id` INT, `discussion_state` INT);
 
 -- -----------------------------------------------------
 -- View `ica`.`jointsources_state_latest`
@@ -1276,6 +1278,7 @@ SELECT
 	tbl_state.id AS state_id,
 	tbl_state.state AS state,
 	tbl_discussion.title_id AS title_id,
+    tbl_discussion.intro_id AS intro_id,
 	tbl_discussion.author_id AS author_id,
 	tbl_discussion.authored AS authored
 FROM `discussions` AS tbl_discussion
@@ -1323,6 +1326,7 @@ SELECT
 	tbl_reference.state AS reference_state,
 	tbl_discussion.discussion_id AS discussion_id,
     tbl_discussion.title_id AS discussion_title_id,
+    tbl_discussion.intro_id AS discussion_intro_id,
 	tbl_discussion.author_id AS discussion_author_id,
 	tbl_discussion.authored AS discussion_authored,
 	tbl_discussion.state_id AS discussion_state_id,

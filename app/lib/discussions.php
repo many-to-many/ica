@@ -12,7 +12,7 @@
    */
   class Discussion extends \ICA\JointSources\JointSource {
 
-    public $title;
+    public $meta;
 
   }
 
@@ -31,7 +31,14 @@
         $discussion = new Discussion();
 
         // Populating data from the database
-        $discussion->title = getDiscussionTitleOfLatestRevision(!empty($row["title_id"]) ? $row["title_id"] : $row["discussion_title_id"]);
+        $discussion->meta["title"] =
+          getDiscussionMetaTitleOfLatestRevision(!empty($row["title_id"])
+            ? $row["title_id"]
+            : $row["discussion_title_id"]);
+        $discussion->meta["intro"] =
+          getDiscussionMetaIntroOfLatestRevision(!empty($row["intro_id"])
+            ? $row["intro_id"]
+            : $row["discussion_intro_id"]);
 
         $data[$discussionId] = $discussion;
       }
@@ -85,15 +92,17 @@
 
     // Request content versioning unit id
     $titleId = \ICA\Contents\requestContentId();
+    $introId = \ICA\Contents\requestContentId();
 
     // Create a new discussion
     query("INSERT INTO discussions
-      (`id`, `title_id`, `author_id`)
-      VALUES ($discussionId, $titleId, $accountId);");
+      (`id`, `title_id`, `intro_id`, `author_id`)
+      VALUES ($discussionId, $titleId, $introId, $accountId);");
 
     insertDiscussionState($discussionId, $state);
 
-    if (!empty($discussion->title)) partialPutDiscussionTitle($titleId, $discussion->title);
+    if (!empty($discussion->meta["title"])) partialPutDiscussionMetaTitle($titleId, $discussion->meta["title"]);
+    if (!empty($discussion->meta["intro"])) partialPutDiscussionMetaIntro($introId, $discussion->meta["intro"]);
 
     releaseDatabaseTransaction();
 
@@ -150,9 +159,32 @@
   }
 
   /**
+   * Partially puts the meta for the specified conversation.
+   */
+  function partialPutDiscussionMeta($discussionId, $meta) {
+
+    $result = query("SELECT *
+      FROM discussions
+      WHERE id = $discussionId;");
+    if ($result->num_rows == 0) {
+      return false; // conversation not found
+    }
+
+    $row = $result->fetch_assoc();
+
+    retainDatabaseTransaction();
+
+    if (!empty($meta["title"])) partialPutDiscussionMetaTitle($row["title_id"], $meta["title"]);
+    if (!empty($meta["intro"])) partialPutDiscussionMetaIntro($row["intro_id"], $meta["intro"]);
+
+    releaseDatabaseTransaction();
+
+  }
+
+  /**
    * Puts the meta for the specified discussion.
    */
-  function putDiscussion($discussionId, $title) {
+  function putDiscussionMeta($discussionId, $meta) {
 
     $result = query("SELECT *
       FROM discussions
@@ -165,35 +197,61 @@
 
     retainDatabaseTransaction();
 
-    if (!empty($title)) putDiscussionTitle($row["title_id"], $title);
+    if (!empty($meta["title"])) putDiscussionMetaTitle($row["title_id"], $meta["title"]);
+    if (!empty($meta["intro"])) putDiscussionMetaIntro($row["intro_id"], $meta["intro"]);
 
     releaseDatabaseTransaction();
 
   }
 
   /**
-   * Discussion title
+   * Discussion meta title
    */
 
   /**
    * Returns the latest revision of the title.
    */
-  function getDiscussionTitleOfLatestRevision($titleId) {
+  function getDiscussionMetaTitleOfLatestRevision($titleId) {
     return \ICA\Contents\getContentLanguagesOfLatestRevision($titleId);
   }
 
   /**
    * Partially puts a new title with the content id of the title.
    */
-  function partialPutDiscussionTitle($titleId, $title) {
+  function partialPutDiscussionMetaTitle($titleId, $title) {
     \ICA\Contents\partialPutContentLanguages($titleId, $title);
   }
 
   /**
    * Puts a new title with the content id of the title.
    */
-  function putDiscussionTitle($titleId, $title) {
+  function putDiscussionMetaTitle($titleId, $title) {
     \ICA\Contents\putContentLanguages($titleId, $title);
+  }
+
+  /**
+   * Discussion meta intro
+   */
+
+  /**
+   * Returns the latest revision of the intro.
+   */
+  function getDiscussionMetaIntroOfLatestRevision($introId) {
+    return \ICA\Contents\getContentLanguagesOfLatestRevision($introId);
+  }
+
+  /**
+   * Partially puts a new title with the content id of the intro.
+   */
+  function partialPutDiscussionMetaIntro($introId, $intro) {
+    \ICA\Contents\partialPutContentLanguages($introId, $intro);
+  }
+
+  /**
+   * Puts a new title with the content id of the intro.
+   */
+  function putDiscussionMetaIntro($introId, $intro) {
+    \ICA\Contents\putContentLanguages($introId, $intro);
   }
 
 ?>
