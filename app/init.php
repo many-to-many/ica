@@ -26,6 +26,16 @@
 
     }
 
+    if (!$DATABASE->query(sprintf("SET time_zone = '%s%02d:%02d';",
+      date("Z") >= 0 ? "+" : "-",
+      abs(intval(date("Z") / 3600)),
+      abs(intval(date("Z") % 3600 / 60))))) {
+
+      printf("Error setting time zone");
+      exit();
+
+    }
+
     if (!$DATABASE->set_charset("utf8mb4")) {
 
       printf("Error loading character set utf8mb4: %s\n", $DATABASE->error);

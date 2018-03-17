@@ -34,7 +34,7 @@
 
         // Readonly data
         $response->_authorId = !empty($row["author_id"]) ? $row["author_id"] : $row["response_author_id"];
-        $response->_timestampAuthored = strtotime(!empty($row["response_authored"]) ? $row["response_authored"] : $row["response_authored"]);
+        $response->_timestampAuthored = strtotime(!empty($row["authored"]) ? $row["authored"] : $row["response_authored"]);
 
         $response->refereeJointSourceIds = getResponseRefereeJointSourceIds($responseId);
 
