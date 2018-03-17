@@ -2,7 +2,7 @@
 
   namespace {
 
-    header("Access-Control-Allow-Origin: https://ica.mintkit.net");
+    header("Access-Control-Allow-Origin: https://many-to-many.net");
     header("Access-Control-Allow-Headers: Cache-Control");
 
     require_once(__DIR__ . "/config.php");
