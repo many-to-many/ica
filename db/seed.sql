@@ -813,8 +813,28 @@ CREATE TABLE IF NOT EXISTS `ica`.`discussions` (
   PRIMARY KEY (`id`),
   INDEX `fk_discussions_contents1_idx` (`title_id` ASC),
   INDEX `fk_discussions_accounts1_idx` (`author_id` ASC),
-  INDEX `fk_discussions_contents2_idx` (`intro_id` ASC))
-ENGINE = MyISAM;
+  INDEX `fk_discussions_contents2_idx` (`intro_id` ASC),
+  CONSTRAINT `fk_discussions_jointsources1`
+    FOREIGN KEY (`id`)
+    REFERENCES `ica`.`jointsources` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_discussions_contents1`
+    FOREIGN KEY (`title_id`)
+    REFERENCES `ica`.`contents` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_discussions_accounts1`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ica`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_discussions_contents2`
+    FOREIGN KEY (`intro_id`)
+    REFERENCES `ica`.`contents` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 USE `ica` ;
 
