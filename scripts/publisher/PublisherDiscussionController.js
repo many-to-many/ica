@@ -140,7 +140,7 @@ PublisherDiscussionController.prototype.publish = function () {
 PublisherDiscussionController.prototype.unpublish = function () {
   return new Promise(function (resolve, reject) {
     let prompt = new BasicPrompt(
-      "Unpublishing \"{0}\"...".format(this.discussion.meta.title),
+      "Unpublishing \"{0}\"...".format(this.discussion.title["0"]),
       "Are you sure you would like to continue?",
       [
         new PromptAction(
