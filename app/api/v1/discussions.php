@@ -78,6 +78,14 @@
 
       break;
 
+    case "DELETE":
+
+      \ICA\Discussions\insertDiscussionState($discussionId, STATE_UNPUBLISHED);
+
+      respondJSON([]);
+
+      break;
+
   } elseif (list($discussionId) = handle("discussions/{i}/thread")) switch ($REQUEST_METHOD) {
 
     case "GET":
