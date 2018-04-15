@@ -115,7 +115,7 @@ PublisherConversationController.defineMethod("updateView", function updateView()
 
   // Update views based on sources in joint source
   this.conversation.forEachSource(function (source) {
-    let element = this.controller.view.querySelector("[data-ica-source-id='{0}']".format(source.sourceId));
+    let element = this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId));
     if (element) return;
 
     // Create new view

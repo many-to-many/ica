@@ -205,28 +205,28 @@
       <template id="template-map-conversation">
         <article class="jointsource conversation">
           <section class="card source meta">
-            <section class="conversation-backdrop" hidden>
-              <div class="conversation-backdrop-image"></div>
+            <section class="jointsource-backdrop" hidden>
+              <div class="jointsource-backdrop-image"></div>
             </section>
-            <section class="conversation-meta">
-              <h2 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title"></h2>
-              <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
-              <div data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></div>
-              <div data-ica-conversation-meta-predicate="others">
+            <section class="jointsource-meta">
+              <h2 data-ica-jointsource-meta-predicate="title" data-ica-jointsource-meta="title"></h2>
+              <p data-ica-jointsource-meta-predicate="region" data-ica-jointsource-meta="region"></p>
+              <div data-ica-jointsource-meta-predicate="intro" data-ica-jointsource-meta="intro"></div>
+              <div data-ica-jointsource-meta-predicate="others">
                 <h3>Other reflections</h3>
-                <div data-ica-conversation-meta="others"></div>
+                <div data-ica-jointsource-meta="others"></div>
               </div>
-              <div data-ica-conversation-meta-predicate="participants">
+              <div data-ica-jointsource-meta-predicate="participants">
                 <h3>Participants</h3>
-                <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>
+                <div data-ica-jointsource-meta="participants" data-ica-format="tokens"></div>
               </div>
-              <div data-ica-conversation-meta-predicate="themes">
+              <div data-ica-jointsource-meta-predicate="themes">
                 <h3>Themes</h3>
-                <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
+                <div data-ica-jointsource-meta="themes" data-ica-format="tokens"></div>
               </div>
             </section>
-            <section class="conversation-control">
-              <a data-ica-action="edit-conversation">Edit Conversation</a>
+            <section class="jointsource-control">
+              <a data-ica-action="edit-jointsource">Edit Conversation</a>
             </section>
           </section>
           <h3>Media</h3>
@@ -245,9 +245,12 @@
       <template id="template-map-discussion">
         <article class="jointsource discussion">
           <section class="card source meta">
-            <section class="discussion-meta">
-              <h2 data-ica-discussion-predicate="title" data-ica-discussion="title"></h2>
-              <div data-ica-discussion-predicate="intro" data-ica-discussion="intro"></div>
+            <section class="jointsource-meta">
+              <h2 data-ica-jointsource-predicate="title" data-ica-jointsource="title"></h2>
+              <div data-ica-jointsource-predicate="intro" data-ica-jointsource="intro"></div>
+            </section>
+            <section class="jointsource-control">
+              <a data-ica-action="edit-jointsource">Edit Meta-Conversation</a>
             </section>
           </section>
         </article>

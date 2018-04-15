@@ -19,23 +19,23 @@ MapConversationController.createViewFragment = function createViewFragment() {
 
     this.view.addEventListener("click", viewOnClick);
 
-    let editConversationAnchor = this.view.querySelector("[data-ica-action='edit-conversation']");
-    editConversationAnchor.href = "/conversations/{0}/edit".format(this.conversation.conversationId);
-    editConversationAnchor.addEventListener("click", editConversationAnchorOnClick);
-    editConversationAnchor.controller = this;
+    let editJointSourceAnchor = this.view.querySelector("[data-ica-action='edit-jointsource']");
+    editJointSourceAnchor.href = "/conversations/{0}/edit".format(this.conversation.conversationId);
+    editJointSourceAnchor.addEventListener("click", editJointSourceAnchorOnClick);
+    editJointSourceAnchor.controller = this;
 
     // Tokens
 
-    new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
-    new TokensController(this.conversation.metaThemesHandler, this.view.querySelector("[data-ica-conversation-meta='themes']")).componentOf = this;
+    new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-jointsource-meta='participants']")).componentOf = this;
+    new TokensController(this.conversation.metaThemesHandler, this.view.querySelector("[data-ica-jointsource-meta='themes']")).componentOf = this;
 
     // Quill
 
-    this.quillIntro = new Quill(this.view.querySelector("[data-ica-conversation-meta='intro']"), {
+    this.quillIntro = new Quill(this.view.querySelector("[data-ica-jointsource-meta='intro']"), {
       readOnly: true
     });
 
-    this.quillOthers = new Quill(this.view.querySelector("[data-ica-conversation-meta='others']"), {
+    this.quillOthers = new Quill(this.view.querySelector("[data-ica-jointsource-meta='others']"), {
       readOnly: true
     });
 
@@ -45,30 +45,30 @@ MapConversationController.createViewFragment = function createViewFragment() {
     if (!this.view) return;
 
     // Set display style for metadata
-    this.view.querySelectorAll("[data-ica-conversation-meta-predicate]").forEach(function (element) {
-      let metaPredicate = getElementProperty(element, "conversation-meta-predicate");
+    this.view.querySelectorAll("[data-ica-jointsource-meta-predicate]").forEach(function (element) {
+      let metaPredicate = getElementProperty(element, "jointsource-meta-predicate");
       element.style.display = isEmpty(this.conversation.meta[metaPredicate]) ? "none" : "";
     }.bind(this));
 
-    this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
-      let content = this.conversation.meta[getElementProperty(element, "conversation-meta")];
+    this.view.querySelectorAll("[data-ica-jointsource-meta]").forEach(function (element) {
+      let content = this.conversation.meta[getElementProperty(element, "jointsource-meta")];
 
-      switch (getElementProperty(element, "conversation-meta")) {
+      switch (getElementProperty(element, "jointsource-meta")) {
         case "intro": this.quillIntro.setText(content || ""); break;
         case "others": this.quillOthers.setText(content || ""); break;
         default: element.textContent = content;
       }
     }.bind(this));
 
-    this.view.querySelector(".conversation-backdrop").hidden = true;
+    this.view.querySelector(".jointsource-backdrop").hidden = true;
     let imageSources = this.conversation.imageSources;
     if (imageSources.length > 0) {
       let imageSource = imageSources[0];
 
       if (imageSource.content) {
-        this.view.querySelector(".conversation-backdrop").hidden = false;
+        this.view.querySelector(".jointsource-backdrop").hidden = false;
 
-        let backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
+        let backdropImageElement = this.view.querySelector(".jointsource-backdrop-image");
         let backgroundImage = imageSource.content
           ? "url(" + (
           imageSource.fileHandler.blob instanceof Blob
@@ -136,7 +136,7 @@ MapConversationController.createViewFragment = function createViewFragment() {
     event.stopPropagation();
   }
 
-  function editConversationAnchorOnClick(event) {
+  function editJointSourceAnchorOnClick(event) {
     event.preventDefault();
 
     this.controller.displayPublisherConversationView();

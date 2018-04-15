@@ -17,7 +17,8 @@
     color: lighten($color-text, 20%);
   }
 
-  .conversation {
+  .jointsource {
+    overflow: hidden;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
     > .sources {
@@ -34,14 +35,14 @@
 
       &.meta {
 
-        > .conversation-backdrop {
+        > .jointsource-backdrop {
           position: relative;
           margin: 0 -1.5em;
           height: 0.6 * $card-width;
           max-height: 40vw;
           background-color: $color-border;
 
-          > .conversation-backdrop-image {
+          > .jointsource-backdrop-image {
             position: absolute;
             top: 0;
             right: 0;
@@ -52,7 +53,7 @@
           }
         }
 
-        > .conversation-meta {
+        > .jointsource-meta {
           margin: 1.5em 0;
 
           h2 {
@@ -73,7 +74,7 @@
             font-family: $font-sans-serif-alt;
           }
 
-          [data-ica-conversation-meta] {
+          [data-ica-jointsource-meta] {
             -webkit-user-select: text;
           }
         }
@@ -137,7 +138,7 @@
         max-width: none;
       }
 
-      > .conversation-control,
+      > .jointsource-control,
       > .source-control {
         @include flex;
         margin: 0 -1.5em;
@@ -152,13 +153,15 @@
     }
   }
 
+  .conversation {
+
+  }
+
   .discussion {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
   }
 
   .response {
-    overflow: hidden;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
     .response-nav {
       @include flex;
