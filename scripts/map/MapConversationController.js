@@ -24,27 +24,6 @@ MapConversationController.createViewFragment = function createViewFragment() {
     editConversationAnchor.addEventListener("click", editConversationAnchorOnClick);
     editConversationAnchor.controller = this;
 
-    // Slides
-    // TODO: Redesign the UI & interaction for this part
-
-    let sourcesElement = this.view.querySelector(".sources");
-    let sourceElement = sourcesElement.querySelector(".source");
-
-    let sourceElementUpdated = function () {
-      let sourceIndex;
-      for (let [index, element] of Object.entries(this.children)) {
-        if (element === sourceElement) {
-          sourceIndex = parseInt(index);
-          break;
-        }
-      }
-
-      this.parentNode.parentNode.querySelector("[data-ica-conversation-source-index]").textContent = (sourceIndex + 1).toString();
-      this.parentNode.parentNode.querySelector("[data-ica-action='previous-source']").style.opacity = sourceElement.previousElementSibling ? 1 : 0;
-      this.parentNode.parentNode.querySelector("[data-ica-action='next-source']").style.opacity = sourceElement.nextElementSibling ? 1 : 0;
-    }.bind(sourcesElement);
-    this.sourceElementUpdated = sourceElementUpdated;
-
     // Tokens
 
     new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
@@ -134,9 +113,6 @@ MapConversationController.createViewFragment = function createViewFragment() {
           new MapConversationTextSourceController(source, element).componentOf = this.controller;
       }
     }.bind(this.view));
-
-    this.sourceElementUpdated();
-    this.view.querySelector("[data-ica-conversation-number-of-sources]").textContent = this.conversation.getNumberOfSources() + 1;
 
   });
 
