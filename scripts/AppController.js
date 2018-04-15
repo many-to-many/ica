@@ -27,6 +27,16 @@ AppController.defineMethod("initView", function () {
           }
 
           break;
+        case "publisher-discussion":
+
+          {
+            let publisherFragment = PublisherDiscussionController.createViewFragment();
+            let publisherElement = publisherFragment.querySelector(".publisher-container");
+            document.body.querySelector(".app-view").appendChild(publisherFragment);
+            new PublisherDiscussionController(new Discussion(), publisherElement);
+          }
+
+          break;
         case "account":
 
           // Redirect to login if account id not available
