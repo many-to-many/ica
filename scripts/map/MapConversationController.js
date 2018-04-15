@@ -114,6 +114,8 @@ MapConversationController.createViewFragment = function createViewFragment() {
       }
     }.bind(this.view));
 
+    this.view.querySelector(".sources-title").hidden = this.conversation.getNumberOfSources() === 0;
+
   });
 
   MapConversationController.defineMethod("uninitView", function uninitView() {
