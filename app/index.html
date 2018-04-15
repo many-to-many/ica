@@ -203,41 +203,34 @@
         </div>
       </template>
       <template id="template-map-conversation">
-        <article class="card jointsource conversation">
-          <header class="conversation-nav">
-            <a class="conversation-nav-btn left" data-ica-action="previous-source"></a>
-            <div><span data-ica-conversation-source-index></span>/<span data-ica-conversation-number-of-sources></span></div>
-            <a class="conversation-nav-btn right" data-ica-action="next-source"></a>
-          </header>
-          <section class="sources-container">
-            <div class="sources">
-              <article class="source meta">
-                <section class="conversation-backdrop" hidden>
-                  <div class="conversation-backdrop-image"></div>
-                </section>
-                <section class="conversation-meta">
-                  <h2 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title"></h2>
-                  <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
-                  <div data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></div>
-                  <div data-ica-conversation-meta-predicate="others">
-                    <h3>Other reflections</h3>
-                    <div data-ica-conversation-meta="others"></div>
-                  </div>
-                  <div data-ica-conversation-meta-predicate="participants">
-                    <h3>Participants</h3>
-                    <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>
-                  </div>
-                  <div data-ica-conversation-meta-predicate="themes">
-                    <h3>Themes</h3>
-                    <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
-                  </div>
-                </section>
-                <section class="conversation-control">
-                  <a data-ica-action="edit-conversation">Edit Conversation</a>
-                </section>
-              </article>
-            </div>
+        <article class="jointsource conversation">
+          <section class="card source meta">
+            <section class="conversation-backdrop" hidden>
+              <div class="conversation-backdrop-image"></div>
+            </section>
+            <section class="conversation-meta">
+              <h2 data-ica-conversation-meta-predicate="title" data-ica-conversation-meta="title"></h2>
+              <p data-ica-conversation-meta-predicate="region" data-ica-conversation-meta="region"></p>
+              <div data-ica-conversation-meta-predicate="intro" data-ica-conversation-meta="intro"></div>
+              <div data-ica-conversation-meta-predicate="others">
+                <h3>Other reflections</h3>
+                <div data-ica-conversation-meta="others"></div>
+              </div>
+              <div data-ica-conversation-meta-predicate="participants">
+                <h3>Participants</h3>
+                <div data-ica-conversation-meta="participants" data-ica-format="tokens"></div>
+              </div>
+              <div data-ica-conversation-meta-predicate="themes">
+                <h3>Themes</h3>
+                <div data-ica-conversation-meta="themes" data-ica-format="tokens"></div>
+              </div>
+            </section>
+            <section class="conversation-control">
+              <a data-ica-action="edit-conversation">Edit Conversation</a>
+            </section>
           </section>
+          <h3>Media</h3>
+          <section class="sources"></section>
         </article>
       </template>
       <template id="template-map-article-discussion">
@@ -304,43 +297,35 @@
         </article>
       </template>
       <template id="template-map-conversation-textsource">
-        <div class="source textsource">
+        <div class="card source textsource">
           <section class="text"></section>
-          <section class="source-control">
-            <a data-ica-action="edit-conversation">Edit Conversation</a>
-          </section>
         </div>
       </template>
       <template id="template-map-conversation-imagesource">
-        <div class="source imagesource">
+        <div class="card source imagesource">
           <section class="source-image">
             <img data-ica-content>
-          </section>
-          <section class="source-control">
-            <a data-ica-action="edit-conversation">Edit Conversation</a>
           </section>
         </div>
       </template>
       <template id="template-map-conversation-audiosource">
-        <div class="source audiosource">
+        <div class="card source audiosource">
           <audio class="player" controls>
             <source data-ica-content="0"></source>
           </audio>
           <section class="text" data-ica-content="1"></section>
           <section class="source-control">
-            <a data-ica-action="edit-conversation">Edit Conversation</a>
             <div class="flex-space"></div>
             <a data-ica-content="0" target="_blank"></a>
           </section>
         </div>
       </template>
       <template id="template-map-conversation-videosource">
-        <div class="source videosource">
+        <div class="card source videosource">
           <video class="player" controls>
             <source data-ica-content="0"></source>
           </video>
           <section class="source-control">
-            <a data-ica-action="edit-conversation">Edit Conversation</a>
             <div class="flex-space"></div>
             <a data-ica-content="0" target="_blank"></a>
           </section>

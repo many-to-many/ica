@@ -45,30 +45,6 @@ MapConversationController.createViewFragment = function createViewFragment() {
     }.bind(sourcesElement);
     this.sourceElementUpdated = sourceElementUpdated;
 
-    this.view.querySelector("[data-ica-action='previous-source']").addEventListener("click", function (event) {
-      event.preventDefault();
-
-      if (sourceElement.previousElementSibling) {
-        sourceElement.style.display = "none";
-        sourceElement = sourceElement.previousElementSibling;
-        sourceElement.style.display = "";
-        sourceElementUpdated();
-      }
-
-    }.bind(sourcesElement));
-
-    this.view.querySelector("[data-ica-action='next-source']").addEventListener("click", function (event) {
-      event.preventDefault();
-
-      if (sourceElement.nextElementSibling) {
-        sourceElement.style.display = "none";
-        sourceElement = sourceElement.nextElementSibling;
-        sourceElement.style.display = "";
-        sourceElementUpdated();
-      }
-
-    }.bind(sourcesElement));
-
     // Tokens
 
     new TokensController(this.conversation.metaParticipantsHandler, this.view.querySelector("[data-ica-conversation-meta='participants']")).componentOf = this;
@@ -157,8 +133,6 @@ MapConversationController.createViewFragment = function createViewFragment() {
           this.querySelector(".sources").appendChild(fragment);
           new MapConversationTextSourceController(source, element).componentOf = this.controller;
       }
-
-      element.style.display = "none";
     }.bind(this.view));
 
     this.sourceElementUpdated();

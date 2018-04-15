@@ -20,182 +20,133 @@
   .conversation {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
-    .conversation-nav {
-      overflow: visible;
-      position: -webkit-sticky;
-      top: 3em;
-      margin: 0 -1.5em;
-      min-height: 2em;
-      display: flex;
-      background-color: #fff;
-      border-bottom: solid 1px $color-border;
-      z-index: $z-relative-topbar;
-      @include shadow(2);
-      overflow-y: hidden;
-      border-radius: 1px 1px 0 0; // Fix sharp corners
-
-      > * {
-        line-height: 1.5;
-        flex: 1 0 auto;
-        text-align: center;
-        padding: 0.25em 0;
-        font-family: $font-mono;
-        color: rgba($color-text, 0.80);
-      }
-
-      > .conversation-nav-btn {
-        box-sizing: border-box;
-        flex: none;
-        width: 3em;
-        background-size: 1em 1em;
-        background-position: center;
-        background-repeat: no-repeat;
-        opacity: 0; // Default to hidden
-        transition: opacity ease 0.2s, background-color ease 0.2s;
-
-        &:hover {
-          background-color: lighten($color-primary, 40%);
-        }
-
-        &.left {
-          border-right: solid 1px $color-border;
-          background-image: inline-image("icon-left.svg");
-        }
-
-        &.right {
-          border-left: solid 1px $color-border;
-          background-image: inline-image("icon-right.svg");
-        }
-      }
+    > .sources {
+      position: relative;
     }
 
-    .sources-container {
-      position: relative;
-      margin: 0 -1.5em;
+    .source {
+      box-sizing: border-box;
+      overflow: hidden;
 
-      > .sources {
+      + .source {
+        margin-top: 1em;
+      }
 
-        > .source {
-          box-sizing: border-box;
-          padding: 0 1.5em;
+      &.meta {
 
-          &.meta {
+        > .conversation-backdrop {
+          position: relative;
+          margin: 0 -1.5em;
+          height: 0.6 * $card-width;
+          max-height: 40vw;
+          background-color: $color-border;
 
-            > .conversation-backdrop {
-              position: relative;
-              margin: 0 -1.5em;
-              height: 0.6 * $card-width;
-              max-height: 40vw;
-              background-color: $color-border;
+          > .conversation-backdrop-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-size: cover;
+            background-position: center;
+          }
+        }
 
-              > .conversation-backdrop-image {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                background-size: cover;
-                background-position: center;
-              }
-            }
+        > .conversation-meta {
+          margin: 1.5em 0;
 
-            > .conversation-meta {
-              margin: 1.5em 0;
-
-              h2 {
-                margin: 0.5em 0;
-              }
-
-              h3 {
-                margin: 1.25em 0 0.625em 0;
-                font-size: 0.875em;
-                font-weight: 400;
-                text-transform: uppercase;
-                color: lighten($color-text, 20%);
-                -webkit-user-select: text;
-              }
-
-              p {
-                margin: 0.5em 0;
-                font-family: $font-sans-serif-alt;
-              }
-
-              [data-ica-conversation-meta] {
-                -webkit-user-select: text;
-              }
-            }
+          h2 {
+            margin: 0.5em 0;
           }
 
-          &.textsource {
-
-          }
-
-          &.imagesource {
-
-            > .source-image {
-              margin: 0 -1.5em;
-
-              > img {
-                box-sizing: border-box;
-                display: block;
-                width: 100%;
-              }
-            }
-          }
-
-          &.audiosource {
-
-            > .plyr {
-              position: -webkit-sticky;
-              top: 5em;
-              margin-top: -1px;
-              padding: 0 0.875em;
-              border-top: solid 1px $color-border;
-              border-bottom: solid 1px $color-border;
-              z-index: $z-relative-topbar;
-            }
-
-            .text {
-
-              .ql-blank::before {
-                content: "No transcript is available.";
-                position: absolute;
-                display: block;
-                line-height: 1.5;
-                color: lighten($color-text, 40%);
-              }
-            }
-          }
-
-          &.videosource {
-
-            > .plyr {
-              border-bottom: solid 3px $color-border;
-            }
-
-            > .source-control {
-              border-top: none;
-            }
-          }
-
-          > .plyr {
-            margin: 0 -1.5em;
-            max-width: none;
-            background-color: #fff;
-          }
-
-          > .conversation-control,
-          > .source-control {
-            @include flex;
-            margin: 0 -1.5em;
-            padding: 1.5em;
+          h3 {
+            margin: 1.25em 0 0.625em 0;
+            font-size: 0.875em;
+            font-weight: 400;
+            text-transform: uppercase;
             color: lighten($color-text, 20%);
-            border-top: solid 3px $color-border;
-
-            > :not(:last-child) {
-              margin-right: 0.5em;
-            }
+            -webkit-user-select: text;
           }
+
+          p {
+            margin: 0.5em 0;
+            font-family: $font-sans-serif-alt;
+          }
+
+          [data-ica-conversation-meta] {
+            -webkit-user-select: text;
+          }
+        }
+      }
+
+      &.textsource {
+
+      }
+
+      &.imagesource {
+
+        > .source-image {
+          margin: 0 -1.5em;
+
+          > img {
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+          }
+        }
+      }
+
+      &.audiosource {
+        overflow: visible; // Special case here for overflowing plyr
+
+        > .plyr {
+          position: -webkit-sticky;
+          top: 5em;
+          margin-top: -1px;
+          padding: 0 0.875em;
+          border-top: solid 1px $color-border;
+          border-bottom: solid 1px $color-border;
+          z-index: $z-relative-topbar;
+        }
+
+        .text {
+
+          .ql-blank::before {
+            content: "No transcript is available.";
+            position: absolute;
+            display: block;
+            line-height: 1.5;
+            color: lighten($color-text, 40%);
+          }
+        }
+      }
+
+      &.videosource {
+
+        > .plyr {
+          border-bottom: solid 3px $color-border;
+        }
+
+        > .source-control {
+          border-top: none;
+        }
+      }
+
+      > .plyr {
+        margin: 0 -1.5em;
+        max-width: none;
+      }
+
+      > .conversation-control,
+      > .source-control {
+        @include flex;
+        margin: 0 -1.5em;
+        padding: 1.5em;
+        color: lighten($color-text, 20%);
+        border-top: solid 3px $color-border;
+
+        > :not(:last-child) {
+          margin-right: 0.5em;
         }
       }
     }
