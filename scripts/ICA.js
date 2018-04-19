@@ -697,7 +697,7 @@
               title: discussion.title ? discussion.title : {},
               intro: discussion.intro ? discussion.intro : {},
             },
-            sources: conversation.mapSourcesList(function (source) {
+            sources: discussion.mapSourcesList(function (source) {
               switch (source.constructor) {
                 case ImageSource:
                   return {
