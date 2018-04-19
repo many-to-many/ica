@@ -57,6 +57,14 @@ ExploreController.defineMethod("updateView", function updateView() {
     this.viewItems.push(item);
 
   }, this);
+
+  [7, 11, 14, 58, 20, 12, 34, 6].forEach(function (jointSourceId, order) {
+    let element = this.view.querySelector("[data-ica-jointsource-id='{0}']".format(jointSourceId));
+    if (element) {
+      element.style.order = order - 1e5;
+    }
+  }.bind(this));
+
 });
 
 ExploreController.defineMethod("uninitView", function initView() {
