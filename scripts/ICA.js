@@ -953,17 +953,17 @@
         if (conversation.locked) return conversation; // Cannot edit locked conversation
 
         conversation.meta = meta;
-        touchSources(dataConversation.sources, conversation);
 
       } else {
         // New conversation
 
         conversation = new Conversation(meta, conversationId);
-        touchSources(dataConversation.sources, conversation);
 
       }
 
     }
+
+    touchSources(dataConversation.sources, conversation);
 
     conversation.didUpdate();
 
@@ -983,7 +983,7 @@
     return touchConversation(conversationId, apiResponse.data);
   }
 
-  function touchSources(dataSources, conversation) {
+  function touchSources(dataSources, jointSource) {
     let sources = [];
     Object.entries(dataSources).forEach(function (entry) {
       let [sourceId, dataSource] = entry;
@@ -994,17 +994,17 @@
       } else {
         switch (dataSource.type) {
           case "image":
-            source = new ImageSource(dataSource.content, conversation, sourceId);
+            source = new ImageSource(dataSource.content, jointSource, sourceId);
             break;
           case "audio":
-            source = new AudioSource(dataSource.content, conversation, sourceId);
+            source = new AudioSource(dataSource.content, jointSource, sourceId);
             break;
           case "video":
-            source = new VideoSource(dataSource.content, conversation, sourceId);
+            source = new VideoSource(dataSource.content, jointSource, sourceId);
             break;
           case "text":
           default:
-            source = new TextSource(dataSource.content["0"], conversation, sourceId);
+            source = new TextSource(dataSource.content["0"], jointSource, sourceId);
         }
         sources.push(source);
       }
@@ -1109,8 +1109,6 @@
       discussion.title = dataDiscussion.meta.title ? dataDiscussion.meta.title : {};
       discussion.intro = dataDiscussion.meta.intro ? dataDiscussion.meta.intro : {};
 
-      touchSources(dataDiscussion.sources, discussion);
-
     } else {
       // New discussion
 
@@ -1118,9 +1116,10 @@
         dataDiscussion.meta.title ? dataDiscussion.meta.title : {},
         dataDiscussion.meta.title ? dataDiscussion.meta.intro : {},
         discussionId);
-      touchSources(dataDiscussion.sources, discussion);
 
     }
+
+    touchSources(dataDiscussion.sources, discussion);
 
     discussion.didUpdate();
 
