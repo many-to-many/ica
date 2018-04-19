@@ -53,7 +53,8 @@
       releaseDatabaseTransaction();
 
       respondJSON([$discussionId => [
-        "_id" => $REQUEST_DATA["_id"]
+        "_id" => $REQUEST_DATA["_id"],
+        "sources" => $dataSources
       ]]);
 
       break;
