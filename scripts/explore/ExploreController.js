@@ -50,6 +50,9 @@ ExploreController.defineMethod("updateView", function updateView() {
     this.view.appendChild(fragment);
     new Controller(item, element).componentOf = this.controller; // Its order of display is controlled by this nested controller
 
+    // Display order
+    element.style.order = -item.jointSourceId;
+
     // Mark item as currently in view
     this.viewItems.push(item);
 

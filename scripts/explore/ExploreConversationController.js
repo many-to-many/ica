@@ -88,10 +88,6 @@ ExploreConversationController.defineAlias("model", "conversation");
         }.bind(this));
     }
 
-    // Display order
-
-    this.view.style.order = -this.conversation.conversationId;
-
   });
 
   ExploreConversationController.defineMethod("uninitView", function uninitView() {

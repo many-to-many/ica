@@ -33,10 +33,6 @@ ExploreDiscussionController.defineAlias("model", "discussion");
       element.textContent = this.discussion[getElementProperty(element, "discussion")]["0"] || "";
     }.bind(this));
 
-    // Display order
-
-    this.view.style.order = -this.discussion.discussionId;
-
   });
 
   ExploreDiscussionController.defineMethod("uninitView", function uninitView() {
