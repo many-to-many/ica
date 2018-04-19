@@ -88,29 +88,29 @@ MapConversationController.createViewFragment = function createViewFragment() {
       let fragment, element;
       switch (source.constructor) {
         case ImageSource:
-          fragment = MapConversationImageSourceController.createViewFragment();
+          fragment = MapImageSourceController.createViewFragment();
           element = fragment.querySelector(".source");
           this.querySelector(".sources").appendChild(fragment);
-          new MapConversationImageSourceController(source, element).componentOf = this.controller;
+          new MapImageSourceController(source, element).componentOf = this.controller;
           break;
         case AudioSource:
-          fragment = MapConversationAudioSourceController.createViewFragment();
+          fragment = MapAudioSourceController.createViewFragment();
           element = fragment.querySelector(".source");
           this.querySelector(".sources").appendChild(fragment);
-          new MapConversationAudioSourceController(source, element).componentOf = this.controller;
+          new MapAudioSourceController(source, element).componentOf = this.controller;
           break;
         case VideoSource:
-          fragment = MapConversationVideoSourceController.createViewFragment();
+          fragment = MapVideoSourceController.createViewFragment();
           element = fragment.querySelector(".source");
           this.querySelector(".sources").appendChild(fragment);
-          new MapConversationVideoSourceController(source, element).componentOf = this.controller;
+          new MapVideoSourceController(source, element).componentOf = this.controller;
           break;
         case TextSource:
         default:
-          fragment = MapConversationTextSourceController.createViewFragment();
+          fragment = MapTextSourceController.createViewFragment();
           element = fragment.querySelector(".source");
           this.querySelector(".sources").appendChild(fragment);
-          new MapConversationTextSourceController(source, element).componentOf = this.controller;
+          new MapTextSourceController(source, element).componentOf = this.controller;
       }
     }.bind(this.view));
 

@@ -1,18 +1,7 @@
 <?php
 
+  require_once(DIR_ROOT . "/lib/common.php");
   require_once(DIR_ROOT . "/lib/responses.php");
-
-  $REQUEST_BODY = file_get_contents("php://input");
-  if ($REQUEST_BODY && $REQUEST_METHOD == "GET") $REQUEST_METHOD = "POST";
-  if (isset($_SERVER["CONTENT_TYPE"])) {
-    switch ($_SERVER["CONTENT_TYPE"]) {
-      case "application/json":
-        $REQUEST_DATA = json_decode($REQUEST_BODY, true);
-        break;
-      default:
-        $REQUEST_DATA = $REQUEST_BODY;
-    }
-  } else $REQUEST_DATA = $REQUEST_BODY;
 
   if (handle("responses")) switch ($REQUEST_METHOD) {
 

@@ -1,16 +1,16 @@
 
 /**
- * MapConversationVideoSourceController
+ * MapVideoSourceController
  * Concrete view controller to display video source.
  * @constructor
  */
-let MapConversationVideoSourceController = MapConversationSourceController.createComponent("MapConversationVideoSourceController");
+let MapVideoSourceController = MapSourceController.createComponent("MapVideoSourceController");
 
-MapConversationVideoSourceController.createViewFragment = function createViewFragment() {
-  return cloneTemplate("#template-map-conversation-videosource");
+MapVideoSourceController.createViewFragment = function createViewFragment() {
+  return cloneTemplate("#template-map-videosource");
 };
 
-MapConversationVideoSourceController.defineMethod("updateView", function updateView() {
+MapVideoSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   let displayPlayer = function displayPlayer(display) {

@@ -697,6 +697,35 @@
               title: discussion.title ? discussion.title : {},
               intro: discussion.intro ? discussion.intro : {},
             },
+            sources: conversation.mapSourcesList(function (source) {
+              switch (source.constructor) {
+                case ImageSource:
+                  return {
+                    _id: source.sourceId,
+                    type: "image",
+                    content: source.content
+                  };
+                case AudioSource:
+                  return {
+                    _id: source.sourceId,
+                    type: "audio",
+                    content: source.content
+                  };
+                case VideoSource:
+                  return {
+                    _id: source.sourceId,
+                    type: "video",
+                    content: source.content
+                  };
+                case TextSource:
+                default:
+                  return {
+                    _id: source.sourceId,
+                    type: "text",
+                    content: {"0": source.content}
+                  };
+              }
+            })
           }, notify)
             .then(touchDiscussionsWithAPIResponse)
             .then(function () {
@@ -708,6 +737,11 @@
         // Update discussion
 
         let notification = new ProgressNotification(notify);
+        let numTasksTodo = 1, numTasksDone = 0;
+        function updateNotification() {
+          notification.progressPct = numTasksDone / numTasksTodo;
+          notification.didUpdate();
+        }
         if (notify) {
           notifications.addNotification(notification);
           notifications.didUpdate();
@@ -719,7 +753,100 @@
             intro: discussion.intro ? discussion.intro : {},
           },
         })
-          // Post new sources
+        // Post new sources
+          .then(function () {
+            return Promise.all(discussion.mapSourcesList(function (source) {
+              ++numTasksTodo;
+
+              let promise;
+              if (source.sourceId < 0) {
+                switch (source.constructor) {
+                  case ImageSource:
+                    promise = ICA.post("/discussions/{0}/sources/".format(discussion.discussionId), {
+                      _id: source.sourceId,
+                      type: "image",
+                      content: source.content
+                    });
+                    break;
+                  case AudioSource:
+                    promise = ICA.post("/discussions/{0}/sources/".format(discussion.discussionId), {
+                      _id: source.sourceId,
+                      type: "audio",
+                      content: source.content
+                    });
+                    break;
+                  case VideoSource:
+                    promise = ICA.post("/discussions/{0}/sources/".format(discussion.discussionId), {
+                      _id: source.sourceId,
+                      type: "video",
+                      content: source.content
+                    });
+                    break;
+                  case TextSource:
+                  default:
+                    promise = ICA.post("/discussions/{0}/sources/".format(discussion.discussionId), {
+                      _id: source.sourceId,
+                      type: "text",
+                      content: {"0": source.content}
+                    });
+                }
+                return promise
+                  .then(ICA.APIResponse.getData)
+                  .then(function (dataSources) {
+                    touchSources(dataSources, discussion);
+                    console.log("ICA: Source posted");
+
+                    ++numTasksDone;
+                    updateNotification();
+                  });
+              }
+              // TODO: Post new revision only if necessary
+              switch (source.constructor) {
+                case AudioSource:
+                case VideoSource:
+                case ImageSource:
+                  promise = ICA.put("/discussions/{0}/sources/{1}/".format(
+                    discussion.discussionId,
+                    source.sourceId),
+                    {
+                      content: source.content
+                    });
+                  break;
+                case TextSource:
+                default:
+                  promise = ICA.put("/discussions/{0}/sources/{1}/".format(
+                    discussion.discussionId,
+                    source.sourceId),
+                    {
+                      content: {"0": source.content}
+                    });
+              }
+              return promise
+                .then(function () {
+                  console.log("ICA: Source revision posted");
+
+                  ++numTasksDone;
+                  updateNotification();
+                });
+            }));
+          })
+          // Unpublish sources removed
+          .then(function () {
+            return Promise.all(discussion.mapBackupSourcesList(function (source) {
+              if (!(source.sourceId in discussion.sources)) {
+                ++numTasksTodo;
+
+                return ICA.unpublishSource(source)
+                  .then(function () {
+                    source.destroy(true, true);
+
+                    ++numTasksDone;
+                    updateNotification();
+                  });
+              }
+              return Promise.resolve();
+            }));
+          })
           .then(function () {
             notification.progressPct = 1;
             notification.didUpdate();
@@ -982,6 +1109,8 @@
       discussion.title = dataDiscussion.meta.title ? dataDiscussion.meta.title : {};
       discussion.intro = dataDiscussion.meta.intro ? dataDiscussion.meta.intro : {};
 
+      touchSources(dataDiscussion.sources, discussion);
+
     } else {
       // New discussion
 
@@ -989,6 +1118,7 @@
         dataDiscussion.meta.title ? dataDiscussion.meta.title : {},
         dataDiscussion.meta.title ? dataDiscussion.meta.intro : {},
         discussionId);
+      touchSources(dataDiscussion.sources, discussion);
 
     }
 

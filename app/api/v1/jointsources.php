@@ -1,5 +1,6 @@
 <?php
 
+  require_once(DIR_ROOT . "/lib/common.php");
   require_once(DIR_ROOT . "/lib/conversations.php");
   require_once(DIR_ROOT . "/lib/discussions.php");
   require_once(DIR_ROOT . "/lib/responses.php");

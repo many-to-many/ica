@@ -57,6 +57,30 @@ PublisherDiscussionController.defineMethod("initView", function initView() {
     setInputValue(element, this.discussion[key]["0"]);
   }.bind(this));
 
+  this.view.querySelectorAll("[data-ica-action^='add-source']").forEach(function (element) {
+    element.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      switch (getElementProperty(element, "action")) {
+        case "add-source/text":
+          new TextSource(null, this.controller.discussion);
+          break;
+        case "add-source/image":
+          new ImageSource(null, this.controller.discussion);
+          break;
+        case "add-source/audio":
+          new AudioSource(null, this.controller.discussion);
+          break;
+        case "add-source/video":
+          new VideoSource(null, this.controller.discussion);
+          break;
+        default:
+          return;
+      }
+      this.controller.discussion.didUpdate();
+    }.bind(this));
+  }.bind(this.view));
+
   this.view.querySelector("[data-ica-action='abort']").addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -90,6 +114,41 @@ PublisherDiscussionController.defineMethod("initView", function initView() {
 
 PublisherDiscussionController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
+
+  // Update views based on sources in joint source
+  this.discussion.forEachSource(function (source) {
+    let element = this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId));
+    if (element) return;
+
+    // Create new view
+    let fragment;
+    switch (source.constructor) {
+      case ImageSource:
+        fragment = PublisherImageSourceController.createViewFragment();
+        element = fragment.querySelector(".publisher-source");
+        this.querySelector(".publisher-sources").appendChild(element);
+        new PublisherImageSourceController(source, element).componentOf = this.controller;
+        break;
+      case AudioSource:
+        fragment = PublisherAudioSourceController.createViewFragment();
+        element = fragment.querySelector(".publisher-source");
+        this.querySelector(".publisher-sources").appendChild(element);
+        new PublisherAudioSourceController(source, element).componentOf = this.controller;
+        break;
+      case VideoSource:
+        fragment = PublisherVideoSourceController.createViewFragment();
+        element = fragment.querySelector(".publisher-source");
+        this.querySelector(".publisher-sources").appendChild(element);
+        new PublisherVideoSourceController(source, element).componentOf = this.controller;
+        break;
+      case TextSource:
+      default:
+        fragment = PublisherTextSourceController.createViewFragment();
+        element = fragment.querySelector(".publisher-source");
+        this.querySelector(".publisher-sources").appendChild(element);
+        new PublisherTextSourceController(source, element).componentOf = this.controller;
+    }
+  }.bind(this.view));
 
   // Display danger zone
   this.view.querySelector("[data-ica-jointsource-filter='published']").hidden = this.discussion.discussionId < 0;

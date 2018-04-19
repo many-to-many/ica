@@ -40,6 +40,9 @@
             ? $row["intro_id"]
             : $row["discussion_intro_id"]);
 
+        // Run all sources joint by discussion
+        $discussion->sources = \ICA\Sources\getSources($discussionId);
+
         $data[$discussionId] = $discussion;
       }
     }

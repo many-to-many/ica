@@ -51,17 +51,19 @@
   "scripts/publisher/PublisherAudioSourceController.js",
   "scripts/publisher/PublisherVideoSourceController.js",
 
+  "scripts/map/MapSourceController.js",
+  "scripts/map/MapTextSourceController.js",
+  "scripts/map/MapImageSourceController.js",
+  "scripts/map/MapAudioSourceController.js",
+  "scripts/map/MapVideoSourceController.js",
+
+  "scripts/map/MapConversationController.js",
+  "scripts/map/MapDiscussionController.js",
+  "scripts/map/MapResponseController.js",
+
   "scripts/map/MapArticleController.js",
   "scripts/map/MapArticleConversationController.js",
   "scripts/map/MapArticleDiscussionController.js",
-  "scripts/map/MapConversationController.js",
-  "scripts/map/MapConversationSourceController.js",
-  "scripts/map/MapConversationTextSourceController.js",
-  "scripts/map/MapConversationImageSourceController.js",
-  "scripts/map/MapConversationAudioSourceController.js",
-  "scripts/map/MapConversationVideoSourceController.js",
-  "scripts/map/MapDiscussionController.js",
-  "scripts/map/MapResponseController.js",
 
   "scripts/map/explore/ExploreRefereesController.js",
   "scripts/map/explore/ExploreHiddenRefereesController.js",

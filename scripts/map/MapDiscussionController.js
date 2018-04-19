@@ -49,6 +49,40 @@ MapDiscussionController.createViewFragment = function createViewFragment() {
       }
     }.bind(this));
 
+    this.discussion.forEachSource(function (source) {
+      if (this.querySelector("[data-ica-source-id='{0}']".format(source.sourceId))) return;
+
+      let fragment, element;
+      switch (source.constructor) {
+        case ImageSource:
+          fragment = MapImageSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapImageSourceController(source, element).componentOf = this.controller;
+          break;
+        case AudioSource:
+          fragment = MapAudioSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapAudioSourceController(source, element).componentOf = this.controller;
+          break;
+        case VideoSource:
+          fragment = MapVideoSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapVideoSourceController(source, element).componentOf = this.controller;
+          break;
+        case TextSource:
+        default:
+          fragment = MapTextSourceController.createViewFragment();
+          element = fragment.querySelector(".source");
+          this.querySelector(".sources").appendChild(fragment);
+          new MapTextSourceController(source, element).componentOf = this.controller;
+      }
+    }.bind(this.view));
+
+    this.view.querySelector(".sources-title").hidden = this.discussion.getNumberOfSources() === 0;
+    
   });
 
   MapDiscussionController.defineMethod("uninitView", function uninitView() {

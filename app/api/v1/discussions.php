@@ -4,18 +4,6 @@
   require_once(DIR_ROOT . "/lib/discussions.php");
   require_once(DIR_ROOT . "/lib/sources.php");
 
-  $REQUEST_BODY = file_get_contents("php://input");
-  if ($REQUEST_BODY && $REQUEST_METHOD == "GET") $REQUEST_METHOD = "POST";
-  if (isset($_SERVER["CONTENT_TYPE"])) {
-    switch ($_SERVER["CONTENT_TYPE"]) {
-      case "application/json":
-        $REQUEST_DATA = json_decode($REQUEST_BODY, true);
-        break;
-      default:
-        $REQUEST_DATA = $REQUEST_BODY;
-    }
-  } else $REQUEST_DATA = $REQUEST_BODY;
-
   if (handle("discussions")) switch ($REQUEST_METHOD) {
 
     case "GET":
@@ -47,6 +35,20 @@
       $discussion->meta = $REQUEST_DATA["meta"];
 
       $discussionId = \ICA\Discussions\insertDiscussion($discussion);
+
+      $dataSources = [];
+      // For each source
+      foreach ($REQUEST_DATA["sources"] as $requestDataSource) {
+        $source = new \ICA\Sources\Source;
+        $source->type = $requestDataSource["type"];
+        $source->content = $requestDataSource["content"];
+
+        $sourceId = \ICA\Sources\insertSource($discussionId, $source);
+
+        $dataSources[$sourceId] = [
+          "_id" => $requestDataSource["_id"]
+        ];
+      }
 
       releaseDatabaseTransaction();
 
@@ -102,6 +104,44 @@
       }
 
       respondJSON($data);
+
+      break;
+
+  } elseif (list($discussionId) = handle("discussions/{i}/sources")) switch ($REQUEST_METHOD) {
+
+    case "POST": \Session\requireVerification();
+
+      if (!$REQUEST_DATA) throw new Exception("No request data");
+
+      $discussion = \ICA\Discussions\getDiscussion($discussionId);
+
+      $source = new \ICA\Sources\Source;
+      $source->type = $REQUEST_DATA["type"];
+      $source->content = $REQUEST_DATA["content"];
+
+      $sourceId = \ICA\Sources\insertSource($discussionId, $source);
+
+      respondJSON([$sourceId => [
+        "_id" => $REQUEST_DATA["_id"]
+      ]]);
+
+      break;
+
+  } elseif (list($discussionId, $sourceId) = handle("discussions/{i}/sources/{i}")) switch ($REQUEST_METHOD) {
+
+    case "PUT": \Session\requireVerification();
+
+      \ICA\Sources\partialPutSourceContent($sourceId, $REQUEST_DATA["content"]);
+
+      respondJSON([]);
+
+      break;
+
+    case "DELETE": \Session\requireVerification();
+
+      \ICA\Sources\insertSourceState($sourceId, STATE_UNPUBLISHED);
+
+      respondJSON([]);
 
       break;
 

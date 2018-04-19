@@ -111,6 +111,16 @@
                 <textarea data-ica-jointsource-meta="intro" placeholder="Introduce your meta-conversation here..." rows="1"></textarea>
               </section>
             </article>
+            <section class="publisher-sources-container">
+              <h3>Upload media here</h3>
+              <section class="publisher-sources"></section>
+              <section class="publisher-sources-control">
+                <input type="button" value="+ Plain Text" data-ica-action="add-source/text">
+                <input type="button" value="+ Photo" data-ica-action="add-source/image">
+                <input type="button" value="+ Audio Recording &amp; Transcript" data-ica-action="add-source/audio">
+                <input type="button" value="+ Video Clip" data-ica-action="add-source/video">
+              </section>
+            </section>
             <section class="publisher-published-container" data-ica-jointsource-filter="published">
               <h3 class="color-primary">Danger Zone</h3>
               <input type="button" class="color-primary" value="Delete this Meta-Conversation" data-ica-action="unpublish">
@@ -237,6 +247,7 @@
         <div class="article-container" data-ica-view>
           <div class="article" data-ica-width-multiple="300">
             <article class="jointsource discussion"></article>
+            <h3>Thread</h3>
             <div class="thread"></div>
             <div class="spinner"></div>
           </div>
@@ -253,6 +264,8 @@
               <a data-ica-action="edit-jointsource">Edit Meta-Conversation</a>
             </section>
           </section>
+          <h3 class="sources-title">Media</h3>
+          <section class="sources"></section>
         </article>
       </template>
       <template id="template-map-response">
@@ -295,19 +308,19 @@
           </section>
         </article>
       </template>
-      <template id="template-map-conversation-textsource">
+      <template id="template-map-textsource">
         <div class="card source textsource">
           <section class="text"></section>
         </div>
       </template>
-      <template id="template-map-conversation-imagesource">
+      <template id="template-map-imagesource">
         <div class="card source imagesource">
           <section class="source-image">
             <img data-ica-content>
           </section>
         </div>
       </template>
-      <template id="template-map-conversation-audiosource">
+      <template id="template-map-audiosource">
         <div class="card source audiosource">
           <audio class="player" controls>
             <source data-ica-content="0"></source>
@@ -319,7 +332,7 @@
           </section>
         </div>
       </template>
-      <template id="template-map-conversation-videosource">
+      <template id="template-map-videosource">
         <div class="card source videosource">
           <video class="player" controls>
             <source data-ica-content="0"></source>

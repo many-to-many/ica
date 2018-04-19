@@ -1,18 +1,18 @@
 
 /**
- * MapConversationAudioSourceController
+ * MapAudioSourceController
  * Concrete view controller to display an audio source.
  * @constructor
  */
-let MapConversationAudioSourceController = MapConversationSourceController.createComponent("MapConversationAudioSourceController");
+let MapAudioSourceController = MapSourceController.createComponent("MapAudioSourceController");
 
-MapConversationAudioSourceController.createViewFragment = function createViewFragment() {
-  return cloneTemplate("#template-map-conversation-audiosource");
+MapAudioSourceController.createViewFragment = function createViewFragment() {
+  return cloneTemplate("#template-map-audiosource");
 };
 
 // View
 
-MapConversationAudioSourceController.defineMethod("initView", function initView() {
+MapAudioSourceController.defineMethod("initView", function initView() {
   if (!this.view) return;
 
   // Transcript
@@ -22,7 +22,7 @@ MapConversationAudioSourceController.defineMethod("initView", function initView(
 
 });
 
-MapConversationAudioSourceController.defineMethod("updateView", function updateView() {
+MapAudioSourceController.defineMethod("updateView", function updateView() {
   if (!this.view) return;
 
   // Audio player
@@ -53,7 +53,7 @@ MapConversationAudioSourceController.defineMethod("updateView", function updateV
 
 });
 
-MapConversationAudioSourceController.defineMethod("uninitView", function uninitView() {
+MapAudioSourceController.defineMethod("uninitView", function uninitView() {
   if (!this.view) return;
 
   // Transcript
