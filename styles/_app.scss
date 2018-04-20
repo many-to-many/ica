@@ -74,21 +74,19 @@
   .about {
     margin: 2em auto;
     max-width: 900px;
+    -webkit-user-select: text;
 
     h2 {
       margin: 1em 0;
       text-align: center;
-      -webkit-user-select: text;
     }
 
     h3 {
       text-align: center;
-      -webkit-user-select: text;
     }
 
     p {
       font-family: $font-sans-serif-alt;
-      -webkit-user-select: text;
     }
 
     // Team members
