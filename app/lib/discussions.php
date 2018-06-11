@@ -221,15 +221,15 @@
   /**
    * Partially puts a new title with the content id of the title.
    */
-  function partialPutDiscussionMetaTitle($titleId, $title) {
-    \ICA\Contents\partialPutContentLanguages($titleId, $title);
+  function partialPutDiscussionMetaTitle($titleId, $title, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($titleId, $title, $state, true);
   }
 
   /**
    * Puts a new title with the content id of the title.
    */
-  function putDiscussionMetaTitle($titleId, $title) {
-    \ICA\Contents\putContentLanguages($titleId, $title);
+  function putDiscussionMetaTitle($titleId, $title, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($titleId, $title, $state, true);
   }
 
   /**
@@ -246,15 +246,15 @@
   /**
    * Partially puts a new title with the content id of the intro.
    */
-  function partialPutDiscussionMetaIntro($introId, $intro) {
-    \ICA\Contents\partialPutContentLanguages($introId, $intro);
+  function partialPutDiscussionMetaIntro($introId, $intro, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($introId, $intro, $state, true);
   }
 
   /**
    * Puts a new title with the content id of the intro.
    */
-  function putDiscussionMetaIntro($introId, $intro) {
-    \ICA\Contents\putContentLanguages($introId, $intro);
+  function putDiscussionMetaIntro($introId, $intro, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($introId, $intro, $state, true);
   }
 
 ?>

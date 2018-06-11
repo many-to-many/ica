@@ -147,12 +147,12 @@
     return \ICA\Contents\getContentLanguagesOfLatestRevision($messageId);
   }
 
-  function _partialPutResponseMessage($messageId, $message) {
-    \ICA\Contents\partialPutContentLanguages($messageId, $message);
+  function _partialPutResponseMessage($messageId, $message, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($messageId, $message, $state, true);
   }
 
-  function _putResponseMessage($messageId, $message) {
-    \ICA\Contents\partialPutContentLanguages($messageId, $message);
+  function _putResponseMessage($messageId, $message, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($messageId, $message, $state, true);
   }
 
   function getResponseRefereeJointSourceIds($responseId, $state = STATE_PUBLISHED) {

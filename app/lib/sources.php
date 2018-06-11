@@ -61,7 +61,7 @@
     $sourceId = $DATABASE->insert_id;
 
     insertSourceState($sourceId, $state);
-    \ICA\Contents\partialPutContentLanguages($contentId, $source->content);
+    partialPutSourceContentLanguages($contentId, $source->content, $source->type, $state);
 
     releaseDatabaseTransaction();
 
@@ -108,8 +108,28 @@
       return false; // Joint source not found
     }
 
-    $contentId = $result->fetch_assoc()["content_id"];
-    \ICA\Contents\partialPutContentLanguages($contentId, $content);
+    $row = $result->fetch_assoc();
+    $contentId = $row["content_id"];
+    $sourceType = decodeLang($row["source_type"]);
+    partialPutSourceContentLanguages($contentId, $content, $sourceType);
+
+  }
+
+  function partialPutSourceContentLanguages($contentId, $langs, $sourceType, $state = STATE_PUBLISHED) {
+
+    retainDatabaseTransaction();
+
+    foreach ($langs as $lang => $content) {
+
+      // Only index text content
+      $indexed =
+        $sourceType == TYPE_TEXT ||
+        $sourceType == TYPE_AUDIO && $lang == LANG_1;
+
+      \ICA\Contents\partialPutContentLanguage($contentId, $lang, $content, $state, $indexed);
+    }
+
+    releaseDatabaseTransaction();
 
   }
 
