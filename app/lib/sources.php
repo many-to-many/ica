@@ -101,7 +101,7 @@
 
   function partialPutSourceContent($sourceId, $content) {
 
-    $result = query("SELECT content_id
+    $result = query("SELECT content_id, type
       FROM sources
       WHERE id = {$sourceId};");
     if ($result->num_rows == 0) {
@@ -110,7 +110,7 @@
 
     $row = $result->fetch_assoc();
     $contentId = $row["content_id"];
-    $sourceType = decodeLang($row["source_type"]);
+    $sourceType = decodeType($row["type"]);
     partialPutSourceContentLanguages($contentId, $content, $sourceType);
 
   }
