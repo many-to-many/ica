@@ -11,7 +11,7 @@
       $limit = 40;
 
       $data = \ICA\Discussions\getDiscussions($limit,
-        !empty($_SERVER["HTTP_X_ICA_STATE"]) ? $_SERVER["HTTP_X_ICA_STATE"] : NULL);
+        empty($_SERVER["HTTP_X_ICA_STATE"]) ? NULL : $_SERVER["HTTP_X_ICA_STATE"]);
 
       // There is probably more data available
       if (count($data) == $limit) {

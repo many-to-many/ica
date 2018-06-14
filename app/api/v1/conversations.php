@@ -10,21 +10,8 @@
 
       $limit = 40;
 
-      if (array_key_exists("q", $_GET)) {
-        if (empty($_GET["q"])) {
-          $data = [];
-        } elseif (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
-          $data = \ICA\Conversations\getConversationsByMetaTitle($_GET["q"], $limit, $_SERVER["HTTP_X_ICA_STATE"]);
-        } else {
-          $data = \ICA\Conversations\getConversationsByMetaTitle($_GET["q"], $limit);
-        }
-      } else {
-        if (!empty($_SERVER["HTTP_X_ICA_STATE"])) {
-          $data = \ICA\Conversations\getConversations($limit, $_SERVER["HTTP_X_ICA_STATE"]);
-        } else {
-          $data = \ICA\Conversations\getConversations($limit);
-        }
-      }
+      $data = \ICA\Conversations\getConversations($limit,
+        empty($_SERVER["HTTP_X_ICA_STATE"]) ? NULL : $_SERVER["HTTP_X_ICA_STATE"]);
 
       // There is probably more data available
       if (count($data) == $limit) {
