@@ -20,6 +20,8 @@
 
     global $ALGOLIA_INDEX;
 
+    if (!isset($ALGOLIA_INDEX)) return [];
+
     $result = $ALGOLIA_INDEX->search($queryString, [
       "attributesToRetrieve" => [
         "jointSourceId"
