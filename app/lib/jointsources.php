@@ -27,7 +27,8 @@
         "jointSourceId"
       ],
       "hitsPerPage" => $limit,
-      "page" => $page
+      "page" => $page,
+      "distinct" => true
     ]);
 
     // Move onto next page if there are more available

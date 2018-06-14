@@ -1,6 +1,6 @@
 <?php
 
-// The Algolia index specified must have `0` and `1` as searchable attributes
+// The Algolia index specified must have `0` and `1` as searchable attributes and `jointSourceId` as distinct attribute
 
 require_once(__DIR__ . "/config.php");
 
