@@ -15,6 +15,7 @@ app/data/*
 app/cache/*
 
 config.json
-app/config.oauth2.php
 app/config.php
+app/config.oauth2.php
+app/config.algolia.php
 app/.htaccess
