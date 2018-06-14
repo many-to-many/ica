@@ -5,6 +5,7 @@
   require_once(__DIR__ . "/common.php");
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/jointsources.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   /**
    * Abstract for response.
@@ -107,6 +108,17 @@
     if (!empty($response->referrerJointSourceIds)) _partialPutResponseReferrerJointSourceIds($response->referrerJointSourceIds, $responseId);
 
     releaseDatabaseTransaction();
+
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObject([
+        "objectID" => $messageId,
+        "jointSourceId" => $responseId
+      ], true);
+    }
 
     return $responseId;
 

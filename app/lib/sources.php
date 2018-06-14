@@ -4,6 +4,7 @@
 
   require_once(__DIR__ . "/common.php");
   require_once(__DIR__ . "/contents.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   class Source {
 
@@ -65,10 +66,35 @@
 
     releaseDatabaseTransaction();
 
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObjects([
+        [
+          "objectID" => $titleId,
+          "sourceId" => $sourceId,
+          "jointSourceId" => $jointSourceId,
+        ],
+        [
+          "objectID" => $contentId,
+          "sourceId" => $sourceId,
+          "jointSourceId" => $jointSourceId
+        ]
+      ], true);
+    }
+
     return $sourceId;
 
   }
 
+  /**
+   * Fixes source titles missing content ids.
+   * @deprecated
+   *
+   * @throws \Exception
+   */
   function fixSourcesTitles() {
 
     retainDatabaseTransaction();

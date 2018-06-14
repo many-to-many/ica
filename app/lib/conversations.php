@@ -6,6 +6,7 @@
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/sources.php");
   require_once(__DIR__ . "/jointsources.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   /**
    * Abstract for conversation.
@@ -132,6 +133,27 @@
     if (!empty($conversation->meta["others"])) partialPutConversationMetaOthers($othersId, $conversation->meta["others"]);
 
     releaseDatabaseTransaction();
+
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObjects([
+        [
+          "objectID" => $titleId,
+          "jointSourceId" => $conversationId
+        ],
+        [
+          "objectID" => $introId,
+          "jointSourceId" => $conversationId
+        ],
+        [
+          "objectID" => $othersId,
+          "jointSourceId" => $conversationId
+        ]
+      ], true);
+    }
 
     return $conversationId;
 

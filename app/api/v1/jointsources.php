@@ -5,28 +5,32 @@
   require_once(DIR_ROOT . "/lib/discussions.php");
   require_once(DIR_ROOT . "/lib/responses.php");
 
-  if (list($jointSourceId) = handle("jointsources/{i}")) switch ($REQUEST_METHOD) {
+  if (handle("jointsources/")) switch ($REQUEST_METHOD) {
 
     case "GET":
 
-      $data = NULL;
+      $limit = 40;
 
-      $jointSourceType = \ICA\JointSources\retrieveJointSourceType($jointSourceId);
-
-      switch ($jointSourceType) {
-        case JOINTSOURCE_CONVERSATION:
-          $data = \ICA\Conversations\getConversation($jointSourceId);
-          $data->type = "conversation";
-          break;
-        case JOINTSOURCE_DISCUSSION:
-          $data = \ICA\Discussions\getDiscussion($jointSourceId);
-          $data->type = "discussion";
-          break;
-        case JOINTSOURCE_RESPONSE:
-          $data = \ICA\Responses\getResponse($jointSourceId);
-          $data->type = "response";
-          break;
+      if (empty($_GET["q"])) {
+        $data = [];
+      } else {
+        $page = !empty($_SERVER["HTTP_X_ICA_STATE"]) ? $_SERVER["HTTP_X_ICA_STATE"] : 0;
+        $data = \ICA\JointSources\getJointSourcesByAlgoliaQueryString($_GET["q"], $limit, $page);
       }
+
+      if (isset($page) && $page > -1) {
+        header("X-ICA-State-Next: " . $page);
+      }
+
+      respondJSON($data);
+
+      break;
+
+  } else if (list($jointSourceId) = handle("jointsources/{i}")) switch ($REQUEST_METHOD) {
+
+    case "GET":
+
+      $data = \ICA\JointSources\getJointSourceByJointSourceId($jointSourceId);
 
       respondJSON($data);
 

@@ -6,6 +6,7 @@
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/jointsources.php");
   require_once(__DIR__ . "/responses.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   /**
    * Abstract for discussion.
@@ -108,6 +109,23 @@
     if (!empty($discussion->meta["intro"])) partialPutDiscussionMetaIntro($introId, $discussion->meta["intro"]);
 
     releaseDatabaseTransaction();
+
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObjects([
+        [
+          "objectID" => $titleId,
+          "jointSourceId" => $discussionId
+        ],
+        [
+          "objectID" => $introId,
+          "jointSourceId" => $discussionId
+        ]
+      ], true);
+    }
 
     return $discussionId;
 
