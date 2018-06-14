@@ -190,12 +190,14 @@ AppMainSearchController.defineMethod("initView", function () {
 
   this.view.querySelectorAll(".search-control [data-ica-conversation-query-meta]").forEach(function (element) {
     element.addEventListener("input", function () {
-      ICA.getConversations({
-        q: this.querySelector(".search-control [data-ica-conversation-query-meta='title']").value
-      })
-        .then(function (conversations) {
-          this.controller.explore.requestNext = conversations.requestNext;
-          this.controller.explore.putItems(conversations);
+      const q = this.querySelector(".search-control [data-ica-conversation-query-meta='title']").value;
+
+      Router.replace(q ? `/search?q=${q}` : "/search");
+
+      ICA.getJointSources({ q })
+        .then(function (jointSources) {
+          this.controller.explore.requestNext = jointSources.requestNext;
+          this.controller.explore.putItems(jointSources);
           this.controller.explore.didUpdate();
         }.bind(this), function (e) {
           console.error(e.message);
