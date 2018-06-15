@@ -32,12 +32,18 @@
         $conversation = new Conversation;
 
         // Populating metadata from the database
-        $conversation->meta["title"] = getConversationMetaTitleOfLatestRevision($row["title_id"]);
-        $conversation->meta["intro"] = getConversationMetaIntroOfLatestRevision($row["intro_id"]);
+        $titleId = (int) $row["title_id"];
+        $introId = (int) $row["intro_id"];
+        $othersId = (int) $row["others_id"];
+        $conversation->meta["title"] = getConversationMetaTitleOfLatestRevision($titleId);
+        $conversation->meta["_titleId"] = $titleId;
+        $conversation->meta["intro"] = getConversationMetaIntroOfLatestRevision($introId);
+        $conversation->meta["_introId"] = $introId;
         $conversation->meta["themes"] = getConversationMetaThemesOfLatestRevision($conversationId);
         $conversation->meta["participants"] = getConversationMetaParticipantsOfLatestRevision($conversationId);
         $conversation->meta["region"] = getConversationMetaRegionOfLatestRevision($conversationId);
-        $conversation->meta["others"] = getConversationMetaOthersOfLatestRevision($row["others_id"]);
+        $conversation->meta["others"] = getConversationMetaOthersOfLatestRevision($othersId);
+        $conversation->meta["_othersId"] = $othersId;
 
         // Run all sources joint by conversation
         $conversation->sources = \ICA\Sources\getSources($conversationId);

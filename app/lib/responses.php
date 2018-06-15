@@ -31,11 +31,20 @@
         $response = new Response;
 
         // Populating metadata from the database
-        $response->message = _getResponseMessageOfLatestRevision(!empty($row["message_id"]) ? $row["message_id"] : $row["response_message_id"]);
+        $messageId = !empty($row["message_id"])
+          ? (int) $row["message_id"]
+          : (int) $row["response_message_id"];
+        $response->message = _getResponseMessageOfLatestRevision($messageId);
+        $response->_messageId = $messageId;
 
         // Readonly data
-        $response->_authorId = !empty($row["author_id"]) ? $row["author_id"] : $row["response_author_id"];
-        $response->_timestampAuthored = strtotime(!empty($row["authored"]) ? $row["authored"] : $row["response_authored"]);
+        $response->_authorId = !empty($row["author_id"])
+          ? (int) $row["author_id"]
+          : (int) $row["response_author_id"];
+        $response->_timestampAuthored =
+          strtotime(!empty($row["authored"])
+            ? $row["authored"]
+            : $row["response_authored"]);
 
         $response->refereeJointSourceIds = getResponseRefereeJointSourceIds($responseId);
 

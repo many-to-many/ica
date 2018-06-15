@@ -2,6 +2,10 @@
 
   namespace ICA\JointSources;
 
+  require_once(__DIR__ . "/common.php");
+  require_once(__DIR__ . "/conversations.php");
+  require_once(__DIR__ . "/discussions.php");
+  require_once(__DIR__ . "/responses.php");
   require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   define("JOINTSOURCE_CONVERSATION", 1);
@@ -61,9 +65,36 @@
 
   }
 
-  function getJointSourceByJointSourceId($jointSourceId) {
+  function createJointSourcesFromQueryResult($result) {
 
-    $jointSourceType = \ICA\JointSources\retrieveJointSourceType($jointSourceId);
+    if ($result->num_rows == 0) return [];
+
+    $data = [];
+    // Iterate through joint sources
+    while ($row = $result->fetch_assoc()) {
+      $jointSourceId = $row["jointsource_id"];
+      if (empty($data[$jointSourceId])) {
+        $jointSourceType = $row["jointsource_type"];
+
+        $data[$jointSourceId] = _getJointSourceByJointSourceIdAndType($jointSourceId, $jointSourceType);
+      }
+    }
+    return $data;
+
+  }
+
+  function getJointSources() {
+
+    $stateEncoded = STATE_PUBLISHED_ENCODED;
+    $result = query("SELECT *
+      FROM jointsources_summary
+      WHERE state = {$stateEncoded};");
+
+    return createJointSourcesFromQueryResult($result);
+
+  }
+
+  function _getJointSourceByJointSourceIdAndType($jointSourceId, $jointSourceType) {
 
     $data = NULL;
     switch ($jointSourceType) {
@@ -82,6 +113,14 @@
     }
 
     return $data;
+
+  }
+
+  function getJointSourceByJointSourceId($jointSourceId) {
+
+    return _getJointSourceByJointSourceIdAndType(
+      $jointSourceId,
+      \ICA\JointSources\retrieveJointSourceType($jointSourceId));
 
   }
 

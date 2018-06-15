@@ -32,14 +32,18 @@
         $discussion = new Discussion();
 
         // Populating data from the database
+        $titleId = !empty($row["title_id"])
+          ? (int) $row["title_id"]
+          : (int) $row["discussion_title_id"];
+        $introId = !empty($row["intro_id"])
+          ? (int) $row["intro_id"]
+          : (int) $row["discussion_intro_id"];
         $discussion->meta["title"] =
-          getDiscussionMetaTitleOfLatestRevision(!empty($row["title_id"])
-            ? $row["title_id"]
-            : $row["discussion_title_id"]);
+          getDiscussionMetaTitleOfLatestRevision($titleId);
+        $discussion->meta["_titleId"] = $titleId;
         $discussion->meta["intro"] =
-          getDiscussionMetaIntroOfLatestRevision(!empty($row["intro_id"])
-            ? $row["intro_id"]
-            : $row["discussion_intro_id"]);
+          getDiscussionMetaIntroOfLatestRevision($introId);
+        $discussion->meta["_introId"] = $introId;
 
         // Run all sources joint by discussion
         $discussion->sources = \ICA\Sources\getSources($discussionId);
