@@ -128,7 +128,7 @@
 
     if ($indexed && isset($ALGOLIA_INDEX)) {
       $ALGOLIA_INDEX->partialUpdateObject([
-        $langEncoded => $content,
+        $lang => $content,
         "objectID" => $contentId
       ], true);
     }
