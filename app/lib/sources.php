@@ -27,6 +27,7 @@
     // Iterate through joint sources
     while ($row = $result->fetch_assoc()) {
       $sourceId = $row["source_id"];
+      $titleId = $row["title_id"];
       $contentId = $row["content_id"];
       if (empty($data[$sourceId])) {
         $source = new Source;
@@ -35,7 +36,10 @@
         $source = $data[$sourceId];
       }
 
+      $source->title = \ICA\Contents\getContentLanguagesOfLatestRevision($titleId);
+      $source->_titleId = $titleId;
       $source->content = \ICA\Contents\getContentLanguagesOfLatestRevision($contentId);
+      $source->_contentId = $contentId;
 
       $data[$sourceId] = $source;
     }
