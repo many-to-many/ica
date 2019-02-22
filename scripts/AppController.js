@@ -14,6 +14,7 @@ AppController.defineMethod("initView", function () {
       event.preventDefault();
 
       switch (getElementProperty(this, "for-view")) {
+        case "landing": appLandingController.focusView(); break;
         case "conversations": appConversationsController.focusView(); break;
         case "discussions": appDiscussionsController.focusView(); break;
         case "search": appSearchController.focusView(); break;
@@ -148,6 +149,15 @@ AppJointSourcesController.defineMethod("initView", function () {
 });
 
 /**
+ * AppLandingController
+ */
+let AppLandingController = AppViewController.createComponent("AppLandingController");
+
+AppLandingController.defineMethod("focusView", function () {
+  Router.push(this, "/", "Many-to-Many");
+});
+
+/**
  * AppConversationsController
  */
 let AppConversationsController = AppJointSourcesController.createComponent("AppConversationsController");
@@ -246,12 +256,14 @@ window.addEventListener("load", function () {
   new NotificationsController(notifications, document.body);
   appController = new AppController(document.body);
 
+  appLandingController = new AppLandingController(document.querySelector(".landing-container"));
   appConversationsController = new AppConversationsController(document.querySelector(".conversations"));
   appDiscussionsController = new AppDiscussionsController(document.querySelector(".discussions"));
   appSearchController = new AppMainSearchController(document.querySelector(".search"));
   appAccountController = new AppAccountController(document.querySelector(".account"));
   appAboutController = new AppAboutController(document.querySelector(".about-container"));
 
+  // Restore view on page load
   for (_ of [
     {
       pattern: /\/jointsources\/(\d+)\/?$/,
@@ -415,7 +427,7 @@ window.addEventListener("load", function () {
     {
       pattern: /.*/,
       func: function () {
-        appConversationsController.focusView();
+        appLandingController.focusView();
       }
     }
   ]) {

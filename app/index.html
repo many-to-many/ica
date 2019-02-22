@@ -406,10 +406,10 @@
     <!-- Begin main -->
     <header class="topbar-container app-header">
       <div class="topbar" data-ica-width-multiple="300">
-        <div class="topbar-title-complex">
+        <a href="/" data-ica-for-view="landing" class="topbar-title-complex">
           <h1 class="title">Many-to-Many</h1>
           <p class="subtitle">Rethinking the Ethnographic Archive</p>
-        </div>
+        </a>
         <nav>
           <ul>
             <li><a href="/conversations" data-ica-for-view="conversations">Explore Conversations</a></li>
@@ -424,6 +424,11 @@
       </div>
     </header>
     <section class="app-view">
+      <div class="landing-container" data-ica-view="landing" hidden>
+        <div class="landing" data-ica-width-multiple="300">
+          <h2>Many-to-Many</h2>
+        </div>
+      </div>
       <div class="conversations" data-ica-view="conversations" data-ica-width-multiple="300" hidden>
         <div class="explore"></div>
         <div class="spinner"></div>
