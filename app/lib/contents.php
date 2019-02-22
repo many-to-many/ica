@@ -2,6 +2,8 @@
 
   namespace ICA\Contents;
 
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
+
   /**
    * Request new storage space for a language-major revisional content.
    * Returns a content id with which the service can be requested.
@@ -78,7 +80,7 @@
   /**
    * Partially puts the language specific content by content id.
    */
-  function partialPutContentLanguage($contentId, $lang, $content, $state = STATE_PUBLISHED) {
+  function partialPutContentLanguage($contentId, $lang, $content, $state = STATE_PUBLISHED, $indexed = false) {
 
     global $DATABASE;
     $accountId = \Session\getAccountId();
@@ -120,6 +122,17 @@
 
     releaseDatabaseTransaction();
 
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if ($indexed && isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObject([
+        $lang => $content,
+        "objectID" => $contentId
+      ], true);
+    }
+
     return $revisionId;
 
   }
@@ -127,12 +140,12 @@
   /**
    * Partially batch puts the language specific content by content id.
    */
-  function partialPutContentLanguages($contentId, $langs, $state = STATE_PUBLISHED) {
+  function partialPutContentLanguages($contentId, $langs, $state = STATE_PUBLISHED, $indexed = false) {
 
     retainDatabaseTransaction();
 
     foreach ($langs as $lang => $content) {
-      partialPutContentLanguage($contentId, $lang, $content, $state);
+      partialPutContentLanguage($contentId, $lang, $content, $state, $indexed);
     }
 
     releaseDatabaseTransaction();
@@ -142,13 +155,13 @@
   /**
    * Puts the language specific content by content id.
    */
-  function putContentLanguages($contentId, $langs, $state = STATE_PUBLISHED) {
+  function putContentLanguages($contentId, $langs, $state = STATE_PUBLISHED, $indexed = false) {
 
     retainDatabaseTransaction();
 
     // Add new languages to the database
 
-    partialPutContentLanguages($contentId, $langs, $state);
+    partialPutContentLanguages($contentId, $langs, $state, $indexed);
 
     // Unpublish languages no longer listed in the content put
 

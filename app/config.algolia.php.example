@@ -1,0 +1,13 @@
+<?php
+
+// The Algolia index specified must have `0` and `1` as searchable attributes and `jointSourceId` as distinct attribute
+
+require_once(__DIR__ . "/config.php");
+
+if (stringEndsWith($_SERVER["HTTP_HOST"], "<http-host>")) {
+
+  define("ALGOLIA_APP_ID", "<algolia-app-id>");
+  define("ALGOLIA_API_KEY", "<algolia-api-key>");
+  define("ALGOLIA_INDEX", "<algolia-index>");
+
+} else die("Site host not supported");

@@ -7,12 +7,15 @@ npm-debug.log
 
 .sass-cache
 
+app/vendor/*
+
 app/scripts/*
 app/styles/*
 app/data/*
 app/cache/*
 
 config.json
-app/config.oauth2.php
 app/config.php
+app/config.oauth2.php
+app/config.algolia.php
 app/.htaccess

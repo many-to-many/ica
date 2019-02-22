@@ -4,6 +4,7 @@
 
   require_once(__DIR__ . "/common.php");
   require_once(__DIR__ . "/contents.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   class Source {
 
@@ -26,6 +27,7 @@
     // Iterate through joint sources
     while ($row = $result->fetch_assoc()) {
       $sourceId = $row["source_id"];
+      $titleId = $row["title_id"];
       $contentId = $row["content_id"];
       if (empty($data[$sourceId])) {
         $source = new Source;
@@ -34,7 +36,10 @@
         $source = $data[$sourceId];
       }
 
+      $source->title = \ICA\Contents\getContentLanguagesOfLatestRevision($titleId);
+      $source->_titleId = $titleId;
       $source->content = \ICA\Contents\getContentLanguagesOfLatestRevision($contentId);
+      $source->_contentId = $contentId;
 
       $data[$sourceId] = $source;
     }
@@ -61,14 +66,39 @@
     $sourceId = $DATABASE->insert_id;
 
     insertSourceState($sourceId, $state);
-    \ICA\Contents\partialPutContentLanguages($contentId, $source->content);
+    partialPutSourceContentLanguages($contentId, $source->content, $source->type, $state);
 
     releaseDatabaseTransaction();
+
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObjects([
+        [
+          "objectID" => $titleId,
+          "sourceId" => $sourceId,
+          "jointSourceId" => $jointSourceId,
+        ],
+        [
+          "objectID" => $contentId,
+          "sourceId" => $sourceId,
+          "jointSourceId" => $jointSourceId
+        ]
+      ], true);
+    }
 
     return $sourceId;
 
   }
 
+  /**
+   * Fixes source titles missing content ids.
+   * @deprecated
+   *
+   * @throws \Exception
+   */
   function fixSourcesTitles() {
 
     retainDatabaseTransaction();
@@ -101,15 +131,35 @@
 
   function partialPutSourceContent($sourceId, $content) {
 
-    $result = query("SELECT content_id
+    $result = query("SELECT content_id, type
       FROM sources
       WHERE id = {$sourceId};");
     if ($result->num_rows == 0) {
       return false; // Joint source not found
     }
 
-    $contentId = $result->fetch_assoc()["content_id"];
-    \ICA\Contents\partialPutContentLanguages($contentId, $content);
+    $row = $result->fetch_assoc();
+    $contentId = $row["content_id"];
+    $sourceType = decodeType($row["type"]);
+    partialPutSourceContentLanguages($contentId, $content, $sourceType);
+
+  }
+
+  function partialPutSourceContentLanguages($contentId, $langs, $sourceType, $state = STATE_PUBLISHED) {
+
+    retainDatabaseTransaction();
+
+    foreach ($langs as $lang => $content) {
+
+      // Only index text content
+      $indexed =
+        $sourceType == TYPE_TEXT ||
+        $sourceType == TYPE_AUDIO && $lang == LANG_1;
+
+      \ICA\Contents\partialPutContentLanguage($contentId, $lang, $content, $state, $indexed);
+    }
+
+    releaseDatabaseTransaction();
 
   }
 

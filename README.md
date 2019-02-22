@@ -35,6 +35,10 @@ Development dependencies please check in [`package.json`](package.json).
 
   Then replace `<server-proxy>` with the url to the locally hosted website, e.g. `http://localhost/`, under which is the `app/` contents.
 
+- Make a copy of [`app/config.algolia.php.example`](app/config.algolia.php.example) as `app/config.algolia.php` in the same directory.
+
+  Then replace `<algolia-app-id>`, `<algolia-api-key>` and `<algolia-index>` with the corresponding values from Algolia. 
+
 - Front-end build: `gulp build`.
 
   Or start the front-end build and watch for changes: `gulp` or `gulp proxy`.

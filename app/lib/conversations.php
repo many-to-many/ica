@@ -6,6 +6,7 @@
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/sources.php");
   require_once(__DIR__ . "/jointsources.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   /**
    * Abstract for conversation.
@@ -31,12 +32,18 @@
         $conversation = new Conversation;
 
         // Populating metadata from the database
-        $conversation->meta["title"] = getConversationMetaTitleOfLatestRevision($row["title_id"]);
-        $conversation->meta["intro"] = getConversationMetaIntroOfLatestRevision($row["intro_id"]);
+        $titleId = (int) $row["title_id"];
+        $introId = (int) $row["intro_id"];
+        $othersId = (int) $row["others_id"];
+        $conversation->meta["title"] = getConversationMetaTitleOfLatestRevision($titleId);
+        $conversation->meta["_titleId"] = $titleId;
+        $conversation->meta["intro"] = getConversationMetaIntroOfLatestRevision($introId);
+        $conversation->meta["_introId"] = $introId;
         $conversation->meta["themes"] = getConversationMetaThemesOfLatestRevision($conversationId);
         $conversation->meta["participants"] = getConversationMetaParticipantsOfLatestRevision($conversationId);
         $conversation->meta["region"] = getConversationMetaRegionOfLatestRevision($conversationId);
-        $conversation->meta["others"] = getConversationMetaOthersOfLatestRevision($row["others_id"]);
+        $conversation->meta["others"] = getConversationMetaOthersOfLatestRevision($othersId);
+        $conversation->meta["_othersId"] = $othersId;
 
         // Run all sources joint by conversation
         $conversation->sources = \ICA\Sources\getSources($conversationId);
@@ -133,6 +140,27 @@
 
     releaseDatabaseTransaction();
 
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObjects([
+        [
+          "objectID" => $titleId,
+          "jointSourceId" => $conversationId
+        ],
+        [
+          "objectID" => $introId,
+          "jointSourceId" => $conversationId
+        ],
+        [
+          "objectID" => $othersId,
+          "jointSourceId" => $conversationId
+        ]
+      ], true);
+    }
+
     return $conversationId;
 
   }
@@ -214,15 +242,15 @@
   /**
    * Partially puts a new meta title with the content id of the title.
    */
-  function partialPutConversationMetaTitle($titleId, $metaTitle) {
-    \ICA\Contents\partialPutContentLanguages($titleId, $metaTitle);
+  function partialPutConversationMetaTitle($titleId, $metaTitle, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($titleId, $metaTitle, $state, true);
   }
 
   /**
    * Puts a new meta title with the content id of the title.
    */
-  function putConversationMetaTitle($titleId, $metaTitle) {
-    \ICA\Contents\putContentLanguages($titleId, $metaTitle);
+  function putConversationMetaTitle($titleId, $metaTitle, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($titleId, $metaTitle, $state, true);
   }
 
   /**
@@ -239,15 +267,15 @@
   /**
    * Partially puts a new meta introduction with the content id of the text.
    */
-  function partialPutConversationMetaIntro($introId, $metaIntro) {
-    \ICA\Contents\partialPutContentLanguages($introId, $metaIntro);
+  function partialPutConversationMetaIntro($introId, $metaIntro, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($introId, $metaIntro, $state, true);
   }
 
   /**
    * Puts a new meta introduction with the content id of the text.
    */
-  function putConversationMetaIntro($introId, $metaTitle) {
-    \ICA\Contents\putContentLanguages($introId, $metaTitle);
+  function putConversationMetaIntro($introId, $metaTitle, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($introId, $metaTitle, $state, true);
   }
 
   /**
@@ -681,15 +709,15 @@
   /**
    * Partially puts a new meta other reflections with the content id of the text.
    */
-  function partialPutConversationMetaOthers($othersId, $metaOthers) {
-    \ICA\Contents\partialPutContentLanguages($othersId, $metaOthers);
+  function partialPutConversationMetaOthers($othersId, $metaOthers, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($othersId, $metaOthers, $state, true);
   }
 
   /**
    * Puts a new meta other reflections with the content id of the text.
    */
-  function putConversationMetaOthers($othersId, $metaOthers) {
-    \ICA\Contents\putContentLanguages($othersId, $metaOthers);
+  function putConversationMetaOthers($othersId, $metaOthers, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($othersId, $metaOthers, $state, true);
   }
 
   function fixConversationMetaOthers() {

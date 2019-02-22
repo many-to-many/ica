@@ -6,6 +6,7 @@
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/jointsources.php");
   require_once(__DIR__ . "/responses.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   /**
    * Abstract for discussion.
@@ -31,14 +32,18 @@
         $discussion = new Discussion();
 
         // Populating data from the database
+        $titleId = !empty($row["title_id"])
+          ? (int) $row["title_id"]
+          : (int) $row["discussion_title_id"];
+        $introId = !empty($row["intro_id"])
+          ? (int) $row["intro_id"]
+          : (int) $row["discussion_intro_id"];
         $discussion->meta["title"] =
-          getDiscussionMetaTitleOfLatestRevision(!empty($row["title_id"])
-            ? $row["title_id"]
-            : $row["discussion_title_id"]);
+          getDiscussionMetaTitleOfLatestRevision($titleId);
+        $discussion->meta["_titleId"] = $titleId;
         $discussion->meta["intro"] =
-          getDiscussionMetaIntroOfLatestRevision(!empty($row["intro_id"])
-            ? $row["intro_id"]
-            : $row["discussion_intro_id"]);
+          getDiscussionMetaIntroOfLatestRevision($introId);
+        $discussion->meta["_introId"] = $introId;
 
         // Run all sources joint by discussion
         $discussion->sources = \ICA\Sources\getSources($discussionId);
@@ -108,6 +113,23 @@
     if (!empty($discussion->meta["intro"])) partialPutDiscussionMetaIntro($introId, $discussion->meta["intro"]);
 
     releaseDatabaseTransaction();
+
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObjects([
+        [
+          "objectID" => $titleId,
+          "jointSourceId" => $discussionId
+        ],
+        [
+          "objectID" => $introId,
+          "jointSourceId" => $discussionId
+        ]
+      ], true);
+    }
 
     return $discussionId;
 
@@ -221,15 +243,15 @@
   /**
    * Partially puts a new title with the content id of the title.
    */
-  function partialPutDiscussionMetaTitle($titleId, $title) {
-    \ICA\Contents\partialPutContentLanguages($titleId, $title);
+  function partialPutDiscussionMetaTitle($titleId, $title, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($titleId, $title, $state, true);
   }
 
   /**
    * Puts a new title with the content id of the title.
    */
-  function putDiscussionMetaTitle($titleId, $title) {
-    \ICA\Contents\putContentLanguages($titleId, $title);
+  function putDiscussionMetaTitle($titleId, $title, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($titleId, $title, $state, true);
   }
 
   /**
@@ -246,15 +268,15 @@
   /**
    * Partially puts a new title with the content id of the intro.
    */
-  function partialPutDiscussionMetaIntro($introId, $intro) {
-    \ICA\Contents\partialPutContentLanguages($introId, $intro);
+  function partialPutDiscussionMetaIntro($introId, $intro, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($introId, $intro, $state, true);
   }
 
   /**
    * Puts a new title with the content id of the intro.
    */
-  function putDiscussionMetaIntro($introId, $intro) {
-    \ICA\Contents\putContentLanguages($introId, $intro);
+  function putDiscussionMetaIntro($introId, $intro, $state = STATE_PUBLISHED) {
+    \ICA\Contents\putContentLanguages($introId, $intro, $state, true);
   }
 
 ?>

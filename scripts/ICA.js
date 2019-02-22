@@ -322,19 +322,7 @@
     if (!jointSourcePromises[jointSourceId]) {
       jointSourcePromises[jointSourceId] =
         ICA.get("/jointsources/{0}/".format(jointSourceId))
-          .then(ICA.APIResponse.getData)
-          .then(function (data) {
-            switch (data.type) {
-              case "conversation":
-                return touchConversation(jointSourceId, data);
-              case "discussion":
-                return touchDiscussion(jointSourceId, data);
-              case "response":
-                return touchResponse(jointSourceId, data);
-              default:
-                throw new Error("Unknown joint source type");
-            }
-          });
+          .then(touchJointSourceWithAPIResponse.bind(null, jointSourceId));
     }
 
     return jointSourcePromises[jointSourceId];
@@ -348,6 +336,20 @@
   ICA.getJointSourceDiscussions = function (jointSourceId) {
     return ICA.get("/jointsources/{0}/discussions/".format(jointSourceId))
       .then(touchDiscussionsWithAPIResponse);
+  };
+
+  ICA.getJointSources = function (params) {
+    let data = params
+      ? Object.entries(params).map(function (entry) {
+        return entry[0] + "=" + entry[1];
+      })
+      : [];
+    return ICA.get(
+      "/jointsources/"
+        + (data.length > 0
+          ? "?" + data.join("&")
+          : ""))
+      .then(touchJointSourcesWithAPIResponse);
   };
 
   ICA.getConversations = function (params) {
@@ -916,6 +918,33 @@
   };
 
   // Utility Functions
+
+  function touchJointSource(jointSourceId, dataJointSource) {
+    switch (dataJointSource.type) {
+      case "conversation":
+        return touchConversation(jointSourceId, dataJointSource);
+      case "discussion":
+        return touchDiscussion(jointSourceId, dataJointSource);
+      case "response":
+        return touchResponse(jointSourceId, dataJointSource);
+      default:
+        throw new Error("Unknown joint source type");
+    }
+  }
+
+  function touchJointSourceWithAPIResponse(jointSourceId, apiResponse) {
+    return touchJointSource(jointSourceId, apiResponse.data);
+  }
+
+  function touchJointSources(dataJointSources) {
+    return Object.entries(dataJointSources).map(function (entry) {
+      return touchJointSource(entry[0], entry[1]);
+    });
+  }
+
+  function touchJointSourcesWithAPIResponse(apiResponse) {
+    return touchJointSources(apiResponse.data);
+  }
 
   function touchConversations(data) {
     let conversations = [];

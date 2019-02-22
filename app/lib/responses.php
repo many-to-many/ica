@@ -5,6 +5,7 @@
   require_once(__DIR__ . "/common.php");
   require_once(__DIR__ . "/contents.php");
   require_once(__DIR__ . "/jointsources.php");
+  require_once(__DIR__ . "/../lib/integration_algolia.php");
 
   /**
    * Abstract for response.
@@ -30,11 +31,20 @@
         $response = new Response;
 
         // Populating metadata from the database
-        $response->message = _getResponseMessageOfLatestRevision(!empty($row["message_id"]) ? $row["message_id"] : $row["response_message_id"]);
+        $messageId = !empty($row["message_id"])
+          ? (int) $row["message_id"]
+          : (int) $row["response_message_id"];
+        $response->message = _getResponseMessageOfLatestRevision($messageId);
+        $response->_messageId = $messageId;
 
         // Readonly data
-        $response->_authorId = !empty($row["author_id"]) ? $row["author_id"] : $row["response_author_id"];
-        $response->_timestampAuthored = strtotime(!empty($row["authored"]) ? $row["authored"] : $row["response_authored"]);
+        $response->_authorId = !empty($row["author_id"])
+          ? (int) $row["author_id"]
+          : (int) $row["response_author_id"];
+        $response->_timestampAuthored =
+          strtotime(!empty($row["authored"])
+            ? $row["authored"]
+            : $row["response_authored"]);
 
         $response->refereeJointSourceIds = getResponseRefereeJointSourceIds($responseId);
 
@@ -108,6 +118,17 @@
 
     releaseDatabaseTransaction();
 
+    // Integration for Algolia for indexing
+
+    global $ALGOLIA_INDEX;
+
+    if (isset($ALGOLIA_INDEX)) {
+      $ALGOLIA_INDEX->partialUpdateObject([
+        "objectID" => $messageId,
+        "jointSourceId" => $responseId
+      ], true);
+    }
+
     return $responseId;
 
   }
@@ -147,12 +168,12 @@
     return \ICA\Contents\getContentLanguagesOfLatestRevision($messageId);
   }
 
-  function _partialPutResponseMessage($messageId, $message) {
-    \ICA\Contents\partialPutContentLanguages($messageId, $message);
+  function _partialPutResponseMessage($messageId, $message, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($messageId, $message, $state, true);
   }
 
-  function _putResponseMessage($messageId, $message) {
-    \ICA\Contents\partialPutContentLanguages($messageId, $message);
+  function _putResponseMessage($messageId, $message, $state = STATE_PUBLISHED) {
+    \ICA\Contents\partialPutContentLanguages($messageId, $message, $state, true);
   }
 
   function getResponseRefereeJointSourceIds($responseId, $state = STATE_PUBLISHED) {
