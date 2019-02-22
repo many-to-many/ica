@@ -60,32 +60,39 @@ AppController.defineMethod("initView", function () {
 });
 
 /**
+ * AppViewMixin
+ */
+function AppViewMixin(Controller) {
+
+  Controller.defineMethod("unhideView", function unhideView() {
+    if (!this.view) return;
+
+    for (let element of document.body.querySelectorAll("[data-ica-view]")) {
+      element.hidden = element !== this.view;
+    }
+
+    let view = getElementProperty(this.view, "view");
+    for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
+      element.classList.toggle("active", getElementProperty(element, "for-view") === view);
+    }
+  });
+
+  return Controller;
+
+}
+
+/**
  * AppViewController
  */
-let AppViewController = Controller.createComponent("AppViewController");
-
-AppViewController.defineMethod("unhideView", function unhideView() {
-  if (!this.view) return;
-
-  let view = getElementProperty(this.view, "view");
-
-  for (let element of this.view.parentNode.querySelectorAll("[data-ica-view]")) {
-    element.hidden = element !== this.view;
-  }
-
-  for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
-    let forView = getElementProperty(element, "for-view");
-    element.classList.toggle("active", view === forView);
-  }
-});
+let AppViewController = AppViewMixin(Controller.createComponent("AppViewController"));
 
 AppViewController.prototype.destroy = function () {}; // Block destory method
-
-let AppJointSourcesController = AppViewController.createComponent("AppJointSourcesController");
 
 /**
  * AppJointSourcesController
  */
+let AppJointSourcesController = AppViewController.createComponent("AppJointSourcesController");
+
 AppJointSourcesController.defineMethod("initView", function () {
   if (!this.view) return;
 

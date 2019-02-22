@@ -17,6 +17,10 @@
 
   "scripts/Controller.js",
 
+  "scripts/ICA.js",
+  "scripts/Router.js",
+  "scripts/AppController.js",
+
   "scripts/authors/Author.js",
 
   "scripts/jointsources/JointSource.js",
@@ -100,9 +104,5 @@
   "scripts/TokensHandler.js",
   "scripts/TokensController.js",
 
-  "scripts/ImageController.js",
-
-  "scripts/ICA.js",
-  "scripts/Router.js",
-  "scripts/AppController.js"
+  "scripts/ImageController.js"
 ]

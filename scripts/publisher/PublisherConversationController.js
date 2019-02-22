@@ -4,7 +4,7 @@
  * Concrete view controller to present a joint source conversation.
  * @constructor
  */
-let PublisherConversationController = ConversationController.createComponent("PublisherConversationController");
+let PublisherConversationController = AppViewMixin(ConversationController.createComponent("PublisherConversationController"));
 
 PublisherConversationController.createViewFragment = function () {
   return cloneTemplate("#template-publisher");
@@ -150,21 +150,6 @@ PublisherConversationController.defineMethod("updateView", function updateView()
 
   // Display danger zone
   this.view.querySelector("[data-ica-conversation-filter='published']").hidden = this.conversation.conversationId < 0;
-});
-
-PublisherConversationController.defineMethod("unhideView", function unhideView() {
-  if (!this.view) return;
-
-  let view = getElementProperty(this.view, "view");
-
-  for (let element of this.view.parentNode.querySelectorAll("[data-ica-view]")) {
-    element.hidden = element !== this.view;
-  }
-
-  for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
-    let forView = getElementProperty(element, "for-view");
-    element.classList.toggle("active", view === forView);
-  }
 });
 
 
