@@ -4,7 +4,7 @@
  * Concrete view controller to display a Discussion.
  * @constructor
  */
-let ExploreDiscussionController = ConversationController.createComponent("ExploreDiscussionController");
+let ExploreDiscussionController = DiscussionController.createComponent("ExploreDiscussionController");
 
 ExploreDiscussionController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-explore-discussion");
