@@ -14,6 +14,35 @@ Object.assign(BasicConversationPresenterController.prototype, {
 
 BasicConversationPresenterController.defineAlias("model", "conversation");
 
+BasicConversationPresenterController.defineMethod("init", function init() {
+
+  // Proxy for backdrop image
+  this.backdropImage = new Image();
+  this.backdropImage.addEventListener("load", function () {
+    if (!this.view) return;
+
+    let backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
+
+    let backgroundImage =
+      (this.fadeBackdrop ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.06) 8em)," : "") +
+      ("url(" + this.backdropImage.src + ")");
+    if (backdropImageElement.style.backgroundImage !== backgroundImage)
+      backdropImageElement.style.backgroundImage = backgroundImage;
+
+  }.bind(this));
+  this.backdropImage.addEventListener("error", function () {
+    if (!this.view) return;
+
+    let backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
+
+    let backgroundImage = "";
+    if (backdropImageElement.style.backgroundImage !== backgroundImage)
+      backdropImageElement.style.backgroundImage = backgroundImage;
+
+  }.bind(this));
+
+});
+
 BasicConversationPresenterController.defineMethod("updateView", function updateView() {
   if (!this.view || !this.conversation) return;
 
@@ -35,24 +64,21 @@ BasicConversationPresenterController.defineMethod("updateView", function updateV
     if (imageSource.content["0"]) {
       this.view.classList.add("dark");
 
-      // TODO: Reduce duplication with fetching images
-      let backgroundImage =
-        (this.fadeBackdrop ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.06) 8em)," : "") +
-        (
-          imageSource.content["0"]
-            ? "url(" + (
-            imageSource.fileHandler.blob instanceof Blob
-              ? imageSource.fileHandler.url
-              : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
-              + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
-          ) + ")"
-            : ""
-        );
-      if (backdropImageElement.style.backgroundImage !== backgroundImage)
-        backdropImageElement.style.backgroundImage = backgroundImage;
+      this.backdropImage.src = imageSource.content["0"] ? (
+          imageSource.fileHandler.blob instanceof Blob
+            ? imageSource.fileHandler.url
+            : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
+            + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
+        ) : "";
+    } else {
+      this.backdropImage.src = "";
     }
   } else {
-    backdropImageElement.style.backgroundImage = "";
+    this.backdropImage.src = "";
   }
 
 });
+
+BasicConversationPresenterController.prototype.promiseBackdropImageLoaded = function () {
+  return promiseImageLoaded(this.backdropImage);
+};

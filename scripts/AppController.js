@@ -172,7 +172,9 @@ AppLandingController.defineMethod("initView", function () {
         }, 1000 + 1)
           .then(function () {
             controller.conversation = conversation;
-
+            return controller.promiseBackdropImageLoaded();
+          }, 1)
+          .then(function () {
             controller.view.classList.add("hidden-left");
           }, 1000 + 1)
           .then(function () {
@@ -188,7 +190,9 @@ AppLandingController.defineMethod("initView", function () {
           }, 1000 + 1)
           .then(function () {
             controller.conversation = conversation;
-
+            return controller.promiseBackdropImageLoaded();
+          }, 1)
+          .then(function () {
             controller.view.classList.add("hidden-right");
           }, 1000 + 1)
           .then(function () {
