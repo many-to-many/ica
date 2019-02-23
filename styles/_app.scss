@@ -30,10 +30,208 @@
       }
     }
   }
+
+  &.app-header.transparent {
+
+    .topbar-title-complex {
+      opacity: 0;
+    }
+
+    li a {
+
+      &:hover,
+      &.active {
+
+        &:after {
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
 }
 
 .app-view {
   padding-top: calc(3em + 1px);
+
+  .landing-container {
+    margin-top: -3 * $font-size - 1px;
+
+    .landing {
+      box-sizing: border-box;
+      margin: 0 auto;
+      padding-top: 3 * $font-size + 1px;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .landing-text {
+      box-sizing: border-box;
+      flex: 0 1 auto;
+      margin: auto 0;
+      padding: 0 1em 0 0;
+      width: 300px;
+      background-color: $color-background;
+      z-index: 2;
+
+      h1 {
+        font-size: 1.5em;
+        margin: 0.3em 0;
+      }
+
+      h2 {
+        font-size: 1em;
+        margin: 0.5em 0;
+        color: $color-secondary;
+      }
+    }
+
+    #featured-conversation {
+      margin: 3em 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+
+      // Some styling borrowed from _explore.scss
+      &.jointsource {
+        box-sizing: border-box;
+        position: relative;
+        background-color: $color-accent;
+        -webkit-user-select: text;
+
+        ::selection {
+          background-color: rgba($color-secondary, 0.40);
+        }
+
+        > .jointsource-meta {
+          z-index: 2;
+          position: absolute;
+          top: 3em;
+          right: 8em;
+          bottom: 1.5em;
+          left: 8em;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+
+          > .jointsource-meta-text {
+            height: 300px;
+            flex: 1 1 auto;
+            font-size: 2em;
+            font-family: $font-serif;
+            color: $color-secondary;
+            @include fade(8em);
+          }
+
+          > .jointsource-meta-caption {
+            margin-top: auto;
+            text-align: center;
+            flex: 0 0 auto;
+          }
+        }
+
+        > .conversation-backdrop {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          overflow: hidden;
+
+          > .conversation-backdrop-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform ease 0.4s;
+          }
+        }
+
+        &.dark {
+          background-color: transparent;
+          color: $color-background;
+
+          > .jointsource-meta {
+
+            > .jointsource-meta-text {
+              display: none;
+            }
+          }
+        }
+      }
+
+      // Prev/next buttons
+
+      #featured-conversation-prev,
+      #featured-conversation-next {
+        font-size: 1em;
+        -webkit-appearance: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        box-sizing: content-box;
+        padding: 1em;
+        width: 3em;
+        height: 2em;
+        border: none;
+        background-color: $color-background;
+        background-size: 2em;
+        background-repeat: no-repeat;
+        transition: transform ease 0.3s;
+      }
+
+      #featured-conversation-prev {
+        left: 0;
+        background-image: inline-image("../images/icon-left.svg");
+        background-position: right 1em center;
+
+        &:hover {
+          transform: translateX(-1em);
+        }
+      }
+
+      #featured-conversation-next {
+        right: 0;
+        background-image: inline-image("../images/icon-right.svg");
+        background-position: left 1em center;
+
+        &:hover {
+          transform: translateX(1em);
+        }
+      }
+
+      // Overlay for sliding transitions
+
+      &.hidden {
+        opacity: initial !important;
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: $color-background;
+        z-index: 3;
+        transform: translateX(100%);
+      }
+
+      &.hidden::after {
+        transform: none;
+        transition: transform ease 1s;
+      }
+
+      &.hidden-left::after {
+        transform: translateX(-100%);
+      }
+
+      &.hidden-right::after {
+        transform: translateX(100%);
+      }
+    }
+  }
 
   .conversations,
   .discussions,

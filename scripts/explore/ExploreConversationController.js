@@ -4,7 +4,7 @@
  * Concrete view controller to display a Conversation.
  * @constructor
  */
-let ExploreConversationController = ConversationController.createComponent("ExploreConversationController");
+let ExploreConversationController = BasicConversationPresenterController.createComponent("ExploreConversationController");
 
 ExploreConversationController.createViewFragment = function createViewFragment() {
   return cloneTemplate("#template-explore-conversation");
@@ -31,45 +31,10 @@ ExploreConversationController.defineAlias("model", "conversation");
 
     this.view.addEventListener("mouseleave", audioPreviewElementOnBlur);
 
-    setElementProperty(this.view, "conversation-id", this.conversation.conversationId);
   });
 
   ExploreConversationController.defineMethod("updateView", function updateView() {
     if (!this.view) return;
-
-    // Update display metadata
-
-    this.view.querySelectorAll("[data-ica-conversation-meta]").forEach(function (element) {
-      element.textContent = this.conversation.meta[getElementProperty(element, "conversation-meta")] || "";
-    }.bind(this));
-
-    // Backdrop image
-
-    this.view.classList.remove("dark");
-    let imageSources = this.conversation.imageSources;
-    if (imageSources.length > 0) {
-      let imageSource = imageSources[0];
-
-      if (imageSource.content["0"]) {
-        this.view.classList.add("dark");
-
-        // TODO: Reduce duplication with fetching images
-        let backdropImageElement = this.view.querySelector(".conversation-backdrop-image");
-        let backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.06) 8em)," +
-          (
-            imageSource.content["0"]
-              ? "url(" + (
-              imageSource.fileHandler.blob instanceof Blob
-                ? imageSource.fileHandler.url
-                : imageSource.fileHandler.url + "?width=" + (backdropImageElement.offsetWidth * this.devicePixelRatio)
-                + "&height=" + (backdropImageElement.offsetHeight * this.devicePixelRatio)
-            ) + ")"
-              : ""
-          );
-        if (backdropImageElement.style.backgroundImage !== backgroundImage)
-          backdropImageElement.style.backgroundImage = backgroundImage;
-      }
-    }
 
     // Audio preview
 
@@ -103,7 +68,6 @@ ExploreConversationController.defineAlias("model", "conversation");
 
     this.view.removeEventListener("click", viewOnClick);
 
-    removeElementProperty(this.view, "conversation-id");
   });
 
   // Shared functions

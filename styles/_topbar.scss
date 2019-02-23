@@ -11,6 +11,7 @@
   -webkit-overflow-scrolling: touch;
   z-index: $z-relative-topbar;
   @include shadow(2);
+  transition: border-bottom-color ease 0.2s;
 }
 
 .topbar {
@@ -37,7 +38,7 @@
     display: block;
     flex: 0 0 auto;
     font-size: 1em;
-    margin: 0 auto 0 0;
+    margin: 0;
     padding: 1em 1.25em 1em 0;
     line-height: 1;
     font-weight: 700;
@@ -46,8 +47,9 @@
 
   .topbar-title-complex {
     flex: 0 0 auto;
-    margin: 0 auto 0 0;
+    margin: 0;
     padding: 0.5em 1.25em 0.5em 0;
+    transition: opacity ease 0.2s;
 
     .title {
       display: block;
@@ -72,6 +74,7 @@
 
   nav {
     flex: 0 0 auto;
+    margin-left: auto;
 
     ul {
       display: flex;
@@ -103,4 +106,9 @@
       }
     }
   }
+}
+
+.topbar-container.transparent {
+  background-color: rgba(#fff, 0.9);
+  border-bottom-color: transparent;
 }

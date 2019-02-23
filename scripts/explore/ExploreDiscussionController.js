@@ -21,7 +21,6 @@ ExploreDiscussionController.defineAlias("model", "discussion");
 
     this.view.addEventListener("click", viewOnClick);
 
-    setElementProperty(this.view, "discussion-id", this.discussion.discussionId);
   });
 
   ExploreDiscussionController.defineMethod("updateView", function updateView() {
@@ -42,7 +41,6 @@ ExploreDiscussionController.defineAlias("model", "discussion");
 
     this.view.removeEventListener("click", viewOnClick);
 
-    removeElementProperty(this.view, "discussion-id");
   });
 
   // Shared functions

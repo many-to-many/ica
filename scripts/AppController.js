@@ -153,8 +153,94 @@ AppJointSourcesController.defineMethod("initView", function () {
  */
 let AppLandingController = AppViewController.createComponent("AppLandingController");
 
+AppLandingController.defineMethod("initView", function () {
+
+  let controller = new BasicConversationPresenterController(null, this.view.querySelector("#featured-conversation"));
+  controller.componentOf = this.controller;
+  controller.fadeBackdrop = false;
+
+  this.present = function (index, forwardAnimation = true) {
+    if (this.presentLock) return;
+    this.presentLock = true; // Waiting to present
+
+    this.featuredItems[index].then(function (conversation) {
+
+      let waterfall;
+      if (forwardAnimation) {
+        waterfall = new Waterfall(function () {
+          controller.view.classList.add("hidden");
+        }, 1000 + 1)
+          .then(function () {
+            controller.conversation = conversation;
+
+            controller.view.classList.add("hidden-left");
+          }, 1000 + 1)
+          .then(function () {
+            controller.view.classList.remove("hidden", "hidden-left");
+            controller.view.style.transition = "";
+          });
+      } else {
+        waterfall = new Waterfall(function () {
+          controller.view.classList.add("hidden-left");
+        })
+          .then(function () {
+            controller.view.classList.add("hidden");
+            controller.view.classList.remove("hidden-left");
+          }, 1000 + 1)
+          .then(function () {
+            controller.conversation = conversation;
+
+            controller.view.classList.add("hidden-right");
+          }, 1000 + 1)
+          .then(function () {
+            controller.view.classList.remove("hidden", "hidden-right");
+          });
+      }
+
+      waterfall
+        .then(function () {
+          this.currentIndex = index;
+          this.presentLock = false;
+        }.bind(this));
+
+    }.bind(this));
+  };
+
+  this.presentNext = function () {
+    return this.present((this.currentIndex + 1) % this.featuredItems.length);
+  }.bind(this);
+
+  this.presentPrev = function () {
+    return this.present((this.currentIndex - 1 + this.featuredItems.length) % this.featuredItems.length, false);
+  }.bind(this);
+
+  this.view.querySelector("#featured-conversation-prev").addEventListener("click", this.presentPrev);
+  this.view.querySelector("#featured-conversation-next").addEventListener("click", this.presentNext);
+
+});
+
+AppLandingController.defineMethod("uninitView", function () {
+
+  this.view.querySelector("#featured-conversation-prev").removeEventListener("click", this.presentPrev);
+  this.view.querySelector("#featured-conversation-next").removeEventListener("click", this.presentNext);
+
+});
+
+AppLandingController.defineMethod("hideView", function () {
+  document.querySelector(".app-header").classList.remove("transparent");
+});
+
+AppLandingController.defineMethod("unhideView", function () {
+  document.querySelector(".app-header").classList.add("transparent");
+});
+
 AppLandingController.defineMethod("focusView", function () {
   Router.push(this, "/", "Many-to-Many");
+
+  if (!this.featuredItems && this.view) {
+    this.featuredItems = [22, 18, 11, 64, 1].map(ICA.getConversation);
+    this.present(0); // Should initialize currentIndex
+  }
 });
 
 /**

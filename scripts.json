@@ -35,6 +35,7 @@
 
   "scripts/conversations/Conversation.js",
   "scripts/conversations/ConversationController.js",
+  "scripts/conversations/BasicConversationPresenterController.js",
 
   "scripts/responses/Response.js",
   "scripts/responses/ResponseController.js",
