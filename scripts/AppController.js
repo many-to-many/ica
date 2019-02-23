@@ -177,7 +177,6 @@ AppLandingController.defineMethod("initView", function () {
           }, 1000 + 1)
           .then(function () {
             controller.view.classList.remove("hidden", "hidden-left");
-            controller.view.style.transition = "";
           });
       } else {
         waterfall = new Waterfall(function () {
