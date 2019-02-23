@@ -9,7 +9,7 @@ let ConversationController = JointSourceController.createComponent("Conversation
 ConversationController.defineAlias("model", "conversation");
 
 ConversationController.defineMethod("initView", function initView() {
-  if (!this.view) return;
+  if (!this.view || !this.conversation) return;
 
   setElementProperty(this.view, "conversation-id", this.conversation.conversationId);
 });
