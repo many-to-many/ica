@@ -238,7 +238,7 @@ AppLandingController.defineMethod("focusView", function () {
   Router.push(this, "/", "Many-to-Many");
 
   if (!this.featuredItems && this.view) {
-    this.featuredItems = [22, 18, 11, 64, 1].map(ICA.getConversation);
+    this.featuredItems = [7, 11, 14, 58, 20, 12, 34, 6].map(ICA.getConversation);
     this.present(0); // Should initialize currentIndex
   }
 });
