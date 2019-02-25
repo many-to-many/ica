@@ -1,0 +1,11 @@
+
+.search-by-algolia {
+  width: $column-width;
+  height: 1em;
+  margin: 1em auto;
+  padding: 1em 0;
+  border-top: 1px solid $color-border;
+  background: inline-image("search-by-algolia-light.svg") no-repeat center;
+  background-origin: content-box;
+  background-size: contain;
+}
