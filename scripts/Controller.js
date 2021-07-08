@@ -80,7 +80,7 @@ Controller.defineMethod("hideView", function hideView() {
   this.view.hidden = true;
 });
 
-Controller.defineMethod("unhideView", function hideView() {
+Controller.defineMethod("unhideView", function unhideView() {
   if (!this.view) return;
   this.view.hidden = false;
 });

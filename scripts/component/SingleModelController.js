@@ -25,6 +25,7 @@ Object.defineProperty(SingleModelController.prototype, "model", {
     this.uninitModel();
     this._model = value;
     this.initModel();
+    this.updateView();
   }
 });
 

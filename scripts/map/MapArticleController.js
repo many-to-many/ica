@@ -4,7 +4,7 @@
  * Abstract view controller to display a jointSource.
  * @constructor
  */
-let MapArticleController = SingleModelController.createComponent("MapArticleController");
+let MapArticleController = AppViewMixin(SingleModelController.createComponent("MapArticleController"));
 
 MapArticleController.defineMethod("construct", function construct() {
 
@@ -51,18 +51,3 @@ MapArticleController.defineMethod("construct", function construct() {
   }
 
 }(MapArticleController));
-
-MapArticleController.defineMethod("unhideView", function unhideView() {
-  if (!this.view) return;
-
-  let view = getElementProperty(this.view, "view");
-
-  for (let element of this.view.parentNode.querySelectorAll("[data-ica-view]")) {
-    element.hidden = element !== this.view;
-  }
-
-  for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
-    let forView = getElementProperty(element, "for-view");
-    element.classList.toggle("active", view === forView);
-  }
-});

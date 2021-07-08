@@ -20,7 +20,7 @@ JointSourceController.defineMethod("uninitModel", function uninitModel() {
 // View
 
 JointSourceController.defineMethod("initView", function updateView() {
-  if (!this.view) return;
+  if (!this.view || !this.jointSource) return;
 
   setElementProperty(this.view, "jointsource-id", this.jointSource.jointSourceId);
 });

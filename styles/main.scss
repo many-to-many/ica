@@ -12,11 +12,12 @@ $color-background-light: #fcfcfc;
 
 /* Fonts */
 
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,500,700|Lato");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,500,700|Lato|Roboto+Slab");
 
 $font-size: 16px;
 $font-sans-serif: Roboto, sans-serif;
 $font-sans-serif-alt: Lato, $font-sans-serif;
+$font-serif: "Roboto Slab", serif;
 $font-mono: "Roboto Mono", monospace;
 
 /* Z-Index & Effects */

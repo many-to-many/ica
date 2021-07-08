@@ -14,6 +14,7 @@ AppController.defineMethod("initView", function () {
       event.preventDefault();
 
       switch (getElementProperty(this, "for-view")) {
+        case "landing": appLandingController.focusView(); break;
         case "conversations": appConversationsController.focusView(); break;
         case "discussions": appDiscussionsController.focusView(); break;
         case "search": appSearchController.focusView(); break;
@@ -60,32 +61,39 @@ AppController.defineMethod("initView", function () {
 });
 
 /**
+ * AppViewMixin
+ */
+function AppViewMixin(Controller) {
+
+  Controller.defineMethod("unhideView", function unhideView() {
+    if (!this.view) return;
+
+    for (let element of document.body.querySelectorAll("[data-ica-view]")) {
+      element.hidden = element !== this.view;
+    }
+
+    let view = getElementProperty(this.view, "view");
+    for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
+      element.classList.toggle("active", getElementProperty(element, "for-view") === view);
+    }
+  });
+
+  return Controller;
+
+}
+
+/**
  * AppViewController
  */
-let AppViewController = Controller.createComponent("AppViewController");
-
-AppViewController.defineMethod("unhideView", function unhideView() {
-  if (!this.view) return;
-
-  let view = getElementProperty(this.view, "view");
-
-  for (let element of this.view.parentNode.querySelectorAll("[data-ica-view]")) {
-    element.hidden = element !== this.view;
-  }
-
-  for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
-    let forView = getElementProperty(element, "for-view");
-    element.classList.toggle("active", view === forView);
-  }
-});
+let AppViewController = AppViewMixin(Controller.createComponent("AppViewController"));
 
 AppViewController.prototype.destroy = function () {}; // Block destory method
-
-let AppJointSourcesController = AppViewController.createComponent("AppJointSourcesController");
 
 /**
  * AppJointSourcesController
  */
+let AppJointSourcesController = AppViewController.createComponent("AppJointSourcesController");
+
 AppJointSourcesController.defineMethod("initView", function () {
   if (!this.view) return;
 
@@ -138,6 +146,104 @@ AppJointSourcesController.defineMethod("initView", function () {
   }.bind(this), 500, true)
     .componentOf = this;
 
+});
+
+/**
+ * AppLandingController
+ */
+let AppLandingController = AppViewController.createComponent("AppLandingController");
+
+AppLandingController.defineMethod("initView", function () {
+
+  let controller = new BasicConversationPresenterController(null, this.view.querySelector("#featured-conversation"));
+  controller.componentOf = this.controller;
+  controller.fadeBackdrop = false;
+
+  this.present = function (index, forwardAnimation = true) {
+    if (this.presentLock) return;
+    this.presentLock = true; // Waiting to present
+
+    this.featuredItems[index].then(function (conversation) {
+
+      let waterfall;
+      if (forwardAnimation) {
+        waterfall = new Waterfall(function () {
+          controller.view.classList.add("hidden");
+        }, 1000 + 1)
+          .then(function () {
+            controller.conversation = conversation;
+            return controller.promiseBackdropImageLoaded();
+          }, 1)
+          .then(function () {
+            controller.view.classList.add("hidden-left");
+          }, 1000 + 1)
+          .then(function () {
+            controller.view.classList.remove("hidden", "hidden-left");
+          });
+      } else {
+        waterfall = new Waterfall(function () {
+          controller.view.classList.add("hidden-left");
+        })
+          .then(function () {
+            controller.view.classList.add("hidden");
+            controller.view.classList.remove("hidden-left");
+          }, 1000 + 1)
+          .then(function () {
+            controller.conversation = conversation;
+            return controller.promiseBackdropImageLoaded();
+          }, 1)
+          .then(function () {
+            controller.view.classList.add("hidden-right");
+          }, 1000 + 1)
+          .then(function () {
+            controller.view.classList.remove("hidden", "hidden-right");
+          });
+      }
+
+      waterfall
+        .then(function () {
+          this.currentIndex = index;
+          this.presentLock = false;
+        }.bind(this));
+
+    }.bind(this));
+  };
+
+  this.presentNext = function () {
+    return this.present((this.currentIndex + 1) % this.featuredItems.length);
+  }.bind(this);
+
+  this.presentPrev = function () {
+    return this.present((this.currentIndex - 1 + this.featuredItems.length) % this.featuredItems.length, false);
+  }.bind(this);
+
+  this.view.querySelector("#featured-conversation-prev").addEventListener("click", this.presentPrev);
+  this.view.querySelector("#featured-conversation-next").addEventListener("click", this.presentNext);
+
+});
+
+AppLandingController.defineMethod("uninitView", function () {
+
+  this.view.querySelector("#featured-conversation-prev").removeEventListener("click", this.presentPrev);
+  this.view.querySelector("#featured-conversation-next").removeEventListener("click", this.presentNext);
+
+});
+
+AppLandingController.defineMethod("hideView", function () {
+  document.querySelector(".app-header").classList.remove("transparent");
+});
+
+AppLandingController.defineMethod("unhideView", function () {
+  document.querySelector(".app-header").classList.add("transparent");
+});
+
+AppLandingController.defineMethod("focusView", function () {
+  Router.push(this, "/", "Many-to-Many");
+
+  if (!this.featuredItems && this.view) {
+    this.featuredItems = [7, 11, 14, 58, 20, 12, 34, 6].map(ICA.getConversation);
+    this.present(0); // Should initialize currentIndex
+  }
 });
 
 /**
@@ -239,12 +345,14 @@ window.addEventListener("load", function () {
   new NotificationsController(notifications, document.body);
   appController = new AppController(document.body);
 
+  appLandingController = new AppLandingController(document.querySelector(".landing-container"));
   appConversationsController = new AppConversationsController(document.querySelector(".conversations"));
   appDiscussionsController = new AppDiscussionsController(document.querySelector(".discussions"));
   appSearchController = new AppMainSearchController(document.querySelector(".search"));
   appAccountController = new AppAccountController(document.querySelector(".account"));
   appAboutController = new AppAboutController(document.querySelector(".about-container"));
 
+  // Restore view on page load
   for (_ of [
     {
       pattern: /\/jointsources\/(\d+)\/?$/,
@@ -408,7 +516,7 @@ window.addEventListener("load", function () {
     {
       pattern: /.*/,
       func: function () {
-        appConversationsController.focusView();
+        appLandingController.focusView();
       }
     }
   ]) {

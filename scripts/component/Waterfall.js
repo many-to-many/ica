@@ -14,13 +14,17 @@ Waterfall.defineMethod("init", function (func, duration = 0, start = true) {
   // Init execute method
   let container = this._container;
   this._execute = function () {
-    if (func) func();
-
-    setTimeout(function () {
-      container.then.forEach(function (item) {
-        item.start();
+    Promise.resolve(func())
+      .catch(function (e) {
+        console.error("Caught Promise rejection in waterfall", e);
+      })
+      .then(function () {
+        setTimeout(function () {
+          container.then.forEach(function (item) {
+            item.start();
+          });
+        }, duration);
       });
-    }, duration);
   };
   // Start waterfall
   if (start) this.start();

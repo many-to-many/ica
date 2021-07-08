@@ -406,10 +406,10 @@
     <!-- Begin main -->
     <header class="topbar-container app-header">
       <div class="topbar" data-ica-width-multiple="300">
-        <div class="topbar-title-complex">
+        <a href="/" data-ica-for-view="landing" class="topbar-title-complex">
           <h1 class="title">Many-to-Many</h1>
           <p class="subtitle">Rethinking the Ethnographic Archive</p>
-        </div>
+        </a>
         <nav>
           <ul>
             <li><a href="/conversations" data-ica-for-view="conversations">Explore Conversations</a></li>
@@ -424,6 +424,30 @@
       </div>
     </header>
     <section class="app-view">
+      <div class="landing-container" data-ica-view="landing" hidden>
+        <div class="landing" data-ica-width-multiple="300">
+          <div class="landing-text">
+            <h1>Many-to-Many</h1>
+            <h2>Rethinking the Ethnographic Archive</h2>
+          </div>
+          <article id="featured-conversation" class="jointsource conversation hidden">
+            <div class="conversation-backdrop">
+              <div class="conversation-backdrop-image"></div>
+            </div>
+            <section class="jointsource-meta">
+              <div class="jointsource-meta-text">
+                <h2 data-ica-conversation-meta="title"></h2>
+                <p data-ica-conversation-meta="intro"></p>
+              </div>
+              <div class="jointsource-meta-caption">
+                <span data-ica-conversation-meta="title"></span> • <span data-ica-conversation-meta="region"></span>
+              </div>
+            </section>
+            <button id="featured-conversation-prev"></button>
+            <button id="featured-conversation-next"></button>
+          </article>
+        </div>
+      </div>
       <div class="conversations" data-ica-view="conversations" data-ica-width-multiple="300" hidden>
         <div class="explore"></div>
         <div class="spinner"></div>

@@ -4,7 +4,7 @@
  * Concrete view controller to present a meta-conversation.
  * @constructor
  */
-let PublisherDiscussionController = DiscussionController.createComponent("PublisherDiscussionController");
+let PublisherDiscussionController = AppViewMixin(DiscussionController.createComponent("PublisherDiscussionController"));
 
 PublisherDiscussionController.createViewFragment = function () {
   return cloneTemplate("#template-publisher-discussion");
@@ -152,21 +152,6 @@ PublisherDiscussionController.defineMethod("updateView", function updateView() {
 
   // Display danger zone
   this.view.querySelector("[data-ica-jointsource-filter='published']").hidden = this.discussion.discussionId < 0;
-});
-
-PublisherDiscussionController.defineMethod("unhideView", function unhideView() {
-  if (!this.view) return;
-
-  let view = getElementProperty(this.view, "view");
-
-  for (let element of this.view.parentNode.querySelectorAll("[data-ica-view]")) {
-    element.hidden = element !== this.view;
-  }
-
-  for (let element of document.body.querySelectorAll("[data-ica-for-view]")) {
-    let forView = getElementProperty(element, "for-view");
-    element.classList.toggle("active", view === forView);
-  }
 });
 
 
